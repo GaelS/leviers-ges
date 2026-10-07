@@ -40,10 +40,12 @@ Règles communes à tous les leviers. Une fiche de levier ne les répète pas ; 
 | Dossier | `data/<levier ou source>/` : un CSV par jeu et un `manifest.json` |
 | Format du CSV | UTF-8, séparateur virgule, point décimal, ligne d'en-tête |
 | Précision | chaque valeur est arrondie à la précision de sa source ; la précision est notée dans le manifeste. Un test échoue si un CSV contient une valeur décimale à plus de 12 chiffres après la virgule (bruit de flottant, par exemple `56.25000000000001`) |
-| Manifeste | source, lien, millésime, date de relevé, total de contrôle, unité de chaque colonne |
+| Manifeste | source, lien, millésime, date de relevé, somme sha256 du fichier, niveau des territoires (absent pour un jeu de constantes), colonne clé, colonnes et leur unité, totaux de contrôle optionnels par colonne. Les colonnes déclarées doivent être exactement celles du CSV |
+| Jeu de constantes | colonnes `name` (clé) et `value` ; une valeur vide est une donnée absente |
 | Contenu | des agrégats par territoire, pas les fichiers bruts (jusqu'à 524 Mo). L'étape de construction des agrégats rejoint le dépôt |
 | Lecture | `csv-parse` ; les valeurs restent du texte jusqu'à la formule qui les passe en `BigNumber` ; un index `Map` par jeu et par code de territoire ; chaque levier charge ses seuls fichiers, au premier usage |
-| Contrôle au chargement | le total de contrôle du manifeste est vérifié ; un écart est une erreur typée `MissingData` |
+| Contrôle au chargement | somme sha256, colonnes, précision, totaux de contrôle, clés uniques et non vides : un écart est une erreur typée `InvalidDataset`. Un territoire absent d'un jeu valide est `MissingData`. Le niveau du territoire doit être celui du jeu |
+| Valeurs refusées | plus de 12 décimales, virgule décimale, notation scientifique, jeu sans ligne |
 
 ## Constantes et sources
 

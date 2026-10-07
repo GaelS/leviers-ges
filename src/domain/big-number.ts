@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { Result } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 
 const Big = BigNumber.clone({
   DECIMAL_PLACES: 30,
@@ -7,14 +7,15 @@ const Big = BigNumber.clone({
   STRICT: true,
 })
 
+const decimalTextPattern = /^-?\d+(\.\d+)?$/
+
 function toBig(value: string | bigint): BigNumber {
   return new Big(value)
 }
 
-const parseBig = Result.fromThrowable(
-  (value: string): BigNumber => new Big(value),
-  (): 'not_a_number' => 'not_a_number',
-)
+function parseBig(value: string): Result<BigNumber, 'not_a_number'> {
+  return decimalTextPattern.test(value) ? ok(new Big(value)) : err('not_a_number')
+}
 
 function sum(values: readonly BigNumber[]): BigNumber {
   return values.reduce((total, value) => total.plus(value), toBig('0'))
