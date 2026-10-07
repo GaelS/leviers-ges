@@ -38,6 +38,7 @@ type DataSourceError = MissingData | InvalidDataset
 interface DataSource {
   constant(dataset: string, name: string): Result<string, DataSourceError>
   row(dataset: string, territory: Territory<Level>): Result<DataRow, DataSourceError>
+  rows(dataset: string): Result<readonly DataRow[], DataSourceError>
 }
 
 function missingData({ dataset, key }: Pick<MissingData, 'dataset' | 'key'>): MissingData {
