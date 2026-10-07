@@ -13,6 +13,10 @@ function toBig(value: string | bigint): BigNumber {
   return new Big(value)
 }
 
+function numberToDecimalText(value: number): string {
+  return toBig(String(value)).toFixed()
+}
+
 function parseBig(value: string): Result<BigNumber, 'not_a_number'> {
   return decimalTextPattern.test(value) ? ok(new Big(value)) : err('not_a_number')
 }
@@ -25,4 +29,4 @@ function roundOutput(value: BigNumber): BigNumber {
   return value.decimalPlaces(2)
 }
 
-export { parseBig, roundOutput, sum, toBig }
+export { numberToDecimalText, parseBig, roundOutput, sum, toBig }
