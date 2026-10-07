@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { parseBig, roundOutput, sum, toBig } from './big-number.js'
+import { numberToDecimalText, parseBig, roundOutput, sum, toBig } from './big-number.js'
 
 describe('big-number', () => {
   it('0.1 + 0.2 vaut exactement 0.3', () => {
@@ -35,6 +35,16 @@ describe('big-number', () => {
 
   it.each(['0', '-1', '1.5', '56.25'])('parseBig accepte %s', (value) => {
     expect(parseBig(value)._unsafeUnwrap().toFixed()).toBe(value)
+  })
+
+  it.each([
+    [1, '1'],
+    [0.1, '0.1'],
+    [-2.5, '-2.5'],
+    [1e21, '1000000000000000000000'],
+    [5e-7, '0.0000005'],
+  ])('numberToDecimalText écrit le nombre %s en décimal plein', (value, expected) => {
+    expect(numberToDecimalText(value)).toBe(expected)
   })
 
   it('arrondit la sortie à 2 décimales, 1.165 donne 1.17', () => {
