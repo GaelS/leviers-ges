@@ -26,6 +26,17 @@ describe('big-number', () => {
     expect(parseBig('abc')._unsafeUnwrapErr()).toBe('not_a_number')
   })
 
+  it.each(['0x1F', '1e3', ' 1.5', '+1.5', 'NaN', 'Infinity', '1_0', '.5', ''])(
+    'parseBig refuse l’écriture non décimale %j',
+    (value) => {
+      expect(parseBig(value)._unsafeUnwrapErr()).toBe('not_a_number')
+    },
+  )
+
+  it.each(['0', '-1', '1.5', '56.25'])('parseBig accepte %s', (value) => {
+    expect(parseBig(value)._unsafeUnwrap().toFixed()).toBe(value)
+  })
+
   it('arrondit la sortie à 2 décimales, 1.165 donne 1.17', () => {
     expect(roundOutput(toBig('1.165')).toFixed()).toBe('1.17')
   })
