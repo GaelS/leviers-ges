@@ -47,6 +47,7 @@ function createCsvDataSource(rootDirectory: string): DataSource {
           const isBlank = value === undefined || value === ''
           return isBlank ? err(missingData({ dataset: name, key: constantName })) : ok(value)
         }),
+    rows: (name) => dataset(name).map(({ rows }) => [...rows.values()]),
     row: (name, territory) =>
       dataset(name).andThen(({ level, rows }) =>
         level === territory.level

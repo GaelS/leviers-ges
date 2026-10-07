@@ -82,6 +82,22 @@ describe('createCsvDataSource', () => {
       })
     })
 
+    it('lit toutes les lignes d’un jeu, dans l’ordre du fichier', () => {
+      const source = createCsvDataSource(createRoot({ csv: VALUES_CSV }))
+      expect(source.rows('demo/values')._unsafeUnwrap()).toEqual([
+        { code: '11', value: '1.5', hectares: '10' },
+        { code: '24', value: '2', hectares: '5.25' },
+      ])
+    })
+
+    it('renvoie l’erreur du jeu quand on lit toutes ses lignes', () => {
+      const source = createCsvDataSource(createRoot({ csv: VALUES_CSV }))
+      expect(source.rows('demo/absent')._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        reason: 'unknown_dataset',
+      })
+    })
+
     it('lit une constante par son nom, en texte', () => {
       const source = createCsvDataSource(
         createRoot({ csv: 'name,value\nFS,1.17\n', manifest: { keyColumn: 'name' } }),
