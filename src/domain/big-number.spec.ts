@@ -1,0 +1,32 @@
+import fc from 'fast-check'
+import { describe, expect, it } from 'vitest'
+import { parseBig, roundOutput, sum, toBig } from './big-number.js'
+
+describe('big-number', () => {
+  it('0.1 + 0.2 vaut exactement 0.3', () => {
+    expect(toBig('0.1').plus(toBig('0.2')).isEqualTo(toBig('0.3'))).toBe(true)
+  })
+
+  it('une somme de 10000 valeurs 0.1 vaut exactement 1000', () => {
+    const values = Array.from({ length: 10_000 }, () => toBig('0.1'))
+    expect(sum(values).toFixed()).toBe('1000')
+  })
+
+  it('la somme de n valeurs 0.1 vaut exactement n / 10', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 5_000 }), (count) => {
+        const values = Array.from({ length: count }, () => toBig('0.1'))
+        expect(sum(values).isEqualTo(toBig(String(count)).dividedBy(10))).toBe(true)
+      }),
+    )
+  })
+
+  it('refuse une chaîne qui n’est pas un nombre', () => {
+    expect(() => toBig('abc')).toThrow()
+    expect(parseBig('abc')._unsafeUnwrapErr()).toBe('not_a_number')
+  })
+
+  it('arrondit la sortie à 2 décimales, 1.165 donne 1.17', () => {
+    expect(roundOutput(toBig('1.165')).toFixed()).toBe('1.17')
+  })
+})

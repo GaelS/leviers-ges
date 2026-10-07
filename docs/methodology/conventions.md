@@ -8,9 +8,9 @@ Règles communes à tous les leviers. Une fiche de levier ne les répète pas ; 
 |---|---|
 | Type numérique | `BigNumber` (`bignumber.js`) pour toute valeur de calcul. Jamais de `number` dans une formule |
 | Instance | une seule, créée par `BigNumber.clone` dans le noyau, avec la précision de division et le mode d'arrondi fixés une fois |
-| Construction | une valeur se construit depuis une chaîne (`new BigNumber('0.1')`), jamais depuis un `number` flottant |
-| Arrondi | un seul, en sortie de `estimate`. Aucun arrondi intermédiaire |
-| Contrôle en développement | `BigNumber.DEBUG` actif hors production : une construction depuis un `number` à plus de 15 chiffres significatifs échoue |
+| Construction | une valeur se construit depuis une chaîne (`toBig('0.1')`), jamais depuis un `number` flottant : `toBig` et `quantity` n'acceptent que `string` ou `bigint` |
+| Chaîne invalide | `STRICT: true` (v11 de `bignumber.js`) : une chaîne qui n'est pas un nombre lève une erreur. À la frontière, `parseBig` la renvoie en `Result` |
+| Arrondi | un seul, en sortie de `estimate` (`roundOutput`, 2 décimales). Aucun arrondi intermédiaire |
 | Entrées publiques | `number` ou texte acceptés à la frontière, validés par `zod`, convertis en `BigNumber` brandé avant toute formule |
 
 ## Unités
