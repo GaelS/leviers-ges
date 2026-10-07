@@ -1,5 +1,7 @@
+import type { DataSourceError } from '../../domain/data-source.js'
 import type { LeverId } from '../../domain/lever-registry.js'
 import type { Level } from '../../domain/territory.js'
+import type { UnknownTerritory } from '../../domain/territory-index.js'
 
 type InvalidRequest = {
   readonly kind: 'invalid_request'
@@ -12,7 +14,7 @@ type LevelNotComputed = {
   readonly level: Level
 }
 
-type EstimationError = InvalidRequest | LevelNotComputed
+type EstimationError = InvalidRequest | LevelNotComputed | UnknownTerritory | DataSourceError
 
 function invalidRequest(issues: InvalidRequest['issues']): InvalidRequest {
   return { kind: 'invalid_request', issues }

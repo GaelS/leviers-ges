@@ -1,16 +1,12 @@
-import { err, ok } from 'neverthrow'
+import { err } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
 import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.js'
 import { parseTerritoryCode } from '../../domain/territory.js'
+import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
 import { loadTerritoryIndex } from './load-territory-index.js'
 
 function dataSourceOf(rows: readonly DataRow[]): DataSource {
-  const unusedError = invalidDataset({ dataset: 'unused', reason: 'unknown_dataset', detail: '' })
-  return {
-    constant: () => err(unusedError),
-    row: () => err(unusedError),
-    rows: () => ok(rows),
-  }
+  return dataSourceFromDatasets({ 'territoires/communes': rows })
 }
 
 describe('loadTerritoryIndex', () => {
@@ -61,7 +57,8 @@ describe('loadTerritoryIndex', () => {
   it('renvoie l’erreur de la source quand le jeu est illisible', () => {
     const failing: DataSource = {
       ...dataSourceOf([]),
-      rows: () => err(invalidDataset({ dataset: 'territoires/communes', reason: 'checksum_mismatch', detail: 'x' })),
+      rows: () =>
+        err(invalidDataset({ dataset: 'territoires/communes', reason: 'checksum_mismatch', detail: 'x' })),
     }
     expect(loadTerritoryIndex(failing)._unsafeUnwrapErr()).toMatchObject({ reason: 'checksum_mismatch' })
   })

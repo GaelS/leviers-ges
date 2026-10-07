@@ -2,11 +2,14 @@ import type { Result } from 'neverthrow'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import type { Level } from '../../domain/territory.js'
 import type { TonnesCo2ePerYear } from '../../domain/units.js'
-import { estimate, type Estimate } from './estimate.js'
+import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
+import { createEstimator, type Estimate } from './estimate.js'
 import type { EstimationError } from './estimation-error.js'
 import type { RequestInput } from './request.js'
 
 type HaiesRequestInput = Extract<RequestInput, { id: 'haies' }>
+
+const estimate = createEstimator(dataSourceFromDatasets({}))
 
 function haiesRequest(hedgeKmCreatedPerYear: string | number): HaiesRequestInput {
   return {
@@ -116,8 +119,8 @@ describe('estimate', () => {
   describe('types', () => {
     it('la réduction est en tonnes de CO2e par an, typée par levier', () => {
       const result = estimate(haiesRequest('1'))
-      expectTypeOf(result).toEqualTypeOf<Result<Estimate, EstimationError>>()
-      expectTypeOf<Estimate['reduction']>().toEqualTypeOf<TonnesCo2ePerYear>()
+      expectTypeOf(result).toEqualTypeOf<Result<Estimate<'haies'>, EstimationError>>()
+      expectTypeOf<Estimate<'haies'>['reduction']>().toEqualTypeOf<TonnesCo2ePerYear>()
     })
 
     it('les paramètres d’un autre levier ne compilent pas pour haies', () => {

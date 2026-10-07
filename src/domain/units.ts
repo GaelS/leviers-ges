@@ -10,6 +10,8 @@ type UnitName =
   | 'TonneKilometres'
   | 'Hectares'
   | 'TCo2ePerKmPerYear'
+  | 'MegawattHours'
+  | 'KgCo2ePerKwh'
   | 'TonnesCo2ePerYear'
 
 type Quantity<U extends UnitName> = BigNumber & { readonly unit: U }
@@ -20,6 +22,8 @@ type Tonnes = Quantity<'Tonnes'>
 type TonneKilometres = Quantity<'TonneKilometres'>
 type Hectares = Quantity<'Hectares'>
 type TCo2ePerKmPerYear = Quantity<'TCo2ePerKmPerYear'>
+type MegawattHours = Quantity<'MegawattHours'>
+type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
 type TonnesCo2ePerYear = Quantity<'TonnesCo2ePerYear'>
 
 function quantity<U extends UnitName>(value: string | bigint): Quantity<U> {
@@ -38,7 +42,9 @@ export { parseFraction, quantity }
 export type {
   Fraction,
   Hectares,
+  KgCo2ePerKwh,
   Kilometres,
+  MegawattHours,
   Quantity,
   TCo2ePerKmPerYear,
   TonneKilometres,
