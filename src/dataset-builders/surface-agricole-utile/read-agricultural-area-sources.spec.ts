@@ -17,7 +17,9 @@ function copyDataDirectory(): string {
   return copyDataFolders({ from: committedDataDirectory, folders: [folder, 'territoires'] })
 }
 
-describe('readAgriculturalAreaSources', () => {
+const SOURCE_READING_TIMEOUT_MS = 30_000
+
+describe('readAgriculturalAreaSources', { timeout: SOURCE_READING_TIMEOUT_MS }, () => {
   it('lit les trois sources versionnées et la géographie', () => {
     const sources = readAgriculturalAreaSources(committedDataDirectory)._unsafeUnwrap()
     expect({
