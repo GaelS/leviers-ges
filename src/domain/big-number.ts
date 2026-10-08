@@ -1,11 +1,20 @@
 import BigNumber from 'bignumber.js'
 import { err, ok, type Result } from 'neverthrow'
 
+// Source : choix de conception de ce dépôt, sans source externe : marge de précision des divisions intermédiaires, non validé
+const INTERMEDIATE_DECIMAL_PLACES = 30
+
+// Source : choix de conception de ce dépôt, sans source externe : précision d'affichage des résultats, non validé
+const OUTPUT_DECIMAL_PLACES = 2
+
 const Big = BigNumber.clone({
-  DECIMAL_PLACES: 30,
+  DECIMAL_PLACES: INTERMEDIATE_DECIMAL_PLACES,
   ROUNDING_MODE: BigNumber.ROUND_HALF_UP,
   STRICT: true,
 })
+
+// Source : élément neutre de l'addition
+const ZERO = new Big('0')
 
 const decimalTextPattern = /^-?\d+(\.\d+)?$/
 
@@ -22,11 +31,11 @@ function parseBig(value: string): Result<BigNumber, 'not_a_number'> {
 }
 
 function sum(values: readonly BigNumber[]): BigNumber {
-  return values.reduce((total, value) => total.plus(value), toBig('0'))
+  return values.reduce((total, value) => total.plus(value), ZERO)
 }
 
 function roundOutput(value: BigNumber): BigNumber {
-  return value.decimalPlaces(2)
+  return value.decimalPlaces(OUTPUT_DECIMAL_PLACES)
 }
 
 export { numberToDecimalText, parseBig, roundOutput, sum, toBig }
