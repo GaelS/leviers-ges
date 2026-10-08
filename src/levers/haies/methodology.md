@@ -1,6 +1,6 @@
 # Gestion des haies
 
-Identifiant : `haies`. Niveaux : région, département, EPCI (aucune question ouverte, aucune interprétation à encoder).
+Identifiant : `haies`. Périmètre du tableur : région, département, EPCI (aucune question ouverte, aucune interprétation à encoder). La requête ne porte pas de territoire.
 
 ## Formule
 
@@ -8,14 +8,13 @@ Identifiant : `haies`. Niveaux : région, département, EPCI (aucune question ou
 Stockage (tCO2e/an) = km de haies plantées par an, nets des arrachages × FS
 ```
 
-La collectivité saisit le net elle-même. La formule est « directe » (`GestionHaies!B12`). Aucune donnée de territoire n'entre dans le calcul.
+La collectivité saisit le net elle-même. La formule est « directe » (`GestionHaies!B12`). Aucune donnée de territoire n'entre dans le calcul : la requête ne porte pas de territoire et en refuse un (clé `territory` non reconnue).
 
 ## Entrées
 
 | Entrée | Unité | Bornes |
 |---|---|---|
-| `hedgeKmCreatedPerYear` | km/an | aucune dans le tableur |
-
+| `hedgeKmCreatedPerYear` | km/an | aucune dans le tableur ; une valeur négative (arrachage net) est admise et donne une réduction négative |
 ## Constantes
 
 | Constante | Valeur | Unité | Source |

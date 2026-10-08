@@ -156,6 +156,31 @@ describe('estimate, reseaux_chaleur', () => {
     })
   })
 
+  it('refuse un niveau de territoire inconnu et un code vide', () => {
+    const invalid = {
+      ...request('region', '84'),
+      territory: { level: 'commune', code: '' },
+    } as unknown as ReseauxChaleurRequestInput
+    expect(estimate(invalid)._unsafeUnwrapErr()).toEqual({
+      kind: 'invalid_request',
+      issues: [
+        { parameter: 'territory.level', message: expect.stringContaining('Invalid') as string },
+        { parameter: 'territory.code', message: 'must not be empty' },
+      ],
+    })
+  })
+
+  it('refuse un code de territoire fait seulement d’espaces', () => {
+    expect(estimate(request('region', '  '))._unsafeUnwrapErr()).toEqual({
+      kind: 'invalid_request',
+      issues: [{ parameter: 'territory.code', message: 'must not be empty' }],
+    })
+  })
+
+  it('accepte un code de territoire entouré d’espaces', () => {
+    expect(estimate(request('region', ' 84 '))._unsafeUnwrap().reduction.toFixed()).toBe('300')
+  })
+
   it('charge l’index des territoires une seule fois pour plusieurs estimations', () => {
     const loads: string[] = []
     const base = dataSourceFromDatasets({

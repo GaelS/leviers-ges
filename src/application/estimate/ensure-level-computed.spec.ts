@@ -3,9 +3,12 @@ import { describe, expect, it } from 'vitest'
 import { ensureLevelComputed } from './ensure-level-computed.ts'
 
 describe('ensureLevelComputed', () => {
-  it.each(['region', 'departement', 'epci'] as const)('accepte haies au niveau %s', (level) => {
-    expect(ensureLevelComputed({ lever: 'haies', level })).toEqual(ok())
-  })
+  it.each(['region', 'departement', 'epci'] as const)(
+    'accepte reseaux_chaleur au niveau %s',
+    (level) => {
+      expect(ensureLevelComputed({ lever: 'reseaux_chaleur', level })).toEqual(ok())
+    },
+  )
 
   it('accepte un niveau avec contournement : fertilisation azotée au département', () => {
     expect(ensureLevelComputed({ lever: 'fertilisation_azotee', level: 'departement' })).toEqual(

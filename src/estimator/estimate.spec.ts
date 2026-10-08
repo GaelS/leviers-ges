@@ -1,7 +1,6 @@
 import type { Result } from 'neverthrow'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
-import type { Level } from '../domain/territory.ts'
 import type { TonnesCo2ePerYear } from '../domain/units.ts'
 import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.ts'
 import { createEstimator, type Estimate, type RequestInput } from './estimate.ts'
@@ -13,7 +12,6 @@ const estimate = createEstimator(dataSourceFromDatasets({}))
 function haiesRequest(hedgeKmCreatedPerYear: string | number): HaiesRequestInput {
   return {
     id: 'haies',
-    territory: { level: 'region', code: '53' },
     parameters: { hedgeKmCreatedPerYear },
   }
 }
@@ -34,17 +32,25 @@ describe('estimate', () => {
       expect(estimation.reduction.toFixed()).toBe(expected)
     })
 
+    it('admet des kilomètres négatifs : un arrachage net donne une réduction négative', () => {
+      const estimation = estimate(haiesRequest('-10'))._unsafeUnwrap()
+      expect(estimation.reduction.toFixed()).toBe('-11.7')
+    })
+
     it('n’annonce aucune hypothèse appliquée', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().appliedAssumptions).toEqual({})
     })
 
-    it.each<Level>(['region', 'departement', 'epci'])('calcule au niveau %s', (level) => {
+    it('refuse un territoire, que son résultat n’utilise pas', () => {
       const result = estimate({
         id: 'haies',
-        territory: { level, code: '53' },
+        territory: { level: 'region', code: '53' },
         parameters: { hedgeKmCreatedPerYear: '1' },
+      } as unknown as RequestInput)
+      expect(result._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'territory', message: 'Unrecognized key: "territory"' }],
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('1.17')
     })
   })
 
@@ -109,7 +115,6 @@ describe('estimate', () => {
     it('refuse un paramètre qui n’appartient pas au levier', () => {
       const result = estimate({
         id: 'haies',
-        territory: { level: 'region', code: '53' },
         parameters: { hedgeKmCreatedPerYear: '1', railShift: '0.1' },
       } as unknown as RequestInput)
       expect(result._unsafeUnwrapErr()).toMatchObject({
@@ -125,42 +130,6 @@ describe('estimate', () => {
         issues: [{ parameter: 'request', message: 'expected an object' }],
       })
     })
-
-    it('refuse un niveau de territoire inconnu et un code vide', () => {
-      const result = estimate({
-        id: 'haies',
-        territory: { level: 'commune', code: '' },
-        parameters: { hedgeKmCreatedPerYear: '1' },
-      } as unknown as RequestInput)
-      expect(result._unsafeUnwrapErr()).toEqual({
-        kind: 'invalid_request',
-        issues: [
-          { parameter: 'territory.level', message: expect.stringContaining('Invalid') as string },
-          { parameter: 'territory.code', message: 'must not be empty' },
-        ],
-      })
-    })
-
-    it('refuse un code de territoire fait seulement d’espaces', () => {
-      const result = estimate({
-        id: 'haies',
-        territory: { level: 'region', code: '  ' },
-        parameters: { hedgeKmCreatedPerYear: '1' },
-      })
-      expect(result._unsafeUnwrapErr()).toEqual({
-        kind: 'invalid_request',
-        issues: [{ parameter: 'territory.code', message: 'must not be empty' }],
-      })
-    })
-
-    it('accepte un code de territoire entouré d’espaces', () => {
-      const result = estimate({
-        id: 'haies',
-        territory: { level: 'region', code: ' 53 ' },
-        parameters: { hedgeKmCreatedPerYear: '1' },
-      })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('1.17')
-    })
   })
 
   describe('types', () => {
@@ -173,7 +142,6 @@ describe('estimate', () => {
     it('les paramètres d’un autre levier ne compilent pas pour haies', () => {
       expectTypeOf<{
         id: 'haies'
-        territory: { level: 'region'; code: string }
         parameters: { railShift: string }
       }>().not.toExtend<RequestInput>()
     })
