@@ -114,6 +114,27 @@ describe('estimate', () => {
         ],
       })
     })
+
+    it('refuse un code de territoire fait seulement d’espaces', () => {
+      const result = estimate({
+        id: 'haies',
+        territory: { level: 'region', code: '  ' },
+        parameters: { hedgeKmCreatedPerYear: '1' },
+      })
+      expect(result._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'territory.code', message: 'must not be empty' }],
+      })
+    })
+
+    it('accepte un code de territoire entouré d’espaces', () => {
+      const result = estimate({
+        id: 'haies',
+        territory: { level: 'region', code: ' 53 ' },
+        parameters: { hedgeKmCreatedPerYear: '1' },
+      })
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('1.17')
+    })
   })
 
   describe('types', () => {

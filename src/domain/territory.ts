@@ -1,22 +1,17 @@
-import { err, ok, type Result } from 'neverthrow'
-import { invalidParameter, type InvalidParameter } from './invalid-parameter.js'
+import { z } from 'zod'
 
 const levels = ['departement', 'epci', 'region'] as const
 
 type Level = (typeof levels)[number]
 
-type TerritoryCode = string & { readonly territoryCode: true }
+const territoryCodeSchema = z.string().trim().min(1, 'must not be empty').brand<'TerritoryCode'>()
+
+type TerritoryCode = z.output<typeof territoryCodeSchema>
 
 type Territory<L extends Level> = {
   readonly level: L
   readonly code: TerritoryCode
 }
 
-function parseTerritoryCode(value: string): Result<TerritoryCode, InvalidParameter> {
-  return value.trim() === ''
-    ? err(invalidParameter({ parameter: 'territoryCode', value }))
-    : ok(value as TerritoryCode)
-}
-
-export { levels, parseTerritoryCode }
+export { levels, territoryCodeSchema }
 export type { Level, Territory, TerritoryCode }

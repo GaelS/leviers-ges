@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { numberToDecimalText, parseBig } from '../../domain/big-number.js'
-import { levels, parseTerritoryCode } from '../../domain/territory.js'
+import { levels, territoryCodeSchema } from '../../domain/territory.js'
 import { parseFraction, quantity } from '../../domain/units.js'
 
 const decimalInputSchema = z.union([
@@ -15,16 +15,6 @@ const fractionSchema = decimalInputSchema.transform((text, context) =>
     (fraction) => fraction,
     () => {
       context.addIssue({ code: 'custom', message: 'must be between 0 and 1', input: text })
-      return z.NEVER
-    },
-  ),
-)
-
-const territoryCodeSchema = z.string().transform((value, context) =>
-  parseTerritoryCode(value).match(
-    (code) => code,
-    () => {
-      context.addIssue({ code: 'custom', message: 'must not be empty', input: value })
       return z.NEVER
     },
   ),

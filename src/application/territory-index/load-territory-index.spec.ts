@@ -1,7 +1,7 @@
 import { err } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
 import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.js'
-import { parseTerritoryCode } from '../../domain/territory.js'
+import { territoryCodeSchema } from '../../domain/territory.js'
 import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
 import { loadTerritoryIndex } from './load-territory-index.js'
 
@@ -17,9 +17,9 @@ describe('loadTerritoryIndex', () => {
         { code_commune: '2A004', code_epci: '', code_departement: '2A', code_region: '94' },
       ]),
     )._unsafeUnwrap()
-    const code = parseTerritoryCode('94')._unsafeUnwrap()
+    const code = territoryCodeSchema.parse('94')
     expect(index.communesOf({ level: 'region', code })._unsafeUnwrap()).toEqual(['2A004'])
-    const epci = parseTerritoryCode('200069193')._unsafeUnwrap()
+    const epci = territoryCodeSchema.parse('200069193')
     expect(index.communesOf({ level: 'epci', code: epci })._unsafeUnwrap()).toEqual(['01001'])
   })
 
