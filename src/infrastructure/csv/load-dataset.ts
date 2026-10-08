@@ -3,7 +3,7 @@ import { err, ok, type Result } from 'neverthrow'
 import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
 import { findDatasetEntry } from './manifest.ts'
 import { parseCsvText } from './parse-csv-text.ts'
-import { readVerifiedText } from './read-verified-text.ts'
+import { readVerifiedText } from './read-verified-file.ts'
 import type { Level } from '../../domain/territory.ts'
 import {
   checkCells,

@@ -18,6 +18,8 @@ const ZERO = new Big('0')
 
 const decimalTextPattern = /^-?\d+(\.\d+)?$/
 
+const decimalTextWithExponentPattern = /^-?\d+(\.\d+)?([eE][+-]?\d+)?$/
+
 function toBig(value: string | bigint): BigNumber {
   return new Big(value)
 }
@@ -30,6 +32,10 @@ function parseBig(value: string): Result<BigNumber, 'not_a_number'> {
   return decimalTextPattern.test(value) ? ok(new Big(value)) : err('not_a_number')
 }
 
+function parseBigWithExponent(value: string): Result<BigNumber, 'not_a_number'> {
+  return decimalTextWithExponentPattern.test(value) ? ok(new Big(value)) : err('not_a_number')
+}
+
 function sum(values: readonly BigNumber[]): BigNumber {
   return values.reduce((total, value) => total.plus(value), ZERO)
 }
@@ -38,4 +44,4 @@ function roundOutput(value: BigNumber): BigNumber {
   return value.decimalPlaces(OUTPUT_DECIMAL_PLACES)
 }
 
-export { numberToDecimalText, parseBig, roundOutput, sum, toBig }
+export { numberToDecimalText, parseBig, parseBigWithExponent, roundOutput, sum, toBig }

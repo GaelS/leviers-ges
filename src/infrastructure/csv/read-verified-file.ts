@@ -26,16 +26,20 @@ function verifyChecksum({
     : err(violation('checksum_mismatch', `expected ${expectedChecksum}, got ${actual}`))
 }
 
-function readVerifiedText({
-  path,
-  expectedChecksum,
-}: {
-  path: string
-  expectedChecksum: string
-}): Result<string, Violation> {
-  return readBytes(path)
-    .andThen((bytes) => verifyChecksum({ bytes, expectedChecksum }))
-    .andThen(decodeUtf8)
+type VerifiedFileReference = {
+  readonly path: string
+  readonly expectedChecksum: string
 }
 
-export { readVerifiedText }
+function readVerifiedBytes({
+  path,
+  expectedChecksum,
+}: VerifiedFileReference): Result<Buffer, Violation> {
+  return readBytes(path).andThen((bytes) => verifyChecksum({ bytes, expectedChecksum }))
+}
+
+function readVerifiedText(reference: VerifiedFileReference): Result<string, Violation> {
+  return readVerifiedBytes(reference).andThen(decodeUtf8)
+}
+
+export { readVerifiedBytes, readVerifiedText }
