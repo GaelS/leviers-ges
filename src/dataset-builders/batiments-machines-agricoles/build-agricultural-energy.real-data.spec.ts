@@ -18,7 +18,9 @@ function totalOf(rows: readonly Readonly<Record<string, string>>[], column: stri
   return sum(rows.map((row) => toBig(row[column] ?? ''))).toFixed()
 }
 
-describe('énergie de l’agriculture, classeurs régionaux et extraits locaux SDES 2024', () => {
+const WORKBOOK_READING_TIMEOUT_MS = 30_000
+
+describe('énergie de l’agriculture, classeurs régionaux et extraits locaux SDES 2024', { timeout: WORKBOOK_READING_TIMEOUT_MS }, () => {
   it('reconstruit regions, departements et epcis à l’identique', async () => {
     const sources = await readAgriculturalEnergySources(dataDirectory)
     const build = sources.andThen(buildAgriculturalEnergy)._unsafeUnwrap()

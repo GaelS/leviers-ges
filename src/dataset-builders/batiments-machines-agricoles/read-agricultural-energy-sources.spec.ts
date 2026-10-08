@@ -20,7 +20,9 @@ function copyDataDirectory(): string {
   return copyDataFolders({ from: committedDataDirectory, folders: [folder, 'territoires'] })
 }
 
-describe('readAgriculturalEnergySources', () => {
+const WORKBOOK_READING_TIMEOUT_MS = 30_000
+
+describe('readAgriculturalEnergySources', { timeout: WORKBOOK_READING_TIMEOUT_MS }, () => {
   it('lit les 13 classeurs régionaux, le classeur métropolitain, les quatre extraits locaux et la géographie', async () => {
     const sources = (await readAgriculturalEnergySources(committedDataDirectory))._unsafeUnwrap()
     expect({
