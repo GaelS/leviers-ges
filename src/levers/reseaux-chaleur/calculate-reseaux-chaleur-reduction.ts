@@ -1,16 +1,7 @@
 import { sum } from '../../domain/big-number.ts'
+import type { HeatNetwork } from '../../domain/heat-network.ts'
 import { quantity } from '../../domain/units.ts'
-import type {
-  Fraction,
-  KgCo2ePerKwh,
-  MegawattHours,
-  TonnesCo2ePerYear,
-} from '../../domain/units.ts'
-
-type HeatNetwork = {
-  readonly deliveredMwh: MegawattHours
-  readonly emissionFactor: KgCo2ePerKwh
-}
+import type { Fraction, TonnesCo2ePerYear } from '../../domain/units.ts'
 
 function calculateReseauxChaleurReduction({
   reductionFraction,
@@ -26,4 +17,3 @@ function calculateReseauxChaleurReduction({
 }
 
 export { calculateReseauxChaleurReduction }
-export type { HeatNetwork }
