@@ -42,6 +42,21 @@ Le calcul pur, la lecture des données, l'orchestration et le schéma de la requ
 
 Le dossier `src/levers/<levier>/` regroupe tout ce qui le concerne, méthodologie comprise. Son `index.ts` n'expose que `estimate` et le type de son entrée. Un levier n'importe jamais un autre levier : ce qui se partage monte dans `domain` ou `application`.
 
+**Les entrées lues vivent dans `data/`.**
+
+Un levier qui lit des données range dans `src/levers/<levier>/data/` tout ce qui fournit les entrées de sa formule :
+
+- les `read-*` (lecture et filtrage d'un jeu) ;
+- les `calculate-*` qui préparent ces entrées avant la formule (répartition, agrégation) ;
+- la fonction `get-*` qui les enchaîne ;
+- le type que ces fichiers produisent et que la formule reçoit, car un fichier d'un levier n'importe pas depuis le dossier parent.
+
+Restent à la racine du levier : la requête, `calculate-<levier>-reduction.ts` (la formule), `estimate.ts`, le barrel et la méthodologie.
+
+Un levier qui ne lit rien n'a pas de `data/`. Une constante sourcée vit à côté de la formule qui l'utilise.
+
+Ne pas confondre avec le `data/` racine du dépôt : celui-ci contient les jeux (CSV et manifestes), l'autre le code qui les lit.
+
 ### 4. La méthodologie vit à côté du code
 
 La fiche d'un levier est `src/levers/<levier>/methodology.md`. Seuls les documents qui concernent plusieurs leviers restent dans `docs/methodology/`.
@@ -117,6 +132,7 @@ const totalAvoidedEmissions = sum(avoidedEmissionsByVector)
 - [ ] Un appel qui revient a un nom (1)
 - [ ] Chaque fichier a une seule préoccupation (2)
 - [ ] Le barrel n'expose que `estimate` et son type d'entrée (3)
+- [ ] Les lectures et la préparation des entrées sont dans `data/`, la formule à la racine (3)
 - [ ] La méthodologie est à côté du code (4)
 - [ ] Pas de fabrique sans besoin (5)
 - [ ] Les types sont écrits, pas inférés (6)
