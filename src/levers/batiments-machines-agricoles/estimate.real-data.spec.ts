@@ -4,7 +4,11 @@ import { createEstimationContext } from '../../application/estimate/create-estim
 import { toBig } from '../../domain/big-number.ts'
 import type { Level } from '../../domain/territory.ts'
 import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.ts'
-import type { BatimentsMachinesAgricolesRequestInput } from './batiments-machines-agricoles-request.ts'
+import {
+  batimentsMachinesAgricolesRequestSchema,
+  type BatimentsMachinesAgricolesRequest,
+  type BatimentsMachinesAgricolesRequestInput,
+} from './batiments-machines-agricoles-request.ts'
 import { estimate } from './estimate.ts'
 
 type Reductions = BatimentsMachinesAgricolesRequestInput['parameters']
@@ -15,14 +19,14 @@ const context = createEstimationContext(dataSource)
 const regions = dataSource.rows('batiments-machines-agricoles/regions')._unsafeUnwrap()
 const departements = dataSource.rows('batiments-machines-agricoles/departements')._unsafeUnwrap()
 
-const FULL: Reductions = {
+const FULL = {
   electricityReductionFraction: '1',
   naturalGasReductionFraction: '1',
   petroleumProductsReductionFraction: '1',
   heatReductionFraction: '1',
 }
 
-const PETROLEUM_ONLY: Reductions = {
+const PETROLEUM_ONLY = {
   electricityReductionFraction: '0',
   naturalGasReductionFraction: '0',
   petroleumProductsReductionFraction: '1',
@@ -36,7 +40,7 @@ const MEGAWATT_HOURS_PER_GIGAWATT_HOUR = '1000'
 
 const SLOW_TEST_TIMEOUT_MS = 60_000
 
-function reduction({
+function toRequest({
   level,
   code,
   parameters,
@@ -44,13 +48,16 @@ function reduction({
   level: Level
   code: string
   parameters: Reductions
-}): string {
-  const input: BatimentsMachinesAgricolesRequestInput = {
+}): BatimentsMachinesAgricolesRequest {
+  return batimentsMachinesAgricolesRequestSchema.parse({
     id: 'batiments_machines_agricoles',
     territory: { level, code },
     parameters,
-  }
-  return estimate(input, context)._unsafeUnwrap().reduction.toFixed()
+  })
+}
+
+function reduction(target: { level: Level; code: string; parameters: Reductions }): string {
+  return estimate(toRequest(target), context)._unsafeUnwrap().reduction.toFixed()
 }
 
 describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020', () => {
@@ -116,11 +123,7 @@ describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020'
     ['region', '01'],
     ['departement', '971'],
   ] as const)('refuse %s %s, outre-mer absent des données énergétiques', (level, code) => {
-    const input: BatimentsMachinesAgricolesRequestInput = {
-      id: 'batiments_machines_agricoles',
-      territory: { level, code },
-      parameters: FULL,
-    }
-    expect(estimate(input, context)._unsafeUnwrapErr()).toMatchObject({ kind: 'missing_data' })
+    const request = toRequest({ level, code, parameters: FULL })
+    expect(estimate(request, context)._unsafeUnwrapErr()).toMatchObject({ kind: 'missing_data' })
   })
 })

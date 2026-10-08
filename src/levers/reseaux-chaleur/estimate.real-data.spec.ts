@@ -6,7 +6,7 @@ import type { DataRow } from '../../domain/data-source.ts'
 import type { Level } from '../../domain/territory.ts'
 import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.ts'
 import { estimate } from './estimate.ts'
-import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.ts'
+import { reseauxChaleurRequestSchema } from './reseaux-chaleur-request.ts'
 
 const dataSource = createCsvDataSource(join(import.meta.dirname, '..', '..', '..', 'data'))
 const context = createEstimationContext(dataSource)
@@ -42,12 +42,12 @@ function networksOf(level: Level, code: string): DataRow[] {
 }
 
 function reductionAtFull(level: Level, code: string): string {
-  const input: ReseauxChaleurRequestInput = {
+  const request = reseauxChaleurRequestSchema.parse({
     id: 'reseaux_chaleur',
     territory: { level, code },
     parameters: { emissionFactorReductionFraction: '1' },
-  }
-  return estimate(input, context)._unsafeUnwrap().reduction.toFixed()
+  })
+  return estimate(request, context)._unsafeUnwrap().reduction.toFixed()
 }
 
 function expectedAtFull(level: Level, code: string): string {

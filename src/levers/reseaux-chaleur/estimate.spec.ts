@@ -7,7 +7,10 @@ import type { DataRow, DataSource } from '../../domain/data-source.ts'
 import type { Level } from '../../domain/territory.ts'
 import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.ts'
 import { estimate as estimateReseauxChaleur } from './estimate.ts'
-import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.ts'
+import {
+  reseauxChaleurRequestSchema,
+  type ReseauxChaleurRequest,
+} from './reseaux-chaleur-request.ts'
 
 const COMMUNES: readonly DataRow[] = [
   { code_commune: '01001', code_epci: '200000001', code_departement: '01', code_region: '84' },
@@ -34,23 +37,19 @@ const NETWORKS: readonly DataRow[] = [
   network('75112', '3783313', '0.1'),
 ]
 
-type Estimator = (input: ReseauxChaleurRequestInput) => Result<EstimateResult, EstimationError>
+type Estimator = (request: ReseauxChaleurRequest) => Result<EstimateResult, EstimationError>
 
 function createEstimator(dataSource: DataSource): Estimator {
   const context = createEstimationContext(dataSource)
-  return (input) => estimateReseauxChaleur(input, context)
+  return (reseauxChaleurRequest) => estimateReseauxChaleur(reseauxChaleurRequest, context)
 }
 
-function request(
-  level: Level,
-  code: string,
-  fraction: string | number = '1',
-): ReseauxChaleurRequestInput {
-  return {
+function request(level: Level, code: string, fraction = '1'): ReseauxChaleurRequest {
+  return reseauxChaleurRequestSchema.parse({
     id: 'reseaux_chaleur',
     territory: { level, code },
     parameters: { emissionFactorReductionFraction: fraction },
-  }
+  })
 }
 
 const estimate = createEstimator(
@@ -61,7 +60,6 @@ describe('estimate, reseaux_chaleur', () => {
   it.each([
     ['la région 84, à 100 %', request('region', '84'), '300'],
     ['la région 84, à 50 %', request('region', '84', '0.5'), '150'],
-    ['la région 84, à 50 % en nombre', request('region', '84', 0.5), '150'],
     ['la région 84, à 0 %', request('region', '84', '0'), '0'],
     ['la région 11', request('region', '11'), '30'],
     ['le département 01', request('departement', '01'), '200'],
@@ -92,15 +90,6 @@ describe('estimate, reseaux_chaleur', () => {
       kind: 'unknown_territory',
       level: 'region',
       code: '99',
-    })
-  })
-
-  it.each(['-0.1', '1.01', '100'])('refuse la fraction %s hors de 0 à 1', (fraction) => {
-    expect(estimate(request('region', '84', fraction))._unsafeUnwrapErr()).toEqual({
-      kind: 'invalid_request',
-      issues: [
-        { parameter: 'parameters.emissionFactorReductionFraction', message: 'must be between 0 and 1' },
-      ],
     })
   })
 
@@ -146,39 +135,6 @@ describe('estimate, reseaux_chaleur', () => {
       kind: 'invalid_dataset',
       dataset: 'territoires/communes',
     })
-  })
-
-  it.each([null, 'abc'])('refuse la fraction %j qui n’est pas un nombre', (fraction) => {
-    const invalid = request('region', '84', fraction as unknown as string)
-    expect(estimate(invalid)._unsafeUnwrapErr()).toMatchObject({
-      kind: 'invalid_request',
-      issues: [{ parameter: 'parameters.emissionFactorReductionFraction' }],
-    })
-  })
-
-  it('refuse un niveau de territoire inconnu et un code vide', () => {
-    const invalid = {
-      ...request('region', '84'),
-      territory: { level: 'commune', code: '' },
-    } as unknown as ReseauxChaleurRequestInput
-    expect(estimate(invalid)._unsafeUnwrapErr()).toEqual({
-      kind: 'invalid_request',
-      issues: [
-        { parameter: 'territory.level', message: expect.stringContaining('Invalid') as string },
-        { parameter: 'territory.code', message: 'must not be empty' },
-      ],
-    })
-  })
-
-  it('refuse un code de territoire fait seulement d’espaces', () => {
-    expect(estimate(request('region', '  '))._unsafeUnwrapErr()).toEqual({
-      kind: 'invalid_request',
-      issues: [{ parameter: 'territory.code', message: 'must not be empty' }],
-    })
-  })
-
-  it('accepte un code de territoire entouré d’espaces', () => {
-    expect(estimate(request('region', ' 84 '))._unsafeUnwrap().reduction.toFixed()).toBe('300')
   })
 
   it('charge l’index des territoires une seule fois pour plusieurs estimations', () => {
