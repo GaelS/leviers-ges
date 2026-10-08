@@ -1,5 +1,5 @@
 import { match } from 'ts-pattern'
-import type { Level } from './territory.js'
+import type { Level } from './territory.ts'
 
 type Status = 'no_open_question' | 'workaround' | 'not_computed'
 

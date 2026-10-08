@@ -1,7 +1,7 @@
-import type { DataSourceError } from '../../domain/data-source.js'
-import type { LeverId } from '../../domain/lever-registry.js'
-import type { Level } from '../../domain/territory.js'
-import type { UnknownTerritory } from '../../domain/territory-index.js'
+import type { DataSourceError } from '../../domain/data-source.ts'
+import type { LeverId } from '../../domain/lever-registry.ts'
+import type { Level } from '../../domain/territory.ts'
+import type { UnknownTerritory } from '../../domain/territory-index.ts'
 
 type InvalidRequest = {
   readonly kind: 'invalid_request'

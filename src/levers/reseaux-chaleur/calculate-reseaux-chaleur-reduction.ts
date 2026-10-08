@@ -1,11 +1,11 @@
-import { sum } from '../../domain/big-number.js'
-import { quantity } from '../../domain/units.js'
+import { sum } from '../../domain/big-number.ts'
+import { quantity } from '../../domain/units.ts'
 import type {
   Fraction,
   KgCo2ePerKwh,
   MegawattHours,
   TonnesCo2ePerYear,
-} from '../../domain/units.js'
+} from '../../domain/units.ts'
 
 type HeatNetwork = {
   readonly deliveredMwh: MegawattHours

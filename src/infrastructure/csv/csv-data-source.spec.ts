@@ -3,8 +3,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.js'
-import { createCsvDataSource } from './csv-data-source.js'
+import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.ts'
+import { createCsvDataSource } from './csv-data-source.ts'
 
 type ManifestOverrides = {
   checksum?: string

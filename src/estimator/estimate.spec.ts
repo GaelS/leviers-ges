@@ -1,10 +1,10 @@
 import type { Result } from 'neverthrow'
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import type { EstimationError } from '../application/estimate/estimation-error.js'
-import type { Level } from '../domain/territory.js'
-import type { TonnesCo2ePerYear } from '../domain/units.js'
-import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.js'
-import { createEstimator, type Estimate, type RequestInput } from './estimate.js'
+import type { EstimationError } from '../application/estimate/estimation-error.ts'
+import type { Level } from '../domain/territory.ts'
+import type { TonnesCo2ePerYear } from '../domain/units.ts'
+import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.ts'
+import { createEstimator, type Estimate, type RequestInput } from './estimate.ts'
 
 type HaiesRequestInput = Extract<RequestInput, { id: 'haies' }>
 

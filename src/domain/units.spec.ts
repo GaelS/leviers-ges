@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import { parseFraction, type Fraction, type Kilometres, type Tonnes } from './units.js'
+import { parseFraction, type Fraction, type Kilometres, type Tonnes } from './units.ts'
 
 describe('units', () => {
   it('une quantité d’une autre unité ne s’assigne pas à des kilomètres', () => {

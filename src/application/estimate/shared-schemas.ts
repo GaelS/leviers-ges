@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { numberToDecimalText, parseBig } from '../../domain/big-number.js'
-import { levels, territoryCodeSchema } from '../../domain/territory.js'
-import { parseFraction, quantity } from '../../domain/units.js'
+import { numberToDecimalText, parseBig } from '../../domain/big-number.ts'
+import { levels, territoryCodeSchema } from '../../domain/territory.ts'
+import { parseFraction, quantity } from '../../domain/units.ts'
 
 const decimalInputSchema = z.union([
   z.string().refine((text) => parseBig(text).isOk(), 'must be a decimal number'),

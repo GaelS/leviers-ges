@@ -1,4 +1,4 @@
-import type { InvalidDatasetReason } from '../../domain/data-source.js'
+import type { InvalidDatasetReason } from '../../domain/data-source.ts'
 
 type Violation = {
   readonly reason: InvalidDatasetReason

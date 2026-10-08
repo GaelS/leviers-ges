@@ -1,8 +1,8 @@
 import { err } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
-import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.js'
-import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
-import { createTerritoryIndexProvider } from './create-territory-index-provider.js'
+import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.ts'
+import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.ts'
+import { createTerritoryIndexProvider } from './create-territory-index-provider.ts'
 
 const COMMUNES: readonly DataRow[] = [
   { code_commune: '01001', code_epci: '200000001', code_departement: '01', code_region: '84' },

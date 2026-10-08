@@ -1,7 +1,7 @@
 import { err, ok, type Result } from 'neverthrow'
-import { parseBig } from '../domain/big-number.js'
-import { invalidDataset, type DataRow, type InvalidDataset } from '../domain/data-source.js'
-import { quantity, type Quantity, type UnitName } from '../domain/units.js'
+import { parseBig } from '../domain/big-number.ts'
+import { invalidDataset, type DataRow, type InvalidDataset } from '../domain/data-source.ts'
+import { quantity, type Quantity, type UnitName } from '../domain/units.ts'
 
 type ColumnReference = {
   readonly dataset: string

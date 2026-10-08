@@ -10,7 +10,7 @@ const productionFiles = ['src/**/*.ts']
 const testFiles = ['**/*.spec.ts', 'src/testing/**/*.ts']
 
 const leverBarrelPattern = {
-  group: ['**/levers/*/*', '!**/levers/*/index.js'],
+  group: ['**/levers/*/*', '!**/levers/*/index.ts'],
   message: 'a lever is imported through its index, which exposes estimate only.',
 }
 
@@ -221,8 +221,8 @@ export default tseslint.config(
                 '**/application/**',
                 '**/infrastructure/**',
                 '**/testing/**',
-                '**/data-source.js',
-                '**/territory-index.js',
+                '**/data-source.ts',
+                '**/territory-index.ts',
                 '**/estimator/**',
               ],
               message: 'a calculation is pure: it receives values, never a data source.',

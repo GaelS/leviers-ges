@@ -1,13 +1,13 @@
 import { err, type Result } from 'neverthrow'
 import type { z } from 'zod'
-import type { LeverId } from '../../domain/lever-registry.js'
-import type { Level } from '../../domain/territory.js'
-import { ensureLevelComputed } from './ensure-level-computed.js'
+import type { LeverId } from '../../domain/lever-registry.ts'
+import type { Level } from '../../domain/territory.ts'
+import { ensureLevelComputed } from './ensure-level-computed.ts'
 import {
   invalidRequest,
   type InvalidRequest,
   type LevelNotComputed,
-} from './estimation-error.js'
+} from './estimation-error.ts'
 
 type RequestEnvelope = {
   readonly id: LeverId

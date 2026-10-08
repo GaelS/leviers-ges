@@ -1,7 +1,7 @@
 import { Result } from 'neverthrow'
-import type { DataRow, DataSource, DataSourceError, InvalidDataset } from '../../domain/data-source.js'
-import { buildTerritoryIndex, type Commune, type TerritoryIndex } from '../../domain/territory-index.js'
-import { requireColumn, requireNonEmptyColumn } from '../require-column.js'
+import type { DataRow, DataSource, DataSourceError, InvalidDataset } from '../../domain/data-source.ts'
+import { buildTerritoryIndex, type Commune, type TerritoryIndex } from '../../domain/territory-index.ts'
+import { requireColumn, requireNonEmptyColumn } from '../require-column.ts'
 
 const communesDataset = 'territoires/communes'
 

@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { Result, err, ok } from 'neverthrow'
 import { z } from 'zod'
-import { levels } from '../../domain/territory.js'
-import { violation, type Violation } from './violation.js'
+import { levels } from '../../domain/territory.ts'
+import { violation, type Violation } from './violation.ts'
 
 const datasetEntrySchema = z.strictObject({
   file: z.string(),

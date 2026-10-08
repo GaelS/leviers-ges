@@ -11,6 +11,8 @@
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "isolatedModules": true,
     "skipLibCheck": true,
     "resolveJsonModule": true

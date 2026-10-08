@@ -1,13 +1,13 @@
 import type { Result } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
-import type { EstimateResult } from '../../application/estimate/estimate-result.js'
-import type { EstimationError } from '../../application/estimate/estimation-error.js'
-import type { DataRow, DataSource } from '../../domain/data-source.js'
-import type { Level } from '../../domain/territory.js'
-import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
-import { estimationContextOf } from '../../testing/estimation-context-of.js'
-import { estimate as estimateReseauxChaleur } from './estimate.js'
-import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.js'
+import type { EstimateResult } from '../../application/estimate/estimate-result.ts'
+import type { EstimationError } from '../../application/estimate/estimation-error.ts'
+import type { DataRow, DataSource } from '../../domain/data-source.ts'
+import type { Level } from '../../domain/territory.ts'
+import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.ts'
+import { estimationContextOf } from '../../testing/estimation-context-of.ts'
+import { estimate as estimateReseauxChaleur } from './estimate.ts'
+import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.ts'
 
 const COMMUNES: readonly DataRow[] = [
   { code_commune: '01001', code_epci: '200000001', code_departement: '01', code_region: '84' },

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { kilometresSchema, territorySchema } from '../../application/estimate/shared-schemas.js'
+import { kilometresSchema, territorySchema } from '../../application/estimate/shared-schemas.ts'
 
 const haiesRequestSchema = z.strictObject({
   id: z.literal('haies'),

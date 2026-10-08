@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { quantity } from '../../domain/units.js'
-import { calculateHaiesReduction, HEDGE_STORAGE_FACTOR } from './calculate-haies-reduction.js'
+import { quantity } from '../../domain/units.ts'
+import { calculateHaiesReduction, HEDGE_STORAGE_FACTOR } from './calculate-haies-reduction.ts'
 
 function reductionOfKilometres(kilometres: string): string {
   return calculateHaiesReduction(quantity<'Kilometres'>(kilometres), HEDGE_STORAGE_FACTOR).toFixed()
