@@ -10,6 +10,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "build:data:batiments-machines-agricoles": "node src/dataset-builders/batiments-machines-agricoles/cli.ts",
+    "build:data:produits-bois": "node src/dataset-builders/produits-bois/cli.ts",
     "build:data:reseaux-chaleur": "node src/dataset-builders/reseaux-chaleur/cli.ts",
     "build:data:surface-agricole-utile": "node src/dataset-builders/surface-agricole-utile/cli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",

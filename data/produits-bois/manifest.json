@@ -1,0 +1,83 @@
+{
+  "datasets": [
+    {
+      "file": "regions.csv",
+      "source": "Agreste, enquête EXFSRI, tableau EXFNR00, récolte de bois 2022 par région de France métropolitaine, lignes « Grumes » (bois d'œuvre) et « Bois d'industrie ». Bois d'industrie absent pour la Corse, compté pour 0. Construit par pnpm build:data:produits-bois",
+      "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/EXFNR00/detail/",
+      "vintage": "récolte 2022",
+      "retrievedOn": "2026-10-07",
+      "checksum": "010fde2cb90b3a3d1398d56cb941c91b8b40cbb17bfe6784edc3b07c59ca65a0",
+      "level": "region",
+      "keyColumn": "code_region",
+      "columns": [
+        { "name": "code_region", "unit": "code INSEE de la région" },
+        { "name": "logs_thousand_m3", "unit": "milliers de m³ de grumes (bois d'œuvre), 2022" },
+        { "name": "industrial_wood_thousand_m3", "unit": "milliers de m³ de bois d'industrie, 2022" }
+      ],
+      "controlTotals": { "logs_thousand_m3": "19975", "industrial_wood_thousand_m3": "10311" },
+      "sources": [
+        {
+          "file": "sources/agreste-exfnr00-recolte-bois-2018-2022.csv",
+          "source": "Agreste, enquête EXFSRI, tableau EXFNR00, récolte de bois 2018 à 2022",
+          "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/EXFNR00/detail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "4645cfb0b4f0267fc02baa0ee00b25c53d093453f1d9d30afff04eeb4921f3e5"
+        }
+      ]
+    },
+    {
+      "file": "departements.csv",
+      "source": "Agreste, enquête EXFSRI, tableau EXFNR00, récolte de bois 2022 par département de France métropolitaine, lignes « Grumes » (bois d'œuvre) et « Bois d'industrie ». Bois d'industrie absent pour 5 départements (2A, 2B, 75, 93, 94), compté pour 0. Construit par pnpm build:data:produits-bois",
+      "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/EXFNR00/detail/",
+      "vintage": "récolte 2022",
+      "retrievedOn": "2026-10-07",
+      "checksum": "04b874f81de951b75595b8cd8b4cffb81f9a25fb5fa8f30c24aa90c3de210ed8",
+      "level": "departement",
+      "keyColumn": "code_departement",
+      "columns": [
+        { "name": "code_departement", "unit": "code INSEE du département" },
+        { "name": "logs_thousand_m3", "unit": "milliers de m³ de grumes (bois d'œuvre), 2022" },
+        { "name": "industrial_wood_thousand_m3", "unit": "milliers de m³ de bois d'industrie, 2022" }
+      ],
+      "controlTotals": { "logs_thousand_m3": "19978", "industrial_wood_thousand_m3": "10308" },
+      "sources": [
+        {
+          "file": "sources/agreste-exfnr00-recolte-bois-2018-2022.csv",
+          "source": "Agreste, enquête EXFSRI, tableau EXFNR00, récolte de bois 2018 à 2022",
+          "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/EXFNR00/detail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "4645cfb0b4f0267fc02baa0ee00b25c53d093453f1d9d30afff04eeb4921f3e5"
+        }
+      ]
+    },
+    {
+      "file": "constants.csv",
+      "source": "Récolte nationale de bois 2022 (ligne METRO du tableau Agreste EXFNR00 : grumes et bois d'industrie, en milliers de m³) et carbone des produits bois 2022 (OMINEA 2026, UTCATF, tableau 45, p. 97 : bois d'œuvre = sciages plus contreplaqués, bois d'industrie = panneaux plus papier, en tC par an). Construit par pnpm build:data:produits-bois",
+      "link": "https://www.citepa.org/donnees-air-climat/methodologie-de-linventaire-ominea/",
+      "vintage": "année 2022",
+      "retrievedOn": "2026-10-07",
+      "checksum": "872ccc49cbce5f699b0338412b031e2398de6ef7c5925d3ef2b173212ba42c0b",
+      "keyColumn": "name",
+      "columns": [
+        { "name": "name", "unit": "nom de la constante" },
+        { "name": "value", "unit": "milliers de m³ pour national_*, tC par an pour *_carbon_tc" }
+      ],
+      "sources": [
+        {
+          "file": "sources/agreste-exfnr00-recolte-bois-2018-2022.csv",
+          "source": "Agreste, enquête EXFSRI, tableau EXFNR00, récolte de bois 2018 à 2022",
+          "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/EXFNR00/detail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "4645cfb0b4f0267fc02baa0ee00b25c53d093453f1d9d30afff04eeb4921f3e5"
+        },
+        {
+          "file": "sources/ominea-2026-tableau-45-produits-bois-tc.csv",
+          "source": "CITEPA, OMINEA 2026, UTCATF, tableau 45, p. 97, produits bois en tC par an de 1990 à 2024",
+          "link": "https://www.citepa.org/donnees-air-climat/methodologie-de-linventaire-ominea/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "0adde1ead86e8fa002362915cf4a18ce78abde4972575974870571585ed2d2f5"
+        }
+      ]
+    }
+  ]
+}
