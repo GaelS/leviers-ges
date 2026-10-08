@@ -45,7 +45,7 @@ const parseCsv = Result.fromThrowable(
     rowsSchema.parse(
       parse(text, { columns: rejectDuplicateColumns, skip_empty_lines: true, delimiter: ',' }),
     ),
-  (error): Violation => violation('unreadable', String(error)),
+  (error): Violation => violation('malformed_csv', String(error)),
 )
 
 function splitDatasetName(name: string): Result<{ folder: string; file: string }, Violation> {

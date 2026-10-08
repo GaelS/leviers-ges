@@ -13,6 +13,7 @@ type InvalidDatasetReason =
   | 'unknown_dataset'
   | 'invalid_manifest'
   | 'unreadable'
+  | 'malformed_csv'
   | 'checksum_mismatch'
   | 'not_utf8'
   | 'empty_dataset'

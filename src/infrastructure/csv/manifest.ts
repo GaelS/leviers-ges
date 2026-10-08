@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { Result, err, ok } from 'neverthrow'
 import { z } from 'zod'
+import { levels } from '../../domain/territory.js'
 import { violation, type Violation } from './violation.js'
 
 const datasetEntrySchema = z.strictObject({
@@ -11,7 +12,7 @@ const datasetEntrySchema = z.strictObject({
   vintage: z.string(),
   retrievedOn: z.string(),
   checksum: z.string().regex(/^[0-9a-f]{64}$/),
-  level: z.enum(['departement', 'epci', 'region']).optional(),
+  level: z.enum(levels).optional(),
   keyColumn: z.string(),
   columns: z.array(z.object({ name: z.string(), unit: z.string() })),
   controlTotals: z.record(z.string(), z.string()).optional(),
