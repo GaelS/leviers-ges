@@ -34,7 +34,7 @@ const heatDataset = 'residentiel-sobriete/sources/sdes-chaleur-commune-2024.csv'
 const HEAT_NETWORKS_COLUMNS = [
   'network_id',
   'commune_code',
-  'residential_delivered_mwh',
+  'delivered_mwh',
   'emission_factor_kg_per_kwh',
 ] as const
 

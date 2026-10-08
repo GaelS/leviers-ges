@@ -265,7 +265,7 @@ function buildResidentialEnergy(
         controlTotals: {
           regions: toRegionControlTotals(regionRows),
           departements: toDepartmentControlTotals(departmentRows),
-          heatNetworks: { residential_delivered_mwh: heatNetworks.totalResidentialDeliveredMwh },
+          heatNetworks: { delivered_mwh: heatNetworks.totalResidentialDeliveredMwh },
         },
         secretNetworkCount: heatNetworks.secretNetworkCount,
       }))

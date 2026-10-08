@@ -74,7 +74,7 @@ describe('buildResidentialEnergy', () => {
     const build = buildResidentialEnergy(SOURCES)._unsafeUnwrap()
     expect({ csv: build.heatNetworksCsv, secret: build.secretNetworkCount }).toEqual({
       csv: [
-        'network_id,commune_code,residential_delivered_mwh,emission_factor_kg_per_kwh',
+        'network_id,commune_code,delivered_mwh,emission_factor_kg_per_kwh',
         'A,75056,50,0.1',
         'B,01001,100,0.2',
         '',
@@ -99,7 +99,7 @@ describe('buildResidentialEnergy', () => {
         fuel_oil_mwh: '1120000',
         lpg_mwh: '280000',
       },
-      heatNetworks: { residential_delivered_mwh: '150' },
+      heatNetworks: { delivered_mwh: '150' },
     })
   })
 

@@ -137,7 +137,7 @@
       "link": "https://www.statistiques.developpement-durable.gouv.fr/donnees-locales-de-consommation-denergie?rubrique=&dossier=189",
       "vintage": "année 2024",
       "retrievedOn": "2026-10-08",
-      "checksum": "ca0ecc18b1ca0d66da5e09c1598cd28fa7d68e9c58c681d84d38777665e8573e",
+      "checksum": "8fe37bfd983973ef4432c291fc7cc972b591fac8467bacb608f1fa42d844bdac",
       "keyColumn": "network_id",
       "columns": [
         {
@@ -149,7 +149,7 @@
           "unit": "code INSEE de la commune d'implantation"
         },
         {
-          "name": "residential_delivered_mwh",
+          "name": "delivered_mwh",
           "unit": "MWh par an livrés au résidentiel (CONSOR)"
         },
         {
@@ -158,7 +158,7 @@
         }
       ],
       "controlTotals": {
-        "residential_delivered_mwh": "13738204.977351426"
+        "delivered_mwh": "13738204.977351426"
       },
       "sources": [
         {

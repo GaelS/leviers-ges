@@ -93,7 +93,7 @@ describe('énergie du résidentiel, bilan régional, extraits locaux, ventes et 
     })
 
     it('les réseaux livrent 13 738 204,98 MWh au résidentiel, hors secret statistique', () => {
-      expect(toBig(totalOf(heatNetworks, 'residential_delivered_mwh')).decimalPlaces(2).toFixed()).toBe(
+      expect(toBig(totalOf(heatNetworks, 'delivered_mwh')).decimalPlaces(2).toFixed()).toBe(
         '13738204.98',
       )
     })

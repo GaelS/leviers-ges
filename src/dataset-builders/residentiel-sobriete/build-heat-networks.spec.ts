@@ -3,7 +3,7 @@ import { buildHeatNetworks } from './build-heat-networks.ts'
 
 const SDES_HEADER = 'ID;COMMUNE_CODE;CONSOR;CONTENU_EN_CO2'
 const NETWORKS_HEADER =
-  'network_id,commune_code,residential_delivered_mwh,emission_factor_kg_per_kwh'
+  'network_id,commune_code,delivered_mwh,emission_factor_kg_per_kwh'
 
 function toSdesCsv(...lines: string[]): string {
   return [SDES_HEADER, ...lines].join('\n')

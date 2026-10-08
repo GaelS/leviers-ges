@@ -1,4 +1,4 @@
-network_id,commune_code,residential_delivered_mwh,emission_factor_kg_per_kwh
+network_id,commune_code,delivered_mwh,emission_factor_kg_per_kwh
 0103C,01283,30401.52,0.047479854132
 0105C,01344,295.75,0.046319949281
 0106C,01034,5309.1,0.019375784031
