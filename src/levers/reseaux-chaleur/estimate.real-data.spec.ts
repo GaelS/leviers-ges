@@ -4,11 +4,12 @@ import { sum, toBig } from '../../domain/big-number.js'
 import type { DataRow } from '../../domain/data-source.js'
 import type { Level } from '../../domain/territory.js'
 import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.js'
-import { createEstimator } from './estimate.js'
-import type { RequestInput } from './request.js'
+import { estimationContextOf } from '../../testing/estimation-context-of.js'
+import { estimate } from './estimate.js'
+import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.js'
 
 const dataSource = createCsvDataSource(join(import.meta.dirname, '..', '..', '..', 'data'))
-const estimate = createEstimator(dataSource)
+const context = estimationContextOf(dataSource)
 
 const communes = dataSource.rows('territoires/communes')._unsafeUnwrap()
 const networks = dataSource.rows('reseaux-chaleur/networks')._unsafeUnwrap()
@@ -41,12 +42,12 @@ function networksOf(level: Level, code: string): DataRow[] {
 }
 
 function reductionAtFull(level: Level, code: string): string {
-  const input: RequestInput = {
+  const input: ReseauxChaleurRequestInput = {
     id: 'reseaux_chaleur',
     territory: { level, code },
     parameters: { emissionFactorReductionFraction: '1' },
   }
-  return estimate(input)._unsafeUnwrap().reduction.toFixed()
+  return estimate(input, context)._unsafeUnwrap().reduction.toFixed()
 }
 
 function expectedAtFull(level: Level, code: string): string {
