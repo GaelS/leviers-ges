@@ -14,6 +14,9 @@ type UnitName =
   | 'GigawattHours'
   | 'KgCo2ePerKwh'
   | 'KgCo2ePerGigajoule'
+  | 'ThousandCubicMetres'
+  | 'TonnesCarbon'
+  | 'RelativeChange'
   | 'TonnesCo2ePerYear'
 
 type Quantity<U extends UnitName> = BigNumber & { readonly unit: U }
@@ -28,6 +31,9 @@ type MegawattHours = Quantity<'MegawattHours'>
 type GigawattHours = Quantity<'GigawattHours'>
 type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
 type KgCo2ePerGigajoule = Quantity<'KgCo2ePerGigajoule'>
+type ThousandCubicMetres = Quantity<'ThousandCubicMetres'>
+type TonnesCarbon = Quantity<'TonnesCarbon'>
+type RelativeChange = Quantity<'RelativeChange'>
 type TonnesCo2ePerYear = Quantity<'TonnesCo2ePerYear'>
 
 function quantity<U extends UnitName>(value: string | bigint): Quantity<U> {
@@ -60,9 +66,12 @@ export type {
   Kilometres,
   MegawattHours,
   Quantity,
+  RelativeChange,
   TCo2ePerKmPerYear,
+  ThousandCubicMetres,
   TonneKilometres,
   Tonnes,
+  TonnesCarbon,
   TonnesCo2ePerYear,
   UnitName,
 }

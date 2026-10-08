@@ -10,7 +10,9 @@ const decimalInputSchema = z.union([
 
 const kilometresSchema = decimalInputSchema.transform((text) => quantity<'Kilometres'>(text))
 
-const fractionSchema = decimalInputSchema.transform((text, context) =>
+const relativeChangeSchema = decimalInputSchema.transform((text) => quantity<'RelativeChange'>(text))
+
+const fractionSchema =decimalInputSchema.transform((text, context) =>
   parseFraction(text).match(
     (fraction) => fraction,
     () => {
@@ -25,4 +27,4 @@ const territorySchema = z.strictObject({
   code: territoryCodeSchema,
 })
 
-export { fractionSchema, kilometresSchema, territorySchema }
+export { fractionSchema, kilometresSchema, relativeChangeSchema, territorySchema }

@@ -10,6 +10,10 @@ import {
 } from '../levers/batiments-machines-agricoles/index.ts'
 import { type HaiesRequestInput, estimate as estimateHaies } from '../levers/haies/index.ts'
 import {
+  estimate as estimateProduitsBois,
+  type ProduitsBoisRequestInput,
+} from '../levers/produits-bois/index.ts'
+import {
   estimate as estimateReseauxChaleur,
   type ReseauxChaleurRequestInput,
 } from '../levers/reseaux-chaleur/index.ts'
@@ -19,6 +23,7 @@ import { parseRequest } from './parse-request.ts'
 type RequestInput =
   | BatimentsMachinesAgricolesRequestInput
   | HaiesRequestInput
+  | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
 
 type Lever = RequestInput['id']
@@ -42,6 +47,11 @@ function createEstimator(dataSource: DataSource): Estimator {
           ),
         )
         .with({ id: 'haies' }, (haiesRequest) => ok(estimateHaies(haiesRequest)))
+        .with({ id: 'produits_bois' }, (produitsBoisRequest) =>
+          estimateOnComputedLevel(produitsBoisRequest, (computedLevelRequest) =>
+            estimateProduitsBois(computedLevelRequest, context),
+          ),
+        )
         .with({ id: 'reseaux_chaleur' }, (reseauxChaleurRequest) =>
           estimateOnComputedLevel(reseauxChaleurRequest, (computedLevelRequest) =>
             estimateReseauxChaleur(computedLevelRequest, context),
