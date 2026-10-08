@@ -129,9 +129,9 @@ export default tseslint.config(
               name,
               message: 'domain performs no I/O: put it behind a port.',
             })),
-            ...['zod', 'csv-parse', 'csv-parse/sync'].map((name) => ({
+            ...['csv-parse', 'csv-parse/sync'].map((name) => ({
               name,
-              message: 'domain depends on nothing but its own types and BigNumber.',
+              message: 'domain reads no files: put parsing behind a port.',
             })),
           ],
           patterns: [
