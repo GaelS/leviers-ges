@@ -54,6 +54,27 @@ describe('createEstimationContext', () => {
     expect(loads).toEqual(['territoires/communes'])
   })
 
+  it.each([
+    ['01001', '84'],
+    ['75056', '11'],
+  ])('donne la région de la commune %s : %s', (commune, region) => {
+    const { getRegionByCommune } = createEstimationContext(toCountingDataSource([]))
+    expect(getRegionByCommune(commune)._unsafeUnwrap()).toBe(region)
+  })
+
+  it('ne donne pas de région à une commune absente de la géographie', () => {
+    const { getRegionByCommune } = createEstimationContext(toCountingDataSource([]))
+    expect(getRegionByCommune('99999')._unsafeUnwrap()).toBeUndefined()
+  })
+
+  it('renvoie l’erreur de la source quand les communes sont absentes pour une région', () => {
+    const { getRegionByCommune } = createEstimationContext(dataSourceFromDatasets({}))
+    expect(getRegionByCommune('01001')._unsafeUnwrapErr()).toMatchObject({
+      kind: 'invalid_dataset',
+      dataset: 'territoires/communes',
+    })
+  })
+
   it('renvoie un territoire inconnu tel quel', () => {
     const { getCommunesOf } = createEstimationContext(toCountingDataSource([]))
     expect(getCommunesOf(toTerritory('region', '99'))._unsafeUnwrapErr()).toEqual({

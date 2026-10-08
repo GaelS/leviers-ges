@@ -64,6 +64,18 @@ describe('buildTerritoryIndex', () => {
     expect(everyEpciCommune.toSorted()).toEqual(['01001', '01002', '69001', '69002'])
   })
 
+  it.each([
+    ['01001', '84'],
+    ['69002', '84'],
+    ['2B033', '94'],
+  ])('la commune %s est dans la région %s', (commune, region) => {
+    expect(index.regionOf(commune)).toBe(region)
+  })
+
+  it('ne donne pas de région à une commune absente de la géographie', () => {
+    expect(index.regionOf('99999')).toBeUndefined()
+  })
+
   it('trie les communes par code quel que soit l’ordre d’entrée', () => {
     const shuffled = buildTerritoryIndex(COMMUNES.toReversed())
     expect(shuffled.communesOf(territory('region', '84'))._unsafeUnwrap()).toEqual([
