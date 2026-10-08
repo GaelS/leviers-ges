@@ -1,10 +1,13 @@
-import { Result, err, ok } from 'neverthrow'
 import { sortBy } from 'es-toolkit'
+import { Result, ok } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
-import { parseBig, sum, toBig } from '../../domain/big-number.ts'
-import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.ts'
+import { sum, toBig } from '../../domain/big-number.ts'
+import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
+import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
+import { SECRET_MARKER } from '../secret-statistic.ts'
+import { toCsvText } from '../to-csv-text.ts'
 
 type FactorSource = 'fcu' | 'sdes'
 
@@ -34,12 +37,6 @@ type DistrictRange = { readonly first: string; readonly last: string; readonly c
 const sdesDataset = 'sdes-chaleur-commune-2024'
 const fcuDataset = 'fcu-reseaux-chaleur'
 
-// Source : SDES, DiDo jeu 6102491997d9292269ce2d70 : la valeur « secret » remplace une livraison couverte par le secret statistique
-const SECRET_MARKER = 'secret'
-
-// Source : src/infrastructure/csv/validate-rows.ts : le chargeur CSV refuse plus de 12 décimales (excessPrecisionPattern)
-const MAX_DECIMAL_PLACES = 12
-
 // Source : data/reseaux-chaleur/manifest.json, colonnes de networks.csv
 const NETWORKS_COLUMNS = [
   'network_id',
@@ -58,29 +55,6 @@ const DISTRICT_RANGES: readonly DistrictRange[] = [
 
 // Source : Insee, code officiel géographique : un code de commune ou d'arrondissement numérique compte 5 chiffres
 const NUMERIC_COMMUNE_CODE = /^\d{5}$/
-
-// Source : RFC 4180 : ces caractères obligent à protéger un champ, que ce générateur ne sait pas faire
-const UNSAFE_CSV_FIELD = /[",\r\n]/
-
-function roundToLoaderPrecision({
-  dataset,
-  column,
-  text,
-}: {
-  dataset: string
-  column: string
-  text: string
-}): Result<string, InvalidDataset> {
-  return parseBig(text)
-    .map((value) => value.decimalPlaces(MAX_DECIMAL_PLACES).toFixed())
-    .mapErr(() =>
-      invalidDataset({
-        dataset,
-        reason: 'unreadable',
-        detail: `${column}=${text} is not a decimal number`,
-      }),
-    )
-}
 
 function toCityCode(communeCode: string): string {
   if (!NUMERIC_COMMUNE_CODE.test(communeCode)) return communeCode
@@ -179,31 +153,18 @@ function readNetworkRecords({
     )
 }
 
-function toCsvLine(fields: readonly string[]): Result<string, InvalidDataset> {
-  const unsafeField = fields.find((field) => UNSAFE_CSV_FIELD.test(field))
-  return unsafeField === undefined
-    ? ok(fields.join(','))
-    : err(
-        invalidDataset({
-          dataset: sdesDataset,
-          reason: 'malformed_csv',
-          detail: `field ${unsafeField} needs CSV quoting`,
-        }),
-      )
-}
-
 function toCsv(networks: readonly Network[]): Result<string, InvalidDataset> {
-  const lines = [
-    NETWORKS_COLUMNS,
-    ...networks.map(({ networkId, communeCode, deliveredMwh, emissionFactor, factorSource }) => [
+  return toCsvText({
+    dataset: sdesDataset,
+    columns: NETWORKS_COLUMNS,
+    rows: networks.map(({ networkId, communeCode, deliveredMwh, emissionFactor, factorSource }) => [
       networkId,
       communeCode,
       deliveredMwh,
       emissionFactor,
       factorSource,
     ]),
-  ]
-  return Result.combine(lines.map(toCsvLine)).map((csvLines) => `${csvLines.join('\n')}\n`)
+  })
 }
 
 function buildNetworks({

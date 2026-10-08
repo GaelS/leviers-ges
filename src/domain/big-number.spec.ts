@@ -1,6 +1,13 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { numberToDecimalText, parseBig, roundOutput, sum, toBig } from './big-number.ts'
+import {
+  numberToDecimalText,
+  parseBig,
+  parseBigWithExponent,
+  roundOutput,
+  sum,
+  toBig,
+} from './big-number.ts'
 
 describe('big-number', () => {
   it('0.1 + 0.2 vaut exactement 0.3', () => {
@@ -36,6 +43,23 @@ describe('big-number', () => {
   it.each(['0', '-1', '1.5', '56.25'])('parseBig accepte %s', (value) => {
     expect(parseBig(value)._unsafeUnwrap().toFixed()).toBe(value)
   })
+
+  it.each([
+    ['1e3', '1000'],
+    ['5.8370206071839403E-2', '0.058370206071839403'],
+    ['2.5E+2', '250'],
+    ['-1e-2', '-0.01'],
+    ['56.25', '56.25'],
+  ])('parseBigWithExponent accepte %s, soit %s', (value, expected) => {
+    expect(parseBigWithExponent(value)._unsafeUnwrap().toFixed()).toBe(expected)
+  })
+
+  it.each(['0x1F', ' 1.5', '+1.5', 'NaN', 'Infinity', '1_0', '.5', '', '1e', 'e3', '1e+'])(
+    'parseBigWithExponent refuse %j',
+    (value) => {
+      expect(parseBigWithExponent(value)._unsafeUnwrapErr()).toBe('not_a_number')
+    },
+  )
 
   it.each([
     [1, '1'],
