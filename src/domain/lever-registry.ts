@@ -96,5 +96,9 @@ function isComputed(status: Status): boolean {
     .exhaustive()
 }
 
-export { getStatus, isComputed, LEVERS }
+function isComputedLevel<L extends LeverId>(lever: L, level: Level): level is ComputedLevels<L> {
+  return isComputed(getStatus({ lever, level }))
+}
+
+export { getStatus, isComputed, isComputedLevel, LEVERS }
 export type { ComputedLevels, LeverId, Status }
