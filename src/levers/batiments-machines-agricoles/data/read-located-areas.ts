@@ -1,7 +1,7 @@
 import { Result } from 'neverthrow'
-import type { RegionLookup } from '../../application/estimate/estimation-context.ts'
-import type { DataRow, DataSource, DataSourceError } from '../../domain/data-source.ts'
-import { requireNonEmptyColumn, requireQuantityColumn } from '../../application/require-column.ts'
+import type { RegionLookup } from '../../../application/estimate/estimation-context.ts'
+import type { DataRow, DataSource, DataSourceError } from '../../../domain/data-source.ts'
+import { requireNonEmptyColumn, requireQuantityColumn } from '../../../application/require-column.ts'
 import type { LocatedArea } from './calculate-regional-area-shares.ts'
 
 type LocatableArea = Omit<LocatedArea, 'region'> & { readonly region: string | undefined }

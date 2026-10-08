@@ -1,5 +1,5 @@
-import { sum } from '../../domain/big-number.ts'
-import { quantity, type Fraction, type MegawattHours } from '../../domain/units.ts'
+import { sum } from '../../../domain/big-number.ts'
+import { quantity, type Fraction, type MegawattHours } from '../../../domain/units.ts'
 import type { AgriculturalConsumption } from './agricultural-consumption.ts'
 
 type RegionalPart = {

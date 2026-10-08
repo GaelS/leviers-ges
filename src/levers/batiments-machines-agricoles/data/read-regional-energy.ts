@@ -6,9 +6,9 @@ import {
   type DataSourceError,
   type InvalidDataset,
   type MissingData,
-} from '../../domain/data-source.ts'
-import { gigawattHoursToMegawattHours } from '../../domain/units.ts'
-import { requireNonEmptyColumn, requireQuantityColumn } from '../../application/require-column.ts'
+} from '../../../domain/data-source.ts'
+import { gigawattHoursToMegawattHours } from '../../../domain/units.ts'
+import { requireNonEmptyColumn, requireQuantityColumn } from '../../../application/require-column.ts'
 import type { AgriculturalConsumption } from './agricultural-consumption.ts'
 
 type RegionalEnergy = ReadonlyMap<string, AgriculturalConsumption>

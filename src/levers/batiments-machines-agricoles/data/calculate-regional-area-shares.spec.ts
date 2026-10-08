@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { quantity } from '../../domain/units.ts'
+import { quantity } from '../../../domain/units.ts'
 import { calculateRegionalAreaShares, type LocatedArea } from './calculate-regional-area-shares.ts'
 
 function area(commune: string, region: string, hectares: string): LocatedArea {
