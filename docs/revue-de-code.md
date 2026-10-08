@@ -55,6 +55,8 @@ Restent à la racine du levier : la requête, `calculate-<levier>-reduction.ts` 
 
 Un levier qui ne lit rien n'a pas de `data/`. Une constante sourcée vit à côté de la formule qui l'utilise.
 
+Une lecture reste dans le `data/` de son levier ; au deuxième levier qui l'utilise, elle monte dans `src/application/data/<concept>/`. Les lectures déjà partagées (`heat-networks`, `territory-index`) sont encore directement sous `src/application/` et rejoindront `data/` au prochain passage.
+
 Ne pas confondre avec le `data/` racine du dépôt : celui-ci contient les jeux (CSV et manifestes), l'autre le code qui les lit.
 
 ### 4. La méthodologie vit à côté du code
