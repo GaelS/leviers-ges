@@ -49,7 +49,7 @@ Règles communes à tous les leviers. Une fiche de levier ne les répète pas ; 
 
 ## Constantes et sources
 
-Chaque constante exportée est précédée d'un commentaire `Source :` qui cite le document, le tableau, la page ou la cellule d'où vient la valeur. C'est la seule exception à la règle « zéro commentaire » du dépôt, limitée aux constantes. Un test parcourt les fichiers et échoue si une constante exportée n'en porte pas.
+Chaque constante en majuscules, exportée ou locale, est précédée d'un commentaire `// Source :` qui cite le document, le tableau, la page ou la cellule d'où vient la valeur. C'est la seule exception à la règle « zéro commentaire » du dépôt, limitée aux constantes. La règle ESLint `local/constant-has-source` échoue si une constante n'en porte pas ; la revue vérifie que la source est exacte (voir `docs/revue-de-code.md`).
 
 ```ts
 // Source : Label bas carbone, méthode Haies, webinaire du 25/01/2021 p. 6 :
