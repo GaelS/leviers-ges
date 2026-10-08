@@ -11,7 +11,9 @@ type UnitName =
   | 'Hectares'
   | 'TCo2ePerKmPerYear'
   | 'MegawattHours'
+  | 'GigawattHours'
   | 'KgCo2ePerKwh'
+  | 'KgCo2ePerGigajoule'
   | 'TonnesCo2ePerYear'
 
 type Quantity<U extends UnitName> = BigNumber & { readonly unit: U }
@@ -23,11 +25,21 @@ type TonneKilometres = Quantity<'TonneKilometres'>
 type Hectares = Quantity<'Hectares'>
 type TCo2ePerKmPerYear = Quantity<'TCo2ePerKmPerYear'>
 type MegawattHours = Quantity<'MegawattHours'>
+type GigawattHours = Quantity<'GigawattHours'>
 type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
+type KgCo2ePerGigajoule = Quantity<'KgCo2ePerGigajoule'>
 type TonnesCo2ePerYear = Quantity<'TonnesCo2ePerYear'>
 
 function quantity<U extends UnitName>(value: string | bigint): Quantity<U> {
   return toBig(value) as Quantity<U>
+}
+
+// Source : BIPM, Le Système international d'unités (Brochure SI), 9e édition, préfixes SI :
+// giga = 10^9 et méga = 10^6, donc 1 GWh = 1 000 MWh
+const MEGAWATT_HOURS_PER_GIGAWATT_HOUR: BigNumber = toBig('1000')
+
+function gigawattHoursToMegawattHours(gigawattHours: GigawattHours): MegawattHours {
+  return quantity<'MegawattHours'>(gigawattHours.times(MEGAWATT_HOURS_PER_GIGAWATT_HOUR).toFixed())
 }
 
 function parseFraction(value: string): Result<Fraction, InvalidParameter> {
@@ -38,10 +50,12 @@ function parseFraction(value: string): Result<Fraction, InvalidParameter> {
   return ok(quantity<'Fraction'>(value))
 }
 
-export { parseFraction, quantity }
+export { gigawattHoursToMegawattHours, parseFraction, quantity }
 export type {
   Fraction,
+  GigawattHours,
   Hectares,
+  KgCo2ePerGigajoule,
   KgCo2ePerKwh,
   Kilometres,
   MegawattHours,

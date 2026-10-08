@@ -17,6 +17,7 @@ type UnknownTerritory = {
 interface TerritoryIndex {
   communesOf(territory: Territory<Level>): Result<readonly string[], UnknownTerritory>
   departementsOf(epci: Territory<'epci'>): Result<readonly string[], UnknownTerritory>
+  regionOf(commune: string): string | undefined
 }
 
 type CommunesByCode = ReadonlyMap<string, readonly Commune[]>
@@ -36,6 +37,8 @@ function buildTerritoryIndex(communes: readonly Commune[]): TerritoryIndex {
     epci: Map.groupBy(communes.filter(hasEpci), (commune) => commune.epci),
   }
 
+  const regionByCommune = new Map(communes.map((commune) => [commune.code, commune.region]))
+
   function communesInTerritory({
     level,
     code,
@@ -51,6 +54,7 @@ function buildTerritoryIndex(communes: readonly Commune[]): TerritoryIndex {
       communesInTerritory(epci).map((found) =>
         [...new Set(found.map((commune) => commune.departement))].toSorted(),
       ),
+    regionOf: (commune) => regionByCommune.get(commune),
   }
 }
 

@@ -89,6 +89,29 @@ Les sources sont versionnées avec leur empreinte dans le manifeste. Le script d
 
 Les imports relatifs portent l'extension `.ts`, jamais `.js`. Les scripts du dépôt sont en TypeScript.
 
+### 13. Un objet inconnu se valide par zod
+
+Pas de test d'objet écrit à la main (`isRecord`, `typeof input['id'] === 'string'`, `Object.hasOwn`). Une valeur de forme inconnue passe par un schéma zod (`safeParse`) : le schéma dit la forme attendue, le type en sort, l'erreur est typée.
+
+```ts
+function isRoutedLever(input: unknown): input is RequestInput {
+  return isRecord(input) && typeof input['id'] === 'string' && Object.hasOwn(routedLevers, input['id'])
+}
+```
+
+Le routage de `src/estimator/estimate.ts` valide l'`id` par un schéma zod (`routedLeverSchema`), à la place du garde ci-dessus.
+
+### 14. Une écriture évidente plutôt qu'un tableau d'appels
+
+Un résultat se construit en constantes nommées, une par composante, puis on les assemble. Pas de tableau littéral qui répète un appel avec d'autres arguments, où les composantes n'ont pas de nom.
+
+```ts
+const electricityAvoidedEmissions = calculateAvoidedEmissions({ ... })
+const naturalGasAvoidedEmissions = calculateAvoidedEmissions({ ... })
+const avoidedEmissionsByVector = [electricityAvoidedEmissions, naturalGasAvoidedEmissions]
+const totalAvoidedEmissions = sum(avoidedEmissionsByVector)
+```
+
 ## Liste de contrôle
 
 - [ ] Un appel qui revient a un nom (1)
@@ -103,3 +126,5 @@ Les imports relatifs portent l'extension `.ts`, jamais `.js`. Les scripts du dé
 - [ ] Les sources sont vraies et les choix non validés sont dits (10)
 - [ ] Les données se reconstruisent depuis le dépôt (11)
 - [ ] Imports en `.ts` et scripts en TypeScript (12)
+- [ ] Un objet inconnu se valide par zod, pas par un test écrit à la main (13)
+- [ ] Un résultat se construit en constantes nommées, pas en tableau d'appels (14)
