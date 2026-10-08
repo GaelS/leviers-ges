@@ -9,7 +9,11 @@ import {
   createTemporaryCsvDataSource,
   type DatasetFixture,
 } from '../../testing/temporary-csv-data-source.ts'
-import type { BatimentsMachinesAgricolesRequestInput } from './batiments-machines-agricoles-request.ts'
+import {
+  batimentsMachinesAgricolesRequestSchema,
+  type BatimentsMachinesAgricolesRequest,
+  type BatimentsMachinesAgricolesRequestInput,
+} from './batiments-machines-agricoles-request.ts'
 import { estimate as estimateBatimentsMachinesAgricoles } from './estimate.ts'
 
 type Fixtures = Readonly<Record<string, DatasetFixture>>
@@ -113,12 +117,12 @@ function toFixtures({
 }
 
 type Estimator = (
-  input: BatimentsMachinesAgricolesRequestInput,
+  request: BatimentsMachinesAgricolesRequest,
 ) => Result<EstimateResult, EstimationError>
 
 function toEstimator(dataSource: DataSource): Estimator {
   const context = createEstimationContext(dataSource)
-  return (input) => estimateBatimentsMachinesAgricoles(input, context)
+  return (request) => estimateBatimentsMachinesAgricoles(request, context)
 }
 
 const FULL: Reductions = {
@@ -139,8 +143,12 @@ function request(
   level: Level,
   code: string,
   parameters: Reductions = FULL,
-): BatimentsMachinesAgricolesRequestInput {
-  return { id: 'batiments_machines_agricoles', territory: { level, code }, parameters }
+): BatimentsMachinesAgricolesRequest {
+  return batimentsMachinesAgricolesRequestSchema.parse({
+    id: 'batiments_machines_agricoles',
+    territory: { level, code },
+    parameters,
+  })
 }
 
 const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
@@ -259,13 +267,6 @@ describe('estimate, batiments_machines_agricoles', () => {
     )
   })
 
-  it('accepte une fraction en nombre', () => {
-    const parameters: Reductions = { ...NONE, petroleumProductsReductionFraction: 0.5 }
-    expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '14040',
-    )
-  })
-
   it('un territoire sans réseau de chaleur garde les trois autres vecteurs et une chaleur nulle', () => {
     const heatOnly: Reductions = { ...NONE, heatReductionFraction: '1' }
     expect(estimate(request('departement', '75', heatOnly))._unsafeUnwrap().reduction.toFixed()).toBe('0')
@@ -319,40 +320,6 @@ describe('estimate, batiments_machines_agricoles', () => {
       kind: 'missing_data',
       dataset: 'batiments-machines-agricoles/regions',
       key: '84',
-    })
-  })
-
-  it.each([
-    ['electricityReductionFraction'],
-    ['naturalGasReductionFraction'],
-    ['petroleumProductsReductionFraction'],
-    ['heatReductionFraction'],
-  ] as const)('refuse %s hors de 0 à 1', (parameter) => {
-    const parameters: Reductions = { ...FULL, [parameter]: '1.01' }
-    expect(estimate(request('region', '84', parameters))._unsafeUnwrapErr()).toEqual({
-      kind: 'invalid_request',
-      issues: [{ parameter: `parameters.${parameter}`, message: 'must be between 0 and 1' }],
-    })
-  })
-
-  it('refuse une requête à laquelle il manque un vecteur', () => {
-    const incomplete = {
-      electricityReductionFraction: '1',
-      naturalGasReductionFraction: '1',
-      petroleumProductsReductionFraction: '1',
-    }
-    const input = request('region', '84', incomplete as Reductions)
-    expect(estimate(input)._unsafeUnwrapErr()).toMatchObject({
-      kind: 'invalid_request',
-      issues: [{ parameter: 'parameters.heatReductionFraction' }],
-    })
-  })
-
-  it('refuse un paramètre inconnu', () => {
-    const input = request('region', '84', { ...FULL, wood: '1' } as Reductions)
-    expect(estimate(input)._unsafeUnwrapErr()).toMatchObject({
-      kind: 'invalid_request',
-      issues: [{ parameter: 'parameters.wood' }],
     })
   })
 

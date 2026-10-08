@@ -40,7 +40,7 @@ Le calcul pur, la lecture des données, l'orchestration et le schéma de la requ
 
 ### 3. Un levier, un dossier, un barrel
 
-Le dossier `src/levers/<levier>/` regroupe tout ce qui le concerne, méthodologie comprise. Son `index.ts` n'expose que `estimate` et le type de son entrée. Un levier n'importe jamais un autre levier : ce qui se partage monte dans `domain` ou `application`.
+Le dossier `src/levers/<levier>/` regroupe tout ce qui le concerne, méthodologie comprise. Son `index.ts` n'expose que `estimate`, le schéma de sa requête et le type de son entrée. Un levier n'importe jamais un autre levier : ce qui se partage monte dans `domain` ou `application`.
 
 **Les entrées lues vivent dans `data/`.**
 
@@ -116,7 +116,7 @@ function isRoutedLever(input: unknown): input is RequestInput {
 }
 ```
 
-Le routage de `src/estimator/estimate.ts` valide l'`id` par un schéma zod (`routedLeverSchema`), à la place du garde ci-dessus.
+Le routage valide la requête par une `discriminatedUnion` zod (`src/estimator/parse-request.ts`), à la place du garde ci-dessus.
 
 ### 14. Une écriture évidente plutôt qu'un tableau d'appels
 
@@ -129,11 +129,15 @@ const avoidedEmissionsByVector = [electricityAvoidedEmissions, naturalGasAvoided
 const totalAvoidedEmissions = sum(avoidedEmissionsByVector)
 ```
 
+### 15. L'inconnu s'arrête à la frontière du package
+
+La requête est validée une seule fois, dans `src/estimator/`. Au-delà, tout est typé : `estimate` d'un levier reçoit la sortie de son schéma (`z.output`), avec ses quantités et son code de territoire déjà brandés, et ne contient aucun `safeParse`. Un test de levier construit sa requête avec `<levier>RequestSchema.parse(...)` ; les cas de requête invalide se testent à l'estimateur.
+
 ## Liste de contrôle
 
 - [ ] Un appel qui revient a un nom (1)
 - [ ] Chaque fichier a une seule préoccupation (2)
-- [ ] Le barrel n'expose que `estimate` et son type d'entrée (3)
+- [ ] Le barrel n'expose que `estimate`, le schéma de sa requête et son type d'entrée (3)
 - [ ] Les lectures et la préparation des entrées sont dans `data/`, la formule à la racine (3)
 - [ ] La méthodologie est à côté du code (4)
 - [ ] Pas de fabrique sans besoin (5)
@@ -146,3 +150,4 @@ const totalAvoidedEmissions = sum(avoidedEmissionsByVector)
 - [ ] Imports en `.ts` et scripts en TypeScript (12)
 - [ ] Un objet inconnu se valide par zod, pas par un test écrit à la main (13)
 - [ ] Un résultat se construit en constantes nommées, pas en tableau d'appels (14)
+- [ ] `estimate` d'un levier ne valide rien : l'inconnu s'arrête à `src/estimator/` (15)

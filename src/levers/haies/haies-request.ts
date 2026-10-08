@@ -8,5 +8,7 @@ const haiesRequestSchema = z.strictObject({
 
 type HaiesRequestInput = z.input<typeof haiesRequestSchema>
 
+type HaiesRequest = z.output<typeof haiesRequestSchema>
+
 export { haiesRequestSchema }
-export type { HaiesRequestInput }
+export type { HaiesRequest, HaiesRequestInput }

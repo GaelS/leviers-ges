@@ -16,5 +16,7 @@ type BatimentsMachinesAgricolesRequestInput = z.input<
   typeof batimentsMachinesAgricolesRequestSchema
 >
 
+type BatimentsMachinesAgricolesRequest = z.output<typeof batimentsMachinesAgricolesRequestSchema>
+
 export { batimentsMachinesAgricolesRequestSchema }
-export type { BatimentsMachinesAgricolesRequestInput }
+export type { BatimentsMachinesAgricolesRequest, BatimentsMachinesAgricolesRequestInput }

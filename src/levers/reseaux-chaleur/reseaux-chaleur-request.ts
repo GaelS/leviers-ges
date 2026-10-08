@@ -9,5 +9,7 @@ const reseauxChaleurRequestSchema = z.strictObject({
 
 type ReseauxChaleurRequestInput = z.input<typeof reseauxChaleurRequestSchema>
 
+type ReseauxChaleurRequest = z.output<typeof reseauxChaleurRequestSchema>
+
 export { reseauxChaleurRequestSchema }
-export type { ReseauxChaleurRequestInput }
+export type { ReseauxChaleurRequest, ReseauxChaleurRequestInput }

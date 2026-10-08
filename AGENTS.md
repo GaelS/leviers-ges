@@ -21,8 +21,8 @@ Une PR passe les quatre premières.
 | Dossier | Contenu |
 |---|---|
 | `src/levers/<levier>/` | tout un levier : requête, calcul pur, lecture des données, `estimate`, tests, `methodology.md` |
-| `src/estimator/` | `createEstimator(dataSource)` : choisit le levier par son `id` |
-| `src/application/` | aides partagées : validation de la requête, contexte d'estimation (`getCommunesOf`), erreurs, index des territoires |
+| `src/estimator/` | `createEstimator(dataSource)` : valide la requête (seul endroit où l'inconnu entre), vérifie que le niveau est calculé, choisit le levier par son `id` |
+| `src/application/` | aides partagées : contexte d'estimation (`getCommunesOf`, `getRegionByCommune`), erreurs, index des territoires |
 | `src/domain/` | noyau : `BigNumber`, unités brandées, territoires, registre `LEVERS` (21 leviers × 3 niveaux), port `DataSource` |
 | `src/infrastructure/csv/` | adaptateur CSV : manifeste, empreintes sha256, contrôles au chargement |
 | `src/dataset-builders/` | scripts TypeScript qui reconstruisent un jeu de `data/` depuis ses sources |
@@ -51,7 +51,8 @@ Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une qu
 
 - Aucune valeur en `number` dans une formule : `BigNumber`, construit depuis un texte (`quantity`, `toBig`). Une opération `BigNumber` par expression, chaque composante nommée.
 - Zéro commentaire, sauf `// Source :` au-dessus de chaque constante en majuscules, qui cite le document, la page ou la cellule. Un choix sans source le dit : « choix de conception, non validé ».
-- Un levier ne s'importe que par son `index.ts`, qui n'expose que `estimate` et le type de son entrée. Un levier n'importe pas un autre levier.
+- Un levier ne s'importe que par son `index.ts`, qui n'expose que `estimate`, le schéma de sa requête et le type de son entrée. Un levier n'importe pas un autre levier.
+- L'inconnu s'arrête à `src/estimator/` : la requête y est validée une seule fois (`parse-request.ts`). `estimate` d'un levier reçoit une requête déjà typée et ne valide rien.
 - `calculate-*.ts` est pur : il reçoit des valeurs, jamais une source de données.
 - Imports relatifs en `.ts`. Scripts en TypeScript, pas de Python.
 - Une PR : un seul type de changement, un test rouge avant un correctif, une liste « À arbitrer » dans la description.
@@ -61,7 +62,7 @@ Le détail est dans `docs/methodology/conventions.md` (calcul, unités, données
 ## Ajouter un levier
 
 1. Créer `src/levers/<id>/` avec `<id>-request.ts` (schéma `zod`), `calculate-<…>.ts`, `estimate.ts`, `index.ts` et les tests.
-2. Brancher le levier dans `src/estimator/estimate.ts` : l'union `RequestInput`, `routedLevers`, le `match`. Le compilateur refuse un levier oublié.
+2. Brancher le levier dans `src/estimator/` : son schéma dans la `discriminatedUnion` de `parse-request.ts`, puis l'union `RequestInput` et le `match` de `estimate.ts`. Le compilateur refuse un levier oublié.
 3. S'il lit des données : un dossier `data/<jeu>/` avec manifeste, sources versionnées et constructeur dans `src/dataset-builders/`. Se tester avec `createTemporaryCsvDataSource`.
 4. Écrire `src/levers/<id>/methodology.md` : formule, entrées, constantes avec leur source, données, cas de test chiffrés, limites.
 5. Reporter dans `docs/methodology/` les hypothèses nommées et les corrections de formule qui concernent le levier.
