@@ -6,8 +6,8 @@ import {
   type EstimateResult,
 } from '../../application/estimate/estimate-result.ts'
 import { parseTerritorialLeverRequest } from '../../application/estimate/parse-request.ts'
+import { readHeatNetworks } from '../../application/heat-networks/read-heat-networks.ts'
 import { calculateReseauxChaleurReduction } from './calculate-reseaux-chaleur-reduction.ts'
-import { readHeatNetworks } from './read-heat-networks.ts'
 import {
   reseauxChaleurRequestSchema,
   type ReseauxChaleurRequestInput,

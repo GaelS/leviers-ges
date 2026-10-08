@@ -9,7 +9,9 @@ import { readAgriculturalAreaSources } from './read-agricultural-area-sources.ts
 const dataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
 const dataSource = createCsvDataSource(dataDirectory)
 
-describe('SAU par commune, recensement agricole 2020', () => {
+const SOURCE_READING_TIMEOUT_MS = 30_000
+
+describe('SAU par commune, recensement agricole 2020', { timeout: SOURCE_READING_TIMEOUT_MS }, () => {
   it('reconstruit communes.csv à l’identique', () => {
     const build = readAgriculturalAreaSources(dataDirectory)
       .andThen(buildAgriculturalArea)

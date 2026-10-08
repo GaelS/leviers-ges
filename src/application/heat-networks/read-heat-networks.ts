@@ -1,12 +1,12 @@
 import { Result } from 'neverthrow'
-import { requireColumn, requireQuantityColumn } from '../../application/require-column.ts'
 import type {
   DataRow,
   DataSource,
   DataSourceError,
   InvalidDataset,
 } from '../../domain/data-source.ts'
-import type { HeatNetwork } from './calculate-reseaux-chaleur-reduction.ts'
+import type { HeatNetwork } from '../../domain/heat-network.ts'
+import { requireColumn, requireQuantityColumn } from '../require-column.ts'
 
 const networksDataset = 'reseaux-chaleur/networks'
 
