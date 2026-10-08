@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { numberToDecimalText, parseBig, roundOutput, sum, toBig } from './big-number.js'
+import { numberToDecimalText, parseBig, roundOutput, sum, toBig } from './big-number.ts'
 
 describe('big-number', () => {
   it('0.1 + 0.2 vaut exactement 0.3', () => {

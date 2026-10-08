@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import { getStatus, isComputed, LEVERS, type ComputedLevels, type Status } from './lever-registry.js'
-import type { Level } from './territory.js'
+import { getStatus, isComputed, LEVERS, type ComputedLevels, type Status } from './lever-registry.ts'
+import type { Level } from './territory.ts'
 
 const levers = Object.entries(LEVERS)
 const statuses = levers.flatMap(([, byLevel]) => Object.values<Status>(byLevel))

@@ -1,5 +1,5 @@
 import { err, ok, type Result } from 'neverthrow'
-import type { Level, Territory } from './territory.js'
+import type { Level, Territory } from './territory.ts'
 
 type Commune = {
   readonly code: string

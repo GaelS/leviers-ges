@@ -1,12 +1,12 @@
 import { err, type Result } from 'neverthrow'
 import { match } from 'ts-pattern'
-import type { EstimateResult } from '../application/estimate/estimate-result.js'
-import type { EstimationContext } from '../application/estimate/estimation-context.js'
-import { invalidRequest, type EstimationError } from '../application/estimate/estimation-error.js'
-import { createTerritoryIndexProvider } from '../application/territory-index/create-territory-index-provider.js'
-import type { DataSource } from '../domain/data-source.js'
-import { estimate as estimateHaies } from '../levers/haies/index.js'
-import { estimate as estimateReseauxChaleur } from '../levers/reseaux-chaleur/index.js'
+import type { EstimateResult } from '../application/estimate/estimate-result.ts'
+import type { EstimationContext } from '../application/estimate/estimation-context.ts'
+import { invalidRequest, type EstimationError } from '../application/estimate/estimation-error.ts'
+import { createTerritoryIndexProvider } from '../application/territory-index/create-territory-index-provider.ts'
+import type { DataSource } from '../domain/data-source.ts'
+import { estimate as estimateHaies } from '../levers/haies/index.ts'
+import { estimate as estimateReseauxChaleur } from '../levers/reseaux-chaleur/index.ts'
 
 type RequestInput =
   | Parameters<typeof estimateHaies>[0]

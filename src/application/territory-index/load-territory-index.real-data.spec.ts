@@ -1,8 +1,8 @@
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.js'
-import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.js'
-import { loadTerritoryIndex } from './load-territory-index.js'
+import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.ts'
+import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.ts'
+import { loadTerritoryIndex } from './load-territory-index.ts'
 
 const dataSource = createCsvDataSource(join(import.meta.dirname, '..', '..', '..', 'data'))
 const index = loadTerritoryIndex(dataSource)._unsafeUnwrap()

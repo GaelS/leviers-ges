@@ -1,8 +1,8 @@
 import { Result, err, ok } from 'neverthrow'
-import { parseBig, sum } from '../../domain/big-number.js'
-import type { DataRow } from '../../domain/data-source.js'
-import type { DatasetEntry } from './manifest.js'
-import { violation, type Violation } from './violation.js'
+import { parseBig, sum } from '../../domain/big-number.ts'
+import type { DataRow } from '../../domain/data-source.ts'
+import type { DatasetEntry } from './manifest.ts'
+import { violation, type Violation } from './violation.ts'
 
 const excessPrecisionPattern = /^-?\d+\.\d{13,}$/
 const decimalCommaPattern = /^-?\d+,\d+$/

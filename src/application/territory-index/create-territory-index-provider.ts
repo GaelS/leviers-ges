@@ -1,7 +1,7 @@
 import { ok, type Result } from 'neverthrow'
-import type { DataSource, DataSourceError } from '../../domain/data-source.js'
-import type { TerritoryIndex } from '../../domain/territory-index.js'
-import { loadTerritoryIndex } from './load-territory-index.js'
+import type { DataSource, DataSourceError } from '../../domain/data-source.ts'
+import type { TerritoryIndex } from '../../domain/territory-index.ts'
+import { loadTerritoryIndex } from './load-territory-index.ts'
 
 function createTerritoryIndexProvider(
   dataSource: DataSource,

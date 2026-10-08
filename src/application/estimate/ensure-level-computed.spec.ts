@@ -1,6 +1,6 @@
 import { ok } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
-import { ensureLevelComputed } from './ensure-level-computed.js'
+import { ensureLevelComputed } from './ensure-level-computed.ts'
 
 describe('ensureLevelComputed', () => {
   it.each(['region', 'departement', 'epci'] as const)('accepte haies au niveau %s', (level) => {

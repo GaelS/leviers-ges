@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { fractionSchema, territorySchema } from '../../application/estimate/shared-schemas.js'
+import { fractionSchema, territorySchema } from '../../application/estimate/shared-schemas.ts'
 
 const reseauxChaleurRequestSchema = z.strictObject({
   id: z.literal('reseaux_chaleur'),

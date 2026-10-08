@@ -1,7 +1,7 @@
 import type BigNumber from 'bignumber.js'
 import { err, ok, type Result } from 'neverthrow'
-import { parseBig, toBig } from './big-number.js'
-import { type InvalidParameter, invalidParameter } from './invalid-parameter.js'
+import { parseBig, toBig } from './big-number.ts'
+import { type InvalidParameter, invalidParameter } from './invalid-parameter.ts'
 
 type UnitName =
   | 'Fraction'

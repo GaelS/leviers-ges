@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checkControlTotals, indexByKey } from './validate-rows.js'
+import { checkControlTotals, indexByKey } from './validate-rows.ts'
 
 describe('validate-rows', () => {
   it('un total de contrôle sur une colonne absente des lignes est refusé', () => {

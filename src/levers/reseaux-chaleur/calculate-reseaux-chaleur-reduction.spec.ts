@@ -1,10 +1,10 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { quantity } from '../../domain/units.js'
+import { quantity } from '../../domain/units.ts'
 import {
   calculateReseauxChaleurReduction,
   type HeatNetwork,
-} from './calculate-reseaux-chaleur-reduction.js'
+} from './calculate-reseaux-chaleur-reduction.ts'
 
 function network(deliveredMwh: string, emissionFactor: string): HeatNetwork {
   return {

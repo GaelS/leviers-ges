@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { levels, territoryCodeSchema } from './territory.js'
+import { levels, territoryCodeSchema } from './territory.ts'
 
 describe('territory', () => {
   it('compte trois niveaux', () => {

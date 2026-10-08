@@ -1,12 +1,12 @@
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { sum, toBig } from '../../domain/big-number.js'
-import type { DataRow } from '../../domain/data-source.js'
-import type { Level } from '../../domain/territory.js'
-import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.js'
-import { estimationContextOf } from '../../testing/estimation-context-of.js'
-import { estimate } from './estimate.js'
-import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.js'
+import { sum, toBig } from '../../domain/big-number.ts'
+import type { DataRow } from '../../domain/data-source.ts'
+import type { Level } from '../../domain/territory.ts'
+import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.ts'
+import { estimationContextOf } from '../../testing/estimation-context-of.ts'
+import { estimate } from './estimate.ts'
+import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.ts'
 
 const dataSource = createCsvDataSource(join(import.meta.dirname, '..', '..', '..', 'data'))
 const context = estimationContextOf(dataSource)

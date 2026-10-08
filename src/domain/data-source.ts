@@ -1,5 +1,5 @@
 import type { Result } from 'neverthrow'
-import type { Level, Territory } from './territory.js'
+import type { Level, Territory } from './territory.ts'
 
 type DataRow = Readonly<Record<string, string>>
 

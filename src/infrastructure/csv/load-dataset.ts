@@ -4,17 +4,17 @@ import { join } from 'node:path'
 import { parse } from 'csv-parse/sync'
 import { Result, err, ok } from 'neverthrow'
 import { z } from 'zod'
-import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.js'
-import { findDatasetEntry, type DatasetEntry } from './manifest.js'
-import type { Level } from '../../domain/territory.js'
+import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.ts'
+import { findDatasetEntry, type DatasetEntry } from './manifest.ts'
+import type { Level } from '../../domain/territory.ts'
 import {
   checkCells,
   checkColumns,
   checkControlTotals,
   checkNotEmpty,
   indexByKey,
-} from './validate-rows.js'
-import { violation, type Violation } from './violation.js'
+} from './validate-rows.ts'
+import { violation, type Violation } from './violation.ts'
 
 type Dataset = {
   readonly level: Level | undefined

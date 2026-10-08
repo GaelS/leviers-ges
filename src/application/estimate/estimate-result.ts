@@ -1,5 +1,5 @@
-import { roundOutput } from '../../domain/big-number.js'
-import { quantity, type TonnesCo2ePerYear } from '../../domain/units.js'
+import { roundOutput } from '../../domain/big-number.ts'
+import { quantity, type TonnesCo2ePerYear } from '../../domain/units.ts'
 
 type EstimateResult = {
   readonly reduction: TonnesCo2ePerYear

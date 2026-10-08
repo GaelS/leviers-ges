@@ -1,9 +1,9 @@
 import { err } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
-import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.js'
-import { territoryCodeSchema } from '../../domain/territory.js'
-import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
-import { loadTerritoryIndex } from './load-territory-index.js'
+import { invalidDataset, type DataRow, type DataSource } from '../../domain/data-source.ts'
+import { territoryCodeSchema } from '../../domain/territory.ts'
+import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.ts'
+import { loadTerritoryIndex } from './load-territory-index.ts'
 
 function dataSourceOf(rows: readonly DataRow[]): DataSource {
   return dataSourceFromDatasets({ 'territoires/communes': rows })

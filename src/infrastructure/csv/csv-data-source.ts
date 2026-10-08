@@ -7,8 +7,8 @@ import {
   type DataSource,
   type DataSourceError,
   type InvalidDataset,
-} from '../../domain/data-source.js'
-import { loadDataset, type Dataset } from './load-dataset.js'
+} from '../../domain/data-source.ts'
+import { loadDataset, type Dataset } from './load-dataset.ts'
 
 const valueColumn = 'value'
 

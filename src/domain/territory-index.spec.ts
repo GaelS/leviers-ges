@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { territoryCodeSchema, type Level, type Territory } from './territory.js'
-import { buildTerritoryIndex, type Commune } from './territory-index.js'
+import { territoryCodeSchema, type Level, type Territory } from './territory.ts'
+import { buildTerritoryIndex, type Commune } from './territory-index.ts'
 
 const COMMUNES: readonly Commune[] = [
   { code: '01001', epci: '200069193', departement: '01', region: '84' },

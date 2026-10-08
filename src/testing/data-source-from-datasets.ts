@@ -1,5 +1,5 @@
 import { err, ok } from 'neverthrow'
-import { invalidDataset, type DataRow, type DataSource } from '../domain/data-source.js'
+import { invalidDataset, type DataRow, type DataSource } from '../domain/data-source.ts'
 
 function dataSourceFromDatasets(datasets: Readonly<Record<string, readonly DataRow[]>>): DataSource {
   const unusedError = invalidDataset({ dataset: 'unused', reason: 'unknown_dataset', detail: '' })
