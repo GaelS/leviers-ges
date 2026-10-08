@@ -1,5 +1,8 @@
 import { builtinModules } from 'node:module'
 import tseslint from 'typescript-eslint'
+import constantHasSource from './eslint-rules/constant-has-source.mjs'
+
+const localPlugin = { rules: { 'constant-has-source': constantHasSource } }
 
 const nodeBuiltinImports = builtinModules.flatMap((name) => [name, `node:${name}`])
 
@@ -119,7 +122,9 @@ export default tseslint.config(
   {
     files: productionFiles,
     ignores: testFiles,
+    plugins: { local: localPlugin },
     rules: {
+      'local/constant-has-source': 'error',
       '@typescript-eslint/no-magic-numbers': [
         'error',
         {
