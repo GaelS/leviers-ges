@@ -1,4 +1,4 @@
-import { err, type Result } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import type { z } from 'zod'
 import type { LeverId } from '../../domain/lever-registry.ts'
 import type { Level } from '../../domain/territory.ts'
@@ -9,8 +9,11 @@ import {
   type LevelNotComputed,
 } from './estimation-error.ts'
 
-type RequestEnvelope = {
+type LeverRequest = {
   readonly id: LeverId
+}
+
+type TerritorialLeverRequest = LeverRequest & {
   readonly territory: { readonly level: Level }
 }
 
@@ -19,10 +22,10 @@ function parameterOf(issue: z.core.$ZodIssue): string {
   return [...issue.path.map(String), ...unrecognizedKeys].join('.')
 }
 
-function parseLeverRequest<S extends z.ZodType<RequestEnvelope>>(
+function parseLeverRequest<S extends z.ZodType<LeverRequest>>(
   schema: S,
   input: z.input<S>,
-): Result<z.output<S>, InvalidRequest | LevelNotComputed> {
+): Result<z.output<S>, InvalidRequest> {
   const parsed = schema.safeParse(input)
   if (!parsed.success) {
     return err(
@@ -34,8 +37,16 @@ function parseLeverRequest<S extends z.ZodType<RequestEnvelope>>(
       ),
     )
   }
-  const { id, territory } = parsed.data
-  return ensureLevelComputed({ lever: id, level: territory.level }).map(() => parsed.data)
+  return ok(parsed.data)
 }
 
-export { parseLeverRequest }
+function parseTerritorialLeverRequest<S extends z.ZodType<TerritorialLeverRequest>>(
+  schema: S,
+  input: z.input<S>,
+): Result<z.output<S>, InvalidRequest | LevelNotComputed> {
+  return parseLeverRequest(schema, input).andThen((request) =>
+    ensureLevelComputed({ lever: request.id, level: request.territory.level }).map(() => request),
+  )
+}
+
+export { parseLeverRequest, parseTerritorialLeverRequest }

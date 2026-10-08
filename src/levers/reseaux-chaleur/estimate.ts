@@ -5,7 +5,7 @@ import {
   toEstimateResult,
   type EstimateResult,
 } from '../../application/estimate/estimate-result.ts'
-import { parseLeverRequest } from '../../application/estimate/parse-request.ts'
+import { parseTerritorialLeverRequest } from '../../application/estimate/parse-request.ts'
 import { calculateReseauxChaleurReduction } from './calculate-reseaux-chaleur-reduction.ts'
 import { readHeatNetworks } from './read-heat-networks.ts'
 import {
@@ -17,7 +17,7 @@ function estimate(
   input: ReseauxChaleurRequestInput,
   { dataSource, getCommunesOf }: EstimationContext,
 ): Result<EstimateResult, EstimationError> {
-  return parseLeverRequest(reseauxChaleurRequestSchema, input).andThen(({ territory, parameters }) =>
+  return parseTerritorialLeverRequest(reseauxChaleurRequestSchema, input).andThen(({ territory, parameters }) =>
     getCommunesOf(territory)
       .andThen((communes) => readHeatNetworks({ dataSource, communes }))
       .map((networks) =>
