@@ -32,6 +32,11 @@ describe('estimate', () => {
       expect(estimation.reduction.toFixed()).toBe(expected)
     })
 
+    it('admet des kilomètres négatifs : un arrachage net donne une réduction négative', () => {
+      const estimation = estimate(haiesRequest('-10'))._unsafeUnwrap()
+      expect(estimation.reduction.toFixed()).toBe('-11.7')
+    })
+
     it('n’annonce aucune hypothèse appliquée', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().appliedAssumptions).toEqual({})
     })

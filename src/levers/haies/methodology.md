@@ -14,7 +14,7 @@ La collectivité saisit le net elle-même. La formule est « directe » (`Gestio
 
 | Entrée | Unité | Bornes |
 |---|---|---|
-| `hedgeKmCreatedPerYear` | km/an | aucune dans le tableur |
+| `hedgeKmCreatedPerYear` | km/an | aucune dans le tableur ; une valeur négative (arrachage net) est admise et donne une réduction négative |
 ## Constantes
 
 | Constante | Valeur | Unité | Source |
