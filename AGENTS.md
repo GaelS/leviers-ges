@@ -40,8 +40,9 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 |---|---|---|
 | `batiments_machines_agricoles` | fait | `src/levers/batiments-machines-agricoles/methodology.md` |
 | `haies` | fait | `src/levers/haies/methodology.md` |
+| `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
-| les 14 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
+| les 13 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
 
 `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés (`not_computed` partout).
 

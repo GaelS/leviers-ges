@@ -4,6 +4,7 @@ import type { z } from 'zod'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
 import type { TonnesCo2ePerYear } from '../domain/units.ts'
 import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.ts'
+import { createTemporaryCsvDataSource } from '../testing/temporary-csv-data-source.ts'
 import { createEstimator, type Estimate, type RequestInput } from './estimate.ts'
 import type { requestSchema } from './parse-request.ts'
 
@@ -229,6 +230,69 @@ describe('estimate', () => {
       expect(estimate(request)._unsafeUnwrapErr()).toMatchObject({
         kind: 'invalid_request',
         issues: [{ parameter: 'parameters.wood' }],
+      })
+    })
+  })
+
+  describe('produits_bois', () => {
+    const withWood = createEstimator(
+      createTemporaryCsvDataSource({
+        'produits-bois/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [{ code_region: '84', logs_thousand_m3: '400', industrial_wood_thousand_m3: '100' }],
+        },
+        'produits-bois/constants': {
+          keyColumn: 'name',
+          rows: [
+            { name: 'national_logs_thousand_m3', value: '1000' },
+            { name: 'national_industrial_wood_thousand_m3', value: '500' },
+            { name: 'timber_products_carbon_tc', value: '1000' },
+            { name: 'industrial_products_carbon_tc', value: '2000' },
+          ],
+        },
+      }),
+    )
+
+    function produitsBoisRequest({
+      level = 'region',
+      increase = '0.12',
+    }: {
+      level?: string
+      increase?: string | number
+    }): RequestInput {
+      return {
+        id: 'produits_bois',
+        territory: { level, code: '84' },
+        parameters: { woodProductionIncrease: increase },
+      } as RequestInput
+    }
+
+    it('refuse l’EPCI, non calculé, sans lire de données', () => {
+      expect(withWood(produitsBoisRequest({ level: 'epci' }))._unsafeUnwrapErr()).toEqual({
+        kind: 'level_not_computed',
+        lever: 'produits_bois',
+        level: 'epci',
+      })
+    })
+
+    it('aiguille la région vers son levier : 40 % des grumes et 20 % du bois d’industrie à +12 %', () => {
+      expect(withWood(produitsBoisRequest({}))._unsafeUnwrap().reduction.toFixed()).toBe('352')
+    })
+
+    it.each([
+      [0.5, '1466.67'],
+      ['2', '5866.67'],
+      ['-0.3', '-880'],
+    ])('accepte la hausse %j, sans borne : %s tCO2e', (increase, expected) => {
+      const result = withWood(produitsBoisRequest({ increase }))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+    })
+
+    it('refuse une hausse qui n’est pas un nombre', () => {
+      expect(withWood(produitsBoisRequest({ increase: 'beaucoup' }))._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.woodProductionIncrease', message: 'must be a decimal number' }],
       })
     })
   })
