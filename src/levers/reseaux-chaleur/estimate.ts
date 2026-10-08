@@ -15,11 +15,10 @@ import {
 
 function estimate(
   input: ReseauxChaleurRequestInput,
-  { dataSource, territoryIndex }: EstimationContext,
+  { dataSource, getCommunesOf }: EstimationContext,
 ): Result<EstimateResult, EstimationError> {
   return parseLeverRequest(reseauxChaleurRequestSchema, input).andThen(({ territory, parameters }) =>
-    territoryIndex()
-      .andThen((index) => index.communesOf(territory))
+    getCommunesOf(territory)
       .andThen((communes) => readHeatNetworks({ dataSource, communes }))
       .map((networks) =>
         toEstimateResult(

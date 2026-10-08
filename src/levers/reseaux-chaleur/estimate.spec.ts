@@ -1,11 +1,11 @@
 import type { Result } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
+import { createEstimationContext } from '../../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../../application/estimate/estimate-result.ts'
 import type { EstimationError } from '../../application/estimate/estimation-error.ts'
 import type { DataRow, DataSource } from '../../domain/data-source.ts'
 import type { Level } from '../../domain/territory.ts'
 import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.ts'
-import { estimationContextOf } from '../../testing/estimation-context-of.ts'
 import { estimate as estimateReseauxChaleur } from './estimate.ts'
 import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.ts'
 
@@ -37,7 +37,7 @@ const NETWORKS: readonly DataRow[] = [
 type Estimator = (input: ReseauxChaleurRequestInput) => Result<EstimateResult, EstimationError>
 
 function createEstimator(dataSource: DataSource): Estimator {
-  const context = estimationContextOf(dataSource)
+  const context = createEstimationContext(dataSource)
   return (input) => estimateReseauxChaleur(input, context)
 }
 

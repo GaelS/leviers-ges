@@ -11,7 +11,7 @@ const testFiles = ['**/*.spec.ts', 'src/testing/**/*.ts']
 
 const leverBarrelPattern = {
   group: ['**/levers/*/*', '!**/levers/*/index.ts'],
-  message: 'a lever is imported through its index, which exposes estimate only.',
+  message: 'a lever is imported through its index, which exposes estimate and its input type only.',
 }
 
 const aboveApplicationPattern = {

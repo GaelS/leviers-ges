@@ -1,16 +1,16 @@
 import { err, type Result } from 'neverthrow'
 import { match } from 'ts-pattern'
+import { createEstimationContext } from '../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../application/estimate/estimate-result.ts'
-import type { EstimationContext } from '../application/estimate/estimation-context.ts'
 import { invalidRequest, type EstimationError } from '../application/estimate/estimation-error.ts'
-import { createTerritoryIndexProvider } from '../application/territory-index/create-territory-index-provider.ts'
 import type { DataSource } from '../domain/data-source.ts'
-import { estimate as estimateHaies } from '../levers/haies/index.ts'
-import { estimate as estimateReseauxChaleur } from '../levers/reseaux-chaleur/index.ts'
+import { estimate as estimateHaies, type HaiesRequestInput } from '../levers/haies/index.ts'
+import {
+  estimate as estimateReseauxChaleur,
+  type ReseauxChaleurRequestInput,
+} from '../levers/reseaux-chaleur/index.ts'
 
-type RequestInput =
-  | Parameters<typeof estimateHaies>[0]
-  | Parameters<typeof estimateReseauxChaleur>[0]
+type RequestInput = HaiesRequestInput | ReseauxChaleurRequestInput
 
 type Lever = RequestInput['id']
 
@@ -37,10 +37,7 @@ function invalidRequestShape(input: unknown): EstimationError {
 }
 
 function createEstimator(dataSource: DataSource): Estimator {
-  const context: EstimationContext = {
-    dataSource,
-    territoryIndex: createTerritoryIndexProvider(dataSource),
-  }
+  const context = createEstimationContext(dataSource)
 
   function estimate<E extends RequestInput>(input: E): Result<Estimate<E['id']>, EstimationError>
   function estimate(input: RequestInput): Result<Estimate, EstimationError> {
