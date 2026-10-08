@@ -1,11 +1,10 @@
 import type { Result } from 'neverthrow'
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import type { Level } from '../../domain/territory.js'
-import type { TonnesCo2ePerYear } from '../../domain/units.js'
-import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
-import { createEstimator, type Estimate } from './estimate.js'
-import type { EstimationError } from './estimation-error.js'
-import type { RequestInput } from './request.js'
+import type { EstimationError } from '../application/estimate/estimation-error.js'
+import type { Level } from '../domain/territory.js'
+import type { TonnesCo2ePerYear } from '../domain/units.js'
+import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.js'
+import { createEstimator, type Estimate, type RequestInput } from './estimate.js'
 
 type HaiesRequestInput = Extract<RequestInput, { id: 'haies' }>
 
@@ -49,12 +48,39 @@ describe('estimate', () => {
     })
   })
 
+  describe('reseaux_chaleur', () => {
+    it('aiguille la requête vers son levier avec la source de données', () => {
+      const withNetworks = createEstimator(
+        dataSourceFromDatasets({
+          'territoires/communes': [
+            { code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' },
+          ],
+          'reseaux-chaleur/networks': [
+            {
+              network_id: 'A',
+              commune_code: '01001',
+              delivered_mwh: '100',
+              emission_factor_kg_per_kwh: '0.1',
+              emission_factor_source: 'fcu',
+            },
+          ],
+        }),
+      )
+      const result = withNetworks({
+        id: 'reseaux_chaleur',
+        territory: { level: 'region', code: '84' },
+        parameters: { emissionFactorReductionFraction: '0.5' },
+      })
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5')
+    })
+  })
+
   describe('entrée invalide', () => {
     it('refuse un levier inconnu', () => {
       const result = estimate({ id: 'inconnu' } as unknown as RequestInput)
-      expect(result._unsafeUnwrapErr()).toMatchObject({
+      expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'id' }],
+        issues: [{ parameter: 'id', message: 'unknown lever' }],
       })
     })
 
@@ -92,11 +118,11 @@ describe('estimate', () => {
       })
     })
 
-    it('refuse une entrée qui n’est pas un objet', () => {
-      const result = estimate(null as unknown as RequestInput)
-      expect(result._unsafeUnwrapErr()).toMatchObject({
+    it.each([null, undefined, [], 'haies', 3])('refuse l’entrée %j qui n’est pas un objet', (input) => {
+      const result = estimate(input as unknown as RequestInput)
+      expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'request' }],
+        issues: [{ parameter: 'request', message: 'expected an object' }],
       })
     })
 

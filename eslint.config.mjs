@@ -6,6 +6,28 @@ const nodeBuiltinImports = builtinModules.flatMap((name) => [name, `node:${name}
 const productionFiles = ['src/**/*.ts']
 const testFiles = ['**/*.spec.ts', 'src/testing/**/*.ts']
 
+const leverBarrelPattern = {
+  group: ['**/levers/*/*', '!**/levers/*/index.js'],
+  message: 'a lever is imported through its index, which exposes estimate only.',
+}
+
+const aboveApplicationPattern = {
+  group: ['**/levers/**', '**/estimator/**'],
+  message: 'levers and the estimator sit above this layer: depend on ports instead.',
+}
+
+const siblingLeverPattern = {
+  regex: '^\\.\\./[^./]',
+  message: 'a lever never imports another lever: share through domain or application.',
+}
+
+function noIoPaths(owner) {
+  return nodeBuiltinImports.map((name) => ({
+    name,
+    message: `${owner} performs no I/O: put it behind a port.`,
+  }))
+}
+
 const upperCaseConstantName = '/^[A-Z][A-Z0-9_]*$/'
 
 const floatArithmeticSelectors = [
@@ -125,10 +147,7 @@ export default tseslint.config(
         'error',
         {
           paths: [
-            ...nodeBuiltinImports.map((name) => ({
-              name,
-              message: 'domain performs no I/O: put it behind a port.',
-            })),
+            ...noIoPaths('domain'),
             ...['csv-parse', 'csv-parse/sync'].map((name) => ({
               name,
               message: 'domain reads no files: put parsing behind a port.',
@@ -139,6 +158,7 @@ export default tseslint.config(
               group: ['**/application/**', '**/infrastructure/**', '**/testing/**'],
               message: 'domain depends on nothing: reach other layers through ports.',
             },
+            aboveApplicationPattern,
           ],
         },
       ],
@@ -151,18 +171,74 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          paths: nodeBuiltinImports.map((name) => ({
-            name,
-            message: 'application performs no I/O: put it behind a port.',
-          })),
+          paths: noIoPaths('application'),
           patterns: [
             {
               group: ['**/infrastructure/**', '**/testing/**'],
               message: 'application knows domain and ports only: inject adapters.',
             },
+            aboveApplicationPattern,
           ],
         },
       ],
+    },
+  },
+  {
+    files: ['src/levers/**/*.ts'],
+    ignores: testFiles,
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: noIoPaths('a lever'),
+          patterns: [
+            {
+              group: ['**/infrastructure/**', '**/testing/**', '**/estimator/**'],
+              message: 'a lever knows domain and ports only: read data through the context.',
+            },
+            siblingLeverPattern,
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/levers/**/calculate-*.ts'],
+    ignores: testFiles,
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: noIoPaths('a calculation'),
+          patterns: [
+            {
+              group: [
+                '**/application/**',
+                '**/infrastructure/**',
+                '**/testing/**',
+                '**/data-source.js',
+                '**/territory-index.js',
+                '**/estimator/**',
+              ],
+              message: 'a calculation is pure: it receives values, never a data source.',
+            },
+            siblingLeverPattern,
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/infrastructure/**/*.ts'],
+    ignores: testFiles,
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [aboveApplicationPattern] }],
+    },
+  },
+  {
+    files: ['src/index.ts'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [leverBarrelPattern] }],
     },
   },
   {

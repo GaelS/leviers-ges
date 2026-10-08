@@ -82,4 +82,4 @@ unité du facteur de réseau de chaleur = kgCO2e/kWh
 
 ## Test attendu
 
-Chaque correction a un cas chiffré dans la fiche de son levier (`docs/methodology/levers/<levier>.md`) : l'entrée, le résultat avec la formule du tableur, le résultat avec la formule corrigée. Le test du levier porte sur le résultat corrigé.
+Chaque correction a un cas chiffré dans la fiche de son levier (`src/levers/<levier>/methodology.md`) : l'entrée, le résultat avec la formule du tableur, le résultat avec la formule corrigée. Le test du levier porte sur le résultat corrigé.

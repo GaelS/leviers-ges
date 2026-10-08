@@ -1,11 +1,10 @@
-export { createEstimator } from './application/estimate/estimate.js'
-export type { Estimate, Estimator } from './application/estimate/estimate.js'
+export { createEstimator } from './estimator/estimate.js'
+export type { Estimate, Estimator, Lever, RequestInput } from './estimator/estimate.js'
 export type {
   EstimationError,
   InvalidRequest,
   LevelNotComputed,
 } from './application/estimate/estimation-error.js'
-export type { Lever, RequestInput } from './application/estimate/request.js'
 export type {
   DataSource,
   DataSourceError,

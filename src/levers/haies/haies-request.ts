@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { kilometresSchema, territorySchema } from './shared-schemas.js'
+import { kilometresSchema, territorySchema } from '../../application/estimate/shared-schemas.js'
 
 const haiesRequestSchema = z.strictObject({
   id: z.literal('haies'),
@@ -7,4 +7,7 @@ const haiesRequestSchema = z.strictObject({
   parameters: z.strictObject({ hedgeKmCreatedPerYear: kilometresSchema }),
 })
 
+type HaiesRequestInput = z.input<typeof haiesRequestSchema>
+
 export { haiesRequestSchema }
+export type { HaiesRequestInput }

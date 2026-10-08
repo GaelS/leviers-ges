@@ -1,9 +1,13 @@
+import type { Result } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
+import type { EstimateResult } from '../../application/estimate/estimate-result.js'
+import type { EstimationError } from '../../application/estimate/estimation-error.js'
 import type { DataRow, DataSource } from '../../domain/data-source.js'
 import type { Level } from '../../domain/territory.js'
 import { dataSourceFromDatasets } from '../../testing/data-source-from-datasets.js'
-import { createEstimator } from './estimate.js'
-import type { RequestInput } from './request.js'
+import { estimationContextOf } from '../../testing/estimation-context-of.js'
+import { estimate as estimateReseauxChaleur } from './estimate.js'
+import type { ReseauxChaleurRequestInput } from './reseaux-chaleur-request.js'
 
 const COMMUNES: readonly DataRow[] = [
   { code_commune: '01001', code_epci: '200000001', code_departement: '01', code_region: '84' },
@@ -30,7 +34,12 @@ const NETWORKS: readonly DataRow[] = [
   network('75112', '3783313', '0.1'),
 ]
 
-type ReseauxChaleurRequestInput = Extract<RequestInput, { id: 'reseaux_chaleur' }>
+type Estimator = (input: ReseauxChaleurRequestInput) => Result<EstimateResult, EstimationError>
+
+function createEstimator(dataSource: DataSource): Estimator {
+  const context = estimationContextOf(dataSource)
+  return (input) => estimateReseauxChaleur(input, context)
+}
 
 function request(
   level: Level,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { fractionSchema, territorySchema } from './shared-schemas.js'
+import { fractionSchema, territorySchema } from '../../application/estimate/shared-schemas.js'
 
 const reseauxChaleurRequestSchema = z.strictObject({
   id: z.literal('reseaux_chaleur'),
@@ -7,4 +7,7 @@ const reseauxChaleurRequestSchema = z.strictObject({
   parameters: z.strictObject({ emissionFactorReductionFraction: fractionSchema }),
 })
 
+type ReseauxChaleurRequestInput = z.input<typeof reseauxChaleurRequestSchema>
+
 export { reseauxChaleurRequestSchema }
+export type { ReseauxChaleurRequestInput }
