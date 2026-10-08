@@ -1,16 +1,24 @@
-import { err, type Result } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import { match } from 'ts-pattern'
+import { z } from 'zod'
 import { createEstimationContext } from '../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../application/estimate/estimate-result.ts'
 import { invalidRequest, type EstimationError } from '../application/estimate/estimation-error.ts'
 import type { DataSource } from '../domain/data-source.ts'
+import {
+  estimate as estimateBatimentsMachinesAgricoles,
+  type BatimentsMachinesAgricolesRequestInput,
+} from '../levers/batiments-machines-agricoles/index.ts'
 import { estimate as estimateHaies, type HaiesRequestInput } from '../levers/haies/index.ts'
 import {
   estimate as estimateReseauxChaleur,
   type ReseauxChaleurRequestInput,
 } from '../levers/reseaux-chaleur/index.ts'
 
-type RequestInput = HaiesRequestInput | ReseauxChaleurRequestInput
+type RequestInput =
+  | BatimentsMachinesAgricolesRequestInput
+  | HaiesRequestInput
+  | ReseauxChaleurRequestInput
 
 type Lever = RequestInput['id']
 
@@ -20,20 +28,24 @@ type Estimate<L extends Lever = Lever> = EstimateByLever[L]
 
 type Estimator = <E extends RequestInput>(input: E) => Result<Estimate<E['id']>, EstimationError>
 
-const routedLevers: Readonly<Record<Lever, true>> = { haies: true, reseaux_chaleur: true }
+const routedLeverIds = ['batiments_machines_agricoles', 'haies', 'reseaux_chaleur'] as const satisfies readonly Lever[]
 
-function isRecord(input: unknown): input is Record<string, unknown> {
-  return typeof input === 'object' && input !== null && !Array.isArray(input)
-}
+const routedLeverSchema = z.looseObject(
+  { id: z.enum(routedLeverIds, { error: 'unknown lever' }) },
+  { error: 'expected an object' },
+)
 
-function isRoutedLever(input: unknown): input is RequestInput {
-  return isRecord(input) && typeof input['id'] === 'string' && Object.hasOwn(routedLevers, input['id'])
-}
-
-function invalidRequestShape(input: unknown): EstimationError {
-  return isRecord(input)
-    ? invalidRequest([{ parameter: 'id', message: 'unknown lever' }])
-    : invalidRequest([{ parameter: 'request', message: 'expected an object' }])
+function parseRoutedLever(input: RequestInput): Result<RequestInput, EstimationError> {
+  const parsed = routedLeverSchema.safeParse(input)
+  if (parsed.success) return ok(input)
+  return err(
+    invalidRequest(
+      parsed.error.issues.map((issue) => ({
+        parameter: issue.path.length === 0 ? 'request' : issue.path.map(String).join('.'),
+        message: issue.message,
+      })),
+    ),
+  )
 }
 
 function createEstimator(dataSource: DataSource): Estimator {
@@ -41,17 +53,21 @@ function createEstimator(dataSource: DataSource): Estimator {
 
   function estimate<E extends RequestInput>(input: E): Result<Estimate<E['id']>, EstimationError>
   function estimate(input: RequestInput): Result<Estimate, EstimationError> {
-    if (!isRoutedLever(input)) return err(invalidRequestShape(input))
-    return match(input)
-      .with({ id: 'haies' }, (haiesInput) => estimateHaies(haiesInput))
-      .with({ id: 'reseaux_chaleur' }, (reseauxChaleurInput) =>
-        estimateReseauxChaleur(reseauxChaleurInput, context),
-      )
-      .exhaustive()
+    return parseRoutedLever(input).andThen((routedInput) =>
+      match(routedInput)
+        .with({ id: 'batiments_machines_agricoles' }, (batimentsMachinesAgricolesInput) =>
+          estimateBatimentsMachinesAgricoles(batimentsMachinesAgricolesInput, context),
+        )
+        .with({ id: 'haies' }, (haiesInput) => estimateHaies(haiesInput))
+        .with({ id: 'reseaux_chaleur' }, (reseauxChaleurInput) =>
+          estimateReseauxChaleur(reseauxChaleurInput, context),
+        )
+        .exhaustive(),
+    )
   }
 
   return estimate
 }
 
-export { createEstimator }
+export { createEstimator, routedLeverIds }
 export type { Estimate, Estimator, Lever, RequestInput }

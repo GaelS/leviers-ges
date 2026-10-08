@@ -3,7 +3,13 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
 import type { TonnesCo2ePerYear } from '../domain/units.ts'
 import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.ts'
-import { createEstimator, type Estimate, type RequestInput } from './estimate.ts'
+import {
+  createEstimator,
+  type Estimate,
+  type Lever,
+  type RequestInput,
+  type routedLeverIds,
+} from './estimate.ts'
 
 type HaiesRequestInput = Extract<RequestInput, { id: 'haies' }>
 
@@ -81,6 +87,40 @@ describe('estimate', () => {
     })
   })
 
+  describe('batiments_machines_agricoles', () => {
+    it('aiguille la requête vers son levier avec le contexte d’estimation', () => {
+      const withEnergy = createEstimator(
+        dataSourceFromDatasets({
+          'territoires/communes': [
+            { code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' },
+          ],
+          'batiments-machines-agricoles/regions': [
+            {
+              code_region: '84',
+              electricity_gwh: '0',
+              natural_gas_gwh: '0',
+              petroleum_products_gwh: '1',
+              heat_gwh: '0',
+            },
+          ],
+          'surface-agricole-utile/communes': [{ code_commune: '01001', agricultural_area_ha: '10' }],
+          'reseaux-chaleur/networks': [],
+        }),
+      )
+      const result = withEnergy({
+        id: 'batiments_machines_agricoles',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          electricityReductionFraction: '0',
+          naturalGasReductionFraction: '0',
+          petroleumProductsReductionFraction: '1',
+          heatReductionFraction: '0',
+        },
+      })
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('280.8')
+    })
+  })
+
   describe('entrée invalide', () => {
     it('refuse un levier inconnu', () => {
       const result = estimate({ id: 'inconnu' } as unknown as RequestInput)
@@ -144,6 +184,10 @@ describe('estimate', () => {
         id: 'haies'
         parameters: { railShift: string }
       }>().not.toExtend<RequestInput>()
+    })
+
+    it('chaque levier de l’union est aiguillé', () => {
+      expectTypeOf<(typeof routedLeverIds)[number]>().toEqualTypeOf<Lever>()
     })
 
     it('un levier absent de l’union ne compile pas', () => {
