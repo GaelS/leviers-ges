@@ -26,7 +26,7 @@ Aucune constante : les facteurs d'émission sont des données.
 
 ## Données
 
-`data/reseaux-chaleur/networks.csv`, construit par `data/reseaux-chaleur/build.py` : 852 réseaux.
+`data/reseaux-chaleur/networks.csv`, construit par `pnpm build:data:reseaux-chaleur` (`src/dataset-builders/reseaux-chaleur/`) à partir des deux sources versionnées dans `data/reseaux-chaleur/sources/`, dont les empreintes sont dans le manifeste : 852 réseaux.
 
 | Choix | Détail |
 |---|---|
