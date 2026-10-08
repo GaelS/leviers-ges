@@ -29,7 +29,7 @@ Règles communes à tous les leviers. Une fiche de levier ne les répète pas ; 
 | Niveau | `Level = 'departement' | 'epci' | 'region'` |
 | Territoire | `Territory<M extends Level> = { level: M; code: TerritoryCode }`, code INSEE |
 | Statut par niveau | `Status = 'no_open_question' | 'workaround' | 'not_computed'`, registre `LEVERS` (21 leviers × 3 niveaux = 63 statuts) |
-| Niveau non calculé | `estimate` renvoie `LevelNotComputed` ; le type de `Request` interdit déjà ce niveau à la compilation pour les leviers calculables |
+| Niveau non calculé | l'estimateur (`src/estimator/`) renvoie `LevelNotComputed` avant d'appeler le levier ; le levier ne le vérifie pas |
 | Corse | codes `2A` et `2B` regroupés dans une table de passage versionnée |
 | EPCI à cheval sur plusieurs départements | 89 EPCI : les jeux EPCI donnent une ligne par couple EPCI et département, et la somme se fait par département. Le traitement propre à chaque levier est dans sa fiche |
 
