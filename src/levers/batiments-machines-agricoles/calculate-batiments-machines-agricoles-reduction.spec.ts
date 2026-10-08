@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
 import { quantity } from '../../domain/units.ts'
-import type { AgriculturalConsumption } from './agricultural-consumption.ts'
+import type { AgriculturalConsumption } from './data/agricultural-consumption.ts'
 import {
   calculateBatimentsMachinesAgricolesReduction,
   type ReductionFractions,

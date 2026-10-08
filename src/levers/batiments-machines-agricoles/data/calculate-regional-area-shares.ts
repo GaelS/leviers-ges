@@ -1,5 +1,5 @@
-import { sum } from '../../domain/big-number.ts'
-import { quantity, type Fraction, type Hectares } from '../../domain/units.ts'
+import { sum } from '../../../domain/big-number.ts'
+import { quantity, type Fraction, type Hectares } from '../../../domain/units.ts'
 
 type LocatedArea = {
   readonly commune: string

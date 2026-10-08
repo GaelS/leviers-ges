@@ -8,7 +8,7 @@ import type {
   MegawattHours,
   TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-import type { AgriculturalConsumption } from './agricultural-consumption.ts'
+import type { AgriculturalConsumption } from './data/agricultural-consumption.ts'
 
 type ReductionFractions = {
   readonly electricity: Fraction

@@ -5,9 +5,9 @@ import {
   type DataSource,
   type DataSourceError,
   type InvalidDataset,
-} from '../../domain/data-source.ts'
-import type { Level, Territory } from '../../domain/territory.ts'
-import { requireQuantityColumn } from '../../application/require-column.ts'
+} from '../../../domain/data-source.ts'
+import type { Level, Territory } from '../../../domain/territory.ts'
+import { requireQuantityColumn } from '../../../application/require-column.ts'
 import type { AgriculturalConsumption } from './agricultural-consumption.ts'
 import { findRegionalConsumption, type RegionalEnergy } from './read-regional-energy.ts'
 

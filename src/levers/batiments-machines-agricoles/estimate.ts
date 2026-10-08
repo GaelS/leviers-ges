@@ -12,7 +12,7 @@ import {
   type BatimentsMachinesAgricolesRequestInput,
 } from './batiments-machines-agricoles-request.ts'
 import { calculateBatimentsMachinesAgricolesReduction } from './calculate-batiments-machines-agricoles-reduction.ts'
-import { getAgriculturalConsumption } from './get-agricultural-consumption.ts'
+import { getAgriculturalConsumption } from './data/get-agricultural-consumption.ts'
 import { weightHeatEmissionFactor } from './weight-heat-emission-factor.ts'
 
 function estimate(
