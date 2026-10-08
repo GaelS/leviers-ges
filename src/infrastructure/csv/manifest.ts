@@ -5,6 +5,14 @@ import { z } from 'zod'
 import { levels } from '../../domain/territory.ts'
 import { violation, type Violation } from './violation.ts'
 
+const sourceEntrySchema = z.strictObject({
+  file: z.string(),
+  source: z.string(),
+  link: z.string().optional(),
+  retrievedOn: z.string(),
+  checksum: z.string().regex(/^[0-9a-f]{64}$/),
+})
+
 const datasetEntrySchema = z.strictObject({
   file: z.string(),
   source: z.string(),
@@ -16,6 +24,7 @@ const datasetEntrySchema = z.strictObject({
   keyColumn: z.string(),
   columns: z.array(z.object({ name: z.string(), unit: z.string() })),
   controlTotals: z.record(z.string(), z.string()).optional(),
+  sources: z.array(sourceEntrySchema).optional(),
 })
 
 const manifestSchema = z.object({ datasets: z.array(datasetEntrySchema) })

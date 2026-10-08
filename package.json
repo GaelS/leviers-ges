@@ -9,6 +9,7 @@
   "packageManager": "pnpm@10.24.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "build:data:reseaux-chaleur": "node src/dataset-builders/reseaux-chaleur/cli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
