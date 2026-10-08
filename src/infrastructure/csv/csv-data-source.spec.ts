@@ -285,15 +285,27 @@ describe('createCsvDataSource', () => {
     it('refuse un CSV dont une ligne n’a pas le bon nombre de colonnes', () => {
       const source = createCsvDataSource(createRoot({ csv: 'code,value\n11,1,2\n' }))
       expect(source.row('demo/values', territory('11'))._unsafeUnwrapErr()).toMatchObject({
-        reason: 'unreadable',
+        reason: 'malformed_csv',
       })
     })
 
     it('refuse deux colonnes de même nom', () => {
       const source = createCsvDataSource(createRoot({ csv: 'code,code\n11,12\n' }))
       expect(source.row('demo/values', territory('11'))._unsafeUnwrapErr()).toMatchObject({
-        reason: 'unreadable',
+        reason: 'malformed_csv',
         detail: expect.stringContaining('duplicate column names') as string,
+      })
+    })
+
+    it('garde en mémoire un CSV malformé : pas de relecture du fichier', () => {
+      const root = createRoot({ csv: 'code,value\n11,1,2\n' })
+      const source = createCsvDataSource(root)
+      expect(source.row('demo/values', territory('11'))._unsafeUnwrapErr()).toMatchObject({
+        reason: 'malformed_csv',
+      })
+      writeFileSync(join(root, 'demo', 'values.csv'), 'code,value\n11,1\n')
+      expect(source.row('demo/values', territory('11'))._unsafeUnwrapErr()).toMatchObject({
+        reason: 'malformed_csv',
       })
     })
 
