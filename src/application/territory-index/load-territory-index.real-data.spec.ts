@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseTerritoryCode, type Level, type Territory } from '../../domain/territory.js'
+import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.js'
 import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.js'
 import { loadTerritoryIndex } from './load-territory-index.js'
 
@@ -9,7 +9,7 @@ const index = loadTerritoryIndex(dataSource)._unsafeUnwrap()
 const rows = dataSource.rows('territoires/communes')._unsafeUnwrap()
 
 function territory<L extends Level>(level: L, code: string): Territory<L> {
-  return { level, code: parseTerritoryCode(code)._unsafeUnwrap() }
+  return { level, code: territoryCodeSchema.parse(code) }
 }
 
 function distinctFilled(column: string): string[] {

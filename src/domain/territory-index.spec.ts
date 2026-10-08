@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseTerritoryCode, type Level, type Territory } from './territory.js'
+import { territoryCodeSchema, type Level, type Territory } from './territory.js'
 import { buildTerritoryIndex, type Commune } from './territory-index.js'
 
 const COMMUNES: readonly Commune[] = [
@@ -12,7 +12,7 @@ const COMMUNES: readonly Commune[] = [
 ]
 
 function territory<L extends Level>(level: L, code: string): Territory<L> {
-  return { level, code: parseTerritoryCode(code)._unsafeUnwrap() }
+  return { level, code: territoryCodeSchema.parse(code) }
 }
 
 const index = buildTerritoryIndex(COMMUNES)

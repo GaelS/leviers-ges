@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import type { Level, Territory, TerritoryCode } from '../../domain/territory.js'
+import { territoryCodeSchema, type Level, type Territory } from '../../domain/territory.js'
 import { createCsvDataSource } from './csv-data-source.js'
 
 type ManifestOverrides = {
@@ -60,7 +60,7 @@ function createRoot(fixture: DatasetFixture): string {
 }
 
 function territory(code: string, level: Level = 'region'): Territory<Level> {
-  return { level, code: code as TerritoryCode }
+  return { level, code: territoryCodeSchema.parse(code) }
 }
 
 const VALUES_CSV = 'code,value,hectares\n11,1.5,10\n24,2,5.25\n'
