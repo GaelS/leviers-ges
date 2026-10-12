@@ -5,7 +5,8 @@ import { sum, toBig } from '../../domain/big-number.ts'
 import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.ts'
 import { toCsvText } from '../to-csv-text.ts'
 import { groupLocalConsumption, type LocalConsumption } from './group-local-consumption.ts'
-import { readRegionalEnergy, type RegionalEnergy, type SheetRows } from './read-regional-energy.ts'
+import type { SheetRows } from '../sheet-rows.ts'
+import { readRegionalEnergy, type RegionalEnergy } from './read-regional-energy.ts'
 
 type NamedSheet = { readonly name: string; readonly rows: SheetRows }
 

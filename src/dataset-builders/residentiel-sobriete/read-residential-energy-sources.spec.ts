@@ -14,10 +14,10 @@ const committedDataDirectory = join(import.meta.dirname, '..', '..', '..', 'data
 const folder = 'residentiel-sobriete'
 const cerenWorkbook = 'sources/ceren-donnees-energie-residentiel-1990-2024.xlsx'
 const irisElectricityCsv = 'sources/sdes-electricite-iris-2024-residentiel-par-departement.csv'
-const heatCsv = 'sources/sdes-chaleur-commune-2024.csv'
+const heatCsv = '../reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
 
 function copyDataDirectory(): string {
-  return copyDataFolders({ from: committedDataDirectory, folders: [folder] })
+  return copyDataFolders({ from: committedDataDirectory, folders: [folder, 'reseaux-chaleur'] })
 }
 
 describe('readResidentialEnergySources', () => {

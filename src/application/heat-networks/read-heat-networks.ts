@@ -8,7 +8,7 @@ import type {
 import type { HeatNetwork } from '../../domain/heat-network.ts'
 import { requireColumn, requireQuantityColumn } from '../require-column.ts'
 
-const networksDataset = 'reseaux-chaleur/networks'
+const reseauxChaleurNetworksDataset = 'reseaux-chaleur/networks'
 
 function toHeatNetwork({
   dataset,
@@ -44,7 +44,7 @@ function keepHeatNetworksInCommunes({
     .andThen((rowsInside) => Result.combine(rowsInside.map((row) => toHeatNetwork({ dataset, row }))))
 }
 
-function readHeatNetworksOf({
+function readHeatNetworks({
   dataSource,
   dataset,
   communes,
@@ -58,14 +58,4 @@ function readHeatNetworksOf({
     .andThen((rows) => keepHeatNetworksInCommunes({ dataset, communes: new Set(communes), rows }))
 }
 
-function readHeatNetworks({
-  dataSource,
-  communes,
-}: {
-  dataSource: DataSource
-  communes: readonly string[]
-}): Result<readonly HeatNetwork[], DataSourceError> {
-  return readHeatNetworksOf({ dataSource, dataset: networksDataset, communes })
-}
-
-export { readHeatNetworks, readHeatNetworksOf }
+export { readHeatNetworks, reseauxChaleurNetworksDataset }

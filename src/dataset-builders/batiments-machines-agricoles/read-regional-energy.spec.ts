@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { OLDER_YEAR_VALUES, toRegionalSheet } from '../../testing/to-regional-sheet.ts'
-import { readRegionalEnergy, type SheetRows } from './read-regional-energy.ts'
+import type { SheetRows } from '../sheet-rows.ts'
+import { readRegionalEnergy } from './read-regional-energy.ts'
 
 function read(rows: SheetRows, year = '2024') {
   return readRegionalEnergy({ dataset: 'sheet', rows, year })
