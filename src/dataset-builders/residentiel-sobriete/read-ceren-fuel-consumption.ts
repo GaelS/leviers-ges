@@ -59,5 +59,5 @@ function readCerenFuelConsumption(rows: SheetRows): Result<CerenFuelConsumption,
   )
 }
 
-export { readCerenFuelConsumption }
+export { cerenDataset, readCerenFuelConsumption }
 export type { SheetRows }

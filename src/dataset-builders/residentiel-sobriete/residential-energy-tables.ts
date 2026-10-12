@@ -63,6 +63,16 @@ function toRegionRows(
       Result.combine([
         roundToLoaderPrecision({
           dataset,
+          column: 'electricity_gwh',
+          text: regionalEnergy.electricityGwh.toFixed(),
+        }),
+        roundToLoaderPrecision({
+          dataset,
+          column: 'natural_gas_gwh',
+          text: regionalEnergy.naturalGasGwh.toFixed(),
+        }),
+        roundToLoaderPrecision({
+          dataset,
           column: 'fuel_oil_gwh',
           text: regionalEnergy.fuelOilGwh.toFixed(),
         }),
@@ -71,14 +81,21 @@ function toRegionRows(
           column: 'lpg_gwh',
           text: regionalEnergy.liquefiedPetroleumGasGwh.toFixed(),
         }),
-      ]).map(([fuelOilGwh, liquefiedPetroleumGasGwh]) => ({
-        regionCode: regionalEnergy.regionCode,
-        electricityGwh: regionalEnergy.electricityGwh,
-        naturalGasGwh: regionalEnergy.naturalGasGwh,
-        fuelOilGwh,
-        liquefiedPetroleumGasGwh,
-        heatGwh: regionalEnergy.heatGwh,
-      })),
+        roundToLoaderPrecision({
+          dataset,
+          column: 'heat_gwh',
+          text: regionalEnergy.heatGwh.toFixed(),
+        }),
+      ]).map(
+        ([electricityGwh, naturalGasGwh, fuelOilGwh, liquefiedPetroleumGasGwh, heatGwh]) => ({
+          regionCode: regionalEnergy.regionCode,
+          electricityGwh,
+          naturalGasGwh,
+          fuelOilGwh,
+          liquefiedPetroleumGasGwh,
+          heatGwh,
+        }),
+      ),
     ),
   )
 }

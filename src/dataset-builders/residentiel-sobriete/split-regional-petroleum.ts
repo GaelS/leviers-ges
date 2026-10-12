@@ -4,6 +4,7 @@ import { toBig } from '../../domain/big-number.ts'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
 import { gigawattHoursToMegawattHours, quantity } from '../../domain/units.ts'
 import type { RegionalPetroleumMwh } from './apportion-oil-sales.ts'
+import { cerenDataset } from './read-ceren-fuel-consumption.ts'
 import type { RegionalBilan } from './read-regional-bilan.ts'
 
 type FuelShares = {
@@ -13,15 +14,15 @@ type FuelShares = {
 
 type RegionalEnergy = {
   readonly regionCode: string
-  readonly electricityGwh: string
-  readonly naturalGasGwh: string
+  readonly electricityGwh: BigNumber
+  readonly naturalGasGwh: BigNumber
   readonly fuelOilGwh: BigNumber
   readonly liquefiedPetroleumGasGwh: BigNumber
-  readonly heatGwh: string
+  readonly heatGwh: BigNumber
 }
 
 function toEmptyFuelSharesError(detail: string): InvalidDataset {
-  return invalidDataset({ dataset: 'residentiel-sobriete', reason: 'empty_dataset', detail })
+  return invalidDataset({ dataset: cerenDataset, reason: 'empty_dataset', detail })
 }
 
 function calculateFuelShares({
@@ -33,13 +34,13 @@ function calculateFuelShares({
 }): Result<FuelShares, InvalidDataset> {
   const fuelOil = toBig(fuelOilTwh)
   const liquefiedPetroleumGas = toBig(liquefiedPetroleumGasTwh)
-  const total = fuelOil.plus(liquefiedPetroleumGas)
-  if (total.isZero()) {
+  const petroleumTwh = fuelOil.plus(liquefiedPetroleumGas)
+  if (petroleumTwh.isZero()) {
     return err(toEmptyFuelSharesError('CEREN fuel oil and LPG consumption sum to 0'))
   }
   return ok({
-    fuelOil: fuelOil.dividedBy(total),
-    liquefiedPetroleumGas: liquefiedPetroleumGas.dividedBy(total),
+    fuelOil: fuelOil.dividedBy(petroleumTwh),
+    liquefiedPetroleumGas: liquefiedPetroleumGas.dividedBy(petroleumTwh),
   })
 }
 
@@ -53,11 +54,11 @@ function toRegionalEnergy({
   const petroleumProductsGwh = toBig(bilan.petroleumProductsGwh)
   return {
     regionCode: bilan.regionCode,
-    electricityGwh: bilan.electricityGwh,
-    naturalGasGwh: bilan.naturalGasGwh,
+    electricityGwh: toBig(bilan.electricityGwh),
+    naturalGasGwh: toBig(bilan.naturalGasGwh),
     fuelOilGwh: petroleumProductsGwh.times(shares.fuelOil),
     liquefiedPetroleumGasGwh: petroleumProductsGwh.times(shares.liquefiedPetroleumGas),
-    heatGwh: bilan.heatGwh,
+    heatGwh: toBig(bilan.heatGwh),
   }
 }
 

@@ -2,6 +2,7 @@ import { Result } from 'neverthrow'
 import type { InvalidDataset } from '../../domain/data-source.ts'
 import { apportionOilSales } from './apportion-oil-sales.ts'
 import { buildHeatNetworks } from './build-heat-networks.ts'
+import { checkDepartmentsHaveSales } from './check-departments-have-sales.ts'
 import { readCerenFuelConsumption, type SheetRows } from './read-ceren-fuel-consumption.ts'
 import { readDepartmentConsumption } from './read-department-consumption.ts'
 import { readOilSales, type OilSales } from './read-oil-sales.ts'
@@ -95,14 +96,19 @@ function buildResidentialEnergy(
     readOilSales(sources.oilSalesCsv),
     buildHeatNetworks(sources.heatCsv),
   ]).andThen(([bilans, shares, electricity, naturalGas, sales, heatNetworks]) =>
-    buildEnergyTables({ bilans, shares, electricity, naturalGas, sales }).andThen(
+    Result.combine([
+      checkDepartmentsHaveSales({ consumptionByDepartment: electricity, sales }),
+      checkDepartmentsHaveSales({ consumptionByDepartment: naturalGas, sales }),
+    ])
+      .andThen(() => buildEnergyTables({ bilans, shares, electricity, naturalGas, sales }))
+      .andThen(
       ({ regionRows, departmentRows }) => {
-        const regionsCsv = toRegionsCsv(regionRows)
-        const departementsCsv = toDepartementsCsv(departmentRows)
-        return Result.combine([regionsCsv, departementsCsv]).map(
-          ([regionsCsvText, departementsCsvText]) => ({
-            regionsCsv: regionsCsvText,
-            departementsCsv: departementsCsvText,
+        const regionsCsvResult = toRegionsCsv(regionRows)
+        const departementsCsvResult = toDepartementsCsv(departmentRows)
+        return Result.combine([regionsCsvResult, departementsCsvResult]).map(
+          ([regionsCsv, departementsCsv]) => ({
+            regionsCsv,
+            departementsCsv,
             heatNetworksCsv: heatNetworks.csv,
             controlTotals: {
               regions: toRegionControlTotals(regionRows),

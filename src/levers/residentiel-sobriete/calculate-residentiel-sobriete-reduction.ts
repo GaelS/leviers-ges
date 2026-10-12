@@ -23,6 +23,11 @@ const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.07
 // aucune cellule du classeur ne contient ni n'explique ce coefficient, repris tel quel
 const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction = quantity<'Fraction'>('0.674')
 
+// Source : produit des deux constantes précédentes : 0,0791 × 67,4 % = 0,0533134 kgCO2e/kWh
+const ELECTRICITY_APPLIED_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>(
+  ELECTRICITY_EMISSION_FACTOR.times(ELECTRICITY_EMISSION_FACTOR_SHARE).toFixed(),
+)
+
 // Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 301 (gaz naturel), SNAP 020202 (chauffage résidentiel), 2024 :
 // 55,8796 kg CO2/GJ PCI, arrondi à 55,88 (choix de conception, non validé)
 const NATURAL_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('55.88')
@@ -43,20 +48,14 @@ function convertToKgPerKwh(emissionFactor: KgCo2ePerGigajoule): KgCo2ePerKwh {
   return quantity<'KgCo2ePerKwh'>(emissionFactor.times(GIGAJOULES_PER_KILOWATT_HOUR).toFixed())
 }
 
-function calculateElectricityEmissionFactor(): KgCo2ePerKwh {
-  return quantity<'KgCo2ePerKwh'>(
-    ELECTRICITY_EMISSION_FACTOR.times(ELECTRICITY_EMISSION_FACTOR_SHARE).toFixed(),
-  )
-}
-
 function calculateEmissions({
   consumption,
   emissionFactor,
 }: {
   consumption: MegawattHours
   emissionFactor: KgCo2ePerKwh
-}): BigNumber {
-  return consumption.times(emissionFactor)
+}): TonnesCo2ePerYear {
+  return quantity<'TonnesCo2ePerYear'>(consumption.times(emissionFactor).toFixed())
 }
 
 function calculateResidentielSobrieteReduction({
@@ -70,7 +69,7 @@ function calculateResidentielSobrieteReduction({
 }): TonnesCo2ePerYear {
   const electricityEmissions = calculateEmissions({
     consumption: consumption.electricity,
-    emissionFactor: calculateElectricityEmissionFactor(),
+    emissionFactor: ELECTRICITY_APPLIED_EMISSION_FACTOR,
   })
   const naturalGasEmissions = calculateEmissions({
     consumption: consumption.naturalGas,

@@ -15,6 +15,10 @@ const CEREN_ROWS = [
   ['Total GPL', undefined, undefined, '8'],
 ]
 
+const SALES_LINES = ['01;84;2024;1;3', '07;84;2024;3;1', '75;11;2024;5;5', '75;11;2023;999;999'].join(
+  '\n',
+)
+
 const SOURCES: ResidentialEnergySources = {
   regionalBilanCsv: [
     BILAN_HEADER,
@@ -25,13 +29,7 @@ const SOURCES: ResidentialEnergySources = {
   cerenRows: CEREN_ROWS,
   irisElectricityCsv: [IRIS_HEADER, '01,10', '07,20', '75,30', '971,99'].join('\n'),
   irisGasCsv: [IRIS_HEADER, '01,1', '75,3'].join('\n'),
-  oilSalesCsv: [
-    SALES_HEADER,
-    '01;84;2024;1;3',
-    '07;84;2024;3;1',
-    '75;11;2024;5;5',
-    '75;11;2023;999;999',
-  ].join('\n'),
+  oilSalesCsv: [SALES_HEADER, SALES_LINES].join('\n'),
   heatCsv: [HEAT_HEADER, 'B;01001;100;0.2', 'A;75101;50;0.1', 'S;01002;secret;secret'].join('\n'),
 }
 
@@ -113,17 +111,45 @@ describe('buildResidentialEnergy', () => {
     const cerenRows = [CEREN_ROWS[0] ?? [], ['Total Fioul', undefined, undefined, '0'], ['Total GPL', undefined, undefined, '0']]
     expect(buildResidentialEnergy({ ...SOURCES, cerenRows })._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'residentiel-sobriete',
+      dataset: 'residentiel-sobriete/sources/ceren-donnees-energie-residentiel-1990-2024.xlsx',
       reason: 'empty_dataset',
       detail: 'CEREN fuel oil and LPG consumption sum to 0',
     })
   })
 
   it('refuse un département dont la région n’a pas de bilan', () => {
-    const oilSalesCsv = [SALES_HEADER, '29;53;2024;1;1'].join('\n')
+    const oilSalesCsv = [SALES_HEADER, SALES_LINES, '29;53;2024;1;1'].join('\n')
     expect(buildResidentialEnergy({ ...SOURCES, oilSalesCsv })._unsafeUnwrapErr()).toMatchObject({
       reason: 'missing_key_column',
       detail: 'region 53',
+    })
+  })
+
+  it.each([
+    ['d’électricité', 'irisElectricityCsv'],
+    ['de gaz', 'irisGasCsv'],
+  ] as const)('refuse un département métropolitain avec une consommation %s mais sans ventes', (_label, source) => {
+    const csv = [IRIS_HEADER, '01,10', '33,5'].join('\n')
+    expect(buildResidentialEnergy({ ...SOURCES, [source]: csv })._unsafeUnwrapErr()).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'residentiel-sobriete/departements.csv',
+      reason: 'missing_key_column',
+      detail: 'department 33 has consumption but no oil sales',
+    })
+  })
+
+  it('refuse une région du bilan sans aucune vente de produits pétroliers', () => {
+    const oilSalesCsv = [SALES_HEADER, '01;84;2024;1;3'].join('\n')
+    const irisCsv = [IRIS_HEADER, '01,10'].join('\n')
+    const sources = {
+      ...SOURCES,
+      oilSalesCsv,
+      irisElectricityCsv: irisCsv,
+      irisGasCsv: irisCsv,
+    }
+    expect(buildResidentialEnergy(sources)._unsafeUnwrapErr()).toMatchObject({
+      reason: 'empty_dataset',
+      detail: 'no oil sales in region 11',
     })
   })
 

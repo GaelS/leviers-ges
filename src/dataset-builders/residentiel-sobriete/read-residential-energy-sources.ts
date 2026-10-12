@@ -48,7 +48,7 @@ function readText({
     folderPath: join(dataDirectory, datasetFolder),
     entry,
     file,
-    dataset: toDatasetName(entry.file),
+    dataset: toDatasetName(file),
   })
 }
 
@@ -59,7 +59,7 @@ function readCerenSheet({
   dataDirectory: string
   entry: DatasetEntry
 }): ResultAsync<SheetRows, InvalidDataset> {
-  const dataset = toDatasetName(entry.file)
+  const dataset = toDatasetName(cerenFile)
   return readManifestSourceBytes({
     folderPath: join(dataDirectory, datasetFolder),
     entry,

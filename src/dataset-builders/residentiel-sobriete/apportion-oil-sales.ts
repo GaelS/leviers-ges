@@ -105,6 +105,10 @@ function apportionOilSales({
   regionalPetroleum: ReadonlyMap<string, RegionalPetroleumMwh>
 }): Result<readonly DepartmentPetroleum[], InvalidDataset> {
   const salesByRegion = Map.groupBy(sales, ({ regionCode }) => regionCode)
+  const regionWithoutSales = [...regionalPetroleum.keys()].find(
+    (regionCode) => !salesByRegion.has(regionCode),
+  )
+  if (regionWithoutSales !== undefined) return err(toEmptyRegionSales(regionWithoutSales))
   return Result.combine(
     [...salesByRegion].map(([regionCode, regionSales]) =>
       apportionRegion({
