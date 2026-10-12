@@ -28,7 +28,7 @@ type HeatNetworkRecord =
   | { readonly kind: 'secret' }
   | { readonly kind: 'network'; readonly network: HeatNetworkRow }
 
-const heatDataset = 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
+const heatDataset = 'residentiel-sobriete/sources/sdes-chaleur-commune-2024.csv'
 
 // Source : data/residentiel-sobriete/manifest.json, colonnes de heat-networks.csv
 const HEAT_NETWORKS_COLUMNS = [

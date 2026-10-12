@@ -58,7 +58,7 @@ Les FE en kg/GJ deviennent des kg/kWh par `FE × 0,0036` : gaz 0,201168, fioul 0
 
 Le facteur de la chaleur est la moyenne des contenus CO2 des réseaux du territoire, pondérée par les livraisons au résidentiel (`Residentiel_Sobriete!C33`).
 
-Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis cinq sources versionnées dans `data/residentiel-sobriete/sources/` et le jeu communal de chaleur du SDES, partagé avec `reseaux_chaleur` (`data/reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv`, même empreinte).
+Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six sources versionnées de `data/residentiel-sobriete/sources/` (le jeu communal de chaleur du SDES y figure aussi dans `data/reseaux-chaleur/sources/`, avec la même empreinte : un manifeste ne référence que des fichiers de son dossier).
 
 ## Choix faits
 
