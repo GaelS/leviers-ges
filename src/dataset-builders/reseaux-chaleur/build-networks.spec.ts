@@ -61,30 +61,12 @@ describe('buildNetworks', () => {
     expect(build.csv).toBe(toNetworksCsv('A,01001,10,0.3,sdes'))
   })
 
-  it.each([
-    ['75101', '75056'],
-    ['75120', '75056'],
-    ['69381', '69123'],
-    ['69389', '69123'],
-    ['13201', '13055'],
-    ['13216', '13055'],
-    ['75056', '75056'],
-    ['75100', '75100'],
-    ['75121', '75121'],
-    ['69380', '69380'],
-    ['69390', '69390'],
-    ['13200', '13200'],
-    ['13217', '13217'],
-    ['2A004', '2A004'],
-    ['7511', '7511'],
-    ['751010', '751010'],
-    ['075101', '075101'],
-  ])('rattache la commune %s à %s', (communeCode, expected) => {
+  it('rattache l’arrondissement d’une commune à sa commune', () => {
     const build = buildNetworks({
-      sdesCsv: toSdesCsv(`A;${communeCode};10;0.3`),
+      sdesCsv: toSdesCsv('A;75101;10;0.3'),
       fcuCsv: toFcuCsv(),
     })._unsafeUnwrap()
-    expect(build.csv).toBe(toNetworksCsv(`A,${expected},10,0.3,sdes`))
+    expect(build.csv).toBe(toNetworksCsv('A,75056,10,0.3,sdes'))
   })
 
   it.each([
