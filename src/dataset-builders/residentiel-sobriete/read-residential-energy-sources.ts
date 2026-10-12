@@ -1,4 +1,4 @@
-import { join, posix } from 'node:path'
+import { join } from 'node:path'
 import { Result, ResultAsync } from 'neverthrow'
 import { readSheet } from 'read-excel-file/node'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
@@ -17,10 +17,10 @@ const cerenFile = 'sources/ceren-donnees-energie-residentiel-1990-2024.xlsx'
 const irisElectricityFile = 'sources/sdes-electricite-iris-2024-residentiel-par-departement.csv'
 const irisGasFile = 'sources/sdes-gaz-iris-2024-residentiel-par-departement.csv'
 const oilSalesFile = 'sources/sdes-ventes-produits-petroliers-departement.csv'
-const heatFile = '../reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
+const heatFile = 'sources/sdes-chaleur-commune-2024.csv'
 
 function toDatasetName(file: string): string {
-  return posix.normalize(`${datasetFolder}/${file}`)
+  return `${datasetFolder}/${file}`
 }
 
 function findEntry({
