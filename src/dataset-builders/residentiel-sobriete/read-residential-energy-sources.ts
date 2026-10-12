@@ -48,7 +48,7 @@ function readText({
     folderPath: join(dataDirectory, datasetFolder),
     entry,
     file,
-    dataset: toDatasetName(entry.file),
+    dataset: toDatasetName(file),
   })
 }
 
@@ -59,7 +59,7 @@ function readCerenSheet({
   dataDirectory: string
   entry: DatasetEntry
 }): ResultAsync<SheetRows, InvalidDataset> {
-  const dataset = toDatasetName(entry.file)
+  const dataset = toDatasetName(cerenFile)
   return readManifestSourceBytes({
     folderPath: join(dataDirectory, datasetFolder),
     entry,
@@ -75,19 +75,31 @@ function readCerenSheet({
 function readResidentialEnergySources(
   dataDirectory: string,
 ): ResultAsync<ResidentialEnergySources, InvalidDataset> {
-  return Result.combine([
-    findEntry({ dataDirectory, file: 'regions.csv' }),
-    findEntry({ dataDirectory, file: 'departements.csv' }),
-    findEntry({ dataDirectory, file: 'heat-networks.csv' }),
-  ]).asyncAndThen(([regions, departements, heatNetworks]) =>
-    Result.combine([
-      readText({ dataDirectory, entry: regions, file: regionalBilanFile }),
-      readText({ dataDirectory, entry: departements, file: irisElectricityFile }),
-      readText({ dataDirectory, entry: departements, file: irisGasFile }),
-      readText({ dataDirectory, entry: departements, file: oilSalesFile }),
-      readText({ dataDirectory, entry: heatNetworks, file: heatFile }),
-    ]).asyncAndThen(
-      ([regionalBilanCsv, irisElectricityCsv, irisGasCsv, oilSalesCsv, heatCsv]) =>
+  const regionsEntry = findEntry({ dataDirectory, file: 'regions.csv' })
+  const departementsEntry = findEntry({ dataDirectory, file: 'departements.csv' })
+  const heatNetworksEntry = findEntry({ dataDirectory, file: 'heat-networks.csv' })
+  return Result.combine([regionsEntry, departementsEntry, heatNetworksEntry]).asyncAndThen(
+    ([regions, departements, heatNetworks]) => {
+      const regionalBilanText = readText({
+        dataDirectory,
+        entry: regions,
+        file: regionalBilanFile,
+      })
+      const irisElectricityText = readText({
+        dataDirectory,
+        entry: departements,
+        file: irisElectricityFile,
+      })
+      const irisGasText = readText({ dataDirectory, entry: departements, file: irisGasFile })
+      const oilSalesText = readText({ dataDirectory, entry: departements, file: oilSalesFile })
+      const heatText = readText({ dataDirectory, entry: heatNetworks, file: heatFile })
+      return Result.combine([
+        regionalBilanText,
+        irisElectricityText,
+        irisGasText,
+        oilSalesText,
+        heatText,
+      ]).asyncAndThen(([regionalBilanCsv, irisElectricityCsv, irisGasCsv, oilSalesCsv, heatCsv]) =>
         readCerenSheet({ dataDirectory, entry: regions }).map((cerenRows) => ({
           regionalBilanCsv,
           cerenRows,
@@ -96,7 +108,8 @@ function readResidentialEnergySources(
           oilSalesCsv,
           heatCsv,
         })),
-    ),
+      )
+    },
   )
 }
 

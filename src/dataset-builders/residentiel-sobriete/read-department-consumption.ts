@@ -26,7 +26,7 @@ function readDepartmentConsumption({
         ),
       ),
     )
-    .map((pairs) => new Map(pairs))
+    .map((consumptionByDepartment) => new Map(consumptionByDepartment))
 }
 
 export { readDepartmentConsumption }

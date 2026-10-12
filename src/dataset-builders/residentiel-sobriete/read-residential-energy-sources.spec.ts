@@ -81,7 +81,7 @@ describe('readResidentialEnergySources', () => {
       checksum: createHash('sha256').update(content).digest('hex'),
     })
     expect((await readResidentialEnergySources(directory))._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'residentiel-sobriete/regions.csv',
+      dataset: `residentiel-sobriete/${cerenWorkbook}`,
       reason: 'unreadable',
       detail: expect.stringContaining(`${cerenWorkbook}: `) as string,
     })
@@ -92,7 +92,7 @@ describe('readResidentialEnergySources', () => {
     removeSourceFromManifest({ directory, folder, file: irisElectricityCsv })
     expect((await readResidentialEnergySources(directory))._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'residentiel-sobriete/departements.csv',
+      dataset: `residentiel-sobriete/${irisElectricityCsv}`,
       reason: 'invalid_manifest',
       detail: irisElectricityCsv,
     })

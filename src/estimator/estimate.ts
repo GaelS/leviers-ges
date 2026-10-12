@@ -17,6 +17,10 @@ import {
   estimate as estimateReseauxChaleur,
   type ReseauxChaleurRequestInput,
 } from '../levers/reseaux-chaleur/index.ts'
+import {
+  estimate as estimateResidentielSobriete,
+  type ResidentielSobrieteRequestInput,
+} from '../levers/residentiel-sobriete/index.ts'
 import { estimateOnComputedLevel } from './estimate-on-computed-level.ts'
 import { parseRequest } from './parse-request.ts'
 
@@ -25,6 +29,7 @@ type RequestInput =
   | HaiesRequestInput
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
+  | ResidentielSobrieteRequestInput
 
 type Lever = RequestInput['id']
 
@@ -55,6 +60,11 @@ function createEstimator(dataSource: DataSource): Estimator {
         .with({ id: 'reseaux_chaleur' }, (reseauxChaleurRequest) =>
           estimateOnComputedLevel(reseauxChaleurRequest, (computedLevelRequest) =>
             estimateReseauxChaleur(computedLevelRequest, context),
+          ),
+        )
+        .with({ id: 'residentiel_sobriete' }, (residentielSobrieteRequest) =>
+          estimateOnComputedLevel(residentielSobrieteRequest, (computedLevelRequest) =>
+            estimateResidentielSobriete(computedLevelRequest, context),
           ),
         )
         .exhaustive(),

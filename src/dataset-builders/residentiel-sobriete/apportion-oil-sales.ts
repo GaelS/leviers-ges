@@ -57,29 +57,35 @@ function apportion({
 function apportionRegion({
   regionCode,
   regionSales,
-  regional,
+  regionalPetroleum,
 }: {
   regionCode: string
   regionSales: readonly OilSales[]
-  regional: RegionalPetroleumMwh | undefined
+  regionalPetroleum: RegionalPetroleumMwh | undefined
 }): Result<readonly DepartmentPetroleum[], InvalidDataset> {
-  const fuelOilTotal = sum(regionSales.map(({ fuelOil }) => toBig(fuelOil)))
-  const gasTotal = sum(regionSales.map(({ liquefiedPetroleumGas }) => toBig(liquefiedPetroleumGas)))
-  if (regional === undefined) return err(toMissingRegion(regionCode))
-  if (fuelOilTotal.isZero() || gasTotal.isZero()) return err(toEmptyRegionSales(regionCode))
+  if (regionalPetroleum === undefined) return err(toMissingRegion(regionCode))
+  const fuelOilSalesTotal = sum(regionSales.map(({ fuelOil }) => toBig(fuelOil)))
+  const liquefiedPetroleumGasSalesTotal = sum(
+    regionSales.map(({ liquefiedPetroleumGas }) => toBig(liquefiedPetroleumGas)),
+  )
+  const regionHasNoFuelOilSales = fuelOilSalesTotal.isZero()
+  const regionHasNoLiquefiedPetroleumGasSales = liquefiedPetroleumGasSalesTotal.isZero()
+  if (regionHasNoFuelOilSales || regionHasNoLiquefiedPetroleumGasSales) {
+    return err(toEmptyRegionSales(regionCode))
+  }
   return Result.combine(
     regionSales.map((sale) =>
       Result.combine([
         apportion({
-          regionalMwh: regional.fuelOilMwh,
+          regionalMwh: regionalPetroleum.fuelOilMwh,
           salesQuantity: sale.fuelOil,
-          regionSalesTotal: fuelOilTotal,
+          regionSalesTotal: fuelOilSalesTotal,
           column: 'FOD',
         }),
         apportion({
-          regionalMwh: regional.liquefiedPetroleumGasMwh,
+          regionalMwh: regionalPetroleum.liquefiedPetroleumGasMwh,
           salesQuantity: sale.liquefiedPetroleumGas,
-          regionSalesTotal: gasTotal,
+          regionSalesTotal: liquefiedPetroleumGasSalesTotal,
           column: 'GPL',
         }),
       ]).map(([fuelOilMwh, liquefiedPetroleumGasMwh]) => ({
@@ -99,9 +105,17 @@ function apportionOilSales({
   regionalPetroleum: ReadonlyMap<string, RegionalPetroleumMwh>
 }): Result<readonly DepartmentPetroleum[], InvalidDataset> {
   const salesByRegion = Map.groupBy(sales, ({ regionCode }) => regionCode)
+  const regionWithoutSales = [...regionalPetroleum.keys()].find(
+    (regionCode) => !salesByRegion.has(regionCode),
+  )
+  if (regionWithoutSales !== undefined) return err(toEmptyRegionSales(regionWithoutSales))
   return Result.combine(
     [...salesByRegion].map(([regionCode, regionSales]) =>
-      apportionRegion({ regionCode, regionSales, regional: regionalPetroleum.get(regionCode) }),
+      apportionRegion({
+        regionCode,
+        regionSales,
+        regionalPetroleum: regionalPetroleum.get(regionCode),
+      }),
     ),
   ).map((regions) => regions.flat())
 }

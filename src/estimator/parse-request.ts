@@ -5,12 +5,14 @@ import { batimentsMachinesAgricolesRequestSchema } from '../levers/batiments-mac
 import { haiesRequestSchema } from '../levers/haies/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
+import { residentielSobrieteRequestSchema } from '../levers/residentiel-sobriete/index.ts'
 
 const requestSchema = z.discriminatedUnion('id', [
   batimentsMachinesAgricolesRequestSchema,
   haiesRequestSchema,
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
+  residentielSobrieteRequestSchema,
 ])
 
 type ParsedRequest = z.output<typeof requestSchema>
