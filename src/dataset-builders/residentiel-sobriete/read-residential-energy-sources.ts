@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join, posix } from 'node:path'
 import { Result, ResultAsync } from 'neverthrow'
 import { readSheet } from 'read-excel-file/node'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
@@ -8,8 +8,8 @@ import {
   readManifestSourceText,
 } from '../../infrastructure/csv/read-manifest-source.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
+import type { SheetRows } from '../sheet-rows.ts'
 import type { ResidentialEnergySources } from './build-residential-energy.ts'
-import type { SheetRows } from './read-ceren-fuel-consumption.ts'
 
 const datasetFolder = 'residentiel-sobriete'
 const regionalBilanFile = 'sources/sdes-bilan-energie-residentiel-2024.csv'
@@ -17,10 +17,10 @@ const cerenFile = 'sources/ceren-donnees-energie-residentiel-1990-2024.xlsx'
 const irisElectricityFile = 'sources/sdes-electricite-iris-2024-residentiel-par-departement.csv'
 const irisGasFile = 'sources/sdes-gaz-iris-2024-residentiel-par-departement.csv'
 const oilSalesFile = 'sources/sdes-ventes-produits-petroliers-departement.csv'
-const heatFile = 'sources/sdes-chaleur-commune-2024.csv'
+const heatFile = '../reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
 
 function toDatasetName(file: string): string {
-  return `${datasetFolder}/${file}`
+  return posix.normalize(`${datasetFolder}/${file}`)
 }
 
 function findEntry({
