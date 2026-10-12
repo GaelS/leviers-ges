@@ -102,4 +102,3 @@ function buildHeatNetworks(heatCsv: string): Result<HeatNetworksBuild, InvalidDa
 }
 
 export { buildHeatNetworks }
-export type { HeatNetworksBuild }

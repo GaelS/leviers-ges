@@ -35,8 +35,8 @@ Les deux sont obligatoires. Le tableur donne une valeur par défaut à la baisse
 |---|---|---|
 | FE électricité, mix moyen | 0,0791 kgCO2e/kWh | Base Empreinte, élément 15591, version 23.11, validité décembre 2017 |
 | Coefficient sur l'électricité | 67,4 % | forme « FE électricité * 67,4% » du tableur ; aucune cellule ne le contient ni ne l'explique, repris tel quel (FE appliqué : 0,0533134) |
-| FE gaz naturel | 55,88 kg/GJ PCI | OMINEA, NAPFUE 301, SNAP 020202, 2024 (55,8796 arrondi) |
-| FE fioul domestique | 74,52 kg/GJ PCI | OMINEA, NAPFUE 204, SNAP 020202, 2024 (74,5229 arrondi) |
+| FE gaz naturel | 55,88 kg/GJ PCI | OMINEA, NAPFUE 301, SNAP 020202, 2024 (55,8796 arrondi, choix 17) |
+| FE fioul domestique | 74,52 kg/GJ PCI | OMINEA, NAPFUE 204, SNAP 020202, 2024 (74,5229 arrondi, choix 17) |
 | FE GPL | 63,1 kg/GJ PCI | OMINEA, NAPFUE 303, SNAP 020202, 2024 |
 | Conversion | 0,0036 GJ/kWh | `DonneesReference!D16`, « convertir GJ en kWh » |
 
@@ -80,6 +80,7 @@ Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six s
 | 14 | Les deux fractions sont obligatoires, la baisse n'a pas de valeur par défaut | le tableur donne 0,1 (`F20`) ; les autres leviers n'ont pas de défaut et `appliedAssumptions` reste vide |
 | 15 | Territoire sans réseau : facteur de chaleur nul | choix de conception, non validé, comme `batiments_machines_agricoles` |
 | 16 | Année 2024 pour toutes les données | le tableur ne fixe pas l'année des facteurs OMINEA |
+| 17 | Facteurs OMINEA du gaz et du fioul arrondis à deux décimales (55,88 et 74,52 au lieu de 55,8796 et 74,5229) | choix de conception, non validé ; le GPL (63,1) n'est pas arrondi |
 
 ## Cas de test
 

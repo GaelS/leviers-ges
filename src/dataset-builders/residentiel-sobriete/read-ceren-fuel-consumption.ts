@@ -30,9 +30,8 @@ function toMismatch(detail: string): InvalidDataset {
 function findYearColumn(rows: SheetRows): Result<number, InvalidDataset> {
   const headerRow = rows.find((row) => row[0] === HEADER_LABEL)
   const column = headerRow?.indexOf(REFERENCE_YEAR)
-  return column === undefined || column < 0
-    ? err(toMismatch(`year ${REFERENCE_YEAR}`))
-    : ok(column)
+  const isYearColumnMissing = column === undefined || column < 0
+  return isYearColumnMissing ? err(toMismatch(`year ${REFERENCE_YEAR}`)) : ok(column)
 }
 
 function readTotal({
@@ -61,4 +60,4 @@ function readCerenFuelConsumption(rows: SheetRows): Result<CerenFuelConsumption,
 }
 
 export { readCerenFuelConsumption }
-export type { CerenFuelConsumption, SheetRows }
+export type { SheetRows }

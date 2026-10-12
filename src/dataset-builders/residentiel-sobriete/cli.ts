@@ -7,8 +7,8 @@ import { readResidentialEnergySources } from './read-residential-energy-sources.
 const dataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
 const outputDirectory = join(dataDirectory, 'residentiel-sobriete')
 
-const residentialEnergy = await readResidentialEnergySources(dataDirectory).andThen((sources) =>
-  buildResidentialEnergy(sources),
+const residentialEnergy = await readResidentialEnergySources(dataDirectory).andThen(
+  buildResidentialEnergy,
 )
 
 if (residentialEnergy.isErr()) {

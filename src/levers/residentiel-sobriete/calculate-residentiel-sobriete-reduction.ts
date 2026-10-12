@@ -24,11 +24,11 @@ const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.07
 const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction = quantity<'Fraction'>('0.674')
 
 // Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 301 (gaz naturel), SNAP 020202 (chauffage résidentiel), 2024 :
-// 55,8796 kg CO2/GJ PCI, arrondi à 55,88 comme dans la fiche d'analyse du levier
+// 55,8796 kg CO2/GJ PCI, arrondi à 55,88 (choix de conception, non validé)
 const NATURAL_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('55.88')
 
 // Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 204 (fioul domestique), SNAP 020202 (chauffage résidentiel), 2024 :
-// 74,5229 kg CO2/GJ PCI, arrondi à 74,52 comme dans la fiche d'analyse du levier
+// 74,5229 kg CO2/GJ PCI, arrondi à 74,52 (choix de conception, non validé)
 const FUEL_OIL_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('74.52')
 
 // Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 303 (GPL), SNAP 020202 (chauffage résidentiel), 2024 :
