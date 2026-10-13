@@ -1,8 +1,7 @@
 import { Result, err, ok } from 'neverthrow'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
-
-type SheetRows = readonly (readonly unknown[])[]
+import type { SheetRows } from '../sheet-rows.ts'
 
 type RegionalEnergy = {
   readonly regionCode: string
@@ -107,4 +106,4 @@ function readRegionalEnergy({
 }
 
 export { readRegionalEnergy }
-export type { RegionalEnergy, SheetRows }
+export type { RegionalEnergy }

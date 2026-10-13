@@ -1,5 +1,9 @@
-import type BigNumber from 'bignumber.js'
-import { sum, toBig } from '../../domain/big-number.ts'
+import { sum } from '../../domain/big-number.ts'
+import {
+  convertToKgPerKwh,
+  ELECTRICITY_APPLIED_EMISSION_FACTOR,
+  NATURAL_GAS_EMISSION_FACTOR,
+} from '../../domain/emission-factors.ts'
 import { quantity } from '../../domain/units.ts'
 import type {
   Fraction,
@@ -15,23 +19,6 @@ type SobrietyFractions = {
   readonly consumptionReduction: Fraction
 }
 
-// Source : Base Empreinte, élément 15591 (électricité, mix moyen), version 23.11, validité décembre 2017,
-// incertitude 10 % : 0,0791 kgCO2e/kWh. PlanET V1, onglet Residentiel_Sobriete
-const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.0791')
-
-// Source : PlanET V1, onglet Residentiel_Sobriete, forme « FE électricité * 67,4% » ;
-// aucune cellule du classeur ne contient ni n'explique ce coefficient, repris tel quel
-const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction = quantity<'Fraction'>('0.674')
-
-// Source : produit des deux constantes précédentes : 0,0791 × 67,4 % = 0,0533134 kgCO2e/kWh
-const ELECTRICITY_APPLIED_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>(
-  ELECTRICITY_EMISSION_FACTOR.times(ELECTRICITY_EMISSION_FACTOR_SHARE).toFixed(),
-)
-
-// Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 301 (gaz naturel), SNAP 020202 (chauffage résidentiel), 2024 :
-// 55,8796 kg CO2/GJ PCI, arrondi à 55,88 (choix de conception, non validé)
-const NATURAL_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('55.88')
-
 // Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 204 (fioul domestique), SNAP 020202 (chauffage résidentiel), 2024 :
 // 74,5229 kg CO2/GJ PCI, arrondi à 74,52 (choix de conception, non validé)
 const FUEL_OIL_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('74.52')
@@ -40,13 +27,6 @@ const FUEL_OIL_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoul
 // 63,1 kg CO2/GJ PCI
 const LIQUEFIED_PETROLEUM_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule =
   quantity<'KgCo2ePerGigajoule'>('63.1')
-
-// Source : PlanET V1, DonneesReference!D16 « convertir GJ en kWh » : 1 kWh = 3,6 MJ = 0,0036 GJ
-const GIGAJOULES_PER_KILOWATT_HOUR: BigNumber = toBig('0.0036')
-
-function convertToKgPerKwh(emissionFactor: KgCo2ePerGigajoule): KgCo2ePerKwh {
-  return quantity<'KgCo2ePerKwh'>(emissionFactor.times(GIGAJOULES_PER_KILOWATT_HOUR).toFixed())
-}
 
 function calculateEmissions({
   consumption,

@@ -8,8 +8,8 @@ import {
   readManifestSourceText,
 } from '../../infrastructure/csv/read-manifest-source.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
+import type { SheetRows } from '../sheet-rows.ts'
 import type { ResidentialEnergySources } from './build-residential-energy.ts'
-import type { SheetRows } from './read-ceren-fuel-consumption.ts'
 
 const datasetFolder = 'residentiel-sobriete'
 const regionalBilanFile = 'sources/sdes-bilan-energie-residentiel-2024.csv'
