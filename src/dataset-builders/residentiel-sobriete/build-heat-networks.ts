@@ -10,7 +10,7 @@ import { SECRET_MARKER } from '../secret-statistic.ts'
 import { toCityCode } from '../to-city-code.ts'
 import { toCsvText } from '../to-csv-text.ts'
 
-type HeatNetwork = {
+type HeatNetworkRow = {
   readonly networkId: string
   readonly communeCode: string
   readonly residentialDeliveredMwh: string
@@ -26,7 +26,7 @@ type HeatNetworksBuild = {
 
 type HeatNetworkRecord =
   | { readonly kind: 'secret' }
-  | { readonly kind: 'network'; readonly network: HeatNetwork }
+  | { readonly kind: 'network'; readonly network: HeatNetworkRow }
 
 const heatDataset = 'residentiel-sobriete/sources/sdes-chaleur-commune-2024.csv'
 
@@ -66,7 +66,7 @@ function toHeatNetworkRecord(row: DataRow): Result<HeatNetworkRecord, InvalidDat
   })
 }
 
-function toCsv(networks: readonly HeatNetwork[]): Result<string, InvalidDataset> {
+function toCsv(networks: readonly HeatNetworkRow[]): Result<string, InvalidDataset> {
   return toCsvText({
     dataset: heatDataset,
     columns: HEAT_NETWORKS_COLUMNS,
@@ -102,4 +102,3 @@ function buildHeatNetworks(heatCsv: string): Result<HeatNetworksBuild, InvalidDa
 }
 
 export { buildHeatNetworks }
-export type { HeatNetworksBuild }

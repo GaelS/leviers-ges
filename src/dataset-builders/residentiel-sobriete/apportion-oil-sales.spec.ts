@@ -78,6 +78,23 @@ describe('apportionOilSales', () => {
     })
   })
 
+  it('refuse une région du bilan sans aucune vente', () => {
+    expect(
+      apportionOilSales({
+        sales: [toSale({ departementCode: '01', fuelOil: '1', liquefiedPetroleumGas: '1' })],
+        regionalPetroleum: new Map([
+          ['84', toRegional('1', '1')],
+          ['11', toRegional('1', '1')],
+        ]),
+      })._unsafeUnwrapErr(),
+    ).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'residentiel-sobriete/departements.csv',
+      reason: 'empty_dataset',
+      detail: 'no oil sales in region 11',
+    })
+  })
+
   it.each([
     ['du fioul', '0', '1'],
     ['du GPL', '1', '0'],

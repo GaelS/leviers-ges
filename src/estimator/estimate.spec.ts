@@ -297,6 +297,88 @@ describe('estimate', () => {
     })
   })
 
+  describe('residentiel_sobriete', () => {
+    const withResidentialEnergy = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'residentiel-sobriete/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              electricity_gwh: '10',
+              natural_gas_gwh: '0',
+              fuel_oil_gwh: '0',
+              lpg_gwh: '0',
+              heat_gwh: '0',
+            },
+          ],
+        },
+        'residentiel-sobriete/heat-networks': {
+          keyColumn: 'network_id',
+          rows: [
+            {
+              network_id: 'A',
+              commune_code: '01001',
+              delivered_mwh: '100',
+              emission_factor_kg_per_kwh: '0.1',
+            },
+          ],
+        },
+      }),
+    )
+
+    function residentielSobrieteRequest({
+      level = 'region',
+      consumptionReduction = '1',
+    }: {
+      level?: string
+      consumptionReduction?: string | number
+    }): RequestInput {
+      return {
+        id: 'residentiel_sobriete',
+        territory: { level, code: '84' },
+        parameters: {
+          householdsApplyingSobrietyFraction: '1',
+          consumptionReductionFraction: consumptionReduction,
+        },
+      } as RequestInput
+    }
+
+    it('refuse l’EPCI, non calculé, sans lire de données', () => {
+      expect(withResidentialEnergy(residentielSobrieteRequest({ level: 'epci' }))._unsafeUnwrapErr()).toEqual({
+        kind: 'level_not_computed',
+        lever: 'residentiel_sobriete',
+        level: 'epci',
+      })
+    })
+
+    it('aiguille la région vers son levier : 10 GWh d’électricité à 0,0533134 kgCO2e/kWh', () => {
+      const result = withResidentialEnergy(residentielSobrieteRequest({}))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('533.13')
+    })
+
+    it('accepte la baisse en nombre', () => {
+      const result = withResidentialEnergy(residentielSobrieteRequest({ consumptionReduction: 0.5 }))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('266.57')
+    })
+
+    it.each(['-0.1', '1.01'])('refuse la baisse %s hors de 0 à 1', (consumptionReduction) => {
+      expect(
+        withResidentialEnergy(residentielSobrieteRequest({ consumptionReduction }))._unsafeUnwrapErr(),
+      ).toEqual({
+        kind: 'invalid_request',
+        issues: [
+          { parameter: 'parameters.consumptionReductionFraction', message: 'must be between 0 and 1' },
+        ],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
