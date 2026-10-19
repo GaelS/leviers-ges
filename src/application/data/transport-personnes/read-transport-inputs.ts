@@ -1,5 +1,4 @@
 import { Result } from 'neverthrow'
-import { match } from 'ts-pattern'
 import { requireQuantityColumn } from '../../require-column.ts'
 import type {
   DataRow,
@@ -8,13 +7,8 @@ import type {
   InvalidDataset,
 } from '../../../domain/data-source.ts'
 import type { Level, Territory } from '../../../domain/territory.ts'
+import { readTransportRow } from './read-transport-row.ts'
 import type { TransportInputs } from './transport-inputs.ts'
-
-const regionsDataset = 'transport-personnes/regions'
-
-const departementsDataset = 'transport-personnes/departements'
-
-const epcisDataset = 'transport-personnes/epcis'
 
 function toTransportInputs({
   dataset,
@@ -78,23 +72,9 @@ function readTransportInputs({
   dataSource: DataSource
   territory: Territory<Level>
 }): Result<TransportInputs, DataSourceError> {
-  return match(territory.level)
-    .with('region', () =>
-      dataSource
-        .row(regionsDataset, territory)
-        .andThen((row) => toTransportInputs({ dataset: regionsDataset, row })),
-    )
-    .with('departement', () =>
-      dataSource
-        .row(departementsDataset, territory)
-        .andThen((row) => toTransportInputs({ dataset: departementsDataset, row })),
-    )
-    .with('epci', () =>
-      dataSource
-        .row(epcisDataset, territory)
-        .andThen((row) => toTransportInputs({ dataset: epcisDataset, row })),
-    )
-    .exhaustive()
+  return readTransportRow({ dataSource, territory }).andThen(({ dataset, row }) =>
+    toTransportInputs({ dataset, row }),
+  )
 }
 
 export { readTransportInputs }
