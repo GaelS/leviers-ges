@@ -3,9 +3,10 @@ import { Result, err, ok } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
 import { sum, toBig } from '../../domain/big-number.ts'
 import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.ts'
+import type { SheetRows } from '../sheet-rows.ts'
 import { toCsvText } from '../to-csv-text.ts'
 import { groupLocalConsumption, type LocalConsumption } from './group-local-consumption.ts'
-import { readRegionalEnergy, type RegionalEnergy, type SheetRows } from './read-regional-energy.ts'
+import { readRegionalEnergy, type RegionalEnergy } from './read-regional-energy.ts'
 
 type NamedSheet = { readonly name: string; readonly rows: SheetRows }
 
@@ -95,10 +96,10 @@ const EPCIS_COLUMNS = ['code_epci', 'electricity_mwh', 'natural_gas_mwh'] as con
 
 const regionalDataset = 'sdes-energie-regional'
 const communesDataset = 'territoires/communes'
-const irisElectricityDataset = 'sdes-electricite-iris-2024-agriculture'
-const irisGasDataset = 'sdes-gaz-iris-2024-agriculture'
-const epciElectricityDataset = 'sdes-electricite-epci-2024-agriculture'
-const epciGasDataset = 'sdes-gaz-epci-2024-agriculture'
+const irisElectricityDataset = 'batiments-machines-agricoles/sources/sdes-electricite-iris-2024-agriculture.csv'
+const irisGasDataset = 'batiments-machines-agricoles/sources/sdes-gaz-iris-2024-agriculture.csv'
+const epciElectricityDataset = 'batiments-machines-agricoles/sources/sdes-electricite-epci-2024-agriculture.csv'
+const epciGasDataset = 'batiments-machines-agricoles/sources/sdes-gaz-epci-2024-agriculture.csv'
 
 function toCommunes(rows: readonly DataRow[]): Result<readonly Commune[], InvalidDataset> {
   const dataset = communesDataset

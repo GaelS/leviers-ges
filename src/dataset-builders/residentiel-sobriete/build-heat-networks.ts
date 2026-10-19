@@ -1,13 +1,9 @@
-import { sortBy } from 'es-toolkit'
-import { Result, ok } from 'neverthrow'
+import { Result } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
 import { sum, toBig } from '../../domain/big-number.ts'
-import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
-import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
-import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
+import type { InvalidDataset } from '../../domain/data-source.ts'
+import { readSdesHeatNetworks, type SdesHeatNetwork } from '../read-sdes-heat-networks.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
-import { SECRET_MARKER } from '../secret-statistic.ts'
-import { toCityCode } from '../to-city-code.ts'
 import { toCsvText } from '../to-csv-text.ts'
 
 type HeatNetworkRow = {
@@ -24,10 +20,6 @@ type HeatNetworksBuild = {
   readonly totalResidentialDeliveredMwh: string
 }
 
-type HeatNetworkRecord =
-  | { readonly kind: 'secret' }
-  | { readonly kind: 'network'; readonly network: HeatNetworkRow }
-
 const heatDataset = 'residentiel-sobriete/sources/sdes-chaleur-commune-2024.csv'
 
 // Source : data/residentiel-sobriete/manifest.json, colonnes de heat-networks.csv
@@ -38,67 +30,56 @@ const HEAT_NETWORKS_COLUMNS = [
   'emission_factor_kg_per_kwh',
 ] as const
 
-function toHeatNetworkRecord(row: DataRow): Result<HeatNetworkRecord, InvalidDataset> {
+function toHeatNetworkRow({
+  networkId,
+  communeCode,
+  deliveredMwh,
+  row,
+}: SdesHeatNetwork): Result<HeatNetworkRow, InvalidDataset> {
   const dataset = heatDataset
-  return Result.combine([
-    requireColumn({ dataset, row, column: 'ID' }),
-    requireColumn({ dataset, row, column: 'COMMUNE_CODE' }),
-    requireColumn({ dataset, row, column: 'CONSOR' }),
-    requireColumn({ dataset, row, column: 'CONTENU_EN_CO2' }),
-  ]).andThen(([networkId, communeCode, residentialConsumption, carbonContent]) => {
-    if (residentialConsumption === SECRET_MARKER) {
-      return ok<HeatNetworkRecord, InvalidDataset>({ kind: 'secret' })
-    }
-    return Result.combine([
-      roundToLoaderPrecision({ dataset, column: 'CONSOR', text: residentialConsumption }),
+  return requireColumn({ dataset, row, column: 'CONTENU_EN_CO2' })
+    .andThen((carbonContent) =>
       roundToLoaderPrecision({ dataset, column: 'CONTENU_EN_CO2', text: carbonContent }),
-    ]).map(
-      ([residentialDeliveredMwh, emissionFactor]): HeatNetworkRecord => ({
-        kind: 'network',
-        network: {
-          networkId,
-          communeCode: toCityCode(communeCode),
-          residentialDeliveredMwh,
-          emissionFactor,
-        },
-      }),
     )
-  })
+    .map((emissionFactor) => ({
+      networkId,
+      communeCode,
+      residentialDeliveredMwh: deliveredMwh,
+      emissionFactor,
+    }))
 }
 
 function toCsv(networks: readonly HeatNetworkRow[]): Result<string, InvalidDataset> {
   return toCsvText({
     dataset: heatDataset,
     columns: HEAT_NETWORKS_COLUMNS,
-    rows: sortBy(networks, [({ networkId }) => networkId]).map(
-      ({ networkId, communeCode, residentialDeliveredMwh, emissionFactor }) => [
-        networkId,
-        communeCode,
-        residentialDeliveredMwh,
-        emissionFactor,
-      ],
-    ),
+    rows: networks.map(({ networkId, communeCode, residentialDeliveredMwh, emissionFactor }) => [
+      networkId,
+      communeCode,
+      residentialDeliveredMwh,
+      emissionFactor,
+    ]),
   })
 }
 
 function buildHeatNetworks(heatCsv: string): Result<HeatNetworksBuild, InvalidDataset> {
-  return parseCsvText({ text: heatCsv, delimiter: ';' })
-    .mapErr(toInvalidDataset(heatDataset))
-    .andThen((rows) => Result.combine(rows.map(toHeatNetworkRecord)))
-    .andThen((records) => {
-      const networks = records.flatMap((record) =>
-        record.kind === 'network' ? [record.network] : [],
-      )
+  return readSdesHeatNetworks({
+    csv: heatCsv,
+    dataset: heatDataset,
+    consumptionColumn: 'CONSOR',
+  }).andThen(({ networks, secretNetworkCount }) =>
+    Result.combine(networks.map(toHeatNetworkRow)).andThen((rows) => {
       const totalResidentialDeliveredMwh = sum(
-        networks.map(({ residentialDeliveredMwh }) => toBig(residentialDeliveredMwh)),
+        rows.map(({ residentialDeliveredMwh }) => toBig(residentialDeliveredMwh)),
       )
-      return toCsv(networks).map((csv) => ({
+      return toCsv(rows).map((csv) => ({
         csv,
-        networkCount: networks.length,
-        secretNetworkCount: records.filter(({ kind }) => kind === 'secret').length,
+        networkCount: rows.length,
+        secretNetworkCount,
         totalResidentialDeliveredMwh: totalResidentialDeliveredMwh.toFixed(),
       }))
-    })
+    }),
+  )
 }
 
 export { buildHeatNetworks }

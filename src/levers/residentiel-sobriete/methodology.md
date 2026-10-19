@@ -58,7 +58,7 @@ Les FE en kg/GJ deviennent des kg/kWh par `FE × 0,0036` : gaz 0,201168, fioul 0
 
 Le facteur de la chaleur est la moyenne des contenus CO2 des réseaux du territoire, pondérée par les livraisons au résidentiel (`Residentiel_Sobriete!C33`).
 
-Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six sources versionnées de `data/residentiel-sobriete/sources/`.
+Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six sources versionnées de `data/residentiel-sobriete/sources/` (le jeu communal de chaleur du SDES y figure aussi dans `data/reseaux-chaleur/sources/`, avec la même empreinte : un manifeste ne référence que des fichiers de son dossier).
 
 ## Choix faits
 
@@ -113,7 +113,6 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Part du fioul et du GPL | à confirmer avec l'ADEME : le CEREN par région, ou une autre clé de répartition (choix 2) |
 | Répartition par les ventes | à confirmer avec l'ADEME : ventes SDES lues comme clé de répartition plutôt que comme consommation (choix 3) |
 | Valeurs négatives dans les CSV | une valeur négative passe la lecture sans contrôle (`require-column.ts`, partagé par les leviers) ; aucune borne n'est posée, à décider pour tous les leviers |
-| Factorisation avec `batiments_machines_agricoles` | `weightHeatEmissionFactor`, les FE de l'électricité et du gaz, la conversion GJ en kWh sont écrits deux fois, un par levier ; ils montent dans `src/application/` dans un refactor séparé |
 
 ## Limites
 

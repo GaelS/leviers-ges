@@ -199,7 +199,7 @@ describe('buildAgriculturalEnergy', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sdes-gaz-iris-2024-agriculture',
+        dataset: 'batiments-machines-agricoles/sources/sdes-gaz-iris-2024-agriculture.csv',
         reason: 'columns_mismatch',
         detail: 'key 99 is not in territoires/communes',
       })
@@ -211,7 +211,7 @@ describe('buildAgriculturalEnergy', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sdes-gaz-epci-2024-agriculture',
+        dataset: 'batiments-machines-agricoles/sources/sdes-gaz-epci-2024-agriculture.csv',
         reason: 'columns_mismatch',
         detail: 'key 299999999 is not in territoires/communes',
       })
@@ -287,10 +287,10 @@ describe('buildAgriculturalEnergy', () => {
     })
 
     it.each([
-      ['irisElectricityCsv', 'sdes-electricite-iris-2024-agriculture'],
-      ['irisGasCsv', 'sdes-gaz-iris-2024-agriculture'],
-      ['epciElectricityCsv', 'sdes-electricite-epci-2024-agriculture'],
-      ['epciGasCsv', 'sdes-gaz-epci-2024-agriculture'],
+      ['irisElectricityCsv', 'batiments-machines-agricoles/sources/sdes-electricite-iris-2024-agriculture.csv'],
+      ['irisGasCsv', 'batiments-machines-agricoles/sources/sdes-gaz-iris-2024-agriculture.csv'],
+      ['epciElectricityCsv', 'batiments-machines-agricoles/sources/sdes-electricite-epci-2024-agriculture.csv'],
+      ['epciGasCsv', 'batiments-machines-agricoles/sources/sdes-gaz-epci-2024-agriculture.csv'],
     ] as const)('renvoie l’erreur du fichier %s en le nommant', (key, dataset) => {
       const result = buildAgriculturalEnergy(toSources({ [key]: 'CODE_IRIS_CODE;CONSO\nA;beaucoup' }))
       expect(result._unsafeUnwrapErr()).toMatchObject({ dataset })

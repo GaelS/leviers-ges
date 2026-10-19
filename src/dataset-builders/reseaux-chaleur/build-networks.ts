@@ -1,13 +1,11 @@
-import { sortBy } from 'es-toolkit'
-import { Result, ok } from 'neverthrow'
+import { Result } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
 import { sum, toBig } from '../../domain/big-number.ts'
 import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
+import { readSdesHeatNetworks, type SdesHeatNetwork } from '../read-sdes-heat-networks.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
-import { SECRET_MARKER } from '../secret-statistic.ts'
-import { toCityCode } from '../to-city-code.ts'
 import { toCsvText } from '../to-csv-text.ts'
 
 type FactorSource = 'fcu' | 'sdes'
@@ -27,14 +25,8 @@ type NetworksBuild = {
   readonly totalDeliveredMwh: string
 }
 
-type IdentifiedRow = { readonly id: string; readonly row: DataRow }
-
-type NetworkRecord =
-  | { readonly kind: 'secret' }
-  | { readonly kind: 'network'; readonly network: Network }
-
-const sdesDataset = 'sdes-chaleur-commune-2024'
-const fcuDataset = 'fcu-reseaux-chaleur'
+const sdesDataset = 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
+const fcuDataset = 'reseaux-chaleur/sources/fcu-reseaux-chaleur.csv'
 
 // Source : data/reseaux-chaleur/manifest.json, colonnes de networks.csv
 const NETWORKS_COLUMNS = [
@@ -86,52 +78,23 @@ function resolveEmissionFactor({
     .map((emissionFactor) => ({ emissionFactor, factorSource: 'sdes' }))
 }
 
-function toNetworkRecord({
-  id,
-  row,
-  fcuFactors,
-}: IdentifiedRow & { fcuFactors: ReadonlyMap<string, string> }): Result<NetworkRecord, InvalidDataset> {
-  const dataset = sdesDataset
-  return Result.combine([
-    requireColumn({ dataset, row, column: 'COMMUNE_CODE' }),
-    requireColumn({ dataset, row, column: 'CONSOTOT' }),
-  ]).andThen(([communeCode, consumption]): Result<NetworkRecord, InvalidDataset> => {
-    if (consumption === SECRET_MARKER) return ok({ kind: 'secret' })
-    return Result.combine([
-      roundToLoaderPrecision({ dataset, column: 'CONSOTOT', text: consumption }),
-      resolveEmissionFactor({ row, networkId: id, fcuFactors }),
-    ]).map(([deliveredMwh, { emissionFactor, factorSource }]) => ({
-      kind: 'network',
-      network: {
-        networkId: id,
-        communeCode: toCityCode(communeCode),
-        deliveredMwh,
-        emissionFactor,
-        factorSource,
-      },
-    }))
-  })
-}
-
-function readNetworkRecords({
-  sdesCsv,
+function toNetwork({
+  network,
   fcuFactors,
 }: {
-  sdesCsv: string
+  network: SdesHeatNetwork
   fcuFactors: ReadonlyMap<string, string>
-}): Result<readonly NetworkRecord[], InvalidDataset> {
-  const dataset = sdesDataset
-  return parseCsvText({ text: sdesCsv, delimiter: ';' })
-    .mapErr(toInvalidDataset(dataset))
-    .andThen((rows) =>
-      Result.combine(
-        rows.map((row) => requireColumn({ dataset, row, column: 'ID' }).map((id) => ({ id, row }))),
-      ),
-    )
-    .map((shaped) => sortBy(shaped, [({ id }) => id]))
-    .andThen((sorted) =>
-      Result.combine(sorted.map((shapedRow) => toNetworkRecord({ ...shapedRow, fcuFactors }))),
-    )
+}): Result<Network, InvalidDataset> {
+  const { networkId, communeCode, deliveredMwh, row } = network
+  return resolveEmissionFactor({ row, networkId, fcuFactors }).map(
+    ({ emissionFactor, factorSource }) => ({
+      networkId,
+      communeCode,
+      deliveredMwh,
+      emissionFactor,
+      factorSource,
+    }),
+  )
 }
 
 function toCsv(networks: readonly Network[]): Result<string, InvalidDataset> {
@@ -155,20 +118,22 @@ function buildNetworks({
   sdesCsv: string
   fcuCsv: string
 }): Result<NetworksBuild, InvalidDataset> {
-  return readFcuFactors(fcuCsv)
-    .andThen((fcuFactors) => readNetworkRecords({ sdesCsv, fcuFactors }))
-    .andThen((records) => {
-      const networks = records.flatMap((record) =>
-        record.kind === 'network' ? [record.network] : [],
-      )
-      const totalDeliveredMwh = sum(networks.map(({ deliveredMwh }) => toBig(deliveredMwh)))
-      return toCsv(networks).map((csv) => ({
-        csv,
-        networkCount: networks.length,
-        secretNetworkCount: records.filter(({ kind }) => kind === 'secret').length,
-        totalDeliveredMwh: totalDeliveredMwh.toFixed(),
-      }))
-    })
+  return Result.combine([
+    readFcuFactors(fcuCsv),
+    readSdesHeatNetworks({ csv: sdesCsv, dataset: sdesDataset, consumptionColumn: 'CONSOTOT' }),
+  ]).andThen(([fcuFactors, { networks, secretNetworkCount }]) =>
+    Result.combine(networks.map((network) => toNetwork({ network, fcuFactors }))).andThen(
+      (resolved) => {
+        const totalDeliveredMwh = sum(resolved.map(({ deliveredMwh }) => toBig(deliveredMwh)))
+        return toCsv(resolved).map((csv) => ({
+          csv,
+          networkCount: resolved.length,
+          secretNetworkCount,
+          totalDeliveredMwh: totalDeliveredMwh.toFixed(),
+        }))
+      },
+    ),
+  )
 }
 
 export { buildNetworks }

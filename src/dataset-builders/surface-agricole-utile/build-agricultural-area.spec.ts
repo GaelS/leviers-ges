@@ -183,7 +183,7 @@ describe('buildAgriculturalArea', () => {
         }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-region',
+        dataset: 'surface-agricole-utile/sources/sau-region.csv',
         reason: 'control_total_mismatch',
       })
     })
@@ -201,7 +201,7 @@ describe('buildAgriculturalArea', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sau-region',
+        dataset: 'surface-agricole-utile/sources/sau-region.csv',
         reason: 'control_total_mismatch',
         detail: '84: the communes differ from the file by -0.5',
       })
@@ -219,7 +219,7 @@ describe('buildAgriculturalArea', () => {
         }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-departement',
+        dataset: 'surface-agricole-utile/sources/sau-departement.csv',
         reason: 'control_total_mismatch',
         detail: '12: the communes differ from the file by -1',
       })
@@ -230,7 +230,7 @@ describe('buildAgriculturalArea', () => {
         toSources({ regionCsv: toCsv(REGION_HEADER, `${T2020},84,A,300.5`, `${T2020},76,B,50`) }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-region',
+        dataset: 'surface-agricole-utile/sources/sau-region.csv',
         detail: '52: the communes differ from the file by 10',
       })
     })
@@ -248,7 +248,7 @@ describe('buildAgriculturalArea', () => {
         }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-region',
+        dataset: 'surface-agricole-utile/sources/sau-region.csv',
         detail: '11: the communes differ from the file by -5',
       })
     })
@@ -261,16 +261,16 @@ describe('buildAgriculturalArea', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sau-commune',
+        dataset: 'surface-agricole-utile/sources/sau-commune.csv',
         reason: 'columns_mismatch',
         detail: 'commune 12218 is not in territoires/communes',
       })
     })
 
     it.each([
-      ['communeCsv', COMMUNE_HEADER, 'sau-commune'],
-      ['regionCsv', REGION_HEADER, 'sau-region'],
-      ['departementCsv', DEPARTEMENT_HEADER, 'sau-departement'],
+      ['communeCsv', COMMUNE_HEADER, 'surface-agricole-utile/sources/sau-commune.csv'],
+      ['regionCsv', REGION_HEADER, 'surface-agricole-utile/sources/sau-region.csv'],
+      ['departementCsv', DEPARTEMENT_HEADER, 'surface-agricole-utile/sources/sau-departement.csv'],
     ] as const)('refuse un fichier %s sans aucune ligne de 2020', (key, header, dataset) => {
       const result = buildAgriculturalArea(
         toSources({ [key]: toCsv(header, `${T2010},01,A,1`) }),
@@ -296,7 +296,7 @@ describe('buildAgriculturalArea', () => {
         }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-region',
+        dataset: 'surface-agricole-utile/sources/sau-region.csv',
         reason: 'control_total_mismatch',
         detail: '84: the communes differ from the file by -200',
       })
@@ -310,7 +310,7 @@ describe('buildAgriculturalArea', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sau-commune',
+        dataset: 'surface-agricole-utile/sources/sau-commune.csv',
         reason: 'columns_mismatch',
         detail: 'commune 99999 is not in territoires/communes',
       })
@@ -322,16 +322,16 @@ describe('buildAgriculturalArea', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sau-commune',
+        dataset: 'surface-agricole-utile/sources/sau-commune.csv',
         reason: 'unreadable',
         detail: 'valeur=beaucoup is not a decimal number',
       })
     })
 
     it.each([
-      ['communeCsv', 'sau-commune', 'geocode_commune'],
-      ['regionCsv', 'sau-region', 'geocode_region'],
-      ['departementCsv', 'sau-departement', 'geocode_departement'],
+      ['communeCsv', 'surface-agricole-utile/sources/sau-commune.csv', 'geocode_commune'],
+      ['regionCsv', 'surface-agricole-utile/sources/sau-region.csv', 'geocode_region'],
+      ['departementCsv', 'surface-agricole-utile/sources/sau-departement.csv', 'geocode_departement'],
     ] as const)('refuse un fichier %s sans sa colonne clé', (key, dataset, column) => {
       const csv = toCsv('date_mesure,libelle,valeur', `${T2020},A,1`)
       const result = buildAgriculturalArea(toSources({ [key]: csv }))
@@ -347,7 +347,7 @@ describe('buildAgriculturalArea', () => {
         toSources({ communeCsv: toCsv(COMMUNE_HEADER, `${T2020},01001,A,1,en trop`) }),
       )
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sau-commune',
+        dataset: 'surface-agricole-utile/sources/sau-commune.csv',
         reason: 'malformed_csv',
       })
     })
@@ -376,7 +376,7 @@ describe('buildAgriculturalArea', () => {
       )
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sau-commune',
+        dataset: 'surface-agricole-utile/sources/sau-commune.csv',
         reason: 'malformed_csv',
         detail: 'field a,b needs CSV quoting',
       })

@@ -13,7 +13,7 @@ type ProductsCarbon = {
 
 type DescribedRow = { readonly row: DataRow; readonly year: string }
 
-const productsCarbonDataset = 'ominea-2026-tableau-45-produits-bois-tc'
+const productsCarbonDataset = 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv'
 
 // Source : OMINEA 2026, UTCATF, tableau 45, p. 97 : colonne « bois d'œuvre » (sciages plus contreplaqués), tC/an
 const TIMBER_PRODUCTS_CARBON_COLUMN = 'bois_oeuvre_tC_sciages_plus_contreplaques'

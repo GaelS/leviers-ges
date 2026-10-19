@@ -1,8 +1,7 @@
 import { Result, err, ok } from 'neverthrow'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
-
-type SheetRows = readonly (readonly unknown[])[]
+import type { SheetRows } from '../sheet-rows.ts'
 
 type CerenFuelConsumption = {
   readonly fuelOilTwh: string
@@ -60,4 +59,3 @@ function readCerenFuelConsumption(rows: SheetRows): Result<CerenFuelConsumption,
 }
 
 export { cerenDataset, readCerenFuelConsumption }
-export type { SheetRows }
