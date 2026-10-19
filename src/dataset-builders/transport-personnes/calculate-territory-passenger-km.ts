@@ -2,7 +2,7 @@ import type BigNumber from 'bignumber.js'
 import { sortBy, uniqBy } from 'es-toolkit'
 import { sum } from '../../domain/big-number.ts'
 import type { CommutingRow } from './read-commuting-passenger-km.ts'
-import { isInScope, type SourceLevel } from './source-level.ts'
+import { isInScope, toTerritoryKey, type SourceLevel } from './source-level.ts'
 
 type TerritoryPassengerKm = {
   readonly level: SourceLevel
@@ -58,7 +58,7 @@ function calculateTerritoryPassengerKm(
   rows: readonly CommutingRow[],
 ): readonly TerritoryPassengerKm[] {
   const inScope = rows.filter(isInScope)
-  const territories = uniqBy(inScope, ({ level, code }) => `${level}|${code}`).map(
+  const territories = uniqBy(inScope, toTerritoryKey).map(
     ({ level, code }) => toTerritoryPassengerKm({ level, code, rows: inScope }),
   )
   return sortBy(territories, [({ code }) => code])

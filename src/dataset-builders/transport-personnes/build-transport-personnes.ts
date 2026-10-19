@@ -1,15 +1,14 @@
 import type BigNumber from 'bignumber.js'
-import { groupBy } from 'es-toolkit'
-import { Result, err, ok } from 'neverthrow'
+import { Result } from 'neverthrow'
 import { sum } from '../../domain/big-number.ts'
-import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
+import type { InvalidDataset } from '../../domain/data-source.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
 import { toCsvText } from '../to-csv-text.ts'
+import { calculateFleetEmissionFactor } from './calculate-fleet-emission-factor.ts'
 import {
-  calculateFleetEmissionFactor,
-  type FleetCounts,
-  type FleetEmissionFactor,
-} from './calculate-fleet-emission-factor.ts'
+  calculateNationalFleetFactors,
+  type NationalFleetFactors,
+} from './calculate-national-fleet-factors.ts'
 import {
   calculateTerritoryPassengerKm,
   type TerritoryPassengerKm,
@@ -18,12 +17,13 @@ import {
   BUS_EMISSION_FACTORS_KG_PER_KM,
   CAR_EMISSION_FACTORS_KG_PER_KM,
 } from './fleet-emission-factors.ts'
+import { fleetCountsOf, groupFleetByTerritory, type FleetByTerritory } from './group-fleet.ts'
 import { readCommutingPassengerKm } from './read-commuting-passenger-km.ts'
-import { readFleet, type FleetGroup, type FleetRow } from './read-fleet.ts'
+import { readFleet } from './read-fleet.ts'
 import type { TransportSources } from './read-transport-sources.ts'
 import type { SourceLevel } from './source-level.ts'
 
-// Source : data/transport-personnes/manifest.json, colonnes numériques de regions.csv, departements.csv et epcis.csv
+// Source : choix de structure du jeu, non validé : les colonnes numériques écrites dans regions.csv, departements.csv et epcis.csv, après la colonne du code
 const NUMERIC_COLUMNS = [
   'car_weekly_passenger_km',
   'public_transport_weekly_passenger_km',
@@ -31,6 +31,7 @@ const NUMERIC_COLUMNS = [
   'bus_emission_factor_kg_per_km',
   'car_fleet_unclassified_share',
   'bus_fleet_unclassified_share',
+  'car_fleet_classified',
   'bus_fleet_classified',
 ] as const
 
@@ -53,164 +54,111 @@ type TransportBuild = {
   readonly epcis: LevelBuild
 }
 
-type NationalFactors = {
-  readonly car: BigNumber
-  readonly bus: BigNumber
+type OutputLevel = {
+  readonly level: SourceLevel
+  readonly keyColumn: string
+  readonly dataset: string
 }
 
-const outputDataset = 'transport-personnes'
+const regionsOutput: OutputLevel = {
+  level: 'REG',
+  keyColumn: 'code_region',
+  dataset: 'transport-personnes/regions.csv',
+}
 
-function fleetCountsOf({
-  fleetByTerritory,
-  level,
-  code,
-  group,
+const departementsOutput: OutputLevel = {
+  level: 'DEP',
+  keyColumn: 'code_departement',
+  dataset: 'transport-personnes/departements.csv',
+}
+
+const epcisOutput: OutputLevel = {
+  level: 'EPCI',
+  keyColumn: 'code_epci',
+  dataset: 'transport-personnes/epcis.csv',
+}
+
+function toRoundedFields({
+  dataset,
+  valueByColumn,
 }: {
-  fleetByTerritory: Readonly<Record<string, readonly FleetRow[]>>
-  level: SourceLevel
-  code: string
-  group: FleetGroup
-}): FleetCounts {
-  const rows = fleetByTerritory[`${level}|${code}|${group}`] ?? []
-  return Object.fromEntries(rows.map(({ fuel, vehicles }) => [fuel, vehicles]))
-}
-
-function nationalCountsOf({
-  fleet,
-  group,
-}: {
-  fleet: readonly FleetRow[]
-  group: FleetGroup
-}): FleetCounts {
-  const regional = fleet.filter((row) => row.level === 'REG' && row.group === group)
-  const byFuel = groupBy(regional, ({ fuel }) => fuel)
-  return Object.fromEntries(
-    Object.entries(byFuel).map(([fuel, rows]) => [
-      fuel,
-      sum(rows.map(({ vehicles }) => vehicles)),
-    ]),
-  )
-}
-
-function requireEmissionFactor({
-  factor,
-  group,
-}: {
-  factor: FleetEmissionFactor
-  group: FleetGroup
-}): Result<BigNumber, InvalidDataset> {
-  return factor.emissionFactor === undefined
-    ? err(invalidDataset({ dataset: outputDataset, reason: 'empty_dataset', detail: `national ${group} fleet` }))
-    : ok(factor.emissionFactor)
-}
-
-function calculateNationalFactors(fleet: readonly FleetRow[]): Result<NationalFactors, InvalidDataset> {
-  const car = calculateFleetEmissionFactor({
-    counts: nationalCountsOf({ fleet, group: 'VP' }),
-    emissionFactors: CAR_EMISSION_FACTORS_KG_PER_KM,
-  })
-  const bus = calculateFleetEmissionFactor({
-    counts: nationalCountsOf({ fleet, group: 'TC_routier' }),
-    emissionFactors: BUS_EMISSION_FACTORS_KG_PER_KM,
-  })
-  return Result.combine([
-    requireEmissionFactor({ factor: car, group: 'VP' }),
-    requireEmissionFactor({ factor: bus, group: 'TC_routier' }),
-  ]).map(([carFactor, busFactor]) => ({ car: carFactor, bus: busFactor }))
-}
-
-function toRoundedFields(
-  values: Readonly<Record<NumericColumn, BigNumber>>,
-): Result<readonly string[], InvalidDataset> {
+  dataset: string
+  valueByColumn: Readonly<Record<NumericColumn, BigNumber>>
+}): Result<readonly string[], InvalidDataset> {
   return Result.combine(
     NUMERIC_COLUMNS.map((column) =>
-      roundToLoaderPrecision({ dataset: outputDataset, column, text: values[column].toFixed() }),
+      roundToLoaderPrecision({ dataset, column, text: valueByColumn[column].toFixed() }),
     ),
   )
 }
 
 function toTerritoryRow({
+  dataset,
   territory,
   fleetByTerritory,
   national,
 }: {
+  dataset: string
   territory: TerritoryPassengerKm
-  fleetByTerritory: Readonly<Record<string, readonly FleetRow[]>>
-  national: NationalFactors
+  fleetByTerritory: FleetByTerritory
+  national: NationalFleetFactors
 }): Result<readonly string[], InvalidDataset> {
   const { level, code } = territory
-  const car = calculateFleetEmissionFactor({
+  const carFleet = calculateFleetEmissionFactor({
     counts: fleetCountsOf({ fleetByTerritory, level, code, group: 'VP' }),
     emissionFactors: CAR_EMISSION_FACTORS_KG_PER_KM,
   })
-  const bus = calculateFleetEmissionFactor({
+  const busFleet = calculateFleetEmissionFactor({
     counts: fleetCountsOf({ fleetByTerritory, level, code, group: 'TC_routier' }),
     emissionFactors: BUS_EMISSION_FACTORS_KG_PER_KM,
   })
   return toRoundedFields({
-    car_weekly_passenger_km: territory.carWeeklyPassengerKm,
-    public_transport_weekly_passenger_km: territory.publicTransportWeeklyPassengerKm,
-    car_emission_factor_kg_per_km: car.emissionFactor ?? national.car,
-    bus_emission_factor_kg_per_km: bus.emissionFactor ?? national.bus,
-    car_fleet_unclassified_share: car.unclassifiedShare,
-    bus_fleet_unclassified_share: bus.unclassifiedShare,
-    bus_fleet_classified: bus.classifiedVehicles,
+    dataset,
+    valueByColumn: {
+      car_weekly_passenger_km: territory.carWeeklyPassengerKm,
+      public_transport_weekly_passenger_km: territory.publicTransportWeeklyPassengerKm,
+      car_emission_factor_kg_per_km: carFleet.emissionFactor ?? national.car,
+      bus_emission_factor_kg_per_km: busFleet.emissionFactor ?? national.bus,
+      car_fleet_unclassified_share: carFleet.unclassifiedShare,
+      bus_fleet_unclassified_share: busFleet.unclassifiedShare,
+      car_fleet_classified: carFleet.classifiedVehicles,
+      bus_fleet_classified: busFleet.classifiedVehicles,
+    },
   }).map((fields) => [code, ...fields])
 }
 
 function toControlTotals(territories: readonly TerritoryPassengerKm[]): ControlTotals {
+  const carWeeklyPassengerKm = sum(territories.map((territory) => territory.carWeeklyPassengerKm))
+  const publicTransportWeeklyPassengerKm = sum(
+    territories.map((territory) => territory.publicTransportWeeklyPassengerKm),
+  )
   return {
-    car_weekly_passenger_km: sum(territories.map(({ carWeeklyPassengerKm }) => carWeeklyPassengerKm)).toFixed(),
-    public_transport_weekly_passenger_km: sum(
-      territories.map(({ publicTransportWeeklyPassengerKm }) => publicTransportWeeklyPassengerKm),
-    ).toFixed(),
+    car_weekly_passenger_km: carWeeklyPassengerKm.toFixed(),
+    public_transport_weekly_passenger_km: publicTransportWeeklyPassengerKm.toFixed(),
   }
 }
 
 function buildLevel({
+  output,
   territories,
-  keyColumn,
   fleetByTerritory,
   national,
 }: {
+  output: OutputLevel
   territories: readonly TerritoryPassengerKm[]
-  keyColumn: string
-  fleetByTerritory: Readonly<Record<string, readonly FleetRow[]>>
-  national: NationalFactors
+  fleetByTerritory: FleetByTerritory
+  national: NationalFleetFactors
 }): Result<LevelBuild, InvalidDataset> {
+  const { dataset, keyColumn } = output
   return Result.combine(
-    territories.map((territory) => toTerritoryRow({ territory, fleetByTerritory, national })),
+    territories.map((territory) => toTerritoryRow({ dataset, territory, fleetByTerritory, national })),
   ).andThen((rows) =>
-    toCsvText({ dataset: outputDataset, columns: [keyColumn, ...NUMERIC_COLUMNS], rows }).map((csv) => ({
+    toCsvText({ dataset, columns: [keyColumn, ...NUMERIC_COLUMNS], rows }).map((csv) => ({
       csv,
       territoryCount: rows.length,
       controlTotals: toControlTotals(territories),
     })),
   )
-}
-
-function buildLevels({
-  passengerKm,
-  fleet,
-  national,
-}: {
-  passengerKm: readonly TerritoryPassengerKm[]
-  fleet: readonly FleetRow[]
-  national: NationalFactors
-}): Result<TransportBuild, InvalidDataset> {
-  const fleetByTerritory = groupBy(fleet, ({ level, code, group }) => `${level}|${code}|${group}`)
-  const buildSourceLevel = ({ level, keyColumn }: { level: SourceLevel; keyColumn: string }) =>
-    buildLevel({
-      territories: passengerKm.filter((territory) => territory.level === level),
-      keyColumn,
-      fleetByTerritory,
-      national,
-    })
-  return Result.combine([
-    buildSourceLevel({ level: 'REG', keyColumn: 'code_region' }),
-    buildSourceLevel({ level: 'DEP', keyColumn: 'code_departement' }),
-    buildSourceLevel({ level: 'EPCI', keyColumn: 'code_epci' }),
-  ]).map(([regions, departements, epcis]) => ({ regions, departements, epcis }))
 }
 
 function buildTransportPersonnes({
@@ -219,9 +167,22 @@ function buildTransportPersonnes({
 }: TransportSources): Result<TransportBuild, InvalidDataset> {
   return Result.combine([readCommutingPassengerKm(commutingCsv), readFleet(fleetCsv)]).andThen(
     ([commuting, fleet]) =>
-      calculateNationalFactors(fleet).andThen((national) =>
-        buildLevels({ passengerKm: calculateTerritoryPassengerKm(commuting), fleet, national }),
-      ),
+      calculateNationalFleetFactors(fleet).andThen((national) => {
+        const passengerKm = calculateTerritoryPassengerKm(commuting)
+        const fleetByTerritory = groupFleetByTerritory(fleet)
+        const buildOutput = (output: OutputLevel) =>
+          buildLevel({
+            output,
+            territories: passengerKm.filter(({ level }) => level === output.level),
+            fleetByTerritory,
+            national,
+          })
+        return Result.combine([
+          buildOutput(regionsOutput),
+          buildOutput(departementsOutput),
+          buildOutput(epcisOutput),
+        ]).map(([regions, departements, epcis]) => ({ regions, departements, epcis }))
+      }),
   )
 }
 

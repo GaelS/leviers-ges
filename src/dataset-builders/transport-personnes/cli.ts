@@ -7,6 +7,19 @@ import { readTransportSources } from './read-transport-sources.ts'
 const dataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
 const outputDirectory = join(dataDirectory, 'transport-personnes')
 
+function writeLevel({
+  file,
+  build,
+}: {
+  file: string
+  build: { csv: string; territoryCount: number; controlTotals: unknown }
+}): void {
+  writeFileSync(join(outputDirectory, file), build.csv)
+  const checksum = createHash('sha256').update(build.csv).digest('hex')
+  const { territoryCount, controlTotals } = build
+  console.log(JSON.stringify({ file, checksum, territoryCount, controlTotals }))
+}
+
 const transportBuild = readTransportSources(dataDirectory).andThen(buildTransportPersonnes)
 
 if (transportBuild.isErr()) {
@@ -14,21 +27,7 @@ if (transportBuild.isErr()) {
   process.exitCode = 1
 } else {
   const { regions, departements, epcis } = transportBuild.value
-  const outputs = [
-    { file: 'regions.csv', build: regions },
-    { file: 'departements.csv', build: departements },
-    { file: 'epcis.csv', build: epcis },
-  ]
-  outputs.forEach(({ file, build }) => {
-    writeFileSync(join(outputDirectory, file), build.csv)
-    const checksum = createHash('sha256').update(build.csv).digest('hex')
-    console.log(
-      JSON.stringify({
-        file,
-        checksum,
-        territoryCount: build.territoryCount,
-        controlTotals: build.controlTotals,
-      }),
-    )
-  })
+  writeLevel({ file: 'regions.csv', build: regions })
+  writeLevel({ file: 'departements.csv', build: departements })
+  writeLevel({ file: 'epcis.csv', build: epcis })
 }

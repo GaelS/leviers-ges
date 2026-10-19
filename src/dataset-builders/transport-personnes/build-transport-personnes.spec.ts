@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildTransportPersonnes } from './build-transport-personnes.ts'
+import { fleetDataset } from './read-fleet.ts'
 
 const COMMUTING_HEADER =
   'side,level,code,mode,champ_co2,sum_ipondi,sum_ipondi_dist_hebdo,sum_ipondi_co2_hebdo,rows'
@@ -37,31 +38,33 @@ const COMMUTING_CSV = commuting(
   ...commutingOf('REG', '99'),
   ...commutingOf('DEP', '01'),
   ...commutingOf('EPCI', '200000001'),
+  ...commutingOf('EPCI', '999999999'),
+  ...commutingOf('EPCI', 'ZZZZZZZZZ'),
 )
 
 const FLEET_CSV = fleet(...fleetOf('REG', '84'), ...fleetOf('DEP', '01'))
 
 const HEADER_TAIL =
-  'car_weekly_passenger_km,public_transport_weekly_passenger_km,car_emission_factor_kg_per_km,bus_emission_factor_kg_per_km,car_fleet_unclassified_share,bus_fleet_unclassified_share,bus_fleet_classified'
+  'car_weekly_passenger_km,public_transport_weekly_passenger_km,car_emission_factor_kg_per_km,bus_emission_factor_kg_per_km,car_fleet_unclassified_share,bus_fleet_unclassified_share,car_fleet_classified,bus_fleet_classified'
 
 describe('buildTransportPersonnes', () => {
   const built = buildTransportPersonnes({ commutingCsv: COMMUTING_CSV, fleetCsv: FLEET_CSV })._unsafeUnwrap()
 
   it('écrit une ligne par région avec ses passagers.km, ses facteurs et ses parts exclues', () => {
-    expect(built.regions.csv).toBe(`code_region,${HEADER_TAIL}\n84,80,10,0.1636,0.8045,0.5,0.5,1\n`)
+    expect(built.regions.csv).toBe(`code_region,${HEADER_TAIL}\n84,80,10,0.1636,0.8045,0.5,0.5,2,1\n`)
   })
 
   it('écrit une ligne par département', () => {
     expect(built.departements.csv).toBe(
-      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,1\n`,
+      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,2,1\n`,
     )
   })
 
-  it('donne à un EPCI sans parc les facteurs nationaux et aucun bus classé', () => {
-    expect(built.epcis.csv).toBe(`code_epci,${HEADER_TAIL}\n200000001,80,10,0.1636,0.8045,0,0,0\n`)
+  it('donne à un EPCI sans parc les facteurs nationaux et aucun véhicule classé', () => {
+    expect(built.epcis.csv).toBe(`code_epci,${HEADER_TAIL}\n200000001,80,10,0.1636,0.8045,0,0,0,0\n`)
   })
 
-  it('compte les territoires de chaque niveau, hors champ de la source exclu', () => {
+  it('compte les territoires de chaque niveau, les codes hors champ de la source exclus', () => {
     expect([built.regions, built.departements, built.epcis].map(({ territoryCount }) => territoryCount)).toEqual([
       1, 1, 1,
     ])
@@ -82,7 +85,7 @@ describe('buildTransportPersonnes', () => {
       })._unsafeUnwrapErr(),
     ).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'transport-personnes',
+      dataset: fleetDataset,
       reason: 'empty_dataset',
       detail: 'national VP fleet',
     })
@@ -94,7 +97,23 @@ describe('buildTransportPersonnes', () => {
         commutingCsv: COMMUTING_CSV,
         fleetCsv: fleet('REG,84,VP,diesel,2', 'REG,84,TC_routier,essence,1'),
       })._unsafeUnwrapErr(),
-    ).toMatchObject({ reason: 'empty_dataset', detail: 'national TC_routier fleet' })
+    ).toMatchObject({
+      dataset: fleetDataset,
+      reason: 'empty_dataset',
+      detail: 'national TC_routier fleet',
+    })
+  })
+
+  it('nomme le fichier de sortie dans une erreur d’écriture', () => {
+    expect(
+      buildTransportPersonnes({
+        commutingCsv: commuting('R,DEP,"0,1",5,TRUE,1,100,0,1'),
+        fleetCsv: FLEET_CSV,
+      })._unsafeUnwrapErr(),
+    ).toMatchObject({
+      dataset: 'transport-personnes/departements.csv',
+      reason: 'malformed_csv',
+    })
   })
 
   it('refuse un trajet domicile-travail illisible', () => {

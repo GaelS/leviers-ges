@@ -22,12 +22,12 @@ describe('buildTransportPersonnes, sources versionnées Insee-SDES 2022 et parc 
     expect(csv).toBe(committed(file))
   })
 
-  it('compte 13 régions, 96 départements et 1 244 EPCI', () => {
+  it('compte 13 régions, 96 départements et 1 243 EPCI', () => {
     expect({
       regions: build.regions.territoryCount,
       departements: build.departements.territoryCount,
       epcis: build.epcis.territoryCount,
-    }).toEqual({ regions: 13, departements: 96, epcis: 1244 })
+    }).toEqual({ regions: 13, departements: 96, epcis: 1243 })
   })
 
   it('les régions et les départements retrouvent 2,12 milliards de passagers.km de voiture par semaine à 0,02 près', () => {
@@ -37,12 +37,16 @@ describe('buildTransportPersonnes, sources versionnées Insee-SDES 2022 et parc 
     }).toEqual({ regions: '2121170446.04', departements: '2121170446.02' })
   })
 
+  it('les EPCI retrouvent les régions à 0,001 % près, le code 999999999 hors champ étant écarté', () => {
+    expect(build.epcis.controlTotals.car_weekly_passenger_km).toBe('2121142472.17')
+  })
+
   it('le chargeur accepte les trois jeux, totaux de contrôle compris', () => {
     const dataSource = createCsvDataSource(dataDirectory)
     expect({
       regions: dataSource.rows('transport-personnes/regions')._unsafeUnwrap().length,
       departements: dataSource.rows('transport-personnes/departements')._unsafeUnwrap().length,
       epcis: dataSource.rows('transport-personnes/epcis')._unsafeUnwrap().length,
-    }).toEqual({ regions: 13, departements: 96, epcis: 1244 })
+    }).toEqual({ regions: 13, departements: 96, epcis: 1243 })
   })
 })

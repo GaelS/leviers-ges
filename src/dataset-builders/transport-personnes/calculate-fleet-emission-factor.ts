@@ -9,8 +9,11 @@ type FleetEmissionFactor = {
   readonly unclassifiedShare: BigNumber
 }
 
+// Source : élément neutre de l'addition
+const NO_VEHICLES = sum([])
+
 function countOf({ counts, fuel }: { counts: FleetCounts; fuel: string }): BigNumber {
-  return counts[fuel] ?? sum([])
+  return counts[fuel] ?? NO_VEHICLES
 }
 
 function calculateFleetEmissionFactor({

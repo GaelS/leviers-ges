@@ -6,7 +6,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "638480b68c8b303cf9bb2b47b59e3be1858b52e3fd364123aff3843af0df8df7",
+      "checksum": "9e92a85962678be5437326bef9a8e38ed6895af5e583a088217b32dae5b22c87",
       "level": "region",
       "keyColumn": "code_region",
       "columns": [
@@ -24,7 +24,7 @@
         },
         {
           "name": "car_emission_factor_kg_per_km",
-          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucune"
         },
         {
           "name": "bus_emission_factor_kg_per_km",
@@ -37,6 +37,10 @@
         {
           "name": "bus_fleet_unclassified_share",
           "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
+        },
+        {
+          "name": "car_fleet_classified",
+          "unit": "nombre de voitures du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
         },
         {
           "name": "bus_fleet_classified",
@@ -70,7 +74,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "11b30c7b90625162d1e8cdfafd41353ff46cf8712e5a7aec2452a38e9b6bfe08",
+      "checksum": "7b1ab2f966bee68868d157a16e2a7f5386d8bb6fe6c96351473fc14157357502",
       "level": "departement",
       "keyColumn": "code_departement",
       "columns": [
@@ -88,7 +92,7 @@
         },
         {
           "name": "car_emission_factor_kg_per_km",
-          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucune"
         },
         {
           "name": "bus_emission_factor_kg_per_km",
@@ -101,6 +105,10 @@
         {
           "name": "bus_fleet_unclassified_share",
           "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
+        },
+        {
+          "name": "car_fleet_classified",
+          "unit": "nombre de voitures du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
         },
         {
           "name": "bus_fleet_classified",
@@ -134,7 +142,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "01e98a36cb6ccf3240df4f044ffd68ea1133d5823170f3ca58b219131b8282dc",
+      "checksum": "444b5aacfc35085e6a69207bc77a0afa9ffdb68d8c01bb6e92ac1cfbd1a4267a",
       "level": "epci",
       "keyColumn": "code_epci",
       "columns": [
@@ -152,7 +160,7 @@
         },
         {
           "name": "car_emission_factor_kg_per_km",
-          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucune"
         },
         {
           "name": "bus_emission_factor_kg_per_km",
@@ -167,13 +175,17 @@
           "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
         },
         {
+          "name": "car_fleet_classified",
+          "unit": "nombre de voitures du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        },
+        {
           "name": "bus_fleet_classified",
           "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
         }
       ],
       "controlTotals": {
-        "car_weekly_passenger_km": "2162838055.345",
-        "public_transport_weekly_passenger_km": "384297929.73"
+        "car_weekly_passenger_km": "2121142472.17",
+        "public_transport_weekly_passenger_km": "378904158.62"
       },
       "sources": [
         {

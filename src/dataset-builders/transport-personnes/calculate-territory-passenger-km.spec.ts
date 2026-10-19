@@ -39,6 +39,7 @@ describe('calculateTerritoryPassengerKm', () => {
       row({ level: 'REG', code: '99', mode: '5', weeklyPassengerKm: '1' }),
       row({ level: 'DEP', code: '999', mode: '5', weeklyPassengerKm: '1' }),
       row({ level: 'EPCI', code: 'ZZZZZZZZZ', mode: '5', weeklyPassengerKm: '1' }),
+      row({ level: 'EPCI', code: '999999999', mode: '5', weeklyPassengerKm: '1' }),
       row({ level: 'DEP', code: '01', mode: '5', weeklyPassengerKm: '1' }),
     ])
     expect(territories.map(({ level, code }) => `${level}|${code}`)).toEqual(['DEP|01'])

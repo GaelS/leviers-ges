@@ -11,7 +11,9 @@ import { readTransportSources } from './read-transport-sources.ts'
 const committedDataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
 const folder = 'transport-personnes'
 const commutingFile = 'sources/insee-sdes-domicile-travail-2022-agregats-par-mode.csv'
-const dataset = 'transport-personnes/regions.csv'
+const manifestDataset = 'transport-personnes/regions'
+const commutingDataset =
+  'transport-personnes/sources/insee-sdes-domicile-travail-2022-agregats-par-mode.csv'
 
 function copyDataDirectory(): string {
   return copyDataFolders({ from: committedDataDirectory, folders: [folder] })
@@ -31,7 +33,7 @@ describe('readTransportSources', () => {
     writeFileSync(join(directory, folder, commutingFile), 'autre')
     expect(readTransportSources(directory)._unsafeUnwrapErr()).toMatchObject({
       kind: 'invalid_dataset',
-      dataset,
+      dataset: commutingDataset,
       reason: 'checksum_mismatch',
       detail: expect.stringContaining(`${commutingFile}: expected `) as string,
     })
@@ -41,7 +43,7 @@ describe('readTransportSources', () => {
     const directory = copyDataDirectory()
     rmSync(join(directory, folder, commutingFile))
     expect(readTransportSources(directory)._unsafeUnwrapErr()).toMatchObject({
-      dataset,
+      dataset: commutingDataset,
       reason: 'unreadable',
     })
   })
@@ -51,7 +53,7 @@ describe('readTransportSources', () => {
     removeSourceFromManifest({ directory, folder, file: commutingFile })
     expect(readTransportSources(directory)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset,
+      dataset: commutingDataset,
       reason: 'invalid_manifest',
       detail: commutingFile,
     })
@@ -61,7 +63,7 @@ describe('readTransportSources', () => {
     const directory = copyDataDirectory()
     removeSourcesFromManifest({ directory, folder })
     expect(readTransportSources(directory)._unsafeUnwrapErr()).toMatchObject({
-      dataset,
+      dataset: commutingDataset,
       reason: 'invalid_manifest',
     })
   })
@@ -69,7 +71,7 @@ describe('readTransportSources', () => {
   it('refuse un dossier sans manifeste', () => {
     const directory = copyDataFolders({ from: committedDataDirectory, folders: [] })
     expect(readTransportSources(directory)._unsafeUnwrapErr()).toMatchObject({
-      dataset,
+      dataset: manifestDataset,
       reason: 'unknown_dataset',
     })
   })
