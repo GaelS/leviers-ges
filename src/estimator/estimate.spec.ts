@@ -442,6 +442,60 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_personnes_electrification', () => {
+    const withTransport = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'transport-personnes/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              car_weekly_passenger_km: '1000',
+              public_transport_weekly_passenger_km: '0',
+              car_emission_factor_kg_per_km: '0.1165',
+              bus_emission_factor_kg_per_km: '0.8',
+              car_fleet_unclassified_share: '0',
+              bus_fleet_unclassified_share: '0',
+              car_fleet_classified: '100',
+              bus_fleet_classified: '100',
+              car_thermal_emission_factor_kg_per_km: '0.1165',
+              bus_thermal_emission_factor_kg_per_km: '0.8',
+              car_thermal_fleet_share: '1',
+              bus_thermal_fleet_share: '1',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportPersonnesElectrificationRequest(carElectrificationFraction: string): RequestInput {
+      return {
+        id: 'transport_personnes_electrification',
+        territory: { level: 'region', code: '84' },
+        parameters: { carElectrificationFraction, busElectrificationFraction: '0' },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine électrifiés évitent 4,62 tCO2e', () => {
+      const result = withTransport(transportPersonnesElectrificationRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.62')
+    })
+
+    it('refuse une part électrifiée hors de 0 à 1', () => {
+      expect(withTransport(transportPersonnesElectrificationRequest('1.5'))._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [
+          { parameter: 'parameters.carElectrificationFraction', message: 'must be between 0 and 1' },
+        ],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
