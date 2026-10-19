@@ -45,6 +45,7 @@ Règles communes à tous les leviers. Une fiche de levier ne les répète pas ; 
 | Contenu | des agrégats par territoire, pas les fichiers bruts (jusqu'à 524 Mo). L'étape de construction des agrégats rejoint le dépôt |
 | Lecture | `csv-parse` ; les valeurs restent du texte jusqu'à la formule qui les passe en `BigNumber` ; un index `Map` par jeu et par code de territoire ; chaque levier charge ses seuls fichiers, au premier usage |
 | Contrôle au chargement | somme sha256, colonnes, précision, totaux de contrôle, clés uniques et non vides : un écart est une erreur typée `InvalidDataset`. Un territoire absent d'un jeu valide est `MissingData`. Le niveau du territoire doit être celui du jeu |
+| Nom d'un jeu dans une erreur | `InvalidDataset.dataset` nomme le fichier fautif. Lu par un levier : `<jeu>/<table>` sans extension, tel que le manifeste le déclare (`residentiel-sobriete/regions`). Lu par un constructeur de données : son chemin sous `data/`, extension comprise (`residentiel-sobriete/sources/sdes-chaleur-commune-2024.csv`, `residentiel-sobriete/departements.csv`). Jamais un nom abrégé (`sdes-chaleur-commune-2024`), et un même fichier garde un seul nom |
 | Valeurs refusées | plus de 12 décimales, virgule décimale, notation scientifique, jeu sans ligne |
 
 ## Constantes et sources
