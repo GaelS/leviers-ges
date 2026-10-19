@@ -1,5 +1,6 @@
 import type BigNumber from 'bignumber.js'
 import { sum, toBig } from '../../domain/big-number.ts'
+import { KILOGRAMS_PER_TONNE, WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
 import {
   BUS_PASSENGERS_PER_VEHICLE,
   CAR_PASSENGERS_PER_VEHICLE,
@@ -29,12 +30,6 @@ type TransportFlows = {
 
 // Source : élément neutre de la multiplication
 const ONE: BigNumber = toBig('1')
-
-// Source : TrsptPers_Efficacité, formule dessinée dans les formes de la feuille (fiche d'analyse 13) : « × 52,14 », semaines par an
-const WEEKS_PER_YEAR: BigNumber = toBig('52.14')
-
-// Source : BIPM, Le Système international d'unités (Brochure SI), 9e édition : kilo = 10^3, donc 1 t = 1 000 kg
-const KILOGRAMS_PER_TONNE: BigNumber = toBig('1000')
 
 // Source : DonneesReference!D29, « ~15% » ; la page citée, mission-transition-ecologique.beta.gouv.fr/projets-entreprise/ecoconduite, dit « jusqu'à 15 % de carburant ». Choix de conception, non validé : le même potentiel vaut pour les voitures et pour les bus et cars, le tableur n'en donne qu'un
 const ECODRIVING_POTENTIAL: Fraction = quantity<'Fraction'>('0.15')

@@ -1,5 +1,6 @@
 import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
 import { toRailShareAssumption } from '../../application/data/transport-personnes/to-rail-share-assumption.ts'
+import { FLEET_SOURCE } from '../../application/data/transport-personnes/fleet-source.ts'
 import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
 import {
   ELECTRIC_BUS_EMISSION_FACTOR,
@@ -11,8 +12,6 @@ import {
   type ElectrificationFractions,
 } from './calculate-transport-personnes-electrification-reduction.ts'
 import type { ThermalFleet } from './data/thermal-fleet.ts'
-
-const fleetSource = 'SDES, parc de véhicules routiers au 1er janvier 2025'
 
 function toElectricCarEmissionFactorAssumption(): AppliedAssumptions {
   return {
@@ -50,7 +49,7 @@ function toCarElectrificationCapAssumption({
   return {
     carElectrificationFraction: {
       value: electrifiedShare.toFixed(),
-      source: `${fleetSource}, share of cars running on petrol, diesel or gas`,
+      source: `${FLEET_SOURCE}, share of cars running on petrol, diesel or gas`,
       limit:
         'The requested share exceeds the share of thermal cars in the fleet: only thermal cars can be electrified, the requested share is capped',
     },
@@ -69,7 +68,7 @@ function toBusElectrificationCapAssumption({
   return {
     busElectrificationFraction: {
       value: electrifiedShare.toFixed(),
-      source: `${fleetSource}, share of buses and coaches running on diesel or gas`,
+      source: `${FLEET_SOURCE}, share of buses and coaches running on diesel or gas`,
       limit:
         'The requested share exceeds the share of thermal buses and coaches in the fleet: only thermal buses and coaches can be electrified, the requested share is capped',
     },

@@ -1,3 +1,4 @@
+import { FLEET_SOURCE } from '../../application/data/transport-personnes/fleet-source.ts'
 import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
 import {
   calculateBusEmissionFactorPerPassengerKm,
@@ -7,8 +8,6 @@ import {
 import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
 import { toRailShareAssumption } from '../../application/data/transport-personnes/to-rail-share-assumption.ts'
 import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
-
-const fleetSource = 'SDES, parc de véhicules routiers au 1er janvier 2025'
 
 function toEcodrivingPotentialAssumption(): AppliedAssumptions {
   return {
@@ -42,7 +41,7 @@ function toCarFleetUnclassifiedAssumption(transportInputs: TransportInputs): App
   return {
     carFleetUnclassifiedShare: {
       value: transportInputs.carFleetUnclassifiedShare.toFixed(),
-      source: fleetSource,
+      source: FLEET_SOURCE,
       limit:
         'Cars with another fuel than petrol, diesel, gas or electricity have no emission factor and are left out of the fleet average',
     },
@@ -54,7 +53,7 @@ function toBusFleetUnclassifiedAssumption(transportInputs: TransportInputs): App
   return {
     busFleetUnclassifiedShare: {
       value: transportInputs.busFleetUnclassifiedShare.toFixed(),
-      source: fleetSource,
+      source: FLEET_SOURCE,
       limit:
         'Buses and coaches running on petrol or another fuel have no emission factor and are left out of the fleet average',
     },
@@ -69,7 +68,7 @@ function toNationalCarAssumption(transportInputs: TransportInputs): AppliedAssum
   return {
     nationalCarEmissionFactor: {
       value: carEmissionFactorPerPassengerKm.toFixed(),
-      source: `${fleetSource}, France métropolitaine`,
+      source: `${FLEET_SOURCE}, France métropolitaine`,
       limit:
         'The territory has no classified car in the fleet: the national fleet average applies, in kgCO2e per passenger-km',
     },
@@ -84,7 +83,7 @@ function toNationalBusAssumption(transportInputs: TransportInputs): AppliedAssum
   return {
     nationalBusEmissionFactor: {
       value: busEmissionFactorPerPassengerKm.toFixed(),
-      source: `${fleetSource}, France métropolitaine`,
+      source: `${FLEET_SOURCE}, France métropolitaine`,
       limit:
         'The territory has no classified bus or coach in the fleet: the national fleet average applies, in kgCO2e per passenger-km',
     },
