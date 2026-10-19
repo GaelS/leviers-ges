@@ -14,6 +14,7 @@
     "build:data:reseaux-chaleur": "node src/dataset-builders/reseaux-chaleur/cli.ts",
     "build:data:residentiel-sobriete": "node src/dataset-builders/residentiel-sobriete/cli.ts",
     "build:data:surface-agricole-utile": "node src/dataset-builders/surface-agricole-utile/cli.ts",
+    "build:data:transport-personnes": "node src/dataset-builders/transport-personnes/cli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
