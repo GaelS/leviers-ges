@@ -42,7 +42,7 @@ Les deux reports sont obligatoires et leur somme ne dépasse pas 1 : le tableur 
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille |
 | Taux de remplissage des voitures | 1,165 passager | `DonneesReference!D26` |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
-| Facteur du ferré, France continentale | 0,0229 kgCO2e/passager.km | `DonneesReference!D37` et G37 (liens Base Empreinte) ; TER moyen 2022, amont de l'électricité sans la fabrication (0,00479), combustion nulle |
+| Facteur du ferré, France continentale | 0,0229 kgCO2e/passager.km | `DonneesReference!D37` et G37 (liens Base Empreinte) ; TER moyen 2022, amont de l'électricité sans la fabrication (0,00479), combustion nulle : choix de conception, non vérifié à la source (G37 demande « la partie combustion » et un TER moyen compte des TER diesel) |
 | Facteur du ferré, Corse | 0,187 kgCO2e/passager.km | Base Empreinte, train de voyageurs de Corse |
 | Part du ferré par défaut | 82 % en Île-de-France, 24 % ailleurs | `ParametreDeterminants` ligne 38 (le tableur donne 84 % et 23 % en 2023, à titre indicatif) ; SDES, Bilan annuel des transports 2024 |
 
@@ -92,6 +92,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Hexagone et moins de 100 km | mêmes limites que le levier d'efficacité : millésime 2022, DOM absents |
 | Domicile-travail seul | les autres motifs de déplacement ne sont pas comptés ; `DonneesReference!D27`, le taux de remplissage des autres trajets, n'est pas utilisé |
 | Capacité du réseau | le report n'ajoute pas de véhicule-km : aucun effet de saturation du transport en commun ni d'offre supplémentaire |
+| Combustion du ferré continental | supposée nulle, non vérifiée dans la Base Empreinte : si les TER diesel comptent, le facteur continental monte et le gain du report vers les transports en commun baisse |
 | Un seul facteur pour tout le ferré | un territoire avec métro ou tram a son propre facteur, souvent plus bas |
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
 | Distance des trajets reportés | les modes actifs ne couvrent pas les mêmes distances que la voiture : la fraction porte sur les passagers.km, pas sur les trajets |
