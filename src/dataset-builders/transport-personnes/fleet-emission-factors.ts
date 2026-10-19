@@ -18,7 +18,7 @@ const BUS_DIESEL_EMISSION_FACTOR = '0.8045'
 // Source : OMINEA 2024 (CITEPA), bus et cars Euro VI, NAPFUE 302, CO2 seul, moyenne de 070302BC (route) et 070303BC (ville), 709,8 g/véh.km
 const BUS_GAS_EMISSION_FACTOR = '0.7098'
 
-// Source : les trois carburants thermiques des voitures de la fiche d'analyse 11 ; les hybrides sont rangés avec leur carburant
+// Source : les trois carburants thermiques des voitures de la fiche d'analyse 11 ; les hybrides sont rangés avec leur carburant (FE_transports!A15:A17)
 const CAR_THERMAL_EMISSION_FACTORS_KG_PER_KM = {
   diesel: CAR_DIESEL_EMISSION_FACTOR,
   essence: CAR_PETROL_EMISSION_FACTOR,

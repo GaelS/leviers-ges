@@ -25,6 +25,20 @@ describe('calculateFleetEmissionFactor', () => {
     expect(result.classifiedShare.toFixed()).toBe('0.5')
   })
 
+  it('donne deux facteurs différents au même parc selon les carburants qui portent un facteur', () => {
+    const counts = { diesel: toBig('3'), electrique: toBig('1') }
+    const wholeFleet = calculateFleetEmissionFactor({ counts, emissionFactors: EMISSION_FACTORS })
+    const thermalFleet = calculateFleetEmissionFactor({
+      counts,
+      emissionFactors: { diesel: '0.2' },
+    })
+    expect({
+      wholeFleet: wholeFleet.emissionFactor?.toFixed(),
+      thermalFleet: thermalFleet.emissionFactor?.toFixed(),
+      thermalShare: thermalFleet.classifiedShare.toFixed(),
+    }).toEqual({ wholeFleet: '0.175', thermalFleet: '0.2', thermalShare: '0.75' })
+  })
+
   it('compte zéro pour un carburant absent du parc', () => {
     const result = calculateFleetEmissionFactor({
       counts: { diesel: toBig('2') },

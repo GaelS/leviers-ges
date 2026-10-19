@@ -33,16 +33,32 @@ function fleetOf(level: string, code: string): readonly string[] {
   ]
 }
 
+function mixedFleetOf(level: string, code: string): readonly string[] {
+  return [
+    `${level},${code},VP,diesel,2`,
+    `${level},${code},VP,electrique,2`,
+    `${level},${code},VP,essence,4`,
+    `${level},${code},TC_routier,diesel,1`,
+    `${level},${code},TC_routier,gaz,1`,
+    `${level},${code},TC_routier,electrique,2`,
+  ]
+}
+
 const COMMUTING_CSV = commuting(
   ...commutingOf('REG', '84'),
   ...commutingOf('REG', '99'),
   ...commutingOf('DEP', '01'),
+  ...commutingOf('DEP', '02'),
   ...commutingOf('EPCI', '200000001'),
   ...commutingOf('EPCI', '999999999'),
   ...commutingOf('EPCI', 'ZZZZZZZZZ'),
 )
 
-const FLEET_CSV = fleet(...fleetOf('REG', '84'), ...fleetOf('DEP', '01'))
+const FLEET_CSV = fleet(
+  ...fleetOf('REG', '84'),
+  ...fleetOf('DEP', '01'),
+  ...mixedFleetOf('DEP', '02'),
+)
 
 const HEADER_TAIL =
   'car_weekly_passenger_km,public_transport_weekly_passenger_km,car_emission_factor_kg_per_km,bus_emission_factor_kg_per_km,car_fleet_unclassified_share,bus_fleet_unclassified_share,car_fleet_classified,bus_fleet_classified,car_thermal_emission_factor_kg_per_km,bus_thermal_emission_factor_kg_per_km,car_thermal_fleet_share,bus_thermal_fleet_share'
@@ -56,8 +72,23 @@ describe('buildTransportPersonnes', () => {
 
   it('écrit une ligne par département', () => {
     expect(built.departements.csv).toBe(
-      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,2,1,0.1636,0.8045,0.5,0.5\n`,
+      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,2,1,0.1636,0.8045,0.5,0.5\n02,80,10,0.12978625,0.426075,0,0,8,4,0.1686,0.75715,0.75,0.5\n`,
     )
+  })
+
+  it('écrit le facteur du parc thermique seul, distinct du facteur du parc entier quand le parc compte de l’électrique', () => {
+    const row = built.departements.csv.split('\n')[2]?.split(',')
+    expect({
+      carEmissionFactor: row?.[3],
+      carThermalEmissionFactor: row?.[9],
+      busEmissionFactor: row?.[4],
+      busThermalEmissionFactor: row?.[10],
+    }).toEqual({
+      carEmissionFactor: '0.12978625',
+      carThermalEmissionFactor: '0.1686',
+      busEmissionFactor: '0.426075',
+      busThermalEmissionFactor: '0.75715',
+    })
   })
 
   it('donne à un EPCI sans parc les facteurs nationaux et aucun véhicule classé', () => {
@@ -66,7 +97,7 @@ describe('buildTransportPersonnes', () => {
 
   it('compte les territoires de chaque niveau, les codes hors champ de la source exclus', () => {
     expect([built.regions, built.departements, built.epcis].map(({ territoryCount }) => territoryCount)).toEqual([
-      1, 1, 1,
+      1, 2, 1,
     ])
   })
 
