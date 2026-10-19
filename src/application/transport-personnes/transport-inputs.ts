@@ -3,7 +3,7 @@ import type {
   KgCo2ePerVehicleKilometre,
   PassengerKilometresPerWeek,
   Vehicles,
-} from '../../../domain/units.ts'
+} from '../../domain/units.ts'
 
 type TransportInputs = {
   readonly carWeeklyPassengerKm: PassengerKilometresPerWeek

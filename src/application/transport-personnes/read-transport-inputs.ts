@@ -1,14 +1,13 @@
 import { Result } from 'neverthrow'
 import { match } from 'ts-pattern'
-import { requireQuantityColumn } from '../../../application/require-column.ts'
+import { requireQuantityColumn } from '../require-column.ts'
 import type {
   DataRow,
   DataSource,
   DataSourceError,
   InvalidDataset,
-} from '../../../domain/data-source.ts'
-import type { ComputedLevels } from '../../../domain/lever-registry.ts'
-import type { Territory } from '../../../domain/territory.ts'
+} from '../../domain/data-source.ts'
+import type { Level, Territory } from '../../domain/territory.ts'
 import type { TransportInputs } from './transport-inputs.ts'
 
 const regionsDataset = 'transport-personnes/regions'
@@ -77,7 +76,7 @@ function readTransportInputs({
   territory,
 }: {
   dataSource: DataSource
-  territory: Territory<ComputedLevels<'transport_personnes_efficacite'>>
+  territory: Territory<Level>
 }): Result<TransportInputs, DataSourceError> {
   return match(territory.level)
     .with('region', () =>
