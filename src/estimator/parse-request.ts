@@ -6,6 +6,7 @@ import { haiesRequestSchema } from '../levers/haies/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
 import { residentielSobrieteRequestSchema } from '../levers/residentiel-sobriete/index.ts'
+import { transportPersonnesEfficaciteRequestSchema } from '../levers/transport-personnes-efficacite/index.ts'
 
 const requestSchema = z.discriminatedUnion('id', [
   batimentsMachinesAgricolesRequestSchema,
@@ -13,6 +14,7 @@ const requestSchema = z.discriminatedUnion('id', [
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
   residentielSobrieteRequestSchema,
+  transportPersonnesEfficaciteRequestSchema,
 ])
 
 type ParsedRequest = z.output<typeof requestSchema>

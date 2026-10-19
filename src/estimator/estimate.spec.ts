@@ -379,6 +379,69 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_personnes_efficacite', () => {
+    const withTransport = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'transport-personnes/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              car_weekly_passenger_km: '1000000',
+              public_transport_weekly_passenger_km: '0',
+              car_emission_factor_kg_per_km: '0.1165',
+              bus_emission_factor_kg_per_km: '0.8',
+              car_fleet_unclassified_share: '0',
+              bus_fleet_unclassified_share: '0',
+              car_fleet_classified: '100',
+              bus_fleet_classified: '100',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportPersonnesEfficaciteRequest({
+      passengerIncrease = '0',
+    }: {
+      passengerIncrease?: string | number
+    }): RequestInput {
+      return {
+        id: 'transport_personnes_efficacite',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          carEcodrivingApplicationFraction: '1',
+          busEcodrivingApplicationFraction: '1',
+          carPassengerIncrease: passengerIncrease,
+          busPassengerIncrease: '0',
+        },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 000 passagers.km par semaine avec 15 % d’écoconduite', () => {
+      const result = withTransport(transportPersonnesEfficaciteRequest({}))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('782.1')
+    })
+
+    it('accepte une hausse de passagers supérieure à 100 %, mais pas négative', () => {
+      expect(
+        withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: 2 }))._unsafeUnwrap()
+          .reduction.toFixed(),
+      ).toBe('3736.7')
+      expect(
+        withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: '-0.1' }))._unsafeUnwrapErr(),
+      ).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.carPassengerIncrease', message: 'must be 0 or more' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
