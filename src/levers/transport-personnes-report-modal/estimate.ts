@@ -1,4 +1,5 @@
 import type { Result } from 'neverthrow'
+import { getPassengerTransportInputs } from '../../application/data/transport-personnes/get-passenger-transport-inputs.ts'
 import { toPassengerTransportAssumptions } from '../../application/data/transport-personnes/to-passenger-transport-assumptions.ts'
 import type { EstimationContext } from '../../application/estimate/estimation-context.ts'
 import {
@@ -8,7 +9,6 @@ import {
 import type { DataSourceError } from '../../domain/data-source.ts'
 import type { UnknownTerritory } from '../../domain/territory-index.ts'
 import { calculateTransportPersonnesReportModalReduction } from './calculate-transport-personnes-report-modal-reduction.ts'
-import { getReportModalInputs } from './data/get-report-modal-inputs.ts'
 import type { TransportPersonnesReportModalRequest } from './transport-personnes-report-modal-request.ts'
 
 function estimate(
@@ -17,7 +17,7 @@ function estimate(
 ): Result<EstimateResult, DataSourceError | UnknownTerritory> {
   return getCommunesOf(territory)
     .andThen((communes) =>
-      getReportModalInputs({
+      getPassengerTransportInputs({
         dataSource,
         territory,
         communes,

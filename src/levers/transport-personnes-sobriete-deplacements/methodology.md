@@ -52,8 +52,8 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 |---|---|---|
 | 1 | Le facteur du ferré est celui de l'amont de l'électricité seul, sans la fabrication | hypothèse nommée `railElectricityUpstreamShare` ; renvoyé dans `appliedAssumptions.railEmissionFactor` |
 | 2 | Un territoire dont toutes les communes sont en Corse prend le facteur corse, les autres le facteur continental | `DonneesReference!D37` ; un territoire à cheval sur la Corse et une autre région, ou sans commune connue, prend le facteur continental : choix de conception, non validé |
-| 3 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
-| 4 | La réduction porte sur toutes les distances domicile-travail, voiture et transport en commun, à la même fraction | le tableur ne donne qu'un paramètre |
+| 3 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité ; choix de conception, non validé |
+| 4 | La réduction porte sur toutes les distances domicile-travail, voiture et transport en commun, à la même fraction | le tableur ne donne qu'un paramètre ; choix de conception, non validé |
 | 5 | Les passagers.km comptent pour moitié côté résidence et pour moitié côté travail | `TrsptPers_SobriétéDéplacements!B13` |
 | 6 | La part du ferré a une valeur par défaut | `ParametreDeterminants` ligne 38 ; renvoyée dans `appliedAssumptions.railShare` quand elle n'est pas saisie |
 
