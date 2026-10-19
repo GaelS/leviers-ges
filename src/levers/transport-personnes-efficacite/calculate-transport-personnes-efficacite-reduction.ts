@@ -3,6 +3,7 @@ import { sum, toBig } from '../../domain/big-number.ts'
 import { KILOGRAMS_PER_TONNE, WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
 import {
   BUS_PASSENGERS_PER_VEHICLE,
+  calculateEmissionFactorPerPassengerKm,
   CAR_PASSENGERS_PER_VEHICLE,
 } from '../../domain/vehicle-occupancy.ts'
 import {
@@ -47,30 +48,6 @@ function calculateReductionFraction({
   const ecodrivingEffect = ONE.minus(ecodrivingGain)
   const remainingEmissions = occupancyEffect.times(ecodrivingEffect)
   return ONE.minus(remainingEmissions)
-}
-
-function calculateEmissionFactorPerPassengerKm({
-  emissionFactorPerVehicleKm,
-  passengersPerVehicle,
-}: {
-  emissionFactorPerVehicleKm: BigNumber
-  passengersPerVehicle: BigNumber
-}): BigNumber {
-  return emissionFactorPerVehicleKm.dividedBy(passengersPerVehicle)
-}
-
-function calculateCarEmissionFactorPerPassengerKm(carEmissionFactor: BigNumber): BigNumber {
-  return calculateEmissionFactorPerPassengerKm({
-    emissionFactorPerVehicleKm: carEmissionFactor,
-    passengersPerVehicle: CAR_PASSENGERS_PER_VEHICLE,
-  })
-}
-
-function calculateBusEmissionFactorPerPassengerKm(busEmissionFactor: BigNumber): BigNumber {
-  return calculateEmissionFactorPerPassengerKm({
-    emissionFactorPerVehicleKm: busEmissionFactor,
-    passengersPerVehicle: BUS_PASSENGERS_PER_VEHICLE,
-  })
 }
 
 function calculateAvoidedEmissions({
@@ -128,8 +105,6 @@ function calculateTransportPersonnesEfficaciteReduction({
 }
 
 export {
-  calculateBusEmissionFactorPerPassengerKm,
-  calculateCarEmissionFactorPerPassengerKm,
   calculateTransportPersonnesEfficaciteReduction,
   ECODRIVING_POTENTIAL,
 }
