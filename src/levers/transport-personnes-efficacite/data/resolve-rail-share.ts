@@ -27,12 +27,12 @@ function resolveRailShare({
   getRegionByCommune: RegionLookup
 }): Result<RailShare, DataSourceError> {
   if (requested !== undefined) return ok({ fraction: requested, defaulted: false })
-  return Result.combine(communes.map(getRegionByCommune)).map((regions) => ({
-    fraction: regions.every((region) => region === ILE_DE_FRANCE_REGION_CODE)
-      ? ILE_DE_FRANCE_RAIL_SHARE
-      : OTHER_REGIONS_RAIL_SHARE,
-    defaulted: true,
-  }))
+  return Result.combine(communes.map(getRegionByCommune)).map((regions) => {
+    const isInIleDeFrance =
+      regions.length > 0 && regions.every((region) => region === ILE_DE_FRANCE_REGION_CODE)
+    const fraction = isInIleDeFrance ? ILE_DE_FRANCE_RAIL_SHARE : OTHER_REGIONS_RAIL_SHARE
+    return { fraction, defaulted: true }
+  })
 }
 
 export { resolveRailShare }

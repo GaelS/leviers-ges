@@ -33,4 +33,3 @@ function getEfficiencyInputs({
 }
 
 export { getEfficiencyInputs }
-export type { EfficiencyInputs }

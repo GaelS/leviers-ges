@@ -117,6 +117,18 @@ describe('estimate, transport_personnes_efficacite', () => {
     )
   })
 
+  it('applique à chaque mode ses propres paramètres : voiture 100 % et +10 %, bus 50 % et +20 %', () => {
+    const parameters = {
+      carEcodrivingApplicationFraction: '1',
+      busEcodrivingApplicationFraction: '0.5',
+      carPassengerIncrease: '0.1',
+      busPassengerIncrease: '0.2',
+    }
+    expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
+      '1911.48',
+    )
+  })
+
   it('ne réduit rien sans écoconduite ni passagers en plus', () => {
     const parameters = {
       carEcodrivingApplicationFraction: '0',
@@ -159,7 +171,7 @@ describe('estimate, transport_personnes_efficacite', () => {
       ),
     )
     const assumptions = withoutBus(request('epci', '200000001'))._unsafeUnwrap().appliedAssumptions
-    expect(assumptions['nationalBusEmissionFactor']?.value).toBe('0.8')
+    expect(assumptions['nationalBusEmissionFactor']?.value).toBe('0.08')
   })
 
   it.each([

@@ -109,6 +109,19 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
     ).toBe('0.250272')
   })
 
+  it('applique au bus sa propre hausse de passagers : 20 % et 50 % d’écoconduite sur 400 passagers.km routiers', () => {
+    expect(
+      reduction({
+        fractions: {
+          busEcodrivingApplication: quantity<'Fraction'>('0.5'),
+          busPassengerIncrease: quantity<'RelativeChange'>('0.2'),
+        },
+        railShare: '0.6',
+        inputs: transportInputs({ publicTransportWeeklyPassengerKm: '1000' }),
+      }),
+    ).toBe('0.38236')
+  })
+
   it('ne compte aucun bus quand tout le transport en commun est ferré', () => {
     expect(
       reduction({

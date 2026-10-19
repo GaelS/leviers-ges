@@ -6,7 +6,7 @@ import { toAppliedAssumptions } from './to-applied-assumptions.ts'
 
 function transportInputs(overrides: Partial<Record<keyof TransportInputs, string>> = {}): TransportInputs {
   const values = {
-    carEmissionFactor: '0.16',
+    carEmissionFactor: '0.1165',
     busEmissionFactor: '0.8',
     carFleetUnclassifiedShare: '0',
     busFleetUnclassifiedShare: '0',
@@ -76,8 +76,8 @@ describe('toAppliedAssumptions', () => {
       'nationalCarEmissionFactor',
       'nationalBusEmissionFactor',
     ])
-    expect(assumptions['nationalCarEmissionFactor']?.value).toBe('0.16')
-    expect(assumptions['nationalBusEmissionFactor']?.value).toBe('0.8')
+    expect(assumptions['nationalCarEmissionFactor']?.value).toBe('0.1')
+    expect(assumptions['nationalBusEmissionFactor']?.value).toBe('0.08')
   })
 
   it('dit pour chaque hypothèse sa source et sa limite', () => {

@@ -41,7 +41,7 @@ Les quatre premières sont obligatoires : le tableur les laisse vides, et la col
 
 | Constante | Valeur | Source |
 |---|---|---|
-| Semaines par an | 52,14 | forme de la feuille `TrsptPers_Efficacité` |
+| Semaines par an | 52,14 | formule dessinée dans les formes de la feuille `TrsptPers_Efficacité` |
 | Potentiel de baisse par écoconduite | 15 % | `DonneesReference!D29` : « ~15% » ; la page citée dit « jusqu'à 15 % de carburant » |
 | Taux de remplissage des voitures | 1,165 passager | SDES, « Se déplacer en voiture » ; `DonneesReference!D26` |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
@@ -79,10 +79,12 @@ La part du ferré par défaut dépend de la région : un territoire dont toutes 
 |---|---|
 | voitures seules, 1 000 passagers.km par semaine à 0,1 kgCO2e/passager.km, écoconduite à 100 % | 0,7821 tCO2e |
 | idem, écoconduite à 50 % et 10 % de passagers en plus | 0,8295 tCO2e (baisse de 15,9 %, 16,6 % si les gains s'additionnaient) |
-| idem, 100 % de passagers en plus | 2,607 tCO2e |
+| voitures seules, écoconduite à 0 % et 100 % de passagers en plus | 2,607 tCO2e |
 | bus seuls, 1 000 passagers.km par semaine dont 60 % en ferré, 0,8 kgCO2e/véh.km, écoconduite à 100 % | 0,250272 tCO2e |
+| idem, écoconduite à 50 % et 20 % de passagers en plus | 0,38236 tCO2e |
 | tout le transport en commun en ferré | 0 tCO2e |
 | région 84, jeu de test, hors Île-de-France | 1 257,62 tCO2e |
+| région 84, jeu de test, voiture à 100 % et +10 %, bus à 50 % et +20 % | 1 911,48 tCO2e |
 | région 11, jeu de test, Île-de-France | 894,72 tCO2e |
 | région 84, données réelles, 100 % d'écoconduite | 314 061,19 tCO2e |
 | région 53 (Bretagne) | 147 001,27 tCO2e |
@@ -103,6 +105,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Deux-roues motorisés | sans terme : 1,4 % des passagers.km |
 | Parc de bus et cars immatriculé au siège | trois communes portent 17,7 % du parc métropolitain ; 276 des 1 243 EPCI n'ont aucun bus ni car classé et 11 aucune voiture : ils prennent la moyenne nationale |
 | Part du ferré par défaut | une valeur par groupe de régions : un territoire avec un grand métro hors Île-de-France (Lyon, Marseille, Lille) a une part ferrée plus haute, et ses bus sont surévalués |
+| Territoire à cheval ou commune sans région | un territoire dont les communes ne sont pas toutes en Île-de-France prend 24 %, y compris un EPCI à cheval sur l'Île-de-France et une autre région (l'EPCI 247800550 : 32 communes en région 11 et 4 en région 24, il prend 24 % alors que 89 % de ses communes sont franciliennes) |
 | Facteur des voitures | les voitures sont comptées avec le facteur du parc, pas celui du trajet |
 | Outre-mer | absent des données |
 

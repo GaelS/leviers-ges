@@ -18,7 +18,7 @@ type EfficiencyFractions = {
 // Source : élément neutre de la multiplication
 const ONE: BigNumber = toBig('1')
 
-// Source : TrsptPers_Efficacité, forme de la feuille : 52,14 semaines par an
+// Source : TrsptPers_Efficacité, formule dessinée dans les formes de la feuille (fiche d'analyse 13) : « × 52,14 », semaines par an
 const WEEKS_PER_YEAR: BigNumber = toBig('52.14')
 
 // Source : BIPM, Le Système international d'unités (Brochure SI), 9e édition : kilo = 10^3, donc 1 t = 1 000 kg
@@ -48,6 +48,30 @@ function calculateReductionFraction({
   return ONE.minus(remainingEmissions)
 }
 
+function calculateEmissionFactorPerPassengerKm({
+  emissionFactorPerVehicleKm,
+  passengersPerVehicle,
+}: {
+  emissionFactorPerVehicleKm: BigNumber
+  passengersPerVehicle: BigNumber
+}): BigNumber {
+  return emissionFactorPerVehicleKm.dividedBy(passengersPerVehicle)
+}
+
+function calculateCarEmissionFactorPerPassengerKm(carEmissionFactor: BigNumber): BigNumber {
+  return calculateEmissionFactorPerPassengerKm({
+    emissionFactorPerVehicleKm: carEmissionFactor,
+    passengersPerVehicle: CAR_PASSENGERS_PER_VEHICLE,
+  })
+}
+
+function calculateBusEmissionFactorPerPassengerKm(busEmissionFactor: BigNumber): BigNumber {
+  return calculateEmissionFactorPerPassengerKm({
+    emissionFactorPerVehicleKm: busEmissionFactor,
+    passengersPerVehicle: BUS_PASSENGERS_PER_VEHICLE,
+  })
+}
+
 function calculateAvoidedEmissions({
   weeklyPassengerKm,
   emissionFactorPerVehicleKm,
@@ -59,7 +83,10 @@ function calculateAvoidedEmissions({
   passengersPerVehicle: BigNumber
   reductionFraction: BigNumber
 }): BigNumber {
-  const emissionFactorPerPassengerKm = emissionFactorPerVehicleKm.dividedBy(passengersPerVehicle)
+  const emissionFactorPerPassengerKm = calculateEmissionFactorPerPassengerKm({
+    emissionFactorPerVehicleKm,
+    passengersPerVehicle,
+  })
   const annualPassengerKm = weeklyPassengerKm.times(WEEKS_PER_YEAR)
   const annualEmissionsKg = annualPassengerKm.times(emissionFactorPerPassengerKm)
   const avoidedEmissionsKg = annualEmissionsKg.times(reductionFraction)
@@ -100,7 +127,8 @@ function calculateTransportPersonnesEfficaciteReduction({
 }
 
 export {
-  BUS_PASSENGERS_PER_VEHICLE,
+  calculateBusEmissionFactorPerPassengerKm,
+  calculateCarEmissionFactorPerPassengerKm,
   calculateTransportPersonnesEfficaciteReduction,
   ECODRIVING_POTENTIAL,
 }
