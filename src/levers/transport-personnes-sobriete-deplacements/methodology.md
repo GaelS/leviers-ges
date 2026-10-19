@@ -22,7 +22,7 @@ FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc 
 | `FE_ferré` | 0,0229 en France continentale, 0,187 en Corse | kgCO2e par passager.km |
 | part du ferré | part des passagers.km de transport en commun en ferré, saisie ou par défaut | fraction |
 
-La formule est lue dans les formes de la feuille `TrsptPers_SobriétéDéplacements` ; la cellule « Formule » ne contient que « Réduction GES = ». Le dessin multiplie les facteurs des voitures par le taux de remplissage ; la cellule `B15` dit de diviser : la correction 1 de `docs/methodology/formula-corrections.md` s'applique. Contrairement au levier d'efficacité, les passagers.km de transport en commun comptent en entier : le facteur du transport en commun porte déjà la part du ferré.
+La formule est lue dans les formes de la feuille `TrsptPers_SobriétéDéplacements` ; la cellule « Formule » ne contient que « Réduction GES = ». Le dessin multiplie les facteurs des voitures par le taux de remplissage ; la cellule `B15` dit de diviser pour les voitures, elle ne dit rien du bus, que la correction 1 divise par analogie (le tableur annonce pourtant ses facteurs de bus en kgCO2e/passager.km, ce qui contredit le dessin) : la correction 1 de `docs/methodology/formula-corrections.md` s'applique. Contrairement au levier d'efficacité, les passagers.km de transport en commun comptent en entier : le facteur du transport en commun porte déjà la part du ferré.
 
 ## Entrées
 
@@ -78,7 +78,7 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | EPCI 200046977 | 30 071,82 tCO2e |
 | région 84, données réelles, 60 % de ferré saisi | 207 033,1 tCO2e |
 
-Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
+Les lignes « données réelles » sont calculées à 10 % de distance en moins (`r` = 0,1). Elles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
 ## Limites
 
@@ -89,5 +89,6 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Combustion du ferré continental | supposée nulle, non vérifiée dans la Base Empreinte : si les TER diesel comptent, le facteur continental monte et le résultat aussi |
 | Un seul facteur pour tout le ferré | un territoire avec métro ou tram a son propre facteur, souvent plus bas |
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
+| EPCI sans bus ni car immatriculé | 273 EPCI ont des passagers.km de transport en commun et aucun bus classé : leur part routière est chiffrée au facteur national du parc de bus, signalé dans `appliedAssumptions` ; saisir `railShareFraction` si le réseau est surtout ferré |
 | Facteur des voitures | facteur du parc, pas celui du trajet |
 | Deux-roues motorisés | sans terme |
