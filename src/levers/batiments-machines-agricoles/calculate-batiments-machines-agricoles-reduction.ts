@@ -48,11 +48,10 @@ function calculateBatimentsMachinesAgricolesReduction({
   consumption: AgriculturalConsumption
   heatEmissionFactor: KgCo2ePerKwh
 }): TonnesCo2ePerYear {
-  const electricityEmissionFactor = ELECTRICITY_APPLIED_EMISSION_FACTOR
   const electricityAvoidedEmissions = calculateAvoidedEmissions({
     consumption: consumption.electricity,
     reductionFraction: reductionFractions.electricity,
-    emissionFactor: electricityEmissionFactor,
+    emissionFactor: ELECTRICITY_APPLIED_EMISSION_FACTOR,
   })
   const naturalGasAvoidedEmissions = calculateAvoidedEmissions({
     consumption: consumption.naturalGas,

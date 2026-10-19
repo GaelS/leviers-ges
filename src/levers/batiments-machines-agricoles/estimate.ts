@@ -4,11 +4,8 @@ import {
   toEstimateResult,
   type EstimateResult,
 } from '../../application/estimate/estimate-result.ts'
-import {
-  readHeatNetworks,
-  reseauxChaleurNetworksDataset,
-} from '../../application/heat-networks/read-heat-networks.ts'
-import { weightHeatEmissionFactor } from '../../application/heat-networks/weight-heat-emission-factor.ts'
+import { readHeatEmissionFactor } from '../../application/heat-networks/read-heat-emission-factor.ts'
+import { reseauxChaleurNetworksDataset } from '../../application/heat-networks/read-heat-networks.ts'
 import type { DataSourceError } from '../../domain/data-source.ts'
 import type { UnknownTerritory } from '../../domain/territory-index.ts'
 import type { BatimentsMachinesAgricolesRequest } from './batiments-machines-agricoles-request.ts'
@@ -22,11 +19,11 @@ function estimate(
   return getCommunesOf(territory).andThen((communes) =>
     Result.combine([
       getAgriculturalConsumption({ dataSource, territory, communes, getRegionByCommune }),
-      readHeatNetworks({
+      readHeatEmissionFactor({
         dataSource,
         dataset: reseauxChaleurNetworksDataset,
         communes,
-      }).map(weightHeatEmissionFactor),
+      }),
     ]).map(([consumption, heatEmissionFactor]) =>
       toEstimateResult(
         calculateBatimentsMachinesAgricolesReduction({
