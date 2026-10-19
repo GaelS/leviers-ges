@@ -23,6 +23,7 @@ const transportPersonnesReportModalRequestSchema = z.strictObject({
       {
         path: ['carToActiveModesFraction'],
         message: 'must be at most 100% together with carToPublicTransportFraction',
+        when: ({ issues }) => issues.length === 0,
       },
     ),
 })

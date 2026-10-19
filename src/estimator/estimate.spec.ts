@@ -551,6 +551,16 @@ describe('estimate', () => {
       expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5.21')
     })
 
+    it.each(['abc', ''])('refuse le report %j qui n’est pas un nombre, sans lever', (toPublicTransport) => {
+      expect(
+        withTransport(transportPersonnesReportModalRequest({ toPublicTransport, toActiveModes: '0.1' }))
+          ._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.carToPublicTransportFraction' }],
+      })
+    })
+
     it('refuse des reports qui dépassent 100 % ensemble', () => {
       expect(
         withTransport(
