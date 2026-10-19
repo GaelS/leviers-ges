@@ -46,7 +46,8 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `transport_personnes_efficacite` | fait | `src/levers/transport-personnes-efficacite/methodology.md` |
 | `transport_personnes_electrification` | fait | `src/levers/transport-personnes-electrification/methodology.md` |
 | `transport_personnes_report_modal` | fait | `src/levers/transport-personnes-report-modal/methodology.md` |
-| les 9 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
+| `transport_personnes_sobriete_deplacements` | fait | `src/levers/transport-personnes-sobriete-deplacements/methodology.md` |
+| les 8 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
 
 `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés (`not_computed` partout).
 

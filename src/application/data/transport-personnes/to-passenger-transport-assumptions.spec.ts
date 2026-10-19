@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
-import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
-import { quantity } from '../../domain/units.ts'
-import type { RailEmissionFactor } from './data/rail-emission-factor.ts'
-import { toAppliedAssumptions } from './to-applied-assumptions.ts'
+import type { RailShare } from './resolve-rail-share.ts'
+import type { TransportInputs } from './transport-inputs.ts'
+import { quantity } from '../../../domain/units.ts'
+import type { RailEmissionFactor } from './rail-emission-factor.ts'
+import { toPassengerTransportAssumptions } from './to-passenger-transport-assumptions.ts'
 
 const TRANSPORT_INPUTS: TransportInputs = {
   carWeeklyPassengerKm: quantity<'PassengerKilometresPerWeek'>('1'),
@@ -28,9 +28,9 @@ const CORSICAN: RailEmissionFactor = {
   isCorsican: true,
 }
 
-describe('toAppliedAssumptions, report modal', () => {
+describe('toPassengerTransportAssumptions', () => {
   it('annonce toujours le facteur du bus et celui du ferré', () => {
-    const assumptions = toAppliedAssumptions({
+    const assumptions = toPassengerTransportAssumptions({
       transportInputs: TRANSPORT_INPUTS,
       railShare: REQUESTED,
       railEmissionFactor: MAINLAND,
@@ -41,7 +41,7 @@ describe('toAppliedAssumptions, report modal', () => {
   })
 
   it('cite le train de Corse pour un territoire corse', () => {
-    const assumptions = toAppliedAssumptions({
+    const assumptions = toPassengerTransportAssumptions({
       transportInputs: TRANSPORT_INPUTS,
       railShare: REQUESTED,
       railEmissionFactor: CORSICAN,
@@ -51,7 +51,7 @@ describe('toAppliedAssumptions, report modal', () => {
   })
 
   it('annonce la part ferrée par défaut, les parts exclues et les moyennes nationales', () => {
-    const assumptions = toAppliedAssumptions({
+    const assumptions = toPassengerTransportAssumptions({
       transportInputs: {
         ...TRANSPORT_INPUTS,
         carFleetUnclassifiedShare: quantity<'Fraction'>('0.01'),

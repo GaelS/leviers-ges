@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { quantity } from '../../domain/units.ts'
 import {
-  calculatePublicTransportEmissionFactor,
   calculateTransportPersonnesReportModalReduction,
   type ReportModalFlows,
   type ReportModalFractions,
@@ -90,17 +89,5 @@ describe('calculateTransportPersonnesReportModalReduction', () => {
         input: flows({ carWeeklyPassengerKm: '2000' }),
       }),
     ).toBe('10.428')
-  })
-})
-
-describe('calculatePublicTransportEmissionFactor', () => {
-  it('pondère le ferré et le bus par la part du ferré : 60 % à 0,02 et 40 % à 0,08 donnent 0,044', () => {
-    expect(
-      calculatePublicTransportEmissionFactor({
-        busEmissionFactor: quantity<'KgCo2ePerVehicleKilometre'>('0.8'),
-        railShare: quantity<'Fraction'>('0.6'),
-        railEmissionFactor: quantity<'KgCo2ePerPassengerKilometre'>('0.02'),
-      }).toFixed(),
-    ).toBe('0.044')
   })
 })
