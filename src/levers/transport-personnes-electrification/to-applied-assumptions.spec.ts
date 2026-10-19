@@ -78,6 +78,22 @@ describe('toAppliedAssumptions, électrification', () => {
     expect(Object.keys(assumptions)).toEqual(['electricCarEmissionFactor', 'electricBusEmissionFactor'])
   })
 
+  it('distingue un territoire sans véhicule thermique d’un plafond atteint', () => {
+    const noThermalFleet: ThermalFleet = {
+      ...THERMAL_FLEET,
+      carThermalFleetShare: quantity<'Fraction'>('0'),
+      busThermalFleetShare: quantity<'Fraction'>('0'),
+    }
+    const assumptions = toAppliedAssumptions({
+      fractions: WITHIN_FLEET,
+      thermalFleet: noThermalFleet,
+      railShare: REQUESTED,
+    })
+    expect(assumptions['busElectrificationFraction']?.value).toBe('0')
+    expect(assumptions['busElectrificationFraction']?.limit).toContain('no thermal buses and coaches')
+    expect(assumptions['carElectrificationFraction']?.limit).toContain('no thermal cars')
+  })
+
   it('dit pour chaque hypothèse sa source et sa limite', () => {
     const assumptions = Object.values(
       toAppliedAssumptions({ fractions: BEYOND_FLEET, thermalFleet: THERMAL_FLEET, railShare: DEFAULTED }),

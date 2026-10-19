@@ -2,6 +2,7 @@ import type { RailShare } from '../../application/data/transport-personnes/resol
 import { toRailShareAssumption } from '../../application/data/transport-personnes/to-rail-share-assumption.ts'
 import { FLEET_SOURCE } from '../../application/data/transport-personnes/fleet-source.ts'
 import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
+import type { Fraction } from '../../domain/units.ts'
 import {
   ELECTRIC_BUS_EMISSION_FACTOR,
   ELECTRIC_CAR_EMISSION_FACTOR,
@@ -37,6 +38,12 @@ function toElectricBusEmissionFactorAssumption(): AppliedAssumptions {
   }
 }
 
+function toCapLimit({ thermalShare, mode }: { thermalShare: Fraction; mode: string }): string {
+  return thermalShare.isZero()
+    ? `The territory has no thermal ${mode} in the fleet data, either because none is registered there or because all are electric: nothing can be electrified`
+    : `The requested share exceeds the share of thermal ${mode} in the fleet: only thermal ${mode} can be electrified, the requested share is capped`
+}
+
 function toCarElectrificationCapAssumption({
   fractions,
   thermalFleet,
@@ -50,8 +57,7 @@ function toCarElectrificationCapAssumption({
     carElectrificationFraction: {
       value: electrifiedShare.toFixed(),
       source: `${FLEET_SOURCE}, share of cars running on petrol, diesel or gas`,
-      limit:
-        'The requested share exceeds the share of thermal cars in the fleet: only thermal cars can be electrified, the requested share is capped',
+      limit: toCapLimit({ thermalShare: thermalFleet.carThermalFleetShare, mode: 'cars' }),
     },
   }
 }
@@ -69,8 +75,10 @@ function toBusElectrificationCapAssumption({
     busElectrificationFraction: {
       value: electrifiedShare.toFixed(),
       source: `${FLEET_SOURCE}, share of buses and coaches running on diesel or gas`,
-      limit:
-        'The requested share exceeds the share of thermal buses and coaches in the fleet: only thermal buses and coaches can be electrified, the requested share is capped',
+      limit: toCapLimit({
+        thermalShare: thermalFleet.busThermalFleetShare,
+        mode: 'buses and coaches',
+      }),
     },
   }
 }

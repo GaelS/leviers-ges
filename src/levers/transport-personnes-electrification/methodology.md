@@ -65,7 +65,8 @@ Construction : `pnpm build:data:transport-personnes`. Les voitures thermiques so
 | 4 | La part du ferré a une valeur par défaut, 82 % en Île-de-France et 24 % ailleurs | voir le levier d'efficacité ; renvoyée dans `appliedAssumptions.railShare` quand elle n'est pas saisie |
 | 5 | Les passagers.km du transport en commun routier = transport en commun × (1 − part du ferré) | `DonneesTerritoires!D14` |
 | 6 | Les passagers.km comptent pour moitié côté résidence et pour moitié côté travail | `TrsptPers_SobriétéDéplacements!B13` |
-| 7 | Un territoire sans véhicule thermique a une part thermique nulle : le facteur national de repli qu'il porte ne joue pas, le résultat est nul | cohérent avec le choix 2 |
+| 7 | Les facteurs thermiques sont ceux du levier d'efficacité (OMINEA, combustion seule : CO2, CH4 et N2O sans amont du carburant) : diesel 0,1636, essence 0,1711, gaz 0,2315 pour les voitures, diesel 0,8045 et gaz 0,7098 pour les bus. Le gaz des voitures est mis au-dessus de l'essence et le bus diesel à la valeur basse (Base Empreinte : 0,0874 kgCO2e/passager.km contre 0,0805), choix de conception non validés. Les hybrides prennent le facteur plein de leur carburant | `src/dataset-builders/transport-personnes/fleet-emission-factors.ts` ; le thermique est à l'échappement, l'électrique à l'amont |
+| 8 | Un territoire sans véhicule thermique a une part thermique nulle : le facteur national de repli qu'il porte ne joue pas, le résultat est nul | cohérent avec le choix 2 |
 
 ## Cas de test chiffrés
 
@@ -97,4 +98,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Parc de bus et cars immatriculé au siège | trois communes portent 17,7 % du parc métropolitain : la part thermique d'un EPCI peut être très éloignée de la réalité des trajets |
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
 | Voiture et bus déjà électriques | leur part est écartée par le plafond : on ne peut pas électrifier deux fois |
+| Territoire sans parc | 276 des 1 243 EPCI n'ont aucun bus ni car immatriculé, 11 aucune voiture : leur part thermique est nulle et le résultat de ce mode est nul, signalé dans `appliedAssumptions` par une limite propre |
+| Périmètre des trajets | seuls les trajets domicile-travail de moins de 100 km comptent, alors que la part saisie porte sur le parc entier |
+| Taux de remplissage des voitures | 1,165 vient du motif « Professionnel » de la source SDES, alors que les données sont domicile-travail ; repris du tableur, partagé avec l'efficacité |
 | Deux-roues motorisés | sans terme |
