@@ -104,7 +104,7 @@ describe('buildNetworks', () => {
       const result = buildNetworks({ sdesCsv: toSdesCsv('A;01001;beaucoup;0.3'), fcuCsv: toFcuCsv() })
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sdes-chaleur-commune-2024',
+        dataset: 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv',
         reason: 'unreadable',
         detail: 'CONSOTOT=beaucoup is not a decimal number',
       })
@@ -114,7 +114,7 @@ describe('buildNetworks', () => {
       const result = buildNetworks({ sdesCsv: toSdesCsv('A;01001;10;0.3'), fcuCsv: toFcuCsv('A,abc') })
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'fcu-reseaux-chaleur',
+        dataset: 'reseaux-chaleur/sources/fcu-reseaux-chaleur.csv',
         reason: 'unreadable',
         detail: 'contenu_co2_kgco2_kwh=abc is not a decimal number',
       })
@@ -124,7 +124,7 @@ describe('buildNetworks', () => {
       const result = buildNetworks({ sdesCsv: toSdesCsv('A;01001;10;'), fcuCsv: toFcuCsv() })
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sdes-chaleur-commune-2024',
+        dataset: 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv',
         reason: 'unreadable',
         detail: 'CONTENU_EN_CO2= is not a decimal number',
       })
@@ -142,7 +142,7 @@ describe('buildNetworks', () => {
           .join(';')
         const result = buildNetworks({ sdesCsv: `${header}\n${row}`, fcuCsv: toFcuCsv() })
         expect(result._unsafeUnwrapErr()).toMatchObject({
-          dataset: 'sdes-chaleur-commune-2024',
+          dataset: 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv',
           reason: 'columns_mismatch',
           detail: column,
         })
@@ -160,7 +160,7 @@ describe('buildNetworks', () => {
           fcuCsv: `${header}\nvaleur`,
         })
         expect(result._unsafeUnwrapErr()).toMatchObject({
-          dataset: 'fcu-reseaux-chaleur',
+          dataset: 'reseaux-chaleur/sources/fcu-reseaux-chaleur.csv',
           reason: 'columns_mismatch',
           detail: column,
         })
@@ -170,7 +170,7 @@ describe('buildNetworks', () => {
     it('refuse un fichier SDES dont une ligne n’a pas le bon nombre de colonnes', () => {
       const result = buildNetworks({ sdesCsv: toSdesCsv('A;01001;10;0.3;en trop'), fcuCsv: toFcuCsv() })
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'sdes-chaleur-commune-2024',
+        dataset: 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv',
         reason: 'malformed_csv',
       })
     })
@@ -181,7 +181,7 @@ describe('buildNetworks', () => {
         fcuCsv: toFcuCsv('A,0.1,en trop'),
       })
       expect(result._unsafeUnwrapErr()).toMatchObject({
-        dataset: 'fcu-reseaux-chaleur',
+        dataset: 'reseaux-chaleur/sources/fcu-reseaux-chaleur.csv',
         reason: 'malformed_csv',
       })
     })
@@ -190,7 +190,7 @@ describe('buildNetworks', () => {
       const result = buildNetworks({ sdesCsv: toSdesCsv('"A,B";01001;10;0.3'), fcuCsv: toFcuCsv() })
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_dataset',
-        dataset: 'sdes-chaleur-commune-2024',
+        dataset: 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv',
         reason: 'malformed_csv',
         detail: 'field A,B needs CSV quoting',
       })

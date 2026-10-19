@@ -29,7 +29,7 @@ type ModalitySelection = {
   readonly entries: readonly HarvestEntry[]
 }
 
-const harvestDataset = 'agreste-exfnr00-recolte-bois'
+const harvestDataset = 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv'
 
 // Source : Agreste, tableau EXFNR00, colonne code_modalite : 1.11 = « Grumes » (bois d'œuvre, DonneesTerritoires!D10)
 const LOGS_MODALITY_CODE = '1.11'

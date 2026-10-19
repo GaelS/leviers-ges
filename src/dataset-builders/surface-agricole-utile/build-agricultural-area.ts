@@ -49,9 +49,9 @@ const COMMUNE_CODE_CHANGES: ReadonlyMap<string, string> = new Map([
 // Source : data/surface-agricole-utile/manifest.json, colonnes de communes.csv
 const COMMUNES_COLUMNS = ['code_commune', 'agricultural_area_ha'] as const
 
-const communeDataset = 'sau-commune'
-const regionDataset = 'sau-region'
-const departementDataset = 'sau-departement'
+const communeDataset = 'surface-agricole-utile/sources/sau-commune.csv'
+const regionDataset = 'surface-agricole-utile/sources/sau-region.csv'
+const departementDataset = 'surface-agricole-utile/sources/sau-departement.csv'
 const geographyDataset = 'territoires/communes'
 
 function readCensusLines({

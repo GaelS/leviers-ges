@@ -96,10 +96,10 @@ const EPCIS_COLUMNS = ['code_epci', 'electricity_mwh', 'natural_gas_mwh'] as con
 
 const regionalDataset = 'sdes-energie-regional'
 const communesDataset = 'territoires/communes'
-const irisElectricityDataset = 'sdes-electricite-iris-2024-agriculture'
-const irisGasDataset = 'sdes-gaz-iris-2024-agriculture'
-const epciElectricityDataset = 'sdes-electricite-epci-2024-agriculture'
-const epciGasDataset = 'sdes-gaz-epci-2024-agriculture'
+const irisElectricityDataset = 'batiments-machines-agricoles/sources/sdes-electricite-iris-2024-agriculture.csv'
+const irisGasDataset = 'batiments-machines-agricoles/sources/sdes-gaz-iris-2024-agriculture.csv'
+const epciElectricityDataset = 'batiments-machines-agricoles/sources/sdes-electricite-epci-2024-agriculture.csv'
+const epciGasDataset = 'batiments-machines-agricoles/sources/sdes-gaz-epci-2024-agriculture.csv'
 
 function toCommunes(rows: readonly DataRow[]): Result<readonly Commune[], InvalidDataset> {
   const dataset = communesDataset

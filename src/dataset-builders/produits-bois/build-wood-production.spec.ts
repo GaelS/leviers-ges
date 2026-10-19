@@ -81,7 +81,7 @@ describe('buildWoodProduction', () => {
   it('refuse une géographie qui n’est ni un département, ni une région, ni METRO', () => {
     expect(build(harvest('2022,XX,1.11,Grumes,1'))._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'unreadable',
       detail: 'geographie=XX is neither a department, a region nor METRO',
     })
@@ -90,7 +90,7 @@ describe('buildWoodProduction', () => {
   it('refuse une récolte sans ligne METRO', () => {
     expect(build(harvest('2022,NR84,1.11,Grumes,60'))._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'missing_key_column',
       detail: 'METRO',
     })
@@ -99,7 +99,7 @@ describe('buildWoodProduction', () => {
   it('refuse une valeur de récolte qui n’est pas un nombre', () => {
     expect(build(harvest('2022,METRO,1.11,Grumes,beaucoup'))._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'unreadable',
       detail: 'valeur_milliers_m3=beaucoup is not a decimal number',
     })
@@ -107,7 +107,7 @@ describe('buildWoodProduction', () => {
 
   it('refuse une récolte à laquelle il manque une colonne', () => {
     expect(build('annee,geographie\n2022,METRO\n')._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'columns_mismatch',
       detail: 'code_modalite',
     })
@@ -137,7 +137,7 @@ describe('buildWoodProduction', () => {
     )
     expect(build(duplicated)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'duplicate_key',
       detail: 'METRO:1.11',
     })
@@ -151,7 +151,7 @@ describe('buildWoodProduction', () => {
     )
     expect(build(withoutLogs)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'missing_key_column',
       detail: '01:1.11',
     })
@@ -160,7 +160,7 @@ describe('buildWoodProduction', () => {
   it('refuse une France métropolitaine sans bois d’industrie au lieu de le compter pour 0', () => {
     expect(build(harvest('2022,METRO,1.11,Grumes,100'))._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'agreste-exfnr00-recolte-bois',
+      dataset: 'produits-bois/sources/agreste-exfnr00-recolte-bois-2018-2022.csv',
       reason: 'missing_key_column',
       detail: 'METRO:1.12',
     })
@@ -168,7 +168,7 @@ describe('buildWoodProduction', () => {
 
   it('refuse une série de produits bois sans colonne année', () => {
     expect(build(HARVEST_CSV, 'sciages_tC\n1\n')._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'ominea-2026-tableau-45-produits-bois-tc',
+      dataset: 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv',
       reason: 'columns_mismatch',
       detail: 'annee',
     })
@@ -182,7 +182,7 @@ describe('buildWoodProduction', () => {
     ].join('\n')
     expect(build(HARVEST_CSV, withoutYear)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'ominea-2026-tableau-45-produits-bois-tc',
+      dataset: 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv',
       reason: 'missing_key_column',
       detail: '2022',
     })
@@ -190,7 +190,7 @@ describe('buildWoodProduction', () => {
 
   it('refuse une série de produits bois à laquelle il manque une colonne', () => {
     expect(build(HARVEST_CSV, 'annee\n2022\n')._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'ominea-2026-tableau-45-produits-bois-tc',
+      dataset: 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv',
       reason: 'columns_mismatch',
     })
   })
@@ -199,7 +199,7 @@ describe('buildWoodProduction', () => {
     const broken =
       'annee,bois_oeuvre_tC_sciages_plus_contreplaques,bois_industrie_tC_panneaux_plus_papier\n2022,beaucoup,2\n'
     expect(build(HARVEST_CSV, broken)._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'ominea-2026-tableau-45-produits-bois-tc',
+      dataset: 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv',
       reason: 'unreadable',
     })
   })
@@ -210,7 +210,7 @@ describe('buildWoodProduction', () => {
 
   it('refuse un CSV de produits bois illisible', () => {
     expect(build(HARVEST_CSV, 'a,b\n"1')._unsafeUnwrapErr()).toMatchObject({
-      dataset: 'ominea-2026-tableau-45-produits-bois-tc',
+      dataset: 'produits-bois/sources/ominea-2026-tableau-45-produits-bois-tc.csv',
       reason: 'malformed_csv',
     })
   })

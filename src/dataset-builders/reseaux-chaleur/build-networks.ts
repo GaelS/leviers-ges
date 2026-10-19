@@ -25,8 +25,8 @@ type NetworksBuild = {
   readonly totalDeliveredMwh: string
 }
 
-const sdesDataset = 'sdes-chaleur-commune-2024'
-const fcuDataset = 'fcu-reseaux-chaleur'
+const sdesDataset = 'reseaux-chaleur/sources/sdes-chaleur-commune-2024.csv'
+const fcuDataset = 'reseaux-chaleur/sources/fcu-reseaux-chaleur.csv'
 
 // Source : data/reseaux-chaleur/manifest.json, colonnes de networks.csv
 const NETWORKS_COLUMNS = [
