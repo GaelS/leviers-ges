@@ -1,0 +1,196 @@
+{
+  "datasets": [
+    {
+      "file": "regions.csv",
+      "source": "Passagers.km des trajets domicile-travail (Insee et SDES, 2022) et facteurs d’émission du parc de voitures et de bus et cars (SDES, parc au 1er janvier 2025 ; OMINEA 2024 du CITEPA et Base Empreinte de l’ADEME), régions de France métropolitaine. Hors champ de la source des trajets : les DOM, l’étranger et les trajets de plus de 100 km. Construit par pnpm build:data:transport-personnes",
+      "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+      "vintage": "trajets 2022, parc 2025",
+      "retrievedOn": "2026-10-07",
+      "checksum": "638480b68c8b303cf9bb2b47b59e3be1858b52e3fd364123aff3843af0df8df7",
+      "level": "region",
+      "keyColumn": "code_region",
+      "columns": [
+        {
+          "name": "code_region",
+          "unit": "code INSEE de la région"
+        },
+        {
+          "name": "car_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en voiture (MODTRANS 5), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "public_transport_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en transport en commun (MODTRANS 6), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "car_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+        },
+        {
+          "name": "bus_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars au 1er janvier 2025 pondérée par les carburants diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_fleet_unclassified_share",
+          "unit": "part du parc de voitures dont le carburant n’a pas de facteur (autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_unclassified_share",
+          "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_classified",
+          "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        }
+      ],
+      "controlTotals": {
+        "car_weekly_passenger_km": "2121170446.04",
+        "public_transport_weekly_passenger_km": "378905617.78"
+      },
+      "sources": [
+        {
+          "file": "sources/insee-sdes-domicile-travail-2022-agregats-par-mode.csv",
+          "source": "Insee et SDES, Estimation des émissions individuelles de gaz à effet de serre lors des déplacements domicile-travail, millésime 2022, agrégé par mode (MODTRANS), par côté résidence ou travail et par région, département et EPCI : somme de IPONDI et somme de IPONDI × DIST_HEBDO",
+          "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "3de6053cfdf780833ab30652e750df27c748658938edbbaab73c4ea395c2c612"
+        },
+        {
+          "file": "sources/sdes-parc-vp-tc-routier-2025-par-maille.csv",
+          "source": "SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2025, voitures particulières (VP) et transports en commun routiers (bus et cars) par carburant, agrégé par région, département et EPCI",
+          "link": "https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=682c33e7d455a8571c7d00ff",
+          "retrievedOn": "2026-10-07",
+          "checksum": "be4be5d739a40fc0659fd7de829b62b23f0daae6f1be5ee07de49da43020dc17"
+        }
+      ]
+    },
+    {
+      "file": "departements.csv",
+      "source": "Passagers.km des trajets domicile-travail (Insee et SDES, 2022) et facteurs d’émission du parc de voitures et de bus et cars (SDES, parc au 1er janvier 2025 ; OMINEA 2024 du CITEPA et Base Empreinte de l’ADEME), départements de France métropolitaine. Hors champ de la source des trajets : les DOM, l’étranger et les trajets de plus de 100 km. Construit par pnpm build:data:transport-personnes",
+      "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+      "vintage": "trajets 2022, parc 2025",
+      "retrievedOn": "2026-10-07",
+      "checksum": "11b30c7b90625162d1e8cdfafd41353ff46cf8712e5a7aec2452a38e9b6bfe08",
+      "level": "departement",
+      "keyColumn": "code_departement",
+      "columns": [
+        {
+          "name": "code_departement",
+          "unit": "code INSEE du département"
+        },
+        {
+          "name": "car_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en voiture (MODTRANS 5), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "public_transport_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en transport en commun (MODTRANS 6), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "car_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+        },
+        {
+          "name": "bus_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars au 1er janvier 2025 pondérée par les carburants diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_fleet_unclassified_share",
+          "unit": "part du parc de voitures dont le carburant n’a pas de facteur (autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_unclassified_share",
+          "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_classified",
+          "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        }
+      ],
+      "controlTotals": {
+        "car_weekly_passenger_km": "2121170446.02",
+        "public_transport_weekly_passenger_km": "378905617.81"
+      },
+      "sources": [
+        {
+          "file": "sources/insee-sdes-domicile-travail-2022-agregats-par-mode.csv",
+          "source": "Insee et SDES, Estimation des émissions individuelles de gaz à effet de serre lors des déplacements domicile-travail, millésime 2022, agrégé par mode (MODTRANS), par côté résidence ou travail et par région, département et EPCI : somme de IPONDI et somme de IPONDI × DIST_HEBDO",
+          "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "3de6053cfdf780833ab30652e750df27c748658938edbbaab73c4ea395c2c612"
+        },
+        {
+          "file": "sources/sdes-parc-vp-tc-routier-2025-par-maille.csv",
+          "source": "SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2025, voitures particulières (VP) et transports en commun routiers (bus et cars) par carburant, agrégé par région, département et EPCI",
+          "link": "https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=682c33e7d455a8571c7d00ff",
+          "retrievedOn": "2026-10-07",
+          "checksum": "be4be5d739a40fc0659fd7de829b62b23f0daae6f1be5ee07de49da43020dc17"
+        }
+      ]
+    },
+    {
+      "file": "epcis.csv",
+      "source": "Passagers.km des trajets domicile-travail (Insee et SDES, 2022) et facteurs d’émission du parc de voitures et de bus et cars (SDES, parc au 1er janvier 2025 ; OMINEA 2024 du CITEPA et Base Empreinte de l’ADEME), EPCI de France métropolitaine. Hors champ de la source des trajets : les DOM, l’étranger et les trajets de plus de 100 km. Construit par pnpm build:data:transport-personnes",
+      "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+      "vintage": "trajets 2022, parc 2025",
+      "retrievedOn": "2026-10-07",
+      "checksum": "01e98a36cb6ccf3240df4f044ffd68ea1133d5823170f3ca58b219131b8282dc",
+      "level": "epci",
+      "keyColumn": "code_epci",
+      "columns": [
+        {
+          "name": "code_epci",
+          "unit": "code SIREN de l’EPCI"
+        },
+        {
+          "name": "car_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en voiture (MODTRANS 5), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "public_transport_weekly_passenger_km",
+          "unit": "passagers.km par semaine des trajets domicile-travail en transport en commun (MODTRANS 6), 50 % côté résidence et 50 % côté travail, 2022"
+        },
+        {
+          "name": "car_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures au 1er janvier 2025 pondérée par les carburants essence, diesel, gaz et électrique"
+        },
+        {
+          "name": "bus_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars au 1er janvier 2025 pondérée par les carburants diesel, gaz et électrique ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_fleet_unclassified_share",
+          "unit": "part du parc de voitures dont le carburant n’a pas de facteur (autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_unclassified_share",
+          "unit": "part du parc de bus et cars dont le carburant n’a pas de facteur (essence, autre), entre 0 et 1"
+        },
+        {
+          "name": "bus_fleet_classified",
+          "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        }
+      ],
+      "controlTotals": {
+        "car_weekly_passenger_km": "2162838055.345",
+        "public_transport_weekly_passenger_km": "384297929.73"
+      },
+      "sources": [
+        {
+          "file": "sources/insee-sdes-domicile-travail-2022-agregats-par-mode.csv",
+          "source": "Insee et SDES, Estimation des émissions individuelles de gaz à effet de serre lors des déplacements domicile-travail, millésime 2022, agrégé par mode (MODTRANS), par côté résidence ou travail et par région, département et EPCI : somme de IPONDI et somme de IPONDI × DIST_HEBDO",
+          "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "3de6053cfdf780833ab30652e750df27c748658938edbbaab73c4ea395c2c612"
+        },
+        {
+          "file": "sources/sdes-parc-vp-tc-routier-2025-par-maille.csv",
+          "source": "SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2025, voitures particulières (VP) et transports en commun routiers (bus et cars) par carburant, agrégé par région, département et EPCI",
+          "link": "https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=682c33e7d455a8571c7d00ff",
+          "retrievedOn": "2026-10-07",
+          "checksum": "be4be5d739a40fc0659fd7de829b62b23f0daae6f1be5ee07de49da43020dc17"
+        }
+      ]
+    }
+  ]
+}
