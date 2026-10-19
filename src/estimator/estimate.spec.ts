@@ -578,6 +578,62 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_personnes_sobriete_deplacements', () => {
+    const withTransport = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'transport-personnes/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              car_weekly_passenger_km: '1000',
+              public_transport_weekly_passenger_km: '0',
+              car_emission_factor_kg_per_km: '0.1165',
+              bus_emission_factor_kg_per_km: '0.8',
+              car_fleet_unclassified_share: '0',
+              bus_fleet_unclassified_share: '0',
+              car_fleet_classified: '100',
+              bus_fleet_classified: '100',
+              car_thermal_emission_factor_kg_per_km: '0.1165',
+              bus_thermal_emission_factor_kg_per_km: '0.8',
+              car_thermal_fleet_share: '1',
+              bus_thermal_fleet_share: '1',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportPersonnesSobrieteDeplacementsRequest(
+      commutingDistanceReductionFraction: string,
+    ): RequestInput {
+      return {
+        id: 'transport_personnes_sobriete_deplacements',
+        territory: { level: 'region', code: '84' },
+        parameters: { commutingDistanceReductionFraction },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine en voiture, tous supprimés, évitent 5,21 tCO2e', () => {
+      const result = withTransport(transportPersonnesSobrieteDeplacementsRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5.21')
+    })
+
+    it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
+      expect(
+        withTransport(transportPersonnesSobrieteDeplacementsRequest(reduction))._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.commutingDistanceReductionFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)

@@ -33,6 +33,10 @@ import {
   estimate as estimateTransportPersonnesReportModal,
   type TransportPersonnesReportModalRequestInput,
 } from '../levers/transport-personnes-report-modal/index.ts'
+import {
+  estimate as estimateTransportPersonnesSobrieteDeplacements,
+  type TransportPersonnesSobrieteDeplacementsRequestInput,
+} from '../levers/transport-personnes-sobriete-deplacements/index.ts'
 import { estimateOnComputedLevel } from './estimate-on-computed-level.ts'
 import { parseRequest } from './parse-request.ts'
 
@@ -45,6 +49,7 @@ type RequestInput =
   | TransportPersonnesEfficaciteRequestInput
   | TransportPersonnesElectrificationRequestInput
   | TransportPersonnesReportModalRequestInput
+  | TransportPersonnesSobrieteDeplacementsRequestInput
 
 type Lever = RequestInput['id']
 
@@ -98,6 +103,15 @@ function createEstimator(dataSource: DataSource): Estimator {
           estimateOnComputedLevel(transportPersonnesReportModalRequest, (computedLevelRequest) =>
             estimateTransportPersonnesReportModal(computedLevelRequest, context),
           ),
+        )
+        .with(
+          { id: 'transport_personnes_sobriete_deplacements' },
+          (transportPersonnesSobrieteDeplacementsRequest) =>
+            estimateOnComputedLevel(
+              transportPersonnesSobrieteDeplacementsRequest,
+              (computedLevelRequest) =>
+                estimateTransportPersonnesSobrieteDeplacements(computedLevelRequest, context),
+            ),
         )
         .exhaustive(),
     )
