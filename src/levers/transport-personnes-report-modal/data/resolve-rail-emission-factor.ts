@@ -1,4 +1,5 @@
-import { Result } from 'neverthrow'
+import type { Result } from 'neverthrow'
+import { areAllCommunesInRegion } from '../../../application/data/transport-personnes/are-all-communes-in-region.ts'
 import type { RegionLookup } from '../../../application/estimate/estimation-context.ts'
 import type { DataSourceError } from '../../../domain/data-source.ts'
 import { quantity, type KgCo2ePerPassengerKilometre } from '../../../domain/units.ts'
@@ -22,8 +23,11 @@ function resolveRailEmissionFactor({
   communes: readonly string[]
   getRegionByCommune: RegionLookup
 }): Result<RailEmissionFactor, DataSourceError> {
-  return Result.combine(communes.map(getRegionByCommune)).map((regions) => {
-    const isCorsican = regions.length > 0 && regions.every((region) => region === CORSICA_REGION_CODE)
+  return areAllCommunesInRegion({
+    communes,
+    regionCode: CORSICA_REGION_CODE,
+    getRegionByCommune,
+  }).map((isCorsican) => {
     const emissionFactor = isCorsican ? CORSICA_RAIL_EMISSION_FACTOR : MAINLAND_RAIL_EMISSION_FACTOR
     return { emissionFactor, isCorsican }
   })
