@@ -8,8 +8,8 @@ import { cerenDataset } from './read-ceren-fuel-consumption.ts'
 import type { RegionalBilan } from './read-regional-bilan.ts'
 
 type FuelShares = {
-  readonly fuelOil: BigNumber
-  readonly liquefiedPetroleumGas: BigNumber
+  readonly fuelOilShare: BigNumber
+  readonly liquefiedPetroleumGasShare: BigNumber
 }
 
 type RegionalEnergy = {
@@ -32,15 +32,15 @@ function calculateFuelShares({
   fuelOilTwh: string
   liquefiedPetroleumGasTwh: string
 }): Result<FuelShares, InvalidDataset> {
-  const fuelOil = toBig(fuelOilTwh)
-  const liquefiedPetroleumGas = toBig(liquefiedPetroleumGasTwh)
-  const petroleumTwh = fuelOil.plus(liquefiedPetroleumGas)
+  const fuelOilConsumptionTwh = toBig(fuelOilTwh)
+  const liquefiedPetroleumGasConsumptionTwh = toBig(liquefiedPetroleumGasTwh)
+  const petroleumTwh = fuelOilConsumptionTwh.plus(liquefiedPetroleumGasConsumptionTwh)
   if (petroleumTwh.isZero()) {
     return err(toEmptyFuelSharesError('CEREN fuel oil and LPG consumption sum to 0'))
   }
   return ok({
-    fuelOil: fuelOil.dividedBy(petroleumTwh),
-    liquefiedPetroleumGas: liquefiedPetroleumGas.dividedBy(petroleumTwh),
+    fuelOilShare: fuelOilConsumptionTwh.dividedBy(petroleumTwh),
+    liquefiedPetroleumGasShare: liquefiedPetroleumGasConsumptionTwh.dividedBy(petroleumTwh),
   })
 }
 
@@ -56,8 +56,8 @@ function toRegionalEnergy({
     regionCode: bilan.regionCode,
     electricityGwh: toBig(bilan.electricityGwh),
     naturalGasGwh: toBig(bilan.naturalGasGwh),
-    fuelOilGwh: petroleumProductsGwh.times(shares.fuelOil),
-    liquefiedPetroleumGasGwh: petroleumProductsGwh.times(shares.liquefiedPetroleumGas),
+    fuelOilGwh: petroleumProductsGwh.times(shares.fuelOilShare),
+    liquefiedPetroleumGasGwh: petroleumProductsGwh.times(shares.liquefiedPetroleumGasShare),
     heatGwh: toBig(bilan.heatGwh),
   }
 }

@@ -102,24 +102,24 @@ function buildResidentialEnergy(
     ])
       .andThen(() => buildEnergyTables({ bilans, shares, electricity, naturalGas, sales }))
       .andThen(
-      ({ regionRows, departmentRows }) => {
-        const regionsCsvResult = toRegionsCsv(regionRows)
-        const departementsCsvResult = toDepartementsCsv(departmentRows)
-        return Result.combine([regionsCsvResult, departementsCsvResult]).map(
-          ([regionsCsv, departementsCsv]) => ({
-            regionsCsv,
-            departementsCsv,
-            heatNetworksCsv: heatNetworks.csv,
-            controlTotals: {
-              regions: toRegionControlTotals(regionRows),
-              departements: toDepartmentControlTotals(departmentRows),
-              heatNetworks: { delivered_mwh: heatNetworks.totalResidentialDeliveredMwh },
-            },
-            secretNetworkCount: heatNetworks.secretNetworkCount,
-          }),
-        )
-      },
-    ),
+        ({ regionRows, departmentRows }) => {
+          const regionsCsvResult = toRegionsCsv(regionRows)
+          const departementsCsvResult = toDepartementsCsv(departmentRows)
+          return Result.combine([regionsCsvResult, departementsCsvResult]).map(
+            ([regionsCsv, departementsCsv]) => ({
+              regionsCsv,
+              departementsCsv,
+              heatNetworksCsv: heatNetworks.csv,
+              controlTotals: {
+                regions: toRegionControlTotals(regionRows),
+                departements: toDepartmentControlTotals(departmentRows),
+                heatNetworks: { delivered_mwh: heatNetworks.totalResidentialDeliveredMwh },
+              },
+              secretNetworkCount: heatNetworks.secretNetworkCount,
+            }),
+          )
+        },
+      ),
   )
 }
 
