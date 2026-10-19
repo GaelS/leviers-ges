@@ -496,6 +496,88 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_personnes_report_modal', () => {
+    const withTransport = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'transport-personnes/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              car_weekly_passenger_km: '1000',
+              public_transport_weekly_passenger_km: '0',
+              car_emission_factor_kg_per_km: '0.1165',
+              bus_emission_factor_kg_per_km: '0.8',
+              car_fleet_unclassified_share: '0',
+              bus_fleet_unclassified_share: '0',
+              car_fleet_classified: '100',
+              bus_fleet_classified: '100',
+              car_thermal_emission_factor_kg_per_km: '0.1165',
+              bus_thermal_emission_factor_kg_per_km: '0.8',
+              car_thermal_fleet_share: '1',
+              bus_thermal_fleet_share: '1',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportPersonnesReportModalRequest({
+      toPublicTransport,
+      toActiveModes,
+    }: {
+      toPublicTransport: string
+      toActiveModes: string
+    }): RequestInput {
+      return {
+        id: 'transport_personnes_report_modal',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          carToPublicTransportFraction: toPublicTransport,
+          carToActiveModesFraction: toActiveModes,
+        },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine reportés vers les modes actifs évitent 5,21 tCO2e', () => {
+      const result = withTransport(
+        transportPersonnesReportModalRequest({ toPublicTransport: '0', toActiveModes: '1' }),
+      )
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5.21')
+    })
+
+    it.each(['abc', ''])('refuse le report %j qui n’est pas un nombre, sans lever', (toPublicTransport) => {
+      expect(
+        withTransport(transportPersonnesReportModalRequest({ toPublicTransport, toActiveModes: '0.1' }))
+          ._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.carToPublicTransportFraction' }],
+      })
+    })
+
+    it('refuse des reports qui dépassent 100 % ensemble', () => {
+      expect(
+        withTransport(
+          transportPersonnesReportModalRequest({ toPublicTransport: '0.7', toActiveModes: '0.4' }),
+        )._unsafeUnwrapErr(),
+      ).toEqual({
+        kind: 'invalid_request',
+        issues: [
+          {
+            parameter: 'parameters.carToActiveModesFraction',
+            message: 'must be at most 100% together with carToPublicTransportFraction',
+          },
+        ],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)

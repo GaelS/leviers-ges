@@ -7,4 +7,34 @@ const CAR_PASSENGERS_PER_VEHICLE: BigNumber = toBig('1.165')
 // Source : DonneesReference!D28, « On prend la valeur du taux de remplissage des bus (10 personnes) indistinctement pour tous les bus et cars »
 const BUS_PASSENGERS_PER_VEHICLE: BigNumber = toBig('10')
 
-export { BUS_PASSENGERS_PER_VEHICLE, CAR_PASSENGERS_PER_VEHICLE }
+function calculateEmissionFactorPerPassengerKm({
+  emissionFactorPerVehicleKm,
+  passengersPerVehicle,
+}: {
+  emissionFactorPerVehicleKm: BigNumber
+  passengersPerVehicle: BigNumber
+}): BigNumber {
+  return emissionFactorPerVehicleKm.dividedBy(passengersPerVehicle)
+}
+
+function calculateCarEmissionFactorPerPassengerKm(carEmissionFactor: BigNumber): BigNumber {
+  return calculateEmissionFactorPerPassengerKm({
+    emissionFactorPerVehicleKm: carEmissionFactor,
+    passengersPerVehicle: CAR_PASSENGERS_PER_VEHICLE,
+  })
+}
+
+function calculateBusEmissionFactorPerPassengerKm(busEmissionFactor: BigNumber): BigNumber {
+  return calculateEmissionFactorPerPassengerKm({
+    emissionFactorPerVehicleKm: busEmissionFactor,
+    passengersPerVehicle: BUS_PASSENGERS_PER_VEHICLE,
+  })
+}
+
+export {
+  BUS_PASSENGERS_PER_VEHICLE,
+  calculateBusEmissionFactorPerPassengerKm,
+  calculateCarEmissionFactorPerPassengerKm,
+  calculateEmissionFactorPerPassengerKm,
+  CAR_PASSENGERS_PER_VEHICLE,
+}

@@ -1,7 +1,8 @@
-import { ok, Result } from 'neverthrow'
+import { ok, type Result } from 'neverthrow'
 import type { DataSourceError } from '../../../domain/data-source.ts'
 import type { RegionLookup } from '../../estimate/estimation-context.ts'
 import { quantity, type Fraction } from '../../../domain/units.ts'
+import { areAllCommunesInRegion } from './are-all-communes-in-region.ts'
 
 type RailShare = {
   readonly fraction: Fraction
@@ -27,9 +28,11 @@ function resolveRailShare({
   getRegionByCommune: RegionLookup
 }): Result<RailShare, DataSourceError> {
   if (requested !== undefined) return ok({ fraction: requested, defaulted: false })
-  return Result.combine(communes.map(getRegionByCommune)).map((regions) => {
-    const isInIleDeFrance =
-      regions.length > 0 && regions.every((region) => region === ILE_DE_FRANCE_REGION_CODE)
+  return areAllCommunesInRegion({
+    communes,
+    regionCode: ILE_DE_FRANCE_REGION_CODE,
+    getRegionByCommune,
+  }).map((isInIleDeFrance) => {
     const fraction = isInIleDeFrance ? ILE_DE_FRANCE_RAIL_SHARE : OTHER_REGIONS_RAIL_SHARE
     return { fraction, defaulted: true }
   })

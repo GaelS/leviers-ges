@@ -15,6 +15,7 @@ type UnitName =
   | 'KgCo2ePerKwh'
   | 'KgCo2ePerGigajoule'
   | 'KgCo2ePerVehicleKilometre'
+  | 'KgCo2ePerPassengerKilometre'
   | 'PassengerKilometresPerWeek'
   | 'Vehicles'
   | 'ThousandCubicMetres'
@@ -35,6 +36,7 @@ type GigawattHours = Quantity<'GigawattHours'>
 type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
 type KgCo2ePerGigajoule = Quantity<'KgCo2ePerGigajoule'>
 type KgCo2ePerVehicleKilometre = Quantity<'KgCo2ePerVehicleKilometre'>
+type KgCo2ePerPassengerKilometre = Quantity<'KgCo2ePerPassengerKilometre'>
 type PassengerKilometresPerWeek = Quantity<'PassengerKilometresPerWeek'>
 type Vehicles = Quantity<'Vehicles'>
 type ThousandCubicMetres = Quantity<'ThousandCubicMetres'>
@@ -69,6 +71,7 @@ export type {
   Hectares,
   KgCo2ePerGigajoule,
   KgCo2ePerKwh,
+  KgCo2ePerPassengerKilometre,
   KgCo2ePerVehicleKilometre,
   Kilometres,
   MegawattHours,
