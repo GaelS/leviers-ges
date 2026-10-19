@@ -21,6 +21,10 @@ import {
   estimate as estimateResidentielSobriete,
   type ResidentielSobrieteRequestInput,
 } from '../levers/residentiel-sobriete/index.ts'
+import {
+  estimate as estimateTransportPersonnesEfficacite,
+  type TransportPersonnesEfficaciteRequestInput,
+} from '../levers/transport-personnes-efficacite/index.ts'
 import { estimateOnComputedLevel } from './estimate-on-computed-level.ts'
 import { parseRequest } from './parse-request.ts'
 
@@ -30,6 +34,7 @@ type RequestInput =
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
   | ResidentielSobrieteRequestInput
+  | TransportPersonnesEfficaciteRequestInput
 
 type Lever = RequestInput['id']
 
@@ -65,6 +70,11 @@ function createEstimator(dataSource: DataSource): Estimator {
         .with({ id: 'residentiel_sobriete' }, (residentielSobrieteRequest) =>
           estimateOnComputedLevel(residentielSobrieteRequest, (computedLevelRequest) =>
             estimateResidentielSobriete(computedLevelRequest, context),
+          ),
+        )
+        .with({ id: 'transport_personnes_efficacite' }, (transportPersonnesEfficaciteRequest) =>
+          estimateOnComputedLevel(transportPersonnesEfficaciteRequest, (computedLevelRequest) =>
+            estimateTransportPersonnesEfficacite(computedLevelRequest, context),
           ),
         )
         .exhaustive(),

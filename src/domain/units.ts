@@ -14,6 +14,9 @@ type UnitName =
   | 'GigawattHours'
   | 'KgCo2ePerKwh'
   | 'KgCo2ePerGigajoule'
+  | 'KgCo2ePerVehicleKilometre'
+  | 'PassengerKilometresPerWeek'
+  | 'Vehicles'
   | 'ThousandCubicMetres'
   | 'TonnesCarbon'
   | 'RelativeChange'
@@ -31,6 +34,9 @@ type MegawattHours = Quantity<'MegawattHours'>
 type GigawattHours = Quantity<'GigawattHours'>
 type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
 type KgCo2ePerGigajoule = Quantity<'KgCo2ePerGigajoule'>
+type KgCo2ePerVehicleKilometre = Quantity<'KgCo2ePerVehicleKilometre'>
+type PassengerKilometresPerWeek = Quantity<'PassengerKilometresPerWeek'>
+type Vehicles = Quantity<'Vehicles'>
 type ThousandCubicMetres = Quantity<'ThousandCubicMetres'>
 type TonnesCarbon = Quantity<'TonnesCarbon'>
 type RelativeChange = Quantity<'RelativeChange'>
@@ -63,8 +69,10 @@ export type {
   Hectares,
   KgCo2ePerGigajoule,
   KgCo2ePerKwh,
+  KgCo2ePerVehicleKilometre,
   Kilometres,
   MegawattHours,
+  PassengerKilometresPerWeek,
   Quantity,
   RelativeChange,
   TCo2ePerKmPerYear,
@@ -74,4 +82,5 @@ export type {
   TonnesCarbon,
   TonnesCo2ePerYear,
   UnitName,
+  Vehicles,
 }
