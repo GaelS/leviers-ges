@@ -1,6 +1,6 @@
 import { ok, Result } from 'neverthrow'
 import type { DataSourceError } from '../../../domain/data-source.ts'
-import type { RegionLookup } from '../../../application/estimate/estimation-context.ts'
+import type { RegionLookup } from '../../estimate/estimation-context.ts'
 import { quantity, type Fraction } from '../../../domain/units.ts'
 
 type RailShare = {

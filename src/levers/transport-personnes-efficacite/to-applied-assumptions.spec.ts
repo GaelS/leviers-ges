@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { quantity } from '../../domain/units.ts'
-import type { RailShare } from './data/resolve-rail-share.ts'
-import type { TransportInputs } from './data/transport-inputs.ts'
+import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
+import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
 import { toAppliedAssumptions } from './to-applied-assumptions.ts'
 
 function transportInputs(overrides: Partial<Record<keyof TransportInputs, string>> = {}): TransportInputs {

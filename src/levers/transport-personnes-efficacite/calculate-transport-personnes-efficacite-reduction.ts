@@ -3,16 +3,24 @@ import { sum, toBig } from '../../domain/big-number.ts'
 import {
   quantity,
   type Fraction,
+  type KgCo2ePerVehicleKilometre,
+  type PassengerKilometresPerWeek,
   type RelativeChange,
   type TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-import type { TransportInputs } from './data/transport-inputs.ts'
 
 type EfficiencyFractions = {
   readonly carEcodrivingApplication: Fraction
   readonly busEcodrivingApplication: Fraction
   readonly carPassengerIncrease: RelativeChange
   readonly busPassengerIncrease: RelativeChange
+}
+
+type TransportFlows = {
+  readonly carWeeklyPassengerKm: PassengerKilometresPerWeek
+  readonly publicTransportWeeklyPassengerKm: PassengerKilometresPerWeek
+  readonly carEmissionFactor: KgCo2ePerVehicleKilometre
+  readonly busEmissionFactor: KgCo2ePerVehicleKilometre
 }
 
 // Source : élément neutre de la multiplication
@@ -100,7 +108,7 @@ function calculateTransportPersonnesEfficaciteReduction({
 }: {
   fractions: EfficiencyFractions
   railShare: Fraction
-  transportInputs: TransportInputs
+  transportInputs: TransportFlows
 }): TonnesCo2ePerYear {
   const roadShare = ONE.minus(railShare)
   const roadPublicTransportWeeklyPassengerKm =

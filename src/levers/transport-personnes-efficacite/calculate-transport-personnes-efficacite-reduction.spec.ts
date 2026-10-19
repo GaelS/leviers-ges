@@ -4,7 +4,7 @@ import {
   calculateTransportPersonnesEfficaciteReduction,
   type EfficiencyFractions,
 } from './calculate-transport-personnes-efficacite-reduction.ts'
-import type { TransportInputs } from './data/transport-inputs.ts'
+import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
 
 const NO_ACTION: EfficiencyFractions = {
   carEcodrivingApplication: quantity<'Fraction'>('0'),

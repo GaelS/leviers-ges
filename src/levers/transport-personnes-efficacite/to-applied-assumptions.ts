@@ -4,8 +4,9 @@ import {
   calculateCarEmissionFactorPerPassengerKm,
   ECODRIVING_POTENTIAL,
 } from './calculate-transport-personnes-efficacite-reduction.ts'
-import type { RailShare } from './data/resolve-rail-share.ts'
-import type { TransportInputs } from './data/transport-inputs.ts'
+import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
+import { toRailShareAssumption } from '../../application/data/transport-personnes/to-rail-share-assumption.ts'
+import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
 
 const fleetSource = 'SDES, parc de véhicules routiers au 1er janvier 2025'
 
@@ -32,19 +33,6 @@ function toBusEmissionFactorAssumption(transportInputs: TransportInputs): Applie
         "OMINEA 2024 (CITEPA), Euro VI buses and coaches, in kgCO2e per passenger-km, weighted by the territory's fleet. Design choice, not validated: the low value is retained",
       limit:
         'Base Empreinte gives 0.0874 kgCO2e per passenger-km for a diesel bus, 8.6% above the OMINEA 0.0805',
-    },
-  }
-}
-
-function toRailShareAssumption(railShare: RailShare): AppliedAssumptions {
-  if (!railShare.defaulted) return {}
-  return {
-    railShare: {
-      value: railShare.fraction.toFixed(),
-      source:
-        'SDES, Bilan annuel des transports 2024: rail share of public transport passenger-km, 82% in Île-de-France and 24% elsewhere',
-      limit:
-        'One value per region group: a territory with a large metro or tram network outside Île-de-France (Lyon, Marseille, Lille) has a higher rail share, so its road public transport is overestimated. A territory straddling Île-de-France and another region, or with a commune of unknown region, takes 24%',
     },
   }
 }
