@@ -6,7 +6,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "9e92a85962678be5437326bef9a8e38ed6895af5e583a088217b32dae5b22c87",
+      "checksum": "6d8d4e4817a47c71170f92c77d7c02de14e3bb2043b73f969c5654c1d1246937",
       "level": "region",
       "keyColumn": "code_region",
       "columns": [
@@ -45,6 +45,22 @@
         {
           "name": "bus_fleet_classified",
           "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        },
+        {
+          "name": "car_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures thermiques (essence, diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucune"
+        },
+        {
+          "name": "bus_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars thermiques (diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_thermal_fleet_share",
+          "unit": "part des voitures du parc qui sont thermiques (essence, diesel, gaz), entre 0 et 1, le carburant autre comptant dans le total"
+        },
+        {
+          "name": "bus_thermal_fleet_share",
+          "unit": "part des bus et cars du parc qui sont thermiques (diesel, gaz), entre 0 et 1, l’essence et le carburant autre comptant dans le total"
         }
       ],
       "controlTotals": {
@@ -74,7 +90,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "7b1ab2f966bee68868d157a16e2a7f5386d8bb6fe6c96351473fc14157357502",
+      "checksum": "4e9ee92c2395aa646e806b980851185daebc96a4892c8121b0aafe0ca83287b2",
       "level": "departement",
       "keyColumn": "code_departement",
       "columns": [
@@ -113,6 +129,22 @@
         {
           "name": "bus_fleet_classified",
           "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        },
+        {
+          "name": "car_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures thermiques (essence, diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucune"
+        },
+        {
+          "name": "bus_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars thermiques (diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_thermal_fleet_share",
+          "unit": "part des voitures du parc qui sont thermiques (essence, diesel, gaz), entre 0 et 1, le carburant autre comptant dans le total"
+        },
+        {
+          "name": "bus_thermal_fleet_share",
+          "unit": "part des bus et cars du parc qui sont thermiques (diesel, gaz), entre 0 et 1, l’essence et le carburant autre comptant dans le total"
         }
       ],
       "controlTotals": {
@@ -142,7 +174,7 @@
       "link": "https://www.data.gouv.fr/datasets/estimation-des-emissions-individuelles-de-gaz-a-effet-de-serre-lors-des-deplacements-domicile-travail/",
       "vintage": "trajets 2022, parc 2025",
       "retrievedOn": "2026-10-07",
-      "checksum": "444b5aacfc35085e6a69207bc77a0afa9ffdb68d8c01bb6e92ac1cfbd1a4267a",
+      "checksum": "229a6289d657f420a4e07724577903946c166108a4d004b4e3eab2db2c0242e0",
       "level": "epci",
       "keyColumn": "code_epci",
       "columns": [
@@ -181,6 +213,22 @@
         {
           "name": "bus_fleet_classified",
           "unit": "nombre de bus et cars du parc qui portent un facteur ; 0 : le facteur est la moyenne nationale"
+        },
+        {
+          "name": "car_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de voitures thermiques (essence, diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucune"
+        },
+        {
+          "name": "bus_thermal_emission_factor_kg_per_km",
+          "unit": "kgCO2e par véhicule.km, moyenne du parc de bus et cars thermiques (diesel, gaz) au 1er janvier 2025 ; moyenne nationale si le territoire n’en a aucun"
+        },
+        {
+          "name": "car_thermal_fleet_share",
+          "unit": "part des voitures du parc qui sont thermiques (essence, diesel, gaz), entre 0 et 1, le carburant autre comptant dans le total"
+        },
+        {
+          "name": "bus_thermal_fleet_share",
+          "unit": "part des bus et cars du parc qui sont thermiques (diesel, gaz), entre 0 et 1, l’essence et le carburant autre comptant dans le total"
         }
       ],
       "controlTotals": {

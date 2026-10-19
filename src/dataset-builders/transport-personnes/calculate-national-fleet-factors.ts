@@ -10,13 +10,17 @@ import {
 } from './calculate-fleet-emission-factor.ts'
 import {
   BUS_EMISSION_FACTORS_KG_PER_KM,
+  BUS_THERMAL_EMISSION_FACTORS_KG_PER_KM,
   CAR_EMISSION_FACTORS_KG_PER_KM,
+  CAR_THERMAL_EMISSION_FACTORS_KG_PER_KM,
 } from './fleet-emission-factors.ts'
 import { fleetDataset, type FleetGroup, type FleetRow } from './read-fleet.ts'
 
 type NationalFleetFactors = {
   readonly car: BigNumber
   readonly bus: BigNumber
+  readonly carThermal: BigNumber
+  readonly busThermal: BigNumber
 }
 
 function nationalCountsOf({
@@ -62,10 +66,25 @@ function calculateNationalFleetFactors(
     counts: nationalCountsOf({ fleet, group: 'TC_routier' }),
     emissionFactors: BUS_EMISSION_FACTORS_KG_PER_KM,
   })
+  const carThermal = calculateFleetEmissionFactor({
+    counts: nationalCountsOf({ fleet, group: 'VP' }),
+    emissionFactors: CAR_THERMAL_EMISSION_FACTORS_KG_PER_KM,
+  })
+  const busThermal = calculateFleetEmissionFactor({
+    counts: nationalCountsOf({ fleet, group: 'TC_routier' }),
+    emissionFactors: BUS_THERMAL_EMISSION_FACTORS_KG_PER_KM,
+  })
   return Result.combine([
     requireEmissionFactor({ factor: car, group: 'VP' }),
     requireEmissionFactor({ factor: bus, group: 'TC_routier' }),
-  ]).map(([carFactor, busFactor]) => ({ car: carFactor, bus: busFactor }))
+    requireEmissionFactor({ factor: carThermal, group: 'VP' }),
+    requireEmissionFactor({ factor: busThermal, group: 'TC_routier' }),
+  ]).map(([carFactor, busFactor, carThermalFactor, busThermalFactor]) => ({
+    car: carFactor,
+    bus: busFactor,
+    carThermal: carThermalFactor,
+    busThermal: busThermalFactor,
+  }))
 }
 
 export { calculateNationalFleetFactors }

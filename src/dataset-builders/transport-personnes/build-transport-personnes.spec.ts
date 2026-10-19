@@ -45,23 +45,23 @@ const COMMUTING_CSV = commuting(
 const FLEET_CSV = fleet(...fleetOf('REG', '84'), ...fleetOf('DEP', '01'))
 
 const HEADER_TAIL =
-  'car_weekly_passenger_km,public_transport_weekly_passenger_km,car_emission_factor_kg_per_km,bus_emission_factor_kg_per_km,car_fleet_unclassified_share,bus_fleet_unclassified_share,car_fleet_classified,bus_fleet_classified'
+  'car_weekly_passenger_km,public_transport_weekly_passenger_km,car_emission_factor_kg_per_km,bus_emission_factor_kg_per_km,car_fleet_unclassified_share,bus_fleet_unclassified_share,car_fleet_classified,bus_fleet_classified,car_thermal_emission_factor_kg_per_km,bus_thermal_emission_factor_kg_per_km,car_thermal_fleet_share,bus_thermal_fleet_share'
 
 describe('buildTransportPersonnes', () => {
   const built = buildTransportPersonnes({ commutingCsv: COMMUTING_CSV, fleetCsv: FLEET_CSV })._unsafeUnwrap()
 
   it('écrit une ligne par région avec ses passagers.km, ses facteurs et ses parts exclues', () => {
-    expect(built.regions.csv).toBe(`code_region,${HEADER_TAIL}\n84,80,10,0.1636,0.8045,0.5,0.5,2,1\n`)
+    expect(built.regions.csv).toBe(`code_region,${HEADER_TAIL}\n84,80,10,0.1636,0.8045,0.5,0.5,2,1,0.1636,0.8045,0.5,0.5\n`)
   })
 
   it('écrit une ligne par département', () => {
     expect(built.departements.csv).toBe(
-      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,2,1\n`,
+      `code_departement,${HEADER_TAIL}\n01,80,10,0.1636,0.8045,0.5,0.5,2,1,0.1636,0.8045,0.5,0.5\n`,
     )
   })
 
   it('donne à un EPCI sans parc les facteurs nationaux et aucun véhicule classé', () => {
-    expect(built.epcis.csv).toBe(`code_epci,${HEADER_TAIL}\n200000001,80,10,0.1636,0.8045,0,0,0,0\n`)
+    expect(built.epcis.csv).toBe(`code_epci,${HEADER_TAIL}\n200000001,80,10,0.1636,0.8045,0,0,0,0,0.1636,0.8045,0,0\n`)
   })
 
   it('compte les territoires de chaque niveau, les codes hors champ de la source exclus', () => {
