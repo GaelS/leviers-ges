@@ -1,13 +1,13 @@
 import { Result } from 'neverthrow'
 import { match } from 'ts-pattern'
-import { requireQuantityColumn } from '../require-column.ts'
+import { requireQuantityColumn } from '../../require-column.ts'
 import type {
   DataRow,
   DataSource,
   DataSourceError,
   InvalidDataset,
-} from '../../domain/data-source.ts'
-import type { Level, Territory } from '../../domain/territory.ts'
+} from '../../../domain/data-source.ts'
+import type { Level, Territory } from '../../../domain/territory.ts'
 import type { TransportInputs } from './transport-inputs.ts'
 
 const regionsDataset = 'transport-personnes/regions'

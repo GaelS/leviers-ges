@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { quantity } from '../../domain/units.ts'
+import { quantity } from '../../../domain/units.ts'
 import { toRailShareAssumption } from './to-rail-share-assumption.ts'
 
 describe('toRailShareAssumption', () => {

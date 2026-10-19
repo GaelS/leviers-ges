@@ -1,7 +1,7 @@
 import { ok } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
-import type { RegionLookup } from '../estimate/estimation-context.ts'
-import { quantity } from '../../domain/units.ts'
+import type { RegionLookup } from '../../estimate/estimation-context.ts'
+import { quantity } from '../../../domain/units.ts'
 import { resolveRailShare } from './resolve-rail-share.ts'
 
 const REGION_BY_COMMUNE: Readonly<Record<string, string | undefined>> = {

@@ -4,9 +4,9 @@ import {
   calculateCarEmissionFactorPerPassengerKm,
   ECODRIVING_POTENTIAL,
 } from './calculate-transport-personnes-efficacite-reduction.ts'
-import type { RailShare } from '../../application/transport-personnes/resolve-rail-share.ts'
-import { toRailShareAssumption } from '../../application/transport-personnes/to-rail-share-assumption.ts'
-import type { TransportInputs } from '../../application/transport-personnes/transport-inputs.ts'
+import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
+import { toRailShareAssumption } from '../../application/data/transport-personnes/to-rail-share-assumption.ts'
+import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
 
 const fleetSource = 'SDES, parc de véhicules routiers au 1er janvier 2025'
 
