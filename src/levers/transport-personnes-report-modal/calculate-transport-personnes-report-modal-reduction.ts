@@ -1,5 +1,4 @@
-import type BigNumber from 'bignumber.js'
-import { sum, toBig } from '../../domain/big-number.ts'
+import { sum } from '../../domain/big-number.ts'
 import { WEEKS_PER_YEAR, KILOGRAMS_PER_TONNE } from '../../domain/transport-conversions.ts'
 import {
   quantity,
@@ -9,10 +8,8 @@ import {
   type PassengerKilometresPerWeek,
   type TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-import {
-  calculateBusEmissionFactorPerPassengerKm,
-  calculateCarEmissionFactorPerPassengerKm,
-} from '../../domain/vehicle-occupancy.ts'
+import { calculatePublicTransportEmissionFactor } from '../../domain/public-transport-emission-factor.ts'
+import { calculateCarEmissionFactorPerPassengerKm } from '../../domain/vehicle-occupancy.ts'
 
 type ReportModalFractions = {
   readonly carToPublicTransport: Fraction
@@ -23,25 +20,6 @@ type ReportModalFlows = {
   readonly carWeeklyPassengerKm: PassengerKilometresPerWeek
   readonly carEmissionFactor: KgCo2ePerVehicleKilometre
   readonly busEmissionFactor: KgCo2ePerVehicleKilometre
-}
-
-// Source : élément neutre de la multiplication
-const ONE: BigNumber = toBig('1')
-
-function calculatePublicTransportEmissionFactor({
-  busEmissionFactor,
-  railShare,
-  railEmissionFactor,
-}: {
-  busEmissionFactor: KgCo2ePerVehicleKilometre
-  railShare: Fraction
-  railEmissionFactor: KgCo2ePerPassengerKilometre
-}): BigNumber {
-  const roadShare = ONE.minus(railShare)
-  const busEmissionFactorPerPassengerKm = calculateBusEmissionFactorPerPassengerKm(busEmissionFactor)
-  const railContribution = railShare.times(railEmissionFactor)
-  const roadContribution = roadShare.times(busEmissionFactorPerPassengerKm)
-  return railContribution.plus(roadContribution)
 }
 
 function calculateTransportPersonnesReportModalReduction({
@@ -77,5 +55,5 @@ function calculateTransportPersonnesReportModalReduction({
   return quantity<'TonnesCo2ePerYear'>(avoidedEmissionsKg.dividedBy(KILOGRAMS_PER_TONNE).toFixed())
 }
 
-export { calculatePublicTransportEmissionFactor, calculateTransportPersonnesReportModalReduction }
+export { calculateTransportPersonnesReportModalReduction }
 export type { ReportModalFlows, ReportModalFractions }

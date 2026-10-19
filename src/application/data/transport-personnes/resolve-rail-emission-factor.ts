@@ -1,6 +1,6 @@
 import type { Result } from 'neverthrow'
-import { areAllCommunesInRegion } from '../../../application/data/transport-personnes/are-all-communes-in-region.ts'
-import type { RegionLookup } from '../../../application/estimate/estimation-context.ts'
+import { areAllCommunesInRegion } from './are-all-communes-in-region.ts'
+import type { RegionLookup } from '../../estimate/estimation-context.ts'
 import type { DataSourceError } from '../../../domain/data-source.ts'
 import { quantity, type KgCo2ePerPassengerKilometre } from '../../../domain/units.ts'
 import type { RailEmissionFactor } from './rail-emission-factor.ts'

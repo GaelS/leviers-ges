@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { RailShare } from '../../application/data/transport-personnes/resolve-rail-share.ts'
 import type { TransportInputs } from '../../application/data/transport-personnes/transport-inputs.ts'
 import { quantity } from '../../domain/units.ts'
-import type { RailEmissionFactor } from './data/rail-emission-factor.ts'
+import type { RailEmissionFactor } from '../../application/data/transport-personnes/rail-emission-factor.ts'
 import { toAppliedAssumptions } from './to-applied-assumptions.ts'
 
 const TRANSPORT_INPUTS: TransportInputs = {
