@@ -1,12 +1,21 @@
 import { describe, expect, it } from 'vitest'
 import {
   convertToKgPerKwh,
+  ELECTRIC_BUS_EMISSION_FACTOR,
+  ELECTRIC_CAR_EMISSION_FACTOR,
   ELECTRICITY_APPLIED_EMISSION_FACTOR,
   NATURAL_GAS_EMISSION_FACTOR,
 } from './emission-factors.ts'
 import { quantity } from './units.ts'
 
 describe('emission-factors', () => {
+  it('la voiture électrique vaut 0,013345 kgCO2e/véh.km et le bus électrique 0,095', () => {
+    expect({
+      car: ELECTRIC_CAR_EMISSION_FACTOR.toFixed(),
+      bus: ELECTRIC_BUS_EMISSION_FACTOR.toFixed(),
+    }).toEqual({ car: '0.013345', bus: '0.095' })
+  })
+
   it('l’électricité vaut 0,0791 × 67,4 % = 0,0533134 kgCO2e/kWh', () => {
     expect(ELECTRICITY_APPLIED_EMISSION_FACTOR.toFixed()).toBe('0.0533134')
   })

@@ -5,6 +5,7 @@ type FleetCounts = Readonly<Record<string, BigNumber>>
 
 type FleetEmissionFactor = {
   readonly classifiedVehicles: BigNumber
+  readonly classifiedShare: BigNumber
   readonly emissionFactor: BigNumber | undefined
   readonly unclassifiedShare: BigNumber
 }
@@ -32,6 +33,7 @@ function calculateFleetEmissionFactor({
   const unclassifiedVehicles = totalVehicles.minus(classifiedVehicles)
   return {
     classifiedVehicles,
+    classifiedShare: totalVehicles.isZero() ? totalVehicles : classifiedVehicles.dividedBy(totalVehicles),
     emissionFactor: classifiedVehicles.isZero() ? undefined : emissions.dividedBy(classifiedVehicles),
     unclassifiedShare: totalVehicles.isZero() ? totalVehicles : unclassifiedVehicles.dividedBy(totalVehicles),
   }

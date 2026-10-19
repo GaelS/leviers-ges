@@ -15,7 +15,9 @@ import {
 } from './calculate-territory-passenger-km.ts'
 import {
   BUS_EMISSION_FACTORS_KG_PER_KM,
+  BUS_THERMAL_EMISSION_FACTORS_KG_PER_KM,
   CAR_EMISSION_FACTORS_KG_PER_KM,
+  CAR_THERMAL_EMISSION_FACTORS_KG_PER_KM,
 } from './fleet-emission-factors.ts'
 import { fleetCountsOf, groupFleetByTerritory, type FleetByTerritory } from './group-fleet.ts'
 import { readCommutingPassengerKm } from './read-commuting-passenger-km.ts'
@@ -33,6 +35,10 @@ const NUMERIC_COLUMNS = [
   'bus_fleet_unclassified_share',
   'car_fleet_classified',
   'bus_fleet_classified',
+  'car_thermal_emission_factor_kg_per_km',
+  'bus_thermal_emission_factor_kg_per_km',
+  'car_thermal_fleet_share',
+  'bus_thermal_fleet_share',
 ] as const
 
 type NumericColumn = (typeof NUMERIC_COLUMNS)[number]
@@ -112,6 +118,14 @@ function toTerritoryRow({
     counts: fleetCountsOf({ fleetByTerritory, level, code, group: 'TC_routier' }),
     emissionFactors: BUS_EMISSION_FACTORS_KG_PER_KM,
   })
+  const carThermalFleet = calculateFleetEmissionFactor({
+    counts: fleetCountsOf({ fleetByTerritory, level, code, group: 'VP' }),
+    emissionFactors: CAR_THERMAL_EMISSION_FACTORS_KG_PER_KM,
+  })
+  const busThermalFleet = calculateFleetEmissionFactor({
+    counts: fleetCountsOf({ fleetByTerritory, level, code, group: 'TC_routier' }),
+    emissionFactors: BUS_THERMAL_EMISSION_FACTORS_KG_PER_KM,
+  })
   return toRoundedFields({
     dataset,
     valueByColumn: {
@@ -123,6 +137,10 @@ function toTerritoryRow({
       bus_fleet_unclassified_share: busFleet.unclassifiedShare,
       car_fleet_classified: carFleet.classifiedVehicles,
       bus_fleet_classified: busFleet.classifiedVehicles,
+      car_thermal_emission_factor_kg_per_km: carThermalFleet.emissionFactor ?? national.carThermal,
+      bus_thermal_emission_factor_kg_per_km: busThermalFleet.emissionFactor ?? national.busThermal,
+      car_thermal_fleet_share: carThermalFleet.classifiedShare,
+      bus_thermal_fleet_share: busThermalFleet.classifiedShare,
     },
   }).map((fields) => [code, ...fields])
 }
