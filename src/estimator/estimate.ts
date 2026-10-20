@@ -8,6 +8,10 @@ import {
   estimate as estimateBatimentsMachinesAgricoles,
   type BatimentsMachinesAgricolesRequestInput,
 } from '../levers/batiments-machines-agricoles/index.ts'
+import {
+  estimate as estimateDechetsModeDeTraitement,
+  type DechetsModeDeTraitementRequestInput,
+} from '../levers/dechets-mode-de-traitement/index.ts'
 import { type HaiesRequestInput, estimate as estimateHaies } from '../levers/haies/index.ts'
 import {
   estimate as estimateProduitsBois,
@@ -42,6 +46,7 @@ import { parseRequest } from './parse-request.ts'
 
 type RequestInput =
   | BatimentsMachinesAgricolesRequestInput
+  | DechetsModeDeTraitementRequestInput
   | HaiesRequestInput
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
@@ -69,6 +74,11 @@ function createEstimator(dataSource: DataSource): Estimator {
         .with({ id: 'batiments_machines_agricoles' }, (batimentsMachinesAgricolesRequest) =>
           estimateOnComputedLevel(batimentsMachinesAgricolesRequest, (computedLevelRequest) =>
             estimateBatimentsMachinesAgricoles(computedLevelRequest, context),
+          ),
+        )
+        .with({ id: 'dechets_mode_de_traitement' }, (dechetsModeDeTraitementRequest) =>
+          estimateOnComputedLevel(dechetsModeDeTraitementRequest, (computedLevelRequest) =>
+            estimateDechetsModeDeTraitement(computedLevelRequest, context),
           ),
         )
         .with({ id: 'haies' }, (haiesRequest) => ok(estimateHaies(haiesRequest)))
