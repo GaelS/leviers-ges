@@ -2,7 +2,7 @@
   "datasets": [
     {
       "file": "regions.csv",
-      "source": "Agreste, recensement agricole 2020, cheptels par région (indicateur 040.01, toutes tailles d'exploitation) et cartostat pour les vaches laitières, 13 régions de France métropolitaine. Effectifs localisés au siège de l'exploitation. Catégories d'animaux de l'OMINEA déduites des catégories d'Agreste par sommes et différences ; une catégorie sous secret statistique compte pour zéro ; une différence négative est ramenée à zéro. Construit par pnpm build:data:elevage-durable",
+      "source": "Agreste, recensement agricole 2020, cheptels par région (indicateur 040.01, toutes tailles d'exploitation) et cartostat pour les vaches laitières, 13 régions de France métropolitaine. Effectifs localisés au siège de l'exploitation. Catégories d'animaux de l'OMINEA déduites des catégories d'Agreste par sommes et différences ; une catégorie sous secret statistique compte pour zéro ; une différence négative est ramenée à zéro. Construit par pnpm build:data:elevage-durable Limites : une catégorie sous secret compte pour zéro, y compris quand son parent est lisible (poulets, poules, truies, équidés), ce qui retire jusqu'à 1,3 % des volailles des départements (53 départements) et 0,2 % de celles des régions.",
       "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/RA2020_2141_EPCI/detail/",
       "vintage": "recensement agricole 2020",
       "retrievedOn": "2026-10-07",
@@ -56,7 +56,7 @@
         },
         {
           "name": "other_poultry",
-          "unit": "têtes, total des volailles moins les poules et poulettes (7.11)"
+          "unit": "têtes, total des volailles moins les poules, poulettes et poulets de chair (7.11, ou la somme de 7.11.1 à 7.11.4 quand 7.11 est sous secret)"
         }
       ],
       "controlTotals": {
@@ -98,11 +98,11 @@
     },
     {
       "file": "departements.csv",
-      "source": "Agreste, recensement agricole 2020, cheptels par département (indicateur 040.01, toutes tailles d'exploitation) et cartostat pour les vaches laitières, 96 départements de France métropolitaine, mêmes déductions que les régions. Effectifs localisés au siège de l'exploitation. Construit par pnpm build:data:elevage-durable",
+      "source": "Agreste, recensement agricole 2020, cheptels par département (indicateur 040.01, toutes tailles d'exploitation) et cartostat pour les vaches laitières, 95 départements de France métropolitaine (Paris, absent du fichier Agreste, n'a pas de ligne), mêmes déductions que les régions. Effectifs localisés au siège de l'exploitation. Construit par pnpm build:data:elevage-durable Limites : une catégorie sous secret compte pour zéro, y compris quand son parent est lisible (poulets, poules, truies, équidés), ce qui retire jusqu'à 1,3 % des volailles des départements (53 départements) et 0,2 % de celles des régions.",
       "link": "https://agreste.agriculture.gouv.fr/agreste-web/disaron/RA2020_2141_EPCI/detail/",
       "vintage": "recensement agricole 2020",
       "retrievedOn": "2026-10-07",
-      "checksum": "6630dd82f4a08b6348928396fe10a05414a6646e10893d620d82be134b08ec2f",
+      "checksum": "5b40029c5b946ae3ae73c6edeb8987f01536d2d6312319b4f453ed003eb7e555",
       "level": "departement",
       "keyColumn": "code_departement",
       "columns": [
@@ -152,7 +152,7 @@
         },
         {
           "name": "other_poultry",
-          "unit": "têtes, total des volailles moins les poules et poulettes (7.11)"
+          "unit": "têtes, total des volailles moins les poules, poulettes et poulets de chair (7.11, ou la somme de 7.11.1 à 7.11.4 quand 7.11 est sous secret)"
         }
       ],
       "controlTotals": {
@@ -166,7 +166,7 @@
         "mules_and_donkeys": "21000",
         "laying_hens": "79346332",
         "broilers": "151037762",
-        "other_poultry": "60221068"
+        "other_poultry": "60216901"
       }
     }
   ]

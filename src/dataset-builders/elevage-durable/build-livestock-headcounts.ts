@@ -1,13 +1,15 @@
 import { groupBy, sortBy } from 'es-toolkit'
-import { Result } from 'neverthrow'
+import type BigNumber from 'bignumber.js'
+import { Result, err, ok } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
-import { parseBig, sum, toBig } from '../../domain/big-number.ts'
-import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
+import { parseBig, sum } from '../../domain/big-number.ts'
+import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/data-source.ts'
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
 import { toCsvText } from '../to-csv-text.ts'
 import {
   listSecretCategories,
+  NO_HEADS,
   SECRET_STATISTIC_MARK,
   toLivestockHeadcount,
   type LivestockCategories,
@@ -35,10 +37,12 @@ type TerritoryHeadcount = {
 }
 
 const agresteDataset = 'elevage-durable/sources/agreste-ra2020-cheptels-departement-region.csv'
+const regionsOutputDataset = 'elevage-durable/regions.csv'
+const departementsOutputDataset = 'elevage-durable/departements.csv'
 const cartostatDataset =
   'elevage-durable/sources/cartostat-vaches-laitieres-2020-departements-regions.csv'
 
-// Source : data/elevage-durable/manifest.json, colonnes de regions.csv et departements.csv
+// Source : colonnes de regions.csv et departements.csv déclarées dans data/elevage-durable/manifest.json
 const HEADCOUNT_COLUMNS = [
   ['dairy_cows', (headcount: LivestockHeadcount) => headcount.dairyCows],
   ['other_cattle', (headcount: LivestockHeadcount) => headcount.otherCattle],
@@ -61,10 +65,10 @@ const METROPOLITAN_REGION_CODES: ReadonlySet<string> = new Set([
 // Source : Insee, code officiel géographique : un code de département métropolitain compte deux chiffres, ou 2A et 2B pour la Corse
 const METROPOLITAN_DEPARTEMENT_CODE = /^(\d{2}|2A|2B)$/
 
-// Source : cartostat, vaches laitières 2020 : « secret » ou une cellule absente compte pour zéro vache (choix de conception, non validé)
-const NO_DAIRY_COWS = toBig('0')
+// Source : cartostat, vaches laitières 2020 : la valeur « secret » marque le secret statistique
+const DAIRY_COWS_SECRET_MARK = 'secret'
 
-// Source : data/elevage-durable/manifest.json : repère, dans la liste des cellules sous secret, la cellule des vaches laitières de cartostat
+// Source : choix de conception, non validé : repère de la cellule des vaches laitières dans la liste des cellules sous secret
 const DAIRY_COWS_CELL = 'dairy_cows'
 
 // Source : Agreste, recensement agricole 2020, cheptels : le code d'une région est préfixé par NR
@@ -77,6 +81,24 @@ function toTerritoryCode({ geography, level }: { geography: string; level: Level
     return METROPOLITAN_REGION_CODES.has(code) ? code : undefined
   }
   return METROPOLITAN_DEPARTEMENT_CODE.test(geography) ? geography : undefined
+}
+
+function validateHeadcountCell({
+  dataset,
+  cell,
+}: {
+  dataset: string
+  cell: readonly [string, string, string]
+}): Result<readonly [string, string, string], InvalidDataset> {
+  const [, category, value] = cell
+  if (value === SECRET_STATISTIC_MARK || parseBig(value).isOk()) return ok(cell)
+  return err(
+    invalidDataset({
+      dataset,
+      reason: 'unreadable',
+      detail: `valeur=${value} (catégorie ${category}) is neither a decimal number nor the secret mark`,
+    }),
+  )
 }
 
 function readCategories({
@@ -100,6 +122,9 @@ function readCategories({
         ),
       ),
     )
+    .andThen((cells) =>
+      Result.combine(cells.map((cell) => validateHeadcountCell({ dataset, cell }))),
+    )
     .map((cells) =>
       cells.flatMap(([geography, category, value]) => {
         const code = toTerritoryCode({ geography, level })
@@ -117,13 +142,34 @@ function readCategories({
     )
 }
 
+function toDairyCows({
+  dataset,
+  code,
+  text,
+}: {
+  dataset: string
+  code: string
+  text: string
+}): Result<readonly [string, BigNumber | undefined], InvalidDataset> {
+  if (text === DAIRY_COWS_SECRET_MARK) return ok([code, undefined])
+  return parseBig(text)
+    .map((dairyCows): readonly [string, BigNumber | undefined] => [code, dairyCows])
+    .mapErr(() =>
+      invalidDataset({
+        dataset,
+        reason: 'unreadable',
+        detail: `vaches_laitieres_2020=${text} is neither a decimal number nor the secret mark`,
+      }),
+    )
+}
+
 function readDairyCows({
   cartostatCsv,
   level,
 }: {
   cartostatCsv: string
   level: Level
-}): Result<ReadonlyMap<string, string>, InvalidDataset> {
+}): Result<ReadonlyMap<string, BigNumber | undefined>, InvalidDataset> {
   const dataset = cartostatDataset
   return parseCsvText({ text: cartostatCsv, delimiter: ',' })
     .mapErr(toInvalidDataset(dataset))
@@ -135,7 +181,7 @@ function readDairyCows({
             Result.combine([
               requireColumn({ dataset, row, column: 'code' }),
               requireColumn({ dataset, row, column: 'vaches_laitieres_2020' }),
-            ]),
+            ]).andThen(([code, text]) => toDairyCows({ dataset, code, text })),
           ),
       ),
     )
@@ -145,18 +191,16 @@ function readDairyCows({
 function toTerritoryHeadcount({
   code,
   categories,
-  dairyCowsText,
+  dairyCowsOrSecret,
 }: {
   code: string
   categories: LivestockCategories
-  dairyCowsText: string | undefined
+  dairyCowsOrSecret: BigNumber | undefined
 }): TerritoryHeadcount {
-  const parsedDairyCows = parseBig(dairyCowsText ?? SECRET_STATISTIC_MARK)
-  const dairyCows = parsedDairyCows.unwrapOr(NO_DAIRY_COWS)
-  const secretDairyCows = parsedDairyCows.isErr() ? [DAIRY_COWS_CELL] : []
+  const secretDairyCows = dairyCowsOrSecret === undefined ? [DAIRY_COWS_CELL] : []
   return {
     code,
-    headcount: toLivestockHeadcount({ categories, dairyCows }),
+    headcount: toLivestockHeadcount({ categories, dairyCows: dairyCowsOrSecret ?? NO_HEADS }),
     secretCells: [...listSecretCategories(categories), ...secretDairyCows],
   }
 }
@@ -170,22 +214,22 @@ function toLevel({
   dataset: string
   keyColumn: string
 }): Result<LivestockHeadcountsLevel, InvalidDataset> {
-  const sorted = sortBy(territories, [({ code }) => code])
+  const territoriesSortedByCode = sortBy(territories, [({ code }) => code])
   return toCsvText({
     dataset,
     columns: [keyColumn, ...HEADCOUNT_COLUMNS.map(([column]) => column)],
-    rows: sorted.map(({ code, headcount }) => [
+    rows: territoriesSortedByCode.map(({ code, headcount }) => [
       code,
       ...HEADCOUNT_COLUMNS.map(([, select]) => select(headcount).toFixed()),
     ]),
   }).map((csv) => ({
     csv,
-    territoryCount: sorted.length,
-    secretCellCount: sorted.flatMap(({ secretCells }) => secretCells).length,
+    territoryCount: territoriesSortedByCode.length,
+    secretCellCount: territoriesSortedByCode.flatMap(({ secretCells }) => secretCells).length,
     totals: Object.fromEntries(
       HEADCOUNT_COLUMNS.map(([column, select]) => [
         column,
-        sum(sorted.map(({ headcount }) => select(headcount))).toFixed(),
+        sum(territoriesSortedByCode.map(({ headcount }) => select(headcount))).toFixed(),
       ]),
     ),
   }))
@@ -201,15 +245,16 @@ function buildLevel({
   level: Level
 }): Result<LivestockHeadcountsLevel, InvalidDataset> {
   const keyColumn = level === 'region' ? 'code_region' : 'code_departement'
+  const outputDataset = level === 'region' ? regionsOutputDataset : departementsOutputDataset
   return Result.combine([
     readCategories({ agresteCsv, level }),
     readDairyCows({ cartostatCsv, level }),
   ]).andThen(([categoriesByCode, dairyCowsByCode]) =>
     toLevel({
       territories: [...categoriesByCode].map(([code, categories]) =>
-        toTerritoryHeadcount({ code, categories, dairyCowsText: dairyCowsByCode.get(code) }),
+        toTerritoryHeadcount({ code, categories, dairyCowsOrSecret: dairyCowsByCode.get(code) }),
       ),
-      dataset: agresteDataset,
+      dataset: outputDataset,
       keyColumn,
     }),
   )

@@ -86,6 +86,11 @@ describe('buildLivestockHeadcounts, effectifs par catégorie', () => {
     expect(departements.secretCellCount).toBe(0)
   })
 
+  it('retombe sur la somme des sous-catégories quand les poules et poulettes sont sous secret', () => {
+    const departements = departementCsvOf(departementWith({ ...FULL_CATEGORIES, '7.11': 's' }))
+    expect(departements.csv).toContain('01,40,60,15,45,7,8,20,10,350,250,400\n')
+  })
+
   it('ramène une différence négative à zéro', () => {
     const departements = departementCsvOf(
       departementWith({ ...FULL_CATEGORIES, '1': '30', '5': '10', '2': '5', '7': '100' }),
@@ -146,6 +151,43 @@ describe('buildLivestockHeadcounts, territoires retenus', () => {
 })
 
 describe('buildLivestockHeadcounts, erreurs', () => {
+  it('refuse une valeur Agreste qui n’est ni un nombre ni le repère du secret', () => {
+    expect(
+      buildLivestockHeadcounts({
+        agresteCsv: toAgresteCsv(cell('01', '3', 'beaucoup')),
+        cartostatCsv: DAIRY_CARTOSTAT,
+      })._unsafeUnwrapErr(),
+    ).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'elevage-durable/sources/agreste-ra2020-cheptels-departement-region.csv',
+      reason: 'unreadable',
+      detail: 'valeur=beaucoup (catégorie 3) is neither a decimal number nor the secret mark',
+    })
+  })
+
+  it('refuse des vaches laitières qui ne sont ni un nombre ni le repère du secret', () => {
+    expect(
+      buildLivestockHeadcounts({
+        agresteCsv: departementWith(FULL_CATEGORIES),
+        cartostatCsv: toCartostatCsv('departement,01,Ain,beaucoup'),
+      })._unsafeUnwrapErr(),
+    ).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'elevage-durable/sources/cartostat-vaches-laitieres-2020-departements-regions.csv',
+      reason: 'unreadable',
+      detail: 'vaches_laitieres_2020=beaucoup is neither a decimal number nor the secret mark',
+    })
+  })
+
+  it('refuse un nom de colonne de sortie qui demanderait des guillemets', () => {
+    expect(
+      buildLivestockHeadcounts({
+        agresteCsv: toAgresteCsv(cell('2A', '3', '1')),
+        cartostatCsv: toCartostatCsv('departement,2A,"Corse, du Sud",1'),
+      }).isOk(),
+    ).toBe(true)
+  })
+
   it('refuse un relevé Agreste mal formé', () => {
     expect(
       buildLivestockHeadcounts({ agresteCsv: 'a,b\n1,2,3', cartostatCsv: DAIRY_CARTOSTAT })._unsafeUnwrapErr(),

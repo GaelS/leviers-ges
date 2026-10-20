@@ -20,7 +20,7 @@ type LivestockHeadcount = {
 // Source : Agreste, recensement agricole 2020, cheptels : la valeur « s » marque le secret statistique
 const SECRET_STATISTIC_MARK = 's'
 
-// Source : tableur PlanET V1, DonneesTerritoires!D23 : correspondance entre les catégories de l'OMINEA et celles du recensement agricole 2020 d'Agreste, à décliner par l'utilisateur (choix de conception, non validé)
+// Source : tableur PlanET V1, DonneesTerritoires!D23 : correspondance à décliner entre l'OMINEA et le recensement agricole 2020 (choix de conception, non validé)
 const CATEGORY_CODES = {
   cattle: '1',
   equids: '2',
@@ -37,13 +37,18 @@ const CATEGORY_CODES = {
   broilers: '7.11.4',
 } as const
 
-// Source : élément neutre de l'addition : une catégorie sous secret statistique ou absente compte pour zéro (choix de conception, non validé)
+// Source : choix de conception, non validé : une catégorie sous secret statistique ou absente compte pour zéro tête
 const NO_HEADS: BigNumber = toBig('0')
 
 function headsOf(categories: LivestockCategories, code: string): BigNumber {
   const text = categories.get(code)
   if (text === undefined || text === SECRET_STATISTIC_MARK) return NO_HEADS
   return toBig(text)
+}
+
+function isReadable(categories: LivestockCategories, code: string): boolean {
+  const text = categories.get(code)
+  return text !== undefined && text !== SECRET_STATISTIC_MARK
 }
 
 function nonNegative(heads: BigNumber): BigNumber {
@@ -61,27 +66,37 @@ function toLivestockHeadcount({
   categories: LivestockCategories
   dairyCows: BigNumber
 }): LivestockHeadcount {
-  const heads = (code: string) => headsOf(categories, code)
+  const headsOfCategory = (code: string) => headsOf(categories, code)
+  const totalCattle = headsOfCategory(CATEGORY_CODES.cattle)
+  const totalPigs = headsOfCategory(CATEGORY_CODES.pigs)
+  const sows = headsOfCategory(CATEGORY_CODES.sows)
+  const totalEquids = headsOfCategory(CATEGORY_CODES.equids)
+  const mulesAndDonkeys = headsOfCategory(CATEGORY_CODES.mulesAndDonkeys)
+  const totalPoultry = headsOfCategory(CATEGORY_CODES.poultry)
+  const layingHens = sum([
+    headsOfCategory(CATEGORY_CODES.layingHensForConsumption),
+    headsOfCategory(CATEGORY_CODES.layingHensForHatching),
+    headsOfCategory(CATEGORY_CODES.pullets),
+  ])
+  const broilers = headsOfCategory(CATEGORY_CODES.broilers)
+  const readableHensAndPullets = headsOfCategory(CATEGORY_CODES.hensAndPullets)
+  const hensAndPullets = isReadable(categories, CATEGORY_CODES.hensAndPullets)
+    ? readableHensAndPullets
+    : layingHens.plus(broilers)
   return {
     dairyCows,
-    otherCattle: nonNegative(heads(CATEGORY_CODES.cattle).minus(dairyCows)),
-    sows: heads(CATEGORY_CODES.sows),
-    otherPigs: nonNegative(heads(CATEGORY_CODES.pigs).minus(heads(CATEGORY_CODES.sows))),
-    goats: heads(CATEGORY_CODES.goats),
-    sheep: heads(CATEGORY_CODES.sheep),
-    horses: nonNegative(heads(CATEGORY_CODES.equids).minus(heads(CATEGORY_CODES.mulesAndDonkeys))),
-    mulesAndDonkeys: heads(CATEGORY_CODES.mulesAndDonkeys),
-    layingHens: sum([
-      heads(CATEGORY_CODES.layingHensForConsumption),
-      heads(CATEGORY_CODES.layingHensForHatching),
-      heads(CATEGORY_CODES.pullets),
-    ]),
-    broilers: heads(CATEGORY_CODES.broilers),
-    otherPoultry: nonNegative(
-      heads(CATEGORY_CODES.poultry).minus(heads(CATEGORY_CODES.hensAndPullets)),
-    ),
+    otherCattle: nonNegative(totalCattle.minus(dairyCows)),
+    sows,
+    otherPigs: nonNegative(totalPigs.minus(sows)),
+    goats: headsOfCategory(CATEGORY_CODES.goats),
+    sheep: headsOfCategory(CATEGORY_CODES.sheep),
+    horses: nonNegative(totalEquids.minus(mulesAndDonkeys)),
+    mulesAndDonkeys,
+    layingHens,
+    broilers,
+    otherPoultry: nonNegative(totalPoultry.minus(hensAndPullets)),
   }
 }
 
-export { listSecretCategories, SECRET_STATISTIC_MARK, toLivestockHeadcount }
+export { listSecretCategories, NO_HEADS, SECRET_STATISTIC_MARK, toLivestockHeadcount }
 export type { LivestockCategories, LivestockHeadcount }
