@@ -38,4 +38,3 @@ function readWasteSources(dataDirectory: string): Result<WasteSources, InvalidDa
 }
 
 export { readWasteSources }
-export type { WasteSources }

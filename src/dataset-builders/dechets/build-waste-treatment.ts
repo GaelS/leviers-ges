@@ -1,4 +1,4 @@
-import { sortBy, uniqBy } from 'es-toolkit'
+import { groupBy, sortBy } from 'es-toolkit'
 import { Result, ok } from 'neverthrow'
 import { requireColumn } from '../../application/require-column.ts'
 import { sum, toBig } from '../../domain/big-number.ts'
@@ -68,10 +68,11 @@ function toFlow(row: DataRow): Result<readonly TreatmentFlow[], InvalidDataset> 
     const treatmentMode = TREATMENT_MODE_BY_OPERATION_CODE.get(operationCode)
     if (treatmentMode === undefined) return ok([])
     return roundToLoaderPrecision({ dataset, column: 'quantite_traitee_t', text: tonnesText }).map(
-      (tonnes) =>
-        toBig(tonnes).isZero()
-          ? []
-          : [{ communeCode: toCityCode(communeCode), wasteCode, treatmentMode, tonnes }],
+      (tonnes) => {
+        const hasNoTonnes = toBig(tonnes).isZero()
+        if (hasNoTonnes) return []
+        return [{ communeCode: toCityCode(communeCode), wasteCode, treatmentMode, tonnes }]
+      },
     )
   })
 }
@@ -81,10 +82,9 @@ function toFlowId({ communeCode, wasteCode, treatmentMode }: TreatmentFlow): str
 }
 
 function consolidate(flows: readonly TreatmentFlow[]): readonly TreatmentFlow[] {
-  return uniqBy(flows, toFlowId).map((flow) => ({
-    ...flow,
-    tonnes: tonnesOf(flows.filter((candidate) => toFlowId(candidate) === toFlowId(flow))),
-  }))
+  return Object.values(groupBy(flows, toFlowId)).flatMap((sameFlow) =>
+    sameFlow.slice(0, 1).map((flow) => ({ ...flow, tonnes: tonnesOf(sameFlow) })),
+  )
 }
 
 function toFlowsCsv(flows: readonly TreatmentFlow[]): Result<string, InvalidDataset> {
@@ -113,11 +113,11 @@ function toEmissionFactor({
   column: string
 }): Result<string, InvalidDataset> {
   const dataset = emissionFactorsDataset
-  return requireColumn({ dataset, row, column }).andThen((text) =>
-    text === MISSING_EMISSION_FACTOR_MARK
-      ? ok('')
-      : roundToLoaderPrecision({ dataset, column, text }),
-  )
+  return requireColumn({ dataset, row, column }).andThen((text) => {
+    const isMissing = text === MISSING_EMISSION_FACTOR_MARK
+    if (isMissing) return ok('')
+    return roundToLoaderPrecision({ dataset, column, text })
+  })
 }
 
 function toEmissionFactorsCsv(
@@ -137,8 +137,12 @@ function toEmissionFactorsCsv(
         ),
       ),
     )
-    .andThen((lines) =>
-      toCsvText({ dataset, columns: EMISSION_FACTORS_COLUMNS, rows: sortBy(lines, [([code]) => code]) }),
+    .andThen((factorsByWasteCode) =>
+      toCsvText({
+        dataset,
+        columns: EMISSION_FACTORS_COLUMNS,
+        rows: sortBy(factorsByWasteCode, [([wasteCode]) => wasteCode]),
+      }),
     )
 }
 
@@ -152,7 +156,7 @@ function buildWasteTreatment({
   return parseCsvText({ text: irepCsv, delimiter: ',' })
     .mapErr(toInvalidDataset(irepDataset))
     .andThen((rows) => Result.combine(rows.map(toFlow)))
-    .map((perRow) => consolidate(perRow.flat()))
+    .map((flowsPerRow) => consolidate(flowsPerRow.flat()))
     .andThen((flows) =>
       Result.combine([toFlowsCsv(flows), toEmissionFactorsCsv(emissionFactorsText)]).map(
         ([flowsCsv, emissionFactorsCsv]) => ({
@@ -170,4 +174,3 @@ function buildWasteTreatment({
 }
 
 export { buildWasteTreatment }
-export type { WasteTreatmentBuild }
