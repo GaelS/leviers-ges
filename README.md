@@ -216,4 +216,4 @@ const result = estimate({
 ## Pour aller plus loin
 
 - `AGENTS.md` : l'architecture, les règles de code et comment ajouter un levier.
-- `docs/methodology/` : conventions de calcul, hypothèses nommées, corrections de formule, `points-a-arbitrer.md` (tout ce qui s'écarte du tableur ou reste à confirmer).
+- `docs/methodology/` : conventions de calcul, hypothèses nommées, corrections de formule, `points-a-arbitrer.md` (état de chaque levier par niveau, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs).

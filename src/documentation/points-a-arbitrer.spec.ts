@@ -17,7 +17,9 @@ const register = readFileSync(
   'utf8',
 )
 
-const UNCOMPUTED_SECTION_TITLE = '## Niveaux non calculés'
+const UNCOMPUTED_SECTION_TITLE = '## 1. Niveaux non calculés'
+
+const OVERVIEW_SECTION_TITLE = "## Vue d'ensemble"
 
 const levelLabels: Readonly<Record<Level, string>> = {
   region: 'région',
@@ -25,14 +27,28 @@ const levelLabels: Readonly<Record<Level, string>> = {
   epci: 'EPCI',
 }
 
-const uncomputedSection = register
-  .split('\n## ')
-  .find((section) => `## ${section}`.startsWith(UNCOMPUTED_SECTION_TITLE))
+function findSection(title: string): string | undefined {
+  return register.split('\n## ').find((section) => `## ${section}`.startsWith(title))
+}
 
-const uncomputedRows = (uncomputedSection ?? '')
-  .split('\n')
-  .filter((line) => line.startsWith('|'))
-  .map((line) => line.split('|').map((cell) => cell.trim()))
+function tableRows(section: string | undefined): readonly (readonly string[])[] {
+  return (section ?? '')
+    .split('\n')
+    .filter((line) => line.startsWith('|'))
+    .map((line) => line.split('|').map((cell) => cell.trim()))
+}
+
+const statusIcons: Readonly<Record<string, string>> = {
+  no_open_question: '✅',
+  workaround: '❓',
+  not_computed: '❌',
+}
+
+const uncomputedSection = findSection(UNCOMPUTED_SECTION_TITLE)
+
+const overviewRows = tableRows(findSection(OVERVIEW_SECTION_TITLE))
+
+const uncomputedRows = tableRows(uncomputedSection)
 
 const uncomputedCells = Object.entries(LEVERS).flatMap(([leverId, statuses]) =>
   (Object.entries(statuses) as [Level, string][])
@@ -50,6 +66,19 @@ describe('docs/methodology/points-a-arbitrer.md', () => {
     const missing = implementedLeverIds.filter((id) => !register.includes(`\`${id}\``))
     expect(missing).toEqual([])
   })
+
+  it.each(Object.entries(LEVERS))(
+    'la vue d’ensemble donne à %s les icônes de son registre',
+    (leverId, statuses) => {
+      const row = overviewRows.find(([, , lever]) => (lever ?? '').includes(`\`${leverId}\``))
+      const icons = row?.slice(3, 6)
+      expect(icons).toEqual([
+        statusIcons[statuses.region],
+        statusIcons[statuses.departement],
+        statusIcons[statuses.epci],
+      ])
+    },
+  )
 
   it('a une section « Niveaux non calculés »', () => {
     expect(uncomputedSection).toBeDefined()
