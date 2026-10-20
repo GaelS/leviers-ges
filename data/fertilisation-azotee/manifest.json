@@ -1,0 +1,66 @@
+{
+  "datasets": [
+    {
+      "file": "regions.csv",
+      "source": "UNIFA puis France Fertilisants, livraisons d'engrais minéraux et organo-minéraux en tonnes d'azote (N) par région, colonne « Total » de chaque page, campagnes 2021-2022 et 2022-2023, 13 régions de France métropolitaine. Livré n'est pas épandu : les livraisons sont comptées au département du distributeur. Construit par pnpm build:data:fertilisation-azotee",
+      "link": "https://www.francefertilisants.fr/",
+      "vintage": "campagnes 2021-2022 et 2022-2023",
+      "retrievedOn": "2026-10-07",
+      "checksum": "a9ae60040e5813790a0001a7992b9463f3816e7cefd34075ddaf8e396554b9bc",
+      "level": "region",
+      "keyColumn": "code_region",
+      "columns": [
+        { "name": "code_region", "unit": "code INSEE de la région" },
+        { "name": "nitrogen_delivered_tonnes_2021_2022", "unit": "tonnes d'azote livrées sur la campagne 2021-2022" },
+        { "name": "nitrogen_delivered_tonnes_2022_2023", "unit": "tonnes d'azote livrées sur la campagne 2022-2023" }
+      ],
+      "controlTotals": {
+        "nitrogen_delivered_tonnes_2021_2022": "1746521",
+        "nitrogen_delivered_tonnes_2022_2023": "1718954"
+      },
+      "sources": [
+        {
+          "file": "sources/azote-livre-par-region.csv",
+          "source": "Tableau extrait à la main des pages région des PDF UNIFA et France Fertilisants, colonne N (azote) de la ligne Total, campagnes 2014-2015 à 2022-2023 ; seules 2021-2022 et 2022-2023 servent",
+          "retrievedOn": "2026-10-07",
+          "checksum": "134dc454bbf0de6798650630d074fe8d7ca3b4a793b24670c66d8cc0d2aca5af"
+        },
+        {
+          "file": "sources/francefertilisants-livraisons-2022-2023-regions.pdf",
+          "source": "France Fertilisants, livraisons d'engrais en France métropolitaine, campagne 2022-2023, par région",
+          "link": "https://www.francefertilisants.fr/",
+          "retrievedOn": "2026-10-07",
+          "checksum": "6538397cb766daa8a5aee2b120cca5e33e0206fc4a6d86caaf3dea1bad2ce77f"
+        },
+        {
+          "file": "sources/azote-livre-par-departement-2021-2022.csv",
+          "source": "Tableau extrait à la main de la page de chaque département du rapport UNIFA 2021-2022, colonne N (azote) de la ligne Total",
+          "retrievedOn": "2026-10-07",
+          "checksum": "1e3c0fccdf62ca5a38a0d7b586aa6762269236fb9cdc1485a0caca53b12c1d1b"
+        },
+        {
+          "file": "sources/unifa-livraisons-2021-2022-departements.pdf",
+          "source": "UNIFA, livraisons d'engrais en France métropolitaine, campagne 2021-2022, par département",
+          "link": "https://www.francefertilisants.fr/sites/default/files/2023-03/Livraisons-des-engrais-en-France-metropolitaine_2021-2022_Regions.pdf",
+          "retrievedOn": "2026-10-07",
+          "checksum": "61ee8a4349db6a6b1af5fe473e51f30dfc2e78b2e59fc639b8c7571776dba8cb"
+        }
+      ]
+    },
+    {
+      "file": "departements.csv",
+      "source": "UNIFA, livraisons d'engrais minéraux et organo-minéraux en tonnes d'azote (N) par département, campagne 2021-2022, 94 départements de France métropolitaine. La Corse, publiée sous le code 20 sans distinguer 2A et 2B, et la page « Région parisienne » (99) sont écartées : 2A et 2B n'ont pas de livraison. Livré n'est pas épandu. Construit par pnpm build:data:fertilisation-azotee",
+      "link": "https://www.francefertilisants.fr/sites/default/files/2023-03/Livraisons-des-engrais-en-France-metropolitaine_2021-2022_Regions.pdf",
+      "vintage": "campagne 2021-2022",
+      "retrievedOn": "2026-10-07",
+      "checksum": "7b50c803152dc3f702407ba2a9e2ad9f0778d1c68c4931a6b41415025f42e8a7",
+      "level": "departement",
+      "keyColumn": "code_departement",
+      "columns": [
+        { "name": "code_departement", "unit": "code INSEE du département" },
+        { "name": "nitrogen_delivered_tonnes_2021_2022", "unit": "tonnes d'azote livrées sur la campagne 2021-2022" }
+      ],
+      "controlTotals": { "nitrogen_delivered_tonnes_2021_2022": "1746319" }
+    }
+  ]
+}
