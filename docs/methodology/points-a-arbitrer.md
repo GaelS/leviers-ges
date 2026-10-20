@@ -10,7 +10,7 @@ Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `as
 | Conception | un choix de ce dépôt, sans question à poser mais sans source : il se discute, il n'a pas été validé |
 | Erratum | une erreur du tableur à lui remonter ; le code ne dépend pas de la réponse, sauf mention contraire |
 
-Quand un point est tranché : la ligne passe en « résolu » avec la date et la décision, et le `methodology.md` du levier est mis à jour dans la même PR. Une nouvelle PR de levier ajoute ses lignes ici.
+Quand un point est tranché : la ligne passe en « résolu » avec la date et la décision, et le `methodology.md` du levier est mis à jour dans la même PR. Une nouvelle PR de levier ajoute ses lignes ici : un test (`src/documentation/points-a-arbitrer.spec.ts`) échoue si un levier implémenté n'est pas nommé par son identifiant complet, entre accents graves. Un levier sans point ouvert y est nommé avec la mention « aucun point ouvert ».
 
 ## Tous les leviers
 
