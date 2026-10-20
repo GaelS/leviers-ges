@@ -931,6 +931,87 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_marchandises_report_modal', () => {
+    const withGoods = createEstimator(
+      createTemporaryCsvDataSource({
+        'transport-marchandises/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              billion_tonne_kilometres: '0.001',
+              heavy_vehicle_fleet: '1000',
+              zero_emission_heavy_vehicle_fleet: '0',
+              diesel_emission_factor_g_per_vehicle_km: '648',
+              diesel_unclassified_share: '0',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportMarchandisesReportModalRequest({
+      roadToRailFraction,
+      roadToWaterwayFraction,
+      level = 'region',
+    }: {
+      roadToRailFraction: string
+      roadToWaterwayFraction: string
+      level?: string
+    }): RequestInput {
+      return {
+        id: 'transport_marchandises_report_modal',
+        territory: { level, code: '84' },
+        parameters: { roadToRailFraction, roadToWaterwayFraction },
+      } as RequestInput
+    }
+
+    it('aiguille la région vers son levier : 1 000 000 t.km, tout ferroviaire, évitent 57,11 tCO2e', () => {
+      const result = withGoods(
+        transportMarchandisesReportModalRequest({ roadToRailFraction: '1', roadToWaterwayFraction: '0' }),
+      )
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('57.11')
+    })
+
+    it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
+      expect(
+        withGoods(
+          transportMarchandisesReportModalRequest({
+            roadToRailFraction: '1',
+            roadToWaterwayFraction: '0',
+            level,
+          }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({ kind: 'level_not_computed' })
+    })
+
+    it('refuse un report total de plus de 100 %', () => {
+      expect(
+        withGoods(
+          transportMarchandisesReportModalRequest({
+            roadToRailFraction: '0.7',
+            roadToWaterwayFraction: '0.4',
+          }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.roadToWaterwayFraction' }],
+      })
+    })
+
+    it.each(['abc', '1.5'])('refuse le report %j', (roadToRailFraction) => {
+      expect(
+        withGoods(
+          transportMarchandisesReportModalRequest({ roadToRailFraction, roadToWaterwayFraction: '0' }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.roadToRailFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
