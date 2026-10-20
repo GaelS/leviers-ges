@@ -64,7 +64,7 @@ Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une qu
 - L'inconnu s'arrête à `src/estimator/` : la requête y est validée une seule fois (`parse-request.ts`). `estimate` d'un levier reçoit une requête déjà typée et ne valide rien.
 - `calculate-*.ts` est pur : il reçoit des valeurs, jamais une source de données.
 - Imports relatifs en `.ts`. Scripts en TypeScript, pas de Python.
-- Une PR : un seul type de changement, un test rouge avant un correctif, une liste « À arbitrer » dans la description, reportée dans `docs/methodology/points-a-arbitrer.md`.
+- Une PR : un seul type de changement, un test rouge avant un correctif, une liste « À arbitrer » dans la description, reportée dans `docs/methodology/points-a-arbitrer.md` ; un test vérifie que chaque levier implémenté y est nommé.
 
 Le détail est dans `docs/methodology/conventions.md` (calcul, unités, données) et `docs/revue-de-code.md`.
 
