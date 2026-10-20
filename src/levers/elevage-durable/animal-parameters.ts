@@ -128,4 +128,4 @@ const ANIMAL_PARAMETERS: Readonly<Record<AnimalType, AnimalParameters>> = {
 }
 
 export { ANIMAL_PARAMETERS }
-export type { AnimalParameters }
+export type { AnimalParameters, ManureConversionFactors, ManureShares }

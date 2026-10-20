@@ -1,5 +1,9 @@
 import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
 import { ANIMAL_TYPES } from './data/animal-types.ts'
+import {
+  DIGESTION_METHANE_CONVERSION_FACTOR,
+  DIGESTION_NITROUS_OXIDE_FACTOR,
+} from './emission-constants.ts'
 import type { ElevageDurableRequest } from './elevage-durable-request.ts'
 import { DEFAULT_ENTERIC_EMISSION_REDUCTION } from './to-animal-changes.ts'
 
@@ -41,7 +45,7 @@ function toDigestionAssumption(animals: RequestedAnimals): AppliedAssumptions {
   if (!isDigestionRequested) return {}
   return {
     methanisationFactors: {
-      value: 'conversion factor of 2.27% to methane, 0.0006 kg N-N2O per kg of nitrogen excreted',
+      value: `methane conversion factor ${DIGESTION_METHANE_CONVERSION_FACTOR.toFixed()}, ${DIGESTION_NITROUS_OXIDE_FACTOR.toFixed()} kg N-N2O per kg of nitrogen excreted`,
       source: 'OMINEA 2026 of the CITEPA, cattle and pigs',
       limit:
         'The documents the spreadsheet cites give no factor for anaerobic digestion. Not available for the other animal types: a request that digests their manure is refused',

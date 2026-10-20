@@ -2,7 +2,12 @@ import type BigNumber from 'bignumber.js'
 import { sum } from '../../domain/big-number.ts'
 import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
 import { quantity, type Fraction, type Heads, type TonnesCo2ePerYear } from '../../domain/units.ts'
-import { ANIMAL_PARAMETERS, type AnimalParameters } from './animal-parameters.ts'
+import {
+  ANIMAL_PARAMETERS,
+  type AnimalParameters,
+  type ManureConversionFactors,
+  type ManureShares,
+} from './animal-parameters.ts'
 import type { AnimalType } from './data/animal-types.ts'
 import {
   DAYS_PER_YEAR,
@@ -21,17 +26,9 @@ import {
   SOLID_MANURE_NITROUS_OXIDE_FACTOR,
 } from './emission-constants.ts'
 
-type ManureModeShares = {
-  readonly liquid: BigNumber
-  readonly solid: BigNumber
-  readonly pasture: BigNumber
-  readonly anaerobicDigestion: BigNumber
-}
+type ManureModeShares = ManureShares & { readonly anaerobicDigestion: BigNumber }
 
-type ManureModeFactors = {
-  readonly liquid: BigNumber | undefined
-  readonly solid: BigNumber | undefined
-  readonly pasture: BigNumber | undefined
+type ManureModeFactors = ManureConversionFactors & {
   readonly anaerobicDigestion: BigNumber | undefined
 }
 
@@ -74,11 +71,8 @@ function toCurrentShares({ currentManureShares }: AnimalParameters): ManureModeS
 }
 
 function toMethaneFactors(parameters: AnimalParameters): ManureModeFactors {
-  const { liquid, solid, pasture } = parameters.methaneConversionFactors
   return {
-    liquid,
-    solid,
-    pasture,
+    ...parameters.methaneConversionFactors,
     anaerobicDigestion: parameters.canBeDigested ? DIGESTION_METHANE_CONVERSION_FACTOR : undefined,
   }
 }

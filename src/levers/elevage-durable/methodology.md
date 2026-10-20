@@ -1,6 +1,6 @@
 # Élevage durable
 
-Identifiant : `elevage_durable`. Niveaux : région et département. **L'EPCI n'est pas calculé** : le fichier Agreste par EPCI se contredit sur les bovins (la somme des vaches laitières vaut 4 856 397 têtes pour 3 482 723 en France métropolitaine) et le secret statistique y retire 18 à 41 % des têtes selon l'animal ; le niveau est `not_computed` dans `src/domain/lever-registry.ts`, alors que la fiche d'analyse le jugeait faisable avec réserve. Plusieurs hypothèses nommées de `docs/methodology/assumptions.md` s'appliquent (`methanisationFactors`) ; les valeurs par défaut et les limites sont renvoyées dans `appliedAssumptions`. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`, comme Paris (absent du recensement agricole).
+Identifiant : `elevage_durable`. Niveaux : région et département. **L'EPCI n'est pas calculé** : le fichier Agreste par EPCI se contredit sur les bovins (la somme des vaches laitières vaut 4 856 397 têtes pour 3 482 723 en France métropolitaine) et le secret statistique y retire 18 à 41 % des têtes selon l'animal ; le niveau est `not_computed` dans `src/domain/lever-registry.ts`, alors que la fiche d'analyse le jugeait faisable avec réserve. L'hypothèse nommée `methanisationFactors` de `docs/methodology/assumptions.md` s'applique ; les valeurs par défaut et les limites sont renvoyées dans `appliedAssumptions`. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`, comme Paris (absent du recensement agricole).
 
 ## Formule
 
@@ -126,7 +126,7 @@ Scénario S : vaches laitières (10 % de têtes en moins, 5 % de baisse entériq
 | Méthanisation initiale à 0 | l'OMINEA 2026 estime la part initiale à 9,5 % des truies et 9,8 % des autres porcins en 2024 (UE) ; l'effet d'un passage à la méthanisation peut être surestimé |
 | Effectifs au siège de l'exploitation | un élevage sur deux départements est compté au siège |
 | Vaches laitières estimées | 21 départements sous secret reçoivent une estimation de cartostat dont la méthode n'est pas décrite ; 91 et 93 sans valeur |
-| Secret statistique | une catégorie sous secret compte pour zéro, y compris quand son parent est publié : 0,2 % des volailles des régions et 1,3 % de celles de 53 départements |
+| Secret statistique | une catégorie sous secret compte pour zéro, y compris quand son parent est publié : 0,2 % des volailles des régions et jusqu'à 1,3 % de celles de 53 départements |
 | Zones pédoclimatiques | non prises en compte (`ElevageDurable!B15`) |
 | Un seul millésime | 2020 |
 | Pas d'interaction entre animaux | les réductions s'additionnent (feuille `SG Agriculture`) |

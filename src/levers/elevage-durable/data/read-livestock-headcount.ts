@@ -10,7 +10,7 @@ import type {
 import type { ComputedLevels } from '../../../domain/lever-registry.ts'
 import type { Territory } from '../../../domain/territory.ts'
 import type { Heads } from '../../../domain/units.ts'
-import { ANIMAL_TYPES, type AnimalType } from './animal-types.ts'
+import type { AnimalType } from './animal-types.ts'
 
 type LivestockHeadcount = Readonly<Record<AnimalType, Heads>>
 
@@ -40,15 +40,51 @@ function toHeadcount({
   dataset: string
   row: DataRow
 }): Result<LivestockHeadcount, InvalidDataset> {
-  return Result.combine(
-    ANIMAL_TYPES.map((animalType) =>
-      requireQuantityColumn<'Heads'>({
-        dataset,
-        row,
-        column: HEADCOUNT_COLUMN_BY_ANIMAL[animalType],
-      }).map((heads) => [animalType, heads] as const),
-    ),
-  ).map((entries) => Object.fromEntries(entries) as LivestockHeadcount)
+  const headsOf = (animalType: AnimalType) =>
+    requireQuantityColumn<'Heads'>({
+      dataset,
+      row,
+      column: HEADCOUNT_COLUMN_BY_ANIMAL[animalType],
+    })
+  return Result.combine([
+    headsOf('dairyCows'),
+    headsOf('otherCattle'),
+    headsOf('sows'),
+    headsOf('otherPigs'),
+    headsOf('goats'),
+    headsOf('sheep'),
+    headsOf('horses'),
+    headsOf('mulesAndDonkeys'),
+    headsOf('layingHens'),
+    headsOf('broilers'),
+    headsOf('otherPoultry'),
+  ]).map(
+    ([
+      dairyCows,
+      otherCattle,
+      sows,
+      otherPigs,
+      goats,
+      sheep,
+      horses,
+      mulesAndDonkeys,
+      layingHens,
+      broilers,
+      otherPoultry,
+    ]) => ({
+      dairyCows,
+      otherCattle,
+      sows,
+      otherPigs,
+      goats,
+      sheep,
+      horses,
+      mulesAndDonkeys,
+      layingHens,
+      broilers,
+      otherPoultry,
+    }),
+  )
 }
 
 function readLivestockHeadcount({
