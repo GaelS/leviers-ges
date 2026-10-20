@@ -145,4 +145,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Le levier calculable restant (électrification du transport de marchandises) ajouteront leurs lignes à leur PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Le levier calculable restant (électrification du transport de marchandises) ajoutera ses lignes à sa PR.
