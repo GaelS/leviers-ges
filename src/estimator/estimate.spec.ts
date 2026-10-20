@@ -717,6 +717,59 @@ describe('estimate', () => {
     })
   })
 
+  describe('dechets_sobriete', () => {
+    const withDechetsSobriete = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'dechets/treatment-flows': {
+          keyColumn: 'flow_id',
+          rows: [
+            {
+              flow_id: '01001:20 03 01:storage',
+              commune_code: '01001',
+              waste_code: '20 03 01',
+              treatment_mode: 'storage',
+              tonnes_per_year: '100',
+            },
+          ],
+        },
+        'dechets/emission-factors': {
+          keyColumn: 'waste_code',
+          rows: [
+            {
+              waste_code: '20 03 01',
+              storage_emission_factor_kg_per_tonne: '400',
+              incineration_emission_factor_kg_per_tonne: '100',
+            },
+          ],
+        },
+      }),
+    )
+
+    function dechetsSobrieteRequest(storageReductionFraction: string): RequestInput {
+      return {
+        id: 'dechets_sobriete',
+        territory: { level: 'region', code: '84' },
+        parameters: { storageReductionFraction, incinerationReductionFraction: '0' },
+      }
+    }
+
+    it('aiguille la région vers son levier : 100 t stockées, toutes supprimées, évitent 40 tCO2e', () => {
+      const result = withDechetsSobriete(dechetsSobrieteRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('40')
+    })
+
+    it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
+      expect(withDechetsSobriete(dechetsSobrieteRequest(reduction))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.storageReductionFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
