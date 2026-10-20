@@ -1,6 +1,7 @@
 import { sum } from '../../domain/big-number.ts'
 import { calculatePublicTransportEmissionFactor } from '../../domain/public-transport-emission-factor.ts'
-import { KILOGRAMS_PER_TONNE, WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
+import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
+import { WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
 import {
   quantity,
   type Fraction,

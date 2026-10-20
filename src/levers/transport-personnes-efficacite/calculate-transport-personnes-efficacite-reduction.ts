@@ -1,6 +1,7 @@
 import type BigNumber from 'bignumber.js'
 import { sum, toBig } from '../../domain/big-number.ts'
-import { KILOGRAMS_PER_TONNE, WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
+import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
+import { WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
 import {
   BUS_PASSENGERS_PER_VEHICLE,
   calculateEmissionFactorPerPassengerKm,
