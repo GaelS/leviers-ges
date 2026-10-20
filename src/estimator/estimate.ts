@@ -38,6 +38,10 @@ import {
   type ResidentielSobrieteRequestInput,
 } from '../levers/residentiel-sobriete/index.ts'
 import {
+  estimate as estimateTransportMarchandisesSobrieteLogistique,
+  type TransportMarchandisesSobrieteLogistiqueRequestInput,
+} from '../levers/transport-marchandises-sobriete-logistique/index.ts'
+import {
   estimate as estimateTransportPersonnesEfficacite,
   type TransportPersonnesEfficaciteRequestInput,
 } from '../levers/transport-personnes-efficacite/index.ts'
@@ -66,6 +70,7 @@ type RequestInput =
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
   | ResidentielSobrieteRequestInput
+  | TransportMarchandisesSobrieteLogistiqueRequestInput
   | TransportPersonnesEfficaciteRequestInput
   | TransportPersonnesElectrificationRequestInput
   | TransportPersonnesReportModalRequestInput
@@ -126,6 +131,15 @@ function createEstimator(dataSource: DataSource): Estimator {
           estimateOnComputedLevel(residentielSobrieteRequest, (computedLevelRequest) =>
             estimateResidentielSobriete(computedLevelRequest, context),
           ),
+        )
+        .with(
+          { id: 'transport_marchandises_sobriete_logistique' },
+          (transportMarchandisesSobrieteLogistiqueRequest) =>
+            estimateOnComputedLevel(
+              transportMarchandisesSobrieteLogistiqueRequest,
+              (computedLevelRequest) =>
+                estimateTransportMarchandisesSobrieteLogistique(computedLevelRequest, context),
+            ),
         )
         .with({ id: 'transport_personnes_efficacite' }, (transportPersonnesEfficaciteRequest) =>
           estimateOnComputedLevel(transportPersonnesEfficaciteRequest, (computedLevelRequest) =>

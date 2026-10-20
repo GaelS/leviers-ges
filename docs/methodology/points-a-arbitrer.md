@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 13 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 14 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
 
 Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `assumptions.md` ; ce registre en recoupe quelques-unes (`wasteScope`, `passengerCarLastLineKept`, `railElectricityUpstreamShare`). Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`. Les limites de données sans décision à prendre restent dans le `methodology.md` du levier.
 
@@ -64,6 +64,19 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `elevage_durable` | animaux absents de la requête | Conception | inchangés, sans contribution | renvoyés dans `appliedAssumptions.unchangedAnimals` |
 | `elevage_durable` | Paris absent du recensement agricole, outre-mer exclu | Conception | `missing_data` | pas de zéro inventé |
 
+## Transport de marchandises
+
+| Levier | Point | Statut | Choix actuel | Effet |
+|---|---|---|---|---|
+| `transport_marchandises_sobriete_logistique` | niveaux département et EPCI hors périmètre | Conception | région seule | le tableur les déclare hors périmètre |
+| `transport_marchandises_sobriete_logistique` | formule lue dans le dessin | ADEME | « Émissions évitées = % réduction × t.km × FE TRM » | la cellule « Formule » est vide |
+| `transport_marchandises_sobriete_logistique` | taux de chargement des poids lourds (`heavyVehicleLoadFactor`) | ADEME | 8,1 t | 8,7 t en cible 2030 : −7 % sur le facteur par t.km |
+| `transport_marchandises_sobriete_logistique` | courte ou longue distance, parc de la région (`heavyVehicleTripType`) | ADEME | longue distance | la courte distance donne un facteur de 32 % plus haut |
+| `transport_marchandises_sobriete_logistique` | t.km avec ou sans l'étranger (`includeInternationalFlows`) | ADEME | avec l'étranger | 239,97 contre 171,71 milliards de t.km |
+| `transport_marchandises_sobriete_logistique` | facteur thermique : CO2 seul, Euro choisi par Crit'Air, vignettes 1 à 5 seulement | Conception | OMINEA 2024, 6 à 14 % du parc diesel écarté | CH4 et N2O ajouteraient 1,7 % |
+| `transport_marchandises_sobriete_logistique` | hydrogène et autres zéro émission avec l'électrique | Conception | facteur électrique (0,0467) | 907 poids lourds en métropole |
+| `transport_marchandises_sobriete_logistique` | parc immatriculé dans la région | Conception | parc de la région | le parc circulant diffère |
+
 ## Résidentiel
 
 | Levier | Point | Statut | Choix actuel | Effet |
@@ -124,4 +137,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les quatre leviers calculables restants (transport de marchandises) ajouteront leurs lignes à leur PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les trois leviers calculables restants (report modal, efficacité et électrification du transport de marchandises) ajouteront leurs lignes à leur PR.

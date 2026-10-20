@@ -879,6 +879,58 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_marchandises_sobriete_logistique', () => {
+    const withGoods = createEstimator(
+      createTemporaryCsvDataSource({
+        'transport-marchandises/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              billion_tonne_kilometres: '30',
+              heavy_vehicle_fleet: '1000',
+              zero_emission_heavy_vehicle_fleet: '0',
+              diesel_emission_factor_g_per_vehicle_km: '810',
+              diesel_unclassified_share: '0',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportMarchandisesSobrieteLogistiqueRequest(
+      roadFreightReductionFraction: string,
+      level = 'region',
+    ): RequestInput {
+      return {
+        id: 'transport_marchandises_sobriete_logistique',
+        territory: { level, code: '84' },
+        parameters: { roadFreightReductionFraction },
+      } as RequestInput
+    }
+
+    it('aiguille la région vers son levier : 30 milliards de t.km à 0,1 kgCO2e/t.km, tout supprimé, évitent 3 000 000 tCO2e', () => {
+      const result = withGoods(transportMarchandisesSobrieteLogistiqueRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('3000000')
+    })
+
+    it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
+      expect(
+        withGoods(transportMarchandisesSobrieteLogistiqueRequest('1', level))._unsafeUnwrapErr(),
+      ).toMatchObject({ kind: 'level_not_computed' })
+    })
+
+    it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
+      expect(
+        withGoods(transportMarchandisesSobrieteLogistiqueRequest(reduction))._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.roadFreightReductionFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
