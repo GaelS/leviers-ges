@@ -1,4 +1,3 @@
-import type BigNumber from 'bignumber.js'
 import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
 import {
   quantity,
@@ -18,7 +17,7 @@ function calculateFertilisationAzoteeReduction({
   nitrogenReductionFraction: Fraction
   deliveredNitrogen: Tonnes
 }): TonnesCo2ePerYear {
-  const deliveredNitrogenKg: BigNumber = deliveredNitrogen.times(KILOGRAMS_PER_TONNE)
+  const deliveredNitrogenKg = deliveredNitrogen.times(KILOGRAMS_PER_TONNE)
   const avoidedNitrogenKg = deliveredNitrogenKg.times(nitrogenReductionFraction)
   const avoidedEmissionsKg = avoidedNitrogenKg.times(NITROGEN_SPREADING_EMISSION_FACTOR)
   return quantity<'TonnesCo2ePerYear'>(

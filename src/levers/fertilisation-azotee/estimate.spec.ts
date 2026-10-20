@@ -80,8 +80,7 @@ describe('estimate, fertilisation_azotee', () => {
     const factor = estimate(request('region', '84'))._unsafeUnwrap().appliedAssumptions[
       'nitrogenSpreadingEmissionFactor'
     ]
-    expect(factor?.value).toBe('5.733')
-    expect(factor?.limit).toContain('400%')
+    expect(factor).toMatchObject({ value: '5.733', limit: expect.stringContaining('400%') as string })
   })
 
   it.each([

@@ -1,6 +1,6 @@
 # Registre des hypothèses
 
-Une question ouverte devient une hypothèse nommée, avec sa valeur de contournement. Une réponse de l'ADEME change la valeur par défaut, pas le code. Chaque levier concerné accepte l'hypothèse dans le champ `assumptions` de sa requête et renvoie dans `appliedAssumptions` la valeur réellement utilisée.
+Une question ouverte devient une hypothèse nommée, avec sa valeur de contournement. Une réponse de l'ADEME change la valeur par défaut, pas le code. Chaque levier concerné renvoie dans `appliedAssumptions` la valeur réellement utilisée. Aucune requête n'accepte encore de surcharger une hypothèse : la valeur par défaut est fixée dans le code du levier.
 
 ## Hypothèses nommées
 

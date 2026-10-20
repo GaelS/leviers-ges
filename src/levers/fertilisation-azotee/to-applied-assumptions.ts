@@ -1,6 +1,6 @@
 import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
-import type { NitrogenDelivered } from './data/nitrogen-delivered.ts'
 import { NITROGEN_SPREADING_EMISSION_FACTOR } from './calculate-fertilisation-azotee-reduction.ts'
+import type { NitrogenDelivered } from './data/nitrogen-delivered.ts'
 
 function toCampaignsAssumption({ campaigns }: NitrogenDelivered): AppliedAssumptions['nitrogenCampaigns'] {
   if (campaigns === 'two-year-average') {
@@ -17,7 +17,7 @@ function toCampaignsAssumption({ campaigns }: NitrogenDelivered): AppliedAssumpt
     source:
       'UNIFA, deliveries of the 2021-2022 campaign by département: the only départemental report available, the spreadsheet asks for a two-year average (DonneesTerritoires!D8)',
     limit:
-      'Deliveries move between campaigns (Nouvelle-Aquitaine 359,666 t in 2018-2019 then 247,253 t) and are counted where the distributor is, not where the nitrogen is spread: Paris receives 17,415 t for 1 ha of agricultural land',
+      'Deliveries move between campaigns (Nouvelle-Aquitaine 229,342 t in 2021-2022 then 200,843 t in 2022-2023) and are counted where the distributor is, not where the nitrogen is spread: Paris receives 17,415 t for 1 ha of agricultural land',
   }
 }
 

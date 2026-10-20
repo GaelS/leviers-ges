@@ -62,12 +62,12 @@ Jeux `fertilisation-azotee/regions` et `fertilisation-azotee/departements`, cons
 | région 84, jeu de test (1 000 et 3 000 t, soit 2 000 t en moyenne), 10 % | 1 146,6 tCO2e |
 | département 01, jeu de test (500 t), 10 % | 286,65 tCO2e |
 | région 84, données réelles (76 764 t en moyenne), 10 % | 44 008,8 tCO2e |
-| région 53 (Bretagne, 132 951,5 t) | 76 221,09 tCO2e |
-| région 11 (Île-de-France, 60 598 t) | 34 740,83 tCO2e |
-| région 94 (Corse, 175,5 t) | 100,61 tCO2e |
-| département 28 (Eure-et-Loir, 58 416 t) | 33 489,89 tCO2e |
-| département 75 (Paris, 17 415 t pour 1 ha de SAU) | 9 984,02 tCO2e |
-| département 35 (Ille-et-Vilaine, 32 568 t) | 18 671,23 tCO2e |
+| région 53 (Bretagne, 132 951,5 t), 10 % | 76 221,09 tCO2e |
+| région 11 (Île-de-France, 60 598 t), 10 % | 34 740,83 tCO2e |
+| région 94 (Corse, 175,5 t), 10 % | 100,61 tCO2e |
+| département 28 (Eure-et-Loir, 58 416 t), 10 % | 33 489,89 tCO2e |
+| département 75 (Paris, 17 415 t pour 1 ha de SAU), 10 % | 9 984,02 tCO2e |
+| département 35 (Ille-et-Vilaine, 32 568 t), 10 % | 18 671,23 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -76,7 +76,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Limite | Effet |
 |---|---|
 | Livré n'est pas épandu | les livraisons sont comptées au département du distributeur : Paris reçoit 17 415 t d'azote pour 1 ha de SAU, les Hauts-de-Seine 7 367 t pour 5 ha, contre 58 416 t pour 446 392 ha en Eure-et-Loir ; limite assumée par le tableur |
-| Une seule campagne au département | les valeurs bougent d'une campagne à l'autre : Nouvelle-Aquitaine 359 666 t en 2018-2019 puis 247 253 t, Provence-Alpes-Côte d'Azur 12 873 t en 2021-2022 puis 23 455 t en 2022-2023 |
+| Une seule campagne au département | les valeurs bougent d'une campagne à l'autre : Nouvelle-Aquitaine 229 342 t en 2021-2022 puis 200 843 t en 2022-2023, Provence-Alpes-Côte d'Azur 12 873 t en 2021-2022 puis 23 455 t en 2022-2023 |
 | Corse départementale | 2A et 2B sans résultat ; la région 94 est calculée (215 et 136 t) |
 | Somme des départements et des régions | 1 746 534 t avec la Corse contre 1 746 521 t pour les 13 régions en 2021-2022 |
 | Incertitude du facteur | 400 % dans la Base Empreinte |

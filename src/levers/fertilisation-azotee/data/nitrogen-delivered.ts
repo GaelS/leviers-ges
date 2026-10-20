@@ -7,4 +7,4 @@ type NitrogenDelivered = {
   readonly campaigns: NitrogenCampaigns
 }
 
-export type { NitrogenCampaigns, NitrogenDelivered }
+export type { NitrogenDelivered }
