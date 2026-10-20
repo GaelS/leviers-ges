@@ -30,7 +30,7 @@ Une PR passe les quatre premières.
 | `src/testing/` | aides de test, dont `createTemporaryCsvDataSource` |
 | `data/<jeu>/` | CSV et `manifest.json` (source, empreinte, unités, totaux de contrôle) |
 | `eslint-rules/` | règle locale `constant-has-source` et son test |
-| `docs/methodology/` | ce qui concerne plusieurs leviers : `conventions.md`, `assumptions.md`, `formula-corrections.md` |
+| `docs/methodology/` | ce qui concerne plusieurs leviers : `conventions.md`, `assumptions.md`, `formula-corrections.md`, `points-a-arbitrer.md` |
 | `docs/revue-de-code.md` | ce que le relecteur juge et que le lint ne vérifie pas |
 
 ## Les leviers
@@ -64,7 +64,7 @@ Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une qu
 - L'inconnu s'arrête à `src/estimator/` : la requête y est validée une seule fois (`parse-request.ts`). `estimate` d'un levier reçoit une requête déjà typée et ne valide rien.
 - `calculate-*.ts` est pur : il reçoit des valeurs, jamais une source de données.
 - Imports relatifs en `.ts`. Scripts en TypeScript, pas de Python.
-- Une PR : un seul type de changement, un test rouge avant un correctif, une liste « À arbitrer » dans la description.
+- Une PR : un seul type de changement, un test rouge avant un correctif, une liste « À arbitrer » dans la description, reportée dans `docs/methodology/points-a-arbitrer.md`.
 
 Le détail est dans `docs/methodology/conventions.md` (calcul, unités, données) et `docs/revue-de-code.md`.
 
