@@ -1081,6 +1081,70 @@ describe('estimate', () => {
     })
   })
 
+  describe('transport_marchandises_electrification', () => {
+    const withGoods = createEstimator(
+      createTemporaryCsvDataSource({
+        'transport-marchandises/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              billion_tonne_kilometres: '0.001',
+              heavy_vehicle_fleet: '1000',
+              zero_emission_heavy_vehicle_fleet: '0',
+              diesel_emission_factor_g_per_vehicle_km: '648',
+              diesel_unclassified_share: '0',
+            },
+          ],
+        },
+      }),
+    )
+
+    function transportMarchandisesElectrificationRequest({
+      additionalElectrifiedFleetFraction,
+      level = 'region',
+    }: {
+      additionalElectrifiedFleetFraction: string
+      level?: string
+    }): RequestInput {
+      return {
+        id: 'transport_marchandises_electrification',
+        territory: { level, code: '84' },
+        parameters: { additionalElectrifiedFleetFraction },
+      } as RequestInput
+    }
+
+    it('aiguille la région vers son levier : tout le parc électrifié évite 33,3 tCO2e pour 1 000 000 t.km', () => {
+      const result = withGoods(
+        transportMarchandisesElectrificationRequest({ additionalElectrifiedFleetFraction: '1' }),
+      )
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('33.3')
+    })
+
+    it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
+      expect(
+        withGoods(
+          transportMarchandisesElectrificationRequest({
+            additionalElectrifiedFleetFraction: '1',
+            level,
+          }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({ kind: 'level_not_computed' })
+    })
+
+    it.each(['abc', '1.5'])('refuse la part %j', (additionalElectrifiedFleetFraction) => {
+      expect(
+        withGoods(
+          transportMarchandisesElectrificationRequest({ additionalElectrifiedFleetFraction }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.additionalElectrifiedFleetFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)

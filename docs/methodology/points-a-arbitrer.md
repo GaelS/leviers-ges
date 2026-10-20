@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 16 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 17 leviers faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
 
 Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `assumptions.md` ; ce registre en recoupe quelques-unes (`wasteScope`, `passengerCarLastLineKept`, `railElectricityUpstreamShare`). Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`. Les limites de données sans décision à prendre restent dans le `methodology.md` du levier.
 
@@ -84,6 +84,10 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_report_modal` | facteurs ferroviaire (combustion et amont) et fluvial (combustion seule) | ADEME | 0,007278 et 0,0206283 kgCO2e/t.km | périmètres différents, une part de l'amont « non chiffrée » (`DonneesReference!D42`) |
 | `transport_marchandises_report_modal` | somme des reports ≤ 100 % | Conception | refusée au-delà | le tableur ne pose pas de borne |
 | `transport_marchandises_report_modal` | cyclologistique : base des reports sans crédit, non bornée | ADEME | 0 par défaut, négative au-delà des t.km de la région | en augmenter la valeur diminue la réduction |
+| `transport_marchandises_electrification` | formule lue dans le dessin ; facteur thermique × taux de chargement dessiné | ADEME | division par le taux de chargement (correction 1) | la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 : seule la division est cohérente avec les unités |
+| `transport_marchandises_electrification` | part saisie en points de parc supplémentaires, plafonnée à la part thermique | Conception | plafond renvoyé dans `appliedAssumptions` | `ParametreDeterminants!D41` ne donne pas de borne ; 0,14 % du parc est déjà zéro émission |
+| `transport_marchandises_electrification` | un seul facteur électrique pour tous les poids lourds | ADEME | 0,0467 kgCO2e/t.km (3,5 à 7,5 t, validité avril 2021, incertitude 70 %) | `DonneesReference!D39` le dit pour les véhicules entre 3,5 et 7 t |
+| `transport_marchandises_electrification` | facteur thermique seul dans la formule, pas le mixte | ADEME | thermique, comme la forme dessinée | les autres leviers de marchandises prennent le mixte |
 
 ## Résidentiel
 
@@ -145,4 +149,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Le levier calculable restant (électrification du transport de marchandises) ajoutera ses lignes à sa PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les 17 autres leviers calculables sont faits : toute nouvelle PR de levier ou de niveau ajoute ses lignes ici.
