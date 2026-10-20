@@ -62,7 +62,8 @@ const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: 'abc
 ## Règles de la requête
 
 - `id` : l'identifiant du levier. `territory` : `{ level: 'region' | 'departement' | 'epci', code }`, absent pour `haies`.
-- Les nombres se passent en texte (`'0.1'`) ou en nombre. Les fractions vont de 0 à 1.
+- `territory.code` : texte (`'84'`, `'69'`, `'2A'`, SIREN de l'EPCI `'200046977'`).
+- Types et bornes des valeurs : voir « Types et bornes » plus bas.
 - Un schéma refuse toute clé inconnue : `wasteReductionFraction` n'existe pas, `dechets_sobriete` prend `storageReductionFraction` et `incinerationReductionFraction`.
 - `reduction` est un `BigNumber` arrondi à deux décimales.
 - `level_not_computed`, `missing_data` (territoire sans donnée, par exemple l'outre-mer) et `invalid_request` sont les erreurs de l'estimation. Les types sont exportés (`EstimationError`, `DataSourceError`).
@@ -83,24 +84,37 @@ Tous les paramètres sont de la forme `parameters: { … }`. Une « fraction » 
 
 ## Référence des paramètres
 
+### Types et bornes
+
+Toute valeur numérique se passe en texte décimal (`'0.1'`, `'-2'`) ou en nombre fini. Sont refusés : l'écriture scientifique (`'1e2'`), la virgule (`'1,5'`), les espaces, le vide, `NaN` et `Infinity`. Le type d'un paramètre est l'un de ceux-ci :
+
+| Type | Bornes | Exemple |
+|---|---|---|
+| fraction | de 0 à 1 inclus | `'0.1'` pour 10 % |
+| variation relative | aucune (négative admise) | `'-0.1'` pour −10 % |
+| variation relative positive | 0 ou plus, sans plafond | `'0.2'` pour +20 % |
+| kilomètres | aucune (négatif admis) | `'100'` |
+| tonnes.kilomètres | 0 ou plus | `'5000000'` |
+| répartition | quatre fractions dont la somme vaut exactement 1 | voir l'élevage |
+
 ### Agriculture et bois
 
-| `id` | Paramètre | Sens |
-|---|---|---|
-| `batiments_machines_agricoles` | `electricityReductionFraction`, `naturalGasReductionFraction`, `petroleumProductsReductionFraction`, `heatReductionFraction` | fraction de baisse de chaque vecteur d'énergie. Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à `'0'` |
-| `fertilisation_azotee` | `nitrogenReductionFraction` | fraction de baisse de la masse d'azote livrée |
-| `haies` | `hedgeKmCreatedPerYear` | kilomètres de haies créés par an ; une valeur négative (arrachage net) est admise et donne une réduction négative |
-| `produits_bois` | `woodProductionIncrease` | variation relative de la production de produits bois (`'0.1'` = +10 %, `'-0.1'` = −10 %), sans borne ; une seule valeur pour le bois d'œuvre et le bois d'industrie |
+| `id` | Paramètre | Type | Sens |
+|---|---|---|---|
+| `batiments_machines_agricoles` | `electricityReductionFraction`, `naturalGasReductionFraction`, `petroleumProductsReductionFraction`, `heatReductionFraction` | fraction | baisse de chaque vecteur d'énergie. Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à `'0'` |
+| `fertilisation_azotee` | `nitrogenReductionFraction` | fraction | baisse de la masse d'azote livrée |
+| `haies` | `hedgeKmCreatedPerYear` | kilomètres | haies créées par an ; négatif = arrachage net, réduction négative |
+| `produits_bois` | `woodProductionIncrease` | variation relative | variation de la production de produits bois, une seule valeur pour le bois d'œuvre et le bois d'industrie ; une valeur supérieure à 1 est admise |
 
 ### Élevage durable
 
 `parameters.animals` associe à chaque type d'animal que la requête change un objet de trois champs. Au moins un type est obligatoire ; un type absent ne change pas et n'apporte rien.
 
-| Champ | Sens |
-|---|---|
-| `headcountReductionFraction` | fraction du cheptel en moins (obligatoire) |
-| `entericEmissionReductionFraction` | fraction de baisse du facteur de fermentation entérique (facultatif, `'0'` par défaut) |
-| `targetManureShares` | répartition visée des déjections : `liquid` (lisier), `solid` (fumier), `pasture` (pâture), `anaerobicDigestion` (méthanisation). Quatre fractions dont la somme vaut exactement 1 (obligatoire) |
+| Champ | Type | Sens |
+|---|---|---|
+| `headcountReductionFraction` | fraction | cheptel en moins (obligatoire) |
+| `entericEmissionReductionFraction` | fraction | baisse du facteur de fermentation entérique (facultatif, `'0'` par défaut) |
+| `targetManureShares` | répartition | répartition visée des déjections : `liquid` (lisier), `solid` (fumier), `pasture` (pâture), `anaerobicDigestion` (méthanisation), chacune une fraction, somme exactement égale à 1 (obligatoire) |
 
 Les onze types, avec la répartition actuelle supposée par le tableur (lisier / fumier / pâture, méthanisation à 0) :
 
@@ -144,50 +158,50 @@ const result = estimate({
 
 ### Résidentiel et réseaux de chaleur
 
-| `id` | Paramètre | Sens |
-|---|---|---|
-| `residentiel_sobriete` | `householdsApplyingSobrietyFraction` | fraction des ménages qui appliquent la sobriété |
-| | `consumptionReductionFraction` | fraction de baisse de leur consommation (pas de valeur par défaut) |
-| `reseaux_chaleur` | `emissionFactorReductionFraction` | fraction de baisse du facteur d'émission des réseaux ; au-delà de 1 la requête est refusée |
+| `id` | Paramètre | Type | Sens |
+|---|---|---|---|
+| `residentiel_sobriete` | `householdsApplyingSobrietyFraction` | fraction | ménages qui appliquent la sobriété |
+| | `consumptionReductionFraction` | fraction | baisse de leur consommation (pas de valeur par défaut) |
+| `reseaux_chaleur` | `emissionFactorReductionFraction` | fraction | baisse du facteur d'émission des réseaux ; au-delà de 1 la requête est refusée |
 
 ### Transport de personnes
 
-`railShareFraction` (facultatif, fraction) est la part du ferré dans le transport en commun. Sans lui, 82 % en Île-de-France et 24 % ailleurs, valeur renvoyée dans `appliedAssumptions.railShare`.
+`railShareFraction` (fraction, facultatif) est la part du ferré dans le transport en commun. Sans lui, 82 % en Île-de-France et 24 % ailleurs, valeur renvoyée dans `appliedAssumptions.railShare`.
 
-| `id` | Paramètre | Sens |
-|---|---|---|
-| `transport_personnes_sobriete_deplacements` | `commutingDistanceReductionFraction` | fraction de baisse des distances domicile-travail (voiture et transport en commun) |
-| | `railShareFraction` | facultatif |
-| `transport_personnes_report_modal` | `carToPublicTransportFraction` | fraction des passagers.km en voiture reportée vers le transport en commun |
-| | `carToActiveModesFraction` | fraction des passagers.km en voiture reportée vers les modes actifs ; la somme des deux reports ne dépasse pas 1 |
-| | `railShareFraction` | facultatif |
-| `transport_personnes_efficacite` | `carEcodrivingApplicationFraction`, `busEcodrivingApplicationFraction` | part d'application de l'écoconduite (voitures, bus et cars) |
-| | `carPassengerIncrease`, `busPassengerIncrease` | hausse relative du nombre de passagers par véhicule (`'0.2'` = +20 %), 0 ou plus, sans plafond |
-| | `railShareFraction` | facultatif |
-| `transport_personnes_electrification` | `carElectrificationFraction` | fraction du parc de voitures à électrifier ; plafonnée à la part thermique du parc, valeur renvoyée dans `appliedAssumptions` quand le plafond joue |
-| | `busElectrificationFraction` | idem pour le parc de bus et cars |
-| | `railShareFraction` | facultatif |
+| `id` | Paramètre | Type | Sens |
+|---|---|---|---|
+| `transport_personnes_sobriete_deplacements` | `commutingDistanceReductionFraction` | fraction | baisse des distances domicile-travail (voiture et transport en commun) |
+| | `railShareFraction` | fraction, facultatif | |
+| `transport_personnes_report_modal` | `carToPublicTransportFraction` | fraction | passagers.km en voiture reportés vers le transport en commun |
+| | `carToActiveModesFraction` | fraction | passagers.km en voiture reportés vers les modes actifs ; la somme des deux reports ne dépasse pas 1 |
+| | `railShareFraction` | fraction, facultatif | |
+| `transport_personnes_efficacite` | `carEcodrivingApplicationFraction`, `busEcodrivingApplicationFraction` | fraction | part d'application de l'écoconduite (voitures, bus et cars) |
+| | `carPassengerIncrease`, `busPassengerIncrease` | variation relative positive | hausse du nombre de passagers par véhicule |
+| | `railShareFraction` | fraction, facultatif | |
+| `transport_personnes_electrification` | `carElectrificationFraction` | fraction | parc de voitures à électrifier ; plafonnée à la part thermique du parc, valeur renvoyée dans `appliedAssumptions` quand le plafond joue |
+| | `busElectrificationFraction` | fraction | idem pour le parc de bus et cars |
+| | `railShareFraction` | fraction, facultatif | |
 
 ### Transport de marchandises
 
-| `id` | Paramètre | Sens |
-|---|---|---|
-| `transport_marchandises_sobriete_logistique` | `roadFreightReductionFraction` | fraction de baisse des tonnes.kilomètres routières |
-| `transport_marchandises_report_modal` | `roadToRailFraction`, `roadToWaterwayFraction` | fractions des t.km routières reportées vers le ferroviaire et le fluvial ; la somme ne dépasse pas 1 |
-| | `cyclologisticTonneKilometres` | t.km reportées vers la cyclologistique (facultatif, `'0'` par défaut, positif ou nul) |
-| `transport_marchandises_efficacite` | `ecodrivingApplicationFraction` | part d'application de l'écoconduite |
-| | `loadFactorIncrease` | hausse relative du chargement (`'0.2'` = +20 %), 0 ou plus, sans plafond |
-| `transport_marchandises_electrification` | `additionalElectrifiedFleetFraction` | points de parc de poids lourds électrifiés en plus ; plafonnée à la part thermique du parc de la région |
+| `id` | Paramètre | Type | Sens |
+|---|---|---|---|
+| `transport_marchandises_sobriete_logistique` | `roadFreightReductionFraction` | fraction | baisse des tonnes.kilomètres routières |
+| `transport_marchandises_report_modal` | `roadToRailFraction`, `roadToWaterwayFraction` | fraction | t.km routières reportées vers le ferroviaire et le fluvial ; la somme ne dépasse pas 1 |
+| | `cyclologisticTonneKilometres` | tonnes.kilomètres, facultatif | t.km reportées vers la cyclologistique (`'0'` par défaut) |
+| `transport_marchandises_efficacite` | `ecodrivingApplicationFraction` | fraction | part d'application de l'écoconduite |
+| | `loadFactorIncrease` | variation relative positive | hausse du chargement |
+| `transport_marchandises_electrification` | `additionalElectrifiedFleetFraction` | fraction | points de parc de poids lourds électrifiés en plus ; plafonnée à la part thermique du parc de la région |
 
 ### Déchets
 
-| `id` | Paramètre | Sens |
-|---|---|---|
-| `dechets_mode_de_traitement` | `storageToIncinerationFraction` | fraction des tonnes stockées envoyées vers l'incinération |
-| | `storageToMaterialRecoveryFraction` | fraction des tonnes stockées envoyées vers la valorisation ; la somme des deux ne dépasse pas 1 |
-| | `incinerationToMaterialRecoveryFraction` | fraction des tonnes incinérées avec récupération envoyées vers la valorisation |
-| `dechets_sobriete` | `storageReductionFraction` | fraction de baisse des tonnes stockées |
-| | `incinerationReductionFraction` | fraction de baisse des tonnes incinérées avec récupération |
+| `id` | Paramètre | Type | Sens |
+|---|---|---|---|
+| `dechets_mode_de_traitement` | `storageToIncinerationFraction` | fraction | tonnes stockées envoyées vers l'incinération |
+| | `storageToMaterialRecoveryFraction` | fraction | tonnes stockées envoyées vers la valorisation ; la somme des deux ne dépasse pas 1 |
+| | `incinerationToMaterialRecoveryFraction` | fraction | tonnes incinérées avec récupération envoyées vers la valorisation |
+| `dechets_sobriete` | `storageReductionFraction` | fraction | baisse des tonnes stockées |
+| | `incinerationReductionFraction` | fraction | baisse des tonnes incinérées avec récupération |
 
 ## Commandes
 
