@@ -6,10 +6,11 @@ type Status = 'no_open_question' | 'workaround' | 'not_computed'
 type LevelStatuses = Readonly<Record<Level, Status>>
 
 // Source : compound-knowledge-db, docs/plans/2026-09-21-001-feat-leviers-ges/onglets/00-questions-implementation.md,
-// section 1 « Tableau par levier et par maille » (2026-10-07) : 16 no_open_question, 24 workaround, 23 not_computed
+// section 1 « Tableau par levier et par maille » (2026-10-07) : 16 no_open_question, 24 workaround, 23 not_computed ;
+// elevage_durable à l'EPCI passé de workaround à not_computed : le fichier Agreste par EPCI se contredit sur les bovins (docs/methodology/points-a-arbitrer.md)
 const LEVERS = {
   fertilisation_azotee: { region: 'workaround', departement: 'workaround', epci: 'not_computed' },
-  elevage_durable: { region: 'workaround', departement: 'workaround', epci: 'workaround' },
+  elevage_durable: { region: 'workaround', departement: 'workaround', epci: 'not_computed' },
   batiments_machines_agricoles: {
     region: 'no_open_question',
     departement: 'no_open_question',

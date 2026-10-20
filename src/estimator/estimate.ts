@@ -17,6 +17,10 @@ import {
   type DechetsSobrieteRequestInput,
 } from '../levers/dechets-sobriete/index.ts'
 import {
+  estimate as estimateElevageDurable,
+  type ElevageDurableRequestInput,
+} from '../levers/elevage-durable/index.ts'
+import {
   estimate as estimateFertilisationAzotee,
   type FertilisationAzoteeRequestInput,
 } from '../levers/fertilisation-azotee/index.ts'
@@ -56,6 +60,7 @@ type RequestInput =
   | BatimentsMachinesAgricolesRequestInput
   | DechetsModeDeTraitementRequestInput
   | DechetsSobrieteRequestInput
+  | ElevageDurableRequestInput
   | FertilisationAzoteeRequestInput
   | HaiesRequestInput
   | ProduitsBoisRequestInput
@@ -94,6 +99,11 @@ function createEstimator(dataSource: DataSource): Estimator {
         .with({ id: 'dechets_sobriete' }, (dechetsSobrieteRequest) =>
           estimateOnComputedLevel(dechetsSobrieteRequest, (computedLevelRequest) =>
             estimateDechetsSobriete(computedLevelRequest, context),
+          ),
+        )
+        .with({ id: 'elevage_durable' }, (elevageDurableRequest) =>
+          estimateOnComputedLevel(elevageDurableRequest, (computedLevelRequest) =>
+            estimateElevageDurable(computedLevelRequest, context),
           ),
         )
         .with({ id: 'fertilisation_azotee' }, (fertilisationAzoteeRequest) =>

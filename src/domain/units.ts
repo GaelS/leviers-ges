@@ -20,6 +20,7 @@ type UnitName =
   | 'KgCo2ePerPassengerKilometre'
   | 'PassengerKilometresPerWeek'
   | 'Vehicles'
+  | 'Heads'
   | 'ThousandCubicMetres'
   | 'TonnesCarbon'
   | 'RelativeChange'
@@ -43,6 +44,7 @@ type KgCo2ePerKgNitrogen = Quantity<'KgCo2ePerKgNitrogen'>
 type KgCo2ePerPassengerKilometre = Quantity<'KgCo2ePerPassengerKilometre'>
 type PassengerKilometresPerWeek = Quantity<'PassengerKilometresPerWeek'>
 type Vehicles = Quantity<'Vehicles'>
+type Heads = Quantity<'Heads'>
 type ThousandCubicMetres = Quantity<'ThousandCubicMetres'>
 type TonnesCarbon = Quantity<'TonnesCarbon'>
 type RelativeChange = Quantity<'RelativeChange'>
@@ -73,6 +75,7 @@ export type {
   Fraction,
   GigawattHours,
   Hectares,
+  Heads,
   KgCo2ePerGigajoule,
   KgCo2ePerKgNitrogen,
   KgCo2ePerKwh,
