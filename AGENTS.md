@@ -51,8 +51,8 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
 | `residentiel_sobriete` | fait | `src/levers/residentiel-sobriete/methodology.md` |
-| `transport_marchandises_electrification` | fait | `src/levers/transport-marchandises-electrification/methodology.md` |
 | `transport_marchandises_efficacite` | fait | `src/levers/transport-marchandises-efficacite/methodology.md` |
+| `transport_marchandises_electrification` | fait | `src/levers/transport-marchandises-electrification/methodology.md` |
 | `transport_marchandises_report_modal` | fait | `src/levers/transport-marchandises-report-modal/methodology.md` |
 | `transport_marchandises_sobriete_logistique` | fait | `src/levers/transport-marchandises-sobriete-logistique/methodology.md` |
 | `transport_personnes_efficacite` | fait | `src/levers/transport-personnes-efficacite/methodology.md` |

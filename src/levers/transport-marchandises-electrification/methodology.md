@@ -20,7 +20,7 @@ FE_thermique = FE diesel par véhicule.km ÷ taux de chargement
 
 La formule est lue dans les formes de la feuille `TrsptMarch_Electrification` : « Émissions évitées = Tonne.km de TM rapportées à la région × % de nouveaux TRM électrifiés × (FE TRM thermique × Tx de chargement TRM − FE TRM électrique) » ; la cellule « Formule » ne contient que « Réduction GES = ». Le résultat du tableur est en kgCO2e ; il est divisé par 1 000.
 
-**Division et non multiplication.** La forme dessine « FE TRM thermique × Tx de chargement TRM », alors que le facteur est en g par véhicule.km (`DonneesReference!D38`) et le taux en tonnes par véhicule (`C43`) : seule la division donne des kgCO2e par t.km (645 g par véhicule.km ÷ 8,1 t = 0,080 ; × 8,1 = 5,2). Correction 1 de `docs/methodology/formula-corrections.md`.
+**Division et non multiplication.** La forme dessine « FE TRM thermique × Tx de chargement TRM », alors que le facteur est en g par véhicule.km (`DonneesReference!D38`) et le taux en tonnes par véhicule (`C43`) : seule la division donne des kgCO2e par t.km (645 g par véhicule.km ÷ 8,1 t = 0,080 ; × 8,1 = 5,2). Correction 1 de `docs/methodology/formula-corrections.md`. Le tableur se contredit : `DonneesReference!C40` et `TrsptMarch_Electrification!D27` libellent le facteur thermique « kgeqCO2/t.km », ce qui le dirait déjà par t.km ; `D38` (« FE thermique en CO2e/veh.km ») et les données OMINEA en g/véh.km tranchent pour la division.
 
 **Le facteur thermique, pas le mixte.** La formule dessine « FE TRM thermique » ; les autres leviers de marchandises utilisent le facteur mixte de la région.
 
@@ -55,6 +55,7 @@ Taux de chargement (8,1 t), facteur électrique (0,0467 kgCO2e/t.km), facteur di
 | idem, 100 % du parc | 33,3 tCO2e |
 | idem, facteur électrique au-dessus du thermique | −6,66 tCO2e |
 | région 84, jeu de test, 20 % | 6,66 tCO2e |
+| région tout zéro émission, 20 % demandés (rien à électrifier) | 0 tCO2e |
 | région à 90 % de zéro émission, 20 % demandés (plafonnés à 10 %) | 3,33 tCO2e |
 | région 84, données réelles, 20 % | 205 745,61 tCO2e |
 | région 53 (Bretagne) | 88 341,34 tCO2e |

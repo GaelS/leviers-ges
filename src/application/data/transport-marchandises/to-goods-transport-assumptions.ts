@@ -57,4 +57,4 @@ function toGoodsTransportAssumptions(goodsTransport: GoodsTransport): AppliedAss
   return { ...toFlowsAssumption(), ...toEmissionFactorAssumptions(goodsTransport) }
 }
 
-export { toGoodsTransportAssumptions }
+export { DISPLAYED_DECIMAL_PLACES, toGoodsTransportAssumptions }

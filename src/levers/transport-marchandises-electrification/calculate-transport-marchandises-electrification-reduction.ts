@@ -1,5 +1,4 @@
-import type BigNumber from 'bignumber.js'
-import { toBig } from '../../domain/big-number.ts'
+import { calculateThermalShare } from '../../domain/heavy-vehicle-emission-factor.ts'
 import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
 import {
   quantity,
@@ -8,13 +7,6 @@ import {
   type TonneKilometres,
   type TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-
-// Source : élément neutre de la multiplication
-const ONE: BigNumber = toBig('1')
-
-function calculateThermalShare(zeroEmissionShare: Fraction): Fraction {
-  return quantity<'Fraction'>(ONE.minus(zeroEmissionShare).toFixed())
-}
 
 function calculateElectrifiedShare({
   requested,
@@ -46,6 +38,5 @@ function calculateTransportMarchandisesElectrificationReduction({
 
 export {
   calculateElectrifiedShare,
-  calculateThermalShare,
   calculateTransportMarchandisesElectrificationReduction,
 }

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { quantity } from '../../domain/units.ts'
 import {
   calculateElectrifiedShare,
-  calculateThermalShare,
   calculateTransportMarchandisesElectrificationReduction,
 } from './calculate-transport-marchandises-electrification-reduction.ts'
 
@@ -40,12 +39,6 @@ describe('calculateTransportMarchandisesElectrificationReduction', () => {
 
   it('donne un résultat négatif quand le facteur électrique dépasse le thermique : −6,66 tCO2e', () => {
     expect(reductionOf({ thermal: '0.0467', electric: '0.08' })).toBe('-6.66')
-  })
-})
-
-describe('calculateThermalShare', () => {
-  it('complète la part zéro émission à 100 % : 0,25 laisse 0,75', () => {
-    expect(calculateThermalShare(quantity<'Fraction'>('0.25')).toFixed()).toBe('0.75')
   })
 })
 

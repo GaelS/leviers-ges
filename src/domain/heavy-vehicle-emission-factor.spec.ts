@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { quantity } from './units.ts'
 import {
   calculateHeavyVehicleEmissionFactors,
+  calculateThermalShare,
   ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR,
   HEAVY_VEHICLE_LOADING_RATE,
 } from './heavy-vehicle-emission-factor.ts'
@@ -54,5 +55,11 @@ describe('calculateHeavyVehicleEmissionFactors', () => {
       loading: HEAVY_VEHICLE_LOADING_RATE.toFixed(),
       electric: ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR.toFixed(),
     }).toEqual({ loading: '8.1', electric: '0.0467' })
+  })
+})
+
+describe('calculateThermalShare', () => {
+  it('complète la part zéro émission à 100 % : 0,25 laisse 0,75', () => {
+    expect(calculateThermalShare(quantity<'Fraction'>('0.25')).toFixed()).toBe('0.75')
   })
 })

@@ -19,9 +19,9 @@ function estimate(
   { dataSource }: EstimationContext,
 ): Result<EstimateResult, DataSourceError> {
   return getGoodsTransport({ dataSource, territory }).map((goodsTransport) => {
-    const requested = parameters.additionalElectrifiedFleetFraction
+    const requestedElectrifiedShare = parameters.additionalElectrifiedFleetFraction
     const electrifiedShare = calculateElectrifiedShare({
-      requested,
+      requested: requestedElectrifiedShare,
       zeroEmissionShare: goodsTransport.emissionFactors.zeroEmissionShare,
     })
     return toEstimateResult(
@@ -31,7 +31,7 @@ function estimate(
         thermalEmissionFactor: goodsTransport.emissionFactors.thermal,
         electricEmissionFactor: ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR,
       }),
-      toAppliedAssumptions({ goodsTransport, requested, electrifiedShare }),
+      toAppliedAssumptions({ goodsTransport, requestedElectrifiedShare, electrifiedShare }),
     )
   })
 }

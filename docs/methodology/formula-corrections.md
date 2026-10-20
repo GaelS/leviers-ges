@@ -9,7 +9,7 @@ Le tableur ne calcule rien : ses formules sont dessinées dans des formes, la ce
 | Leviers | transport de personnes et de marchandises, les huit leviers |
 | Tableur | la formule affichée multiplie le facteur par le taux de remplissage ou de chargement |
 | Correction | on divise |
-| Raison | l'unité l'impose (g par véhicule.km ÷ personnes par véhicule) ; la cellule `B15` de chaque onglet dit « diviser » |
+| Raison | l'unité l'impose (g par véhicule.km ÷ personnes par véhicule) ; la cellule `B15` des onglets de transport de personnes dit « diviser » ; pour les marchandises, `DonneesReference!D38` (facteur thermique en CO2e/véh.km) et `C43` (taux en tonnes/véhicule) |
 
 ```
 facteur par passager.km = facteur par véhicule.km ÷ taux de remplissage

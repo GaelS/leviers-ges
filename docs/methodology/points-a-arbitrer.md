@@ -84,8 +84,8 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_report_modal` | facteurs ferroviaire (combustion et amont) et fluvial (combustion seule) | ADEME | 0,007278 et 0,0206283 kgCO2e/t.km | périmètres différents, une part de l'amont « non chiffrée » (`DonneesReference!D42`) |
 | `transport_marchandises_report_modal` | somme des reports ≤ 100 % | Conception | refusée au-delà | le tableur ne pose pas de borne |
 | `transport_marchandises_report_modal` | cyclologistique : base des reports sans crédit, non bornée | ADEME | 0 par défaut, négative au-delà des t.km de la région | en augmenter la valeur diminue la réduction |
-| `transport_marchandises_electrification` | formule lue dans le dessin ; facteur thermique × taux de chargement dessiné | ADEME | division par le taux de chargement (correction 1) | la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 : seule la division est cohérente avec les unités |
-| `transport_marchandises_electrification` | part saisie en points de parc supplémentaires, plafonnée à la part thermique | Conception | plafond renvoyé dans `appliedAssumptions` | `ParametreDeterminants!D41` ne donne pas de borne ; 0,14 % du parc est déjà zéro émission |
+| `transport_marchandises_electrification` | formule lue dans le dessin ; facteur thermique × taux de chargement dessiné | ADEME | division par le taux de chargement (correction 1) | la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 : seule la division est cohérente avec `DonneesReference!D38` (facteur thermique en CO2e/véh.km) ; `C40` et `D27` libellent pourtant le facteur thermique « kgeqCO2/t.km », ce qui le dirait déjà par t.km |
+| `transport_marchandises_electrification` | part saisie en points de parc supplémentaires, plafonnée à la part thermique | Conception | plafond renvoyé dans `appliedAssumptions` | `ParametreDeterminants!D41` ne donne pas de borne ; 0,15 % du parc (907 poids lourds sur 614 131) est déjà zéro émission |
 | `transport_marchandises_electrification` | un seul facteur électrique pour tous les poids lourds | ADEME | 0,0467 kgCO2e/t.km (3,5 à 7,5 t, validité avril 2021, incertitude 70 %) | `DonneesReference!D39` le dit pour les véhicules entre 3,5 et 7 t |
 | `transport_marchandises_electrification` | facteur thermique seul dans la formule, pas le mixte | ADEME | thermique, comme la forme dessinée | les autres leviers de marchandises prennent le mixte |
 
@@ -149,4 +149,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les 17 autres leviers calculables sont faits : toute nouvelle PR de levier ou de niveau ajoute ses lignes ici.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les 17 leviers calculables sont faits : toute nouvelle PR de levier ou de niveau ajoute ses lignes ici.
