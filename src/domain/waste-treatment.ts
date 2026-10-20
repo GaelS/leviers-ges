@@ -10,7 +10,7 @@ type WasteTypeTreatment = {
   readonly incinerationEmissionFactor: KgCo2ePerTonne | undefined
 }
 
-// Source : élément neutre de l'addition : un terme dont un facteur d'émission manque (« — » dans FE_déchets) n'est pas calculé
+// Source : FE_déchets, « — » pour un facteur absent de la Base Empreinte : le terme concerné n'est pas calculé, soit zéro (choix de conception, non validé)
 const NO_EMISSIONS_KG: BigNumber = toBig('0')
 
 export { NO_EMISSIONS_KG }

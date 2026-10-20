@@ -49,10 +49,10 @@ Les facteurs de la feuille `FE_déchets` (Base Empreinte de l'ADEME), en kgCO2e 
 | Plastique PE | 20 01 39 | 41 | 2 769 |
 | Acier | 20 01 40 | 41 | 135 |
 | Ordures ménagères résiduelles | 20 01 99, 20 02 03, 20 03 01, 20 03 03, 20 03 04, 20 03 07, 20 03 99 | 412 | 374 |
-| Déchets dangereux (DIS) | 15 codes, de 20 01 13 à 20 03 06 | 128 | 844 |
+| Déchets dangereux (DIS) | 16 codes, de 20 01 13 à 20 03 06 | 128 | 844 |
 | Déchets dangereux (DAS) | 20 01 31 | absent | 943 |
 
-Neuf codes n'ont aucun facteur (20 01 26, 20 01 33 à 20 01 36, 20 01 42 à 20 01 44, 20 02 02). 22 des 34 codes avec facteur reprennent celui de la famille DIS ou OMR (colonne « Notes de correspondance » du tableur).
+Huit codes n'ont aucun facteur (20 01 33 à 20 01 36, 20 01 42 à 20 01 44, 20 02 02). 23 des 35 codes avec facteur reprennent celui de la famille DIS ou OMR (colonne « Notes de correspondance » du tableur).
 
 ## Données
 
@@ -73,7 +73,8 @@ Modes : stockage = opérations D1 et D5 (dépôt sur ou dans le sol, mise en dé
 | 4 | Un terme dont un facteur nécessaire manque n'est pas calculé : le terme 1 demande les deux facteurs, les termes 2 et 3 un seul | « Pas de FE disponible » dans `FE_déchets` ; les tonnes ignorées sont renvoyées dans `appliedAssumptions.wasteTonnesWithoutEmissionFactor` |
 | 5 | Les arrondissements de Paris, Lyon et Marseille sont rapportés à leur commune | même choix que les réseaux de chaleur ; choix de conception, non validé |
 | 6 | Le résultat peut être négatif quand l'incinération émet plus que le stockage (plastique : 41 contre 2 769) | aucune borne dans le tableur ; aucune alerte renvoyée |
-| 7 | La correction 4 de `docs/methodology/formula-corrections.md` (« 1 − % » dans le Scénario global) ne concerne pas ce levier : il calcule son propre changement, pas l'enchaînement avec la sobriété | `Scénario global Déchets` hors périmètre |
+| 7 | La somme des deux parts du stockage ne dépasse pas 100 % : la requête est refusée au-delà | déduction du Scénario global (« 1 − … − … »), absente de `ParametreDeterminants` ; choix de conception, non validé |
+| 8 | La correction 4 de `docs/methodology/formula-corrections.md` (« 1 − % » dans le Scénario global) ne concerne pas ce levier : il calcule son propre changement, pas l'enchaînement avec la sobriété | `Scénario global Déchets` hors périmètre |
 
 ## Cas de test chiffrés
 
@@ -102,11 +103,11 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Limite | Effet |
 |---|---|
 | Sites, pas déchets du territoire | les tonnes traitées par région vont de 0,41 à 7,39 fois les tonnes collectées (SINOE 2021) ; à l'EPCI, 911 EPCI sur 1 255 n'hébergent aucun site et ont un résultat nul |
-| Terres et pierres sans facteur | le code 20 02 02 pèse 3 046 658 t de stockage (31,7 %) et n'a pas de facteur : ignoré ; région 84 : 51 700,6 t ignorées, Île-de-France : 2 527 010,76 t |
+| Terres et pierres sans facteur | le code 20 02 02 pèse 3 046 657,96 t de stockage (28,2 %) et n'a pas de facteur : ignoré ; région 84 : 51 700,6 t ignorées, Île-de-France : 2 527 010,76 t |
 | Incinération sans récupération | 1 207 376 t en D10 contre 61 517 t dans SINOE 2021 (19,6 fois) ; ces tonnes sont comptées avec le stockage |
 | Récupération d'énergie non créditée | `ChangementModeTraitement!B13` : le facteur de l'incinération avec récupération ne compte pas d'émission évitée ; limite assumée par le tableur |
 | Valorisation matière à zéro | le recyclage, le compostage et la méthanisation n'émettent rien dans la formule |
-| Facteurs d'une famille voisine | 22 codes sur 34 reprennent le facteur de la famille DIS ou OMR |
+| Facteurs d'une famille voisine | 23 codes sur 35 reprennent le facteur de la famille DIS ou OMR |
 | Un seul millésime | 2022 ; 2023 et 2024 sont publiés |
 | Même fraction pour tous les types | pas de taux par type de déchet |
 | 20 01 36 | 0,4 t d'équipements électriques sans facteur, ignorées |

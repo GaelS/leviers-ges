@@ -59,14 +59,19 @@ function calculateWasteTypeAvoidedKg({
   shifts: TreatmentShifts
   wasteType: WasteTypeTreatment
 }): BigNumber {
-  return sum([
-    calculateStorageToIncinerationKg({ shift: shifts.storageToIncineration, wasteType }),
-    calculateIncinerationToMaterialRecoveryKg({
-      shift: shifts.incinerationToMaterialRecovery,
-      wasteType,
-    }),
-    calculateStorageToMaterialRecoveryKg({ shift: shifts.storageToMaterialRecovery, wasteType }),
-  ])
+  const storageToIncinerationKg = calculateStorageToIncinerationKg({
+    shift: shifts.storageToIncineration,
+    wasteType,
+  })
+  const incinerationToMaterialRecoveryKg = calculateIncinerationToMaterialRecoveryKg({
+    shift: shifts.incinerationToMaterialRecovery,
+    wasteType,
+  })
+  const storageToMaterialRecoveryKg = calculateStorageToMaterialRecoveryKg({
+    shift: shifts.storageToMaterialRecovery,
+    wasteType,
+  })
+  return sum([storageToIncinerationKg, incinerationToMaterialRecoveryKg, storageToMaterialRecoveryKg])
 }
 
 function calculateDechetsModeDeTraitementReduction({

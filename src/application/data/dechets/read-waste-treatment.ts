@@ -69,9 +69,9 @@ function readTreatmentFlows({
         ),
       ),
     )
-    .andThen((located) =>
+    .andThen((flowsWithCommune) =>
       Result.combine(
-        located.filter(({ commune }) => communes.has(commune)).map(({ row }) => toTreatmentFlow(row)),
+        flowsWithCommune.filter(({ commune }) => communes.has(commune)).map(({ row }) => toTreatmentFlow(row)),
       ),
     )
 }
@@ -101,7 +101,7 @@ function readEmissionFactors(
   return dataSource
     .rows(emissionFactorsDataset)
     .andThen((rows) => Result.combine(rows.map(toEmissionFactors)))
-    .map((entries) => new Map(entries))
+    .map((factorsByWasteCode) => new Map(factorsByWasteCode))
 }
 
 function tonnesOf({
@@ -124,13 +124,13 @@ function toWasteTypeTreatment({
   flows: readonly TreatmentFlow[]
   emissionFactors: ReadonlyMap<string, WasteEmissionFactors>
 }): WasteTypeTreatment {
-  const factors = emissionFactors.get(wasteCode)
+  const wasteFactors = emissionFactors.get(wasteCode)
   return {
     wasteCode,
     storageTonnes: tonnesOf({ flows, treatmentMode: 'storage' }),
     incinerationTonnes: tonnesOf({ flows, treatmentMode: 'incineration' }),
-    storageEmissionFactor: factors?.storage,
-    incinerationEmissionFactor: factors?.incineration,
+    storageEmissionFactor: wasteFactors?.storage,
+    incinerationEmissionFactor: wasteFactors?.incineration,
   }
 }
 
