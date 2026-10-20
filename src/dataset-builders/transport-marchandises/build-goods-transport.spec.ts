@@ -41,13 +41,13 @@ const BRETAGNE_TKM = tkmLine('Bretagne', '13.5')
 function build({
   tonneKilometresCsv = toTkmCsv(BRETAGNE_TKM),
   fleetCsv,
-  ominenaCsv = OMINEA_CSV,
+  omineaCsv = OMINEA_CSV,
 }: {
   tonneKilometresCsv?: string
   fleetCsv: string
-  ominenaCsv?: string
+  omineaCsv?: string
 }) {
-  return buildGoodsTransport({ tonneKilometresCsv, fleetCsv, ominenaCsv })
+  return buildGoodsTransport({ tonneKilometresCsv, fleetCsv, omineaCsv })
 }
 
 const BRETAGNE_FLEET = toFleetCsv(
@@ -55,7 +55,7 @@ const BRETAGNE_FLEET = toFleetCsv(
   "53,Diesel HNR,Crit'Air 3,100",
   "53,Diesel,Crit'Air 5,100",
   "53,Diesel,Non classé,100",
-  '53,Electrique,Crit\'Air E,10',
+  "53,Electrique,Crit'Air E,10",
   "53,Hydrogène et autre ZE,Crit'Air E,5",
   "53,Essence,Crit'Air 1,5",
 )
@@ -155,7 +155,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        ominenaCsv: [OMINEA_HEADER, '070301PL,Euro VI,205,CO2,g/(veh.km),700'].join('\n'),
+        omineaCsv: [OMINEA_HEADER, '070301PL,Euro VI,205,CO2,g/(veh.km),700'].join('\n'),
       })._unsafeUnwrapErr(),
     ).toMatchObject({
       dataset: 'transport-marchandises/sources/ominea-co2-poids-lourds-diesel-g-par-vehicule-km-2024.csv',
@@ -164,11 +164,11 @@ describe('buildGoodsTransport', () => {
   })
 
   it('refuse un facteur OMINEA qui n’est pas un nombre', () => {
-    const ominenaCsv = [
+    const omineaCsv = [
       OMINEA_HEADER,
       ...EURO_FACTORS.map(([snap, rubric]) => `${snap},${rubric},205,CO2,g/(veh.km),beaucoup`),
     ].join('\n')
-    expect(build({ fleetCsv: BRETAGNE_FLEET, ominenaCsv })._unsafeUnwrapErr()).toMatchObject({
+    expect(build({ fleetCsv: BRETAGNE_FLEET, omineaCsv })._unsafeUnwrapErr()).toMatchObject({
       reason: 'unreadable',
       detail: 'valeur_2024=beaucoup is not a decimal number',
     })
@@ -178,7 +178,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        ominenaCsv: 'snap,rubric\n070301PL,Euro VI',
+        omineaCsv: 'snap,rubric\n070301PL,Euro VI',
       })._unsafeUnwrapErr(),
     ).toMatchObject({ reason: 'columns_mismatch', detail: 'valeur_2024' })
   })
@@ -186,7 +186,7 @@ describe('buildGoodsTransport', () => {
   it.each([
     ['tonnes.kilomètres', { tonneKilometresCsv: 'a,b\n1,2,3' }],
     ['parc', { fleetCsv: 'a,b\n1,2,3' }],
-    ['OMINEA', { ominenaCsv: 'a,b\n1,2,3' }],
+    ['OMINEA', { omineaCsv: 'a,b\n1,2,3' }],
   ])('refuse un relevé de %s mal formé', (_label, override) => {
     expect(build({ fleetCsv: BRETAGNE_FLEET, ...override })._unsafeUnwrapErr()).toMatchObject({
       reason: 'malformed_csv',

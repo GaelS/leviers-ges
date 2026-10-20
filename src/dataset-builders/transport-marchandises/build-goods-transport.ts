@@ -150,20 +150,24 @@ function toRegionLine({
       invalidDataset({ dataset: fleetDataset, reason: 'missing_key_column', detail: regionCode }),
     )
   }
-  const weightedEmissions = sum(
-    classifiedFleet.map(({ vehicles, euroFactor }) => vehicles.times(euroFactor)),
+  const weightedEmissionsByFleet = classifiedFleet.map(({ vehicles, euroFactor }) =>
+    vehicles.times(euroFactor),
   )
-  const unclassifiedVehicles = countVehicles(dieselFleet).minus(classifiedVehicles)
+  const weightedEmissions = sum(weightedEmissionsByFleet)
+  const dieselVehicles = countVehicles(dieselFleet)
+  const unclassifiedVehicles = dieselVehicles.minus(classifiedVehicles)
+  const averageEmissionFactor = weightedEmissions.dividedBy(classifiedVehicles)
+  const unclassifiedShare = unclassifiedVehicles.dividedBy(dieselVehicles)
   return Result.combine([
     roundToLoaderPrecision({
       dataset: regionsDataset,
       column: 'diesel_emission_factor_g_per_vehicle_km',
-      text: weightedEmissions.dividedBy(classifiedVehicles).toFixed(),
+      text: averageEmissionFactor.toFixed(),
     }),
     roundToLoaderPrecision({
       dataset: regionsDataset,
       column: 'diesel_unclassified_share',
-      text: unclassifiedVehicles.dividedBy(countVehicles(dieselFleet)).toFixed(),
+      text: unclassifiedShare.toFixed(),
     }),
   ]).map(([dieselEmissionFactor, dieselUnclassifiedShare]) => ({
     regionCode,
@@ -175,31 +179,30 @@ function toRegionLine({
   }))
 }
 
-function toTotals(lines: readonly RegionLine[]): Readonly<Record<string, string>> {
+function toTotals(regionLines: readonly RegionLine[]): Readonly<Record<string, string>> {
+  const billionTonneKilometres = regionLines.map((line) => toBig(line.billionTonneKilometres))
+  const heavyVehicleFleets = regionLines.map((line) => line.heavyVehicleFleet)
+  const zeroEmissionFleets = regionLines.map((line) => line.zeroEmissionFleet)
   return {
-    billion_tonne_kilometres: sum(
-      lines.map(({ billionTonneKilometres }) => toBig(billionTonneKilometres)),
-    ).toFixed(),
-    heavy_vehicle_fleet: sum(lines.map(({ heavyVehicleFleet }) => heavyVehicleFleet)).toFixed(),
-    zero_emission_heavy_vehicle_fleet: sum(
-      lines.map(({ zeroEmissionFleet }) => zeroEmissionFleet),
-    ).toFixed(),
+    billion_tonne_kilometres: sum(billionTonneKilometres).toFixed(),
+    heavy_vehicle_fleet: sum(heavyVehicleFleets).toFixed(),
+    zero_emission_heavy_vehicle_fleet: sum(zeroEmissionFleets).toFixed(),
   }
 }
 
 function buildGoodsTransport({
   tonneKilometresCsv,
   fleetCsv,
-  ominenaCsv,
+  omineaCsv,
 }: {
   tonneKilometresCsv: string
   fleetCsv: string
-  ominenaCsv: string
+  omineaCsv: string
 }): Result<GoodsTransportBuild, InvalidDataset> {
   return Result.combine([
     readTonneKilometres(tonneKilometresCsv),
     readFleet(fleetCsv),
-    readEuroFactors(ominenaCsv),
+    readEuroFactors(omineaCsv),
   ])
     .andThen(([regionTonneKilometres, fleet, euroFactors]) => {
       const fleetByRegion = groupBy(fleet, ({ regionCode }) => regionCode)
@@ -213,12 +216,12 @@ function buildGoodsTransport({
         ),
       )
     })
-    .map((lines) => sortBy(lines, [({ regionCode }) => regionCode]))
-    .andThen((lines) =>
+    .map((regionLines) => sortBy(regionLines, [({ regionCode }) => regionCode]))
+    .andThen((regionLines) =>
       toCsvText({
         dataset: regionsDataset,
         columns: REGION_COLUMNS,
-        rows: lines.map((line) => [
+        rows: regionLines.map((line) => [
           line.regionCode,
           line.billionTonneKilometres,
           line.heavyVehicleFleet.toFixed(),
@@ -226,7 +229,11 @@ function buildGoodsTransport({
           line.dieselEmissionFactor,
           line.dieselUnclassifiedShare,
         ]),
-      }).map((csv) => ({ csv, regionCount: lines.length, totals: toTotals(lines) })),
+      }).map((csv) => ({
+        csv,
+        regionCount: regionLines.length,
+        totals: toTotals(regionLines),
+      })),
     )
 }
 

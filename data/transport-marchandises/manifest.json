@@ -2,7 +2,7 @@
   "datasets": [
     {
       "file": "regions.csv",
-      "source": "SDES, « Le TRM des pavillons européens en 2024 » (feuille reg_type_flux) : tonnes.kilomètres rapportées à la région, avec l'international (trafic interne plus 50 % du trafic chargé ou déchargé dans la région, y compris vers l'étranger), 13 régions de France métropolitaine ; SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024, poids lourds par région, carburant et vignette Crit'Air ; OMINEA 2024 du CITEPA, CO2 des poids lourds diesel, longues distances (SNAP 070301PL et 070302PL), norme Euro choisie par vignette. Parc immatriculé dans la région, pas circulant. Construit par pnpm build:data:transport-marchandises",
+      "source": "SDES, « Le TRM des pavillons européens en 2024 » (feuille reg_type_flux) : tonnes.kilomètres rapportées à la région, avec l'international (trafic interne plus 50 % du trafic chargé ou déchargé dans la région, y compris vers l'étranger), 13 régions de France métropolitaine ; SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024, poids lourds par région, carburant et vignette Crit'Air ; OMINEA 2024 du CITEPA, CO2 des poids lourds diesel, longues distances (SNAP 070301PL et 070302PL), norme Euro choisie par vignette. Parc immatriculé dans la région, pas circulant ; le biodiesel (2 485 poids lourds au niveau national) est compté dans le parc mais pas dans la moyenne diesel (le tableur ne regroupe que Diesel, Diesel HNR et Diesel HR) ; les 6,7 milliards de t.km à région « non précisé » et celles des DOM ne vont dans aucune des 13 régions. Construit par pnpm build:data:transport-marchandises",
       "link": "https://www.statistiques.developpement-durable.gouv.fr/",
       "vintage": "tonnes.kilomètres 2024, parc au 1er janvier 2024, OMINEA 2024",
       "retrievedOn": "2026-10-20",
@@ -20,7 +20,7 @@
         },
         {
           "name": "heavy_vehicle_fleet",
-          "unit": "poids lourds immatriculés dans la région au 1er janvier 2024, tous carburants"
+          "unit": "poids lourds immatriculés dans la région au 1er janvier 2024, tous carburants (biodiesel compris)"
         },
         {
           "name": "zero_emission_heavy_vehicle_fleet",

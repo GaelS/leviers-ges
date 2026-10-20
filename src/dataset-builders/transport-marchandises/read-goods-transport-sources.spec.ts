@@ -22,7 +22,7 @@ describe('readGoodsTransportSources', () => {
     expect({
       tonneKilometres: sources.tonneKilometresCsv.slice(0, 6),
       fleet: sources.fleetCsv.slice(0, 11),
-      ominea: sources.ominenaCsv.slice(0, 4),
+      ominea: sources.omineaCsv.slice(0, 4),
     }).toEqual({ tonneKilometres: 'region', fleet: 'code_region', ominea: 'snap' })
   })
 

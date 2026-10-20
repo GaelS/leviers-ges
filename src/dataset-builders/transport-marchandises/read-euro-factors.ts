@@ -6,7 +6,7 @@ import { invalidDataset, type DataRow, type InvalidDataset } from '../../domain/
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
 
-const ominenaDataset = 'transport-marchandises/sources/ominea-co2-poids-lourds-diesel-g-par-vehicule-km-2024.csv'
+const omineaDataset = 'transport-marchandises/sources/ominea-co2-poids-lourds-diesel-g-par-vehicule-km-2024.csv'
 
 // Source : tableur PlanET V1, FE_transports!G42:K75 : norme Euro des poids lourds diesel pour chaque vignette Crit'Air (Crit'Air E, non classé et inconnu n'en ont pas)
 const EURO_STANDARD_BY_CRIT_AIR: ReadonlyMap<string, string> = new Map([
@@ -32,7 +32,7 @@ function findFactor({
   snapCode: string
   euroStandard: string
 }): Result<BigNumber, InvalidDataset> {
-  const dataset = ominenaDataset
+  const dataset = omineaDataset
   const row = rows.find((candidate) => candidate['snap'] === snapCode && candidate['rubric'] === euroStandard)
   if (row === undefined) {
     return err(
@@ -57,18 +57,17 @@ function calculateLongDistanceFactor({
   rows: readonly DataRow[]
   euroStandard: string
 }): Result<BigNumber, InvalidDataset> {
-  return Result.combine(
-    [...LONG_DISTANCE_SNAP_WEIGHTS].map(([snapCode, weight]) =>
-      findFactor({ rows, snapCode, euroStandard }).map((factor) => factor.times(weight)),
-    ),
-  ).map(sum)
+  const weightedFactors = [...LONG_DISTANCE_SNAP_WEIGHTS].map(([snapCode, weight]) =>
+    findFactor({ rows, snapCode, euroStandard }).map((factor) => factor.times(weight)),
+  )
+  return Result.combine(weightedFactors).map(sum)
 }
 
 function readEuroFactors(
-  ominenaCsv: string,
+  omineaCsv: string,
 ): Result<ReadonlyMap<string, BigNumber>, InvalidDataset> {
-  return parseCsvText({ text: ominenaCsv, delimiter: ',' })
-    .mapErr(toInvalidDataset(ominenaDataset))
+  return parseCsvText({ text: omineaCsv, delimiter: ',' })
+    .mapErr(toInvalidDataset(omineaDataset))
     .andThen((rows) =>
       Result.combine(
         [...EURO_STANDARD_BY_CRIT_AIR].map(([critAir, euroStandard]) =>
