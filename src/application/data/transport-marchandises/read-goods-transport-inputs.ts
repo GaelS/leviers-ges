@@ -19,10 +19,14 @@ function readGoodsTransportInputs({
   const dataset = regionsDataset
   return dataSource.row(dataset, territory).andThen((row) =>
     Result.combine([
-      requireQuantityColumn<'Kilometres'>({ dataset, row, column: 'billion_tonne_kilometres' }),
+      requireQuantityColumn<'BillionTonneKilometres'>({
+        dataset,
+        row,
+        column: 'billion_tonne_kilometres',
+      }),
       requireQuantityColumn<'Vehicles'>({ dataset, row, column: 'heavy_vehicle_fleet' }),
       requireQuantityColumn<'Vehicles'>({ dataset, row, column: 'zero_emission_heavy_vehicle_fleet' }),
-      requireQuantityColumn<'Kilometres'>({
+      requireQuantityColumn<'GramsCo2ePerVehicleKilometre'>({
         dataset,
         row,
         column: 'diesel_emission_factor_g_per_vehicle_km',

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { DataRow } from '../../../domain/data-source.ts'
 import { territoryCodeSchema } from '../../../domain/territory.ts'
 import { createTemporaryCsvDataSource } from '../../../testing/temporary-csv-data-source.ts'
-import { getGoodsTransport } from './get-goods-transport-inputs.ts'
+import { getGoodsTransport } from './get-goods-transport.ts'
 
 const REGION_ROW: DataRow = {
   code_region: '84',

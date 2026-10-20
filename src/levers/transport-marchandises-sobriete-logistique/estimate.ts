@@ -1,5 +1,5 @@
 import type { Result } from 'neverthrow'
-import { getGoodsTransport } from '../../application/data/transport-marchandises/get-goods-transport-inputs.ts'
+import { getGoodsTransport } from '../../application/data/transport-marchandises/get-goods-transport.ts'
 import { toGoodsTransportAssumptions } from '../../application/data/transport-marchandises/to-goods-transport-assumptions.ts'
 import type { EstimationContext } from '../../application/estimate/estimation-context.ts'
 import {

@@ -74,8 +74,9 @@ describe('estimate, transport_marchandises_sobriete_logistique', () => {
     expect(Object.keys(appliedAssumptions)).toEqual([
       'includeInternationalFlows',
       'heavyVehicleTripType',
+      'heavyVehicleThermalEmissionFactor',
       'heavyVehicleLoadFactor',
-      'heavyVehicleFleet',
+      'dieselUnclassifiedShare',
       'electricHeavyVehicleEmissionFactor',
     ])
   })

@@ -8,6 +8,8 @@ type UnitName =
   | 'Kilometres'
   | 'Tonnes'
   | 'TonneKilometres'
+  | 'BillionTonneKilometres'
+  | 'GramsCo2ePerVehicleKilometre'
   | 'Hectares'
   | 'TCo2ePerKmPerYear'
   | 'MegawattHours'
@@ -33,6 +35,8 @@ type Fraction = Quantity<'Fraction'>
 type Kilometres = Quantity<'Kilometres'>
 type Tonnes = Quantity<'Tonnes'>
 type TonneKilometres = Quantity<'TonneKilometres'>
+type BillionTonneKilometres = Quantity<'BillionTonneKilometres'>
+type GramsCo2ePerVehicleKilometre = Quantity<'GramsCo2ePerVehicleKilometre'>
 type Hectares = Quantity<'Hectares'>
 type TCo2ePerKmPerYear = Quantity<'TCo2ePerKmPerYear'>
 type MegawattHours = Quantity<'MegawattHours'>
@@ -74,7 +78,9 @@ function parseFraction(value: string): Result<Fraction, InvalidParameter> {
 
 export { gigawattHoursToMegawattHours, parseFraction, quantity }
 export type {
+  BillionTonneKilometres,
   Fraction,
+  GramsCo2ePerVehicleKilometre,
   GigawattHours,
   Hectares,
   Heads,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { calculateHeavyVehicleEmissionFactors } from '../../../domain/heavy-vehicle-emission-factor.ts'
 import { quantity } from '../../../domain/units.ts'
-import type { GoodsTransport } from './get-goods-transport-inputs.ts'
+import type { GoodsTransport } from './get-goods-transport.ts'
 import { toGoodsTransportAssumptions } from './to-goods-transport-assumptions.ts'
 
 const INPUTS = {
@@ -22,16 +22,18 @@ const GOODS_TRANSPORT: GoodsTransport = {
 }
 
 describe('toGoodsTransportAssumptions', () => {
-  it('renvoie les cinq hypothèses avec leurs valeurs', () => {
+  it('renvoie les hypothèses avec leurs valeurs', () => {
     const assumptions = toGoodsTransportAssumptions(GOODS_TRANSPORT)
     expect({
-      factor: assumptions['heavyVehicleTripType']?.value,
+      tripType: assumptions['heavyVehicleTripType']?.value,
+      factor: assumptions['heavyVehicleThermalEmissionFactor']?.value,
       loading: assumptions['heavyVehicleLoadFactor']?.value,
-      unclassified: assumptions['heavyVehicleFleet']?.value,
+      unclassified: assumptions['dieselUnclassifiedShare']?.value,
       electric: assumptions['electricHeavyVehicleEmissionFactor']?.value,
       flows: assumptions['includeInternationalFlows']?.limit,
     }).toEqual({
-      factor: '0.1 kgCO2e per tonne-km for diesel heavy vehicles',
+      tripType: 'long distance, diesel heavy vehicles of the region',
+      factor: '0.1',
       loading: '8.1',
       unclassified: '0.09',
       electric: '0.0467',

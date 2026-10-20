@@ -73,7 +73,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_sobriete_logistique` | taux de chargement des poids lourds (`heavyVehicleLoadFactor`) | ADEME | 8,1 t | 8,7 t en cible 2030 : −7 % sur le facteur par t.km |
 | `transport_marchandises_sobriete_logistique` | courte ou longue distance, parc de la région (`heavyVehicleTripType`) | ADEME | longue distance | la courte distance donne un facteur de 32 % plus haut |
 | `transport_marchandises_sobriete_logistique` | t.km avec ou sans l'étranger (`includeInternationalFlows`) | ADEME | avec l'étranger | 239,97 contre 171,71 milliards de t.km |
-| `transport_marchandises_sobriete_logistique` | facteur thermique : CO2 seul, Euro choisi par Crit'Air, vignettes 1 à 5 seulement | Conception | OMINEA 2024, 6 à 14 % du parc diesel écarté | CH4 et N2O ajouteraient 1,7 % |
+| `transport_marchandises_sobriete_logistique` | facteur thermique : CO2 seul, Euro choisi par Crit'Air, vignettes 1 à 5 seulement | Conception | OMINEA 2024, 3 à 14 % du parc diesel écarté | CH4 et N2O ajouteraient 1,7 % |
 | `transport_marchandises_sobriete_logistique` | hydrogène et autres zéro émission avec l'électrique | Conception | facteur électrique (0,0467) | 907 poids lourds en métropole |
 | `transport_marchandises_sobriete_logistique` | parc immatriculé dans la région | Conception | parc de la région | le parc circulant diffère |
 
