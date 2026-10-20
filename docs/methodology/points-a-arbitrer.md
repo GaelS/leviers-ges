@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 11 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 12 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
 
 Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `assumptions.md` ; ce registre en recoupe quelques-unes (`wasteScope`, `passengerCarLastLineKept`, `railElectricityUpstreamShare`). Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`. Les limites de données sans décision à prendre restent dans le `methodology.md` du levier.
 
@@ -30,6 +30,11 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `batiments_machines_agricoles` | facteur du fioul lourd appliqué à tous les produits pétroliers | ADEME | fioul lourd, comme la forme | OMINEA donne 74,52 et 72,48 pour les engins agricoles : le fioul lourd (78) est 4,7 % et 7,6 % plus haut |
 | `batiments_machines_agricoles` | produits pétroliers et chaleur répartis par la part de SAU | Conception | part de SAU du territoire dans chaque région | la part de SAU s'écarte de celle du gazole non routier de 3,0 points en médiane, 11,6 au 90e centile |
 | `batiments_machines_agricoles` | somme des EPCI inférieure de 110 tCO2e aux 13 régions (produits pétroliers) | Conception | cause non établie | 110 sur 12 333 751 tCO2e |
+| `fertilisation_azotee` | campagnes : moyenne de deux ans pour une région, une seule campagne pour un département (`nitrogenCampaigns`) | ADEME | 2021-2022 et 2022-2023 en région, 2021-2022 au département | le tableur demande la moyenne sur deux ans ; le rapport départemental 2022-2023 n'est pas publié |
+| `fertilisation_azotee` | livré pris pour épandu | ADEME | livraisons, comme le tableur | Paris reçoit 17 415 t d'azote pour 1 ha de SAU |
+| `fertilisation_azotee` | Corse départementale | Conception | 2A et 2B sans résultat (`missing_data`) | la Corse est publiée sous le code 20 sans distinguer 2A et 2B |
+| `fertilisation_azotee` | facteur d'émission national, incertitude de 400 % | ADEME | 5,733 kgCO2e/kg d'azote pour tous les territoires | un facteur par territoire n'existe pas dans la Base Empreinte |
+| `fertilisation_azotee` | borne de la réduction | ADEME | 0 à 1 | une ancienne note citait 25 % (surplus national d'azote, ClimAgri), absente du tableur actuel |
 | `batiments_machines_agricoles` | gaz en PCS ou PCI | Conception | PCI | écart de 10 % sur 3,0 % de l'énergie du secteur |
 | `batiments_machines_agricoles` | territoire sans SAU | Conception | produits pétroliers et chaleur nuls, électricité et gaz conservés, sans signal dans le résultat | région sans SAU (aucune en métropole), département ou EPCI urbain |
 | `batiments_machines_agricoles` | secret statistique et communes sans ligne de SAU | Conception | lignes secrètes à 0 ; 1 384 communes sans SAU lues comme nulles | électricité : 38 % des lignes IRIS sous secret ; gaz : 66 % |
@@ -104,4 +109,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les six leviers calculables restants (fertilisation azotée, élevage durable, transport de marchandises) ajouteront leurs lignes à leur PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les cinq leviers calculables restants (élevage durable, transport de marchandises) ajouteront leurs lignes à leur PR.

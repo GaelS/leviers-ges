@@ -4,6 +4,7 @@ import { invalidRequest, type InvalidRequest } from '../application/estimate/est
 import { batimentsMachinesAgricolesRequestSchema } from '../levers/batiments-machines-agricoles/index.ts'
 import { dechetsModeDeTraitementRequestSchema } from '../levers/dechets-mode-de-traitement/index.ts'
 import { dechetsSobrieteRequestSchema } from '../levers/dechets-sobriete/index.ts'
+import { fertilisationAzoteeRequestSchema } from '../levers/fertilisation-azotee/index.ts'
 import { haiesRequestSchema } from '../levers/haies/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
@@ -17,6 +18,7 @@ const requestSchema = z.discriminatedUnion('id', [
   batimentsMachinesAgricolesRequestSchema,
   dechetsModeDeTraitementRequestSchema,
   dechetsSobrieteRequestSchema,
+  fertilisationAzoteeRequestSchema,
   haiesRequestSchema,
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,

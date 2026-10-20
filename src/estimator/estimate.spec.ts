@@ -770,6 +770,53 @@ describe('estimate', () => {
     })
   })
 
+  describe('fertilisation_azotee', () => {
+    const withNitrogen = createEstimator(
+      createTemporaryCsvDataSource({
+        'fertilisation-azotee/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              nitrogen_delivered_tonnes_2021_2022: '1000',
+              nitrogen_delivered_tonnes_2022_2023: '1000',
+            },
+          ],
+        },
+      }),
+    )
+
+    function fertilisationAzoteeRequest(nitrogenReductionFraction: string): RequestInput {
+      return {
+        id: 'fertilisation_azotee',
+        territory: { level: 'region', code: '84' },
+        parameters: { nitrogenReductionFraction },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 t d’azote, toutes supprimées, évitent 5 733 tCO2e', () => {
+      const result = withNitrogen(fertilisationAzoteeRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5733')
+    })
+
+    it('refuse un EPCI, niveau non calculé', () => {
+      const result = withNitrogen({
+        id: 'fertilisation_azotee',
+        territory: { level: 'epci', code: '200000001' },
+        parameters: { nitrogenReductionFraction: '0.1' },
+      })
+      expect(result._unsafeUnwrapErr()).toMatchObject({ kind: 'level_not_computed' })
+    })
+
+    it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
+      expect(withNitrogen(fertilisationAzoteeRequest(reduction))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.nitrogenReductionFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)

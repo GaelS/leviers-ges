@@ -16,6 +16,10 @@ import {
   estimate as estimateDechetsSobriete,
   type DechetsSobrieteRequestInput,
 } from '../levers/dechets-sobriete/index.ts'
+import {
+  estimate as estimateFertilisationAzotee,
+  type FertilisationAzoteeRequestInput,
+} from '../levers/fertilisation-azotee/index.ts'
 import { type HaiesRequestInput, estimate as estimateHaies } from '../levers/haies/index.ts'
 import {
   estimate as estimateProduitsBois,
@@ -52,6 +56,7 @@ type RequestInput =
   | BatimentsMachinesAgricolesRequestInput
   | DechetsModeDeTraitementRequestInput
   | DechetsSobrieteRequestInput
+  | FertilisationAzoteeRequestInput
   | HaiesRequestInput
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
@@ -89,6 +94,11 @@ function createEstimator(dataSource: DataSource): Estimator {
         .with({ id: 'dechets_sobriete' }, (dechetsSobrieteRequest) =>
           estimateOnComputedLevel(dechetsSobrieteRequest, (computedLevelRequest) =>
             estimateDechetsSobriete(computedLevelRequest, context),
+          ),
+        )
+        .with({ id: 'fertilisation_azotee' }, (fertilisationAzoteeRequest) =>
+          estimateOnComputedLevel(fertilisationAzoteeRequest, (computedLevelRequest) =>
+            estimateFertilisationAzotee(computedLevelRequest, context),
           ),
         )
         .with({ id: 'haies' }, (haiesRequest) => ok(estimateHaies(haiesRequest)))
