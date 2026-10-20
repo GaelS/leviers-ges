@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { invalidRequest, type InvalidRequest } from '../application/estimate/estimation-error.ts'
 import { batimentsMachinesAgricolesRequestSchema } from '../levers/batiments-machines-agricoles/index.ts'
 import { dechetsModeDeTraitementRequestSchema } from '../levers/dechets-mode-de-traitement/index.ts'
+import { dechetsSobrieteRequestSchema } from '../levers/dechets-sobriete/index.ts'
 import { haiesRequestSchema } from '../levers/haies/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
@@ -15,6 +16,7 @@ import { transportPersonnesEfficaciteRequestSchema } from '../levers/transport-p
 const requestSchema = z.discriminatedUnion('id', [
   batimentsMachinesAgricolesRequestSchema,
   dechetsModeDeTraitementRequestSchema,
+  dechetsSobrieteRequestSchema,
   haiesRequestSchema,
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
