@@ -1,7 +1,13 @@
 import type BigNumber from 'bignumber.js'
 import { sum } from '../../domain/big-number.ts'
 import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
-import { quantity, type Fraction, type TonnesCo2ePerYear } from '../../domain/units.ts'
+import {
+  quantity,
+  type Fraction,
+  type KgCo2ePerTonne,
+  type Tonnes,
+  type TonnesCo2ePerYear,
+} from '../../domain/units.ts'
 import { NO_EMISSIONS_KG, type WasteTypeTreatment } from '../../domain/waste-treatment.ts'
 
 type WasteReductions = {
@@ -9,30 +15,18 @@ type WasteReductions = {
   readonly incineration: Fraction
 }
 
-function calculateStorageReductionKg({
+function calculateReductionKg({
   reduction,
-  wasteType,
+  tonnes,
+  emissionFactor,
 }: {
   reduction: Fraction
-  wasteType: WasteTypeTreatment
+  tonnes: Tonnes
+  emissionFactor: KgCo2ePerTonne | undefined
 }): BigNumber {
-  const { storageTonnes, storageEmissionFactor } = wasteType
-  if (storageEmissionFactor === undefined) return NO_EMISSIONS_KG
-  const reducedTonnes = storageTonnes.times(reduction)
-  return reducedTonnes.times(storageEmissionFactor)
-}
-
-function calculateIncinerationReductionKg({
-  reduction,
-  wasteType,
-}: {
-  reduction: Fraction
-  wasteType: WasteTypeTreatment
-}): BigNumber {
-  const { incinerationTonnes, incinerationEmissionFactor } = wasteType
-  if (incinerationEmissionFactor === undefined) return NO_EMISSIONS_KG
-  const reducedTonnes = incinerationTonnes.times(reduction)
-  return reducedTonnes.times(incinerationEmissionFactor)
+  if (emissionFactor === undefined) return NO_EMISSIONS_KG
+  const reducedTonnes = tonnes.times(reduction)
+  return reducedTonnes.times(emissionFactor)
 }
 
 function calculateWasteTypeAvoidedKg({
@@ -42,13 +36,15 @@ function calculateWasteTypeAvoidedKg({
   reductions: WasteReductions
   wasteType: WasteTypeTreatment
 }): BigNumber {
-  const storageReductionKg = calculateStorageReductionKg({
+  const storageReductionKg = calculateReductionKg({
     reduction: reductions.storage,
-    wasteType,
+    tonnes: wasteType.storageTonnes,
+    emissionFactor: wasteType.storageEmissionFactor,
   })
-  const incinerationReductionKg = calculateIncinerationReductionKg({
+  const incinerationReductionKg = calculateReductionKg({
     reduction: reductions.incineration,
-    wasteType,
+    tonnes: wasteType.incinerationTonnes,
+    emissionFactor: wasteType.incinerationEmissionFactor,
   })
   return sum([storageReductionKg, incinerationReductionKg])
 }

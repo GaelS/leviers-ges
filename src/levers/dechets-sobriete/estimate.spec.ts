@@ -15,7 +15,7 @@ import {
   type DechetsSobrieteRequest,
 } from './dechets-sobriete-request.ts'
 
-type Parameters = {
+type ReductionParameters = {
   readonly storageReductionFraction: string
   readonly incinerationReductionFraction: string
 }
@@ -26,7 +26,17 @@ const COMMUNES: readonly DataRow[] = [
   { code_commune: '75056', code_epci: '200000003', code_departement: '75', code_region: '11' },
 ]
 
-function flow(commune: string, wasteCode: string, mode: string, tonnes: string): DataRow {
+function flow({
+  commune,
+  wasteCode,
+  mode,
+  tonnes,
+}: {
+  commune: string
+  wasteCode: string
+  mode: string
+  tonnes: string
+}): DataRow {
   return {
     flow_id: `${commune}:${wasteCode}:${mode}`,
     commune_code: commune,
@@ -41,11 +51,11 @@ const FIXTURES: Readonly<Record<string, DatasetFixture>> = {
   'dechets/treatment-flows': {
     keyColumn: 'flow_id',
     rows: [
-      flow('01001', '20 03 01', 'storage', '100'),
-      flow('01001', '20 03 01', 'incineration', '200'),
-      flow('01002', '20 03 01', 'storage', '50'),
-      flow('01002', '20 02 02', 'storage', '1000'),
-      flow('75056', '20 03 01', 'incineration', '400'),
+      flow({ commune: '01001', wasteCode: '20 03 01', mode: 'storage', tonnes: '100' }),
+      flow({ commune: '01001', wasteCode: '20 03 01', mode: 'incineration', tonnes: '200' }),
+      flow({ commune: '01002', wasteCode: '20 03 01', mode: 'storage', tonnes: '50' }),
+      flow({ commune: '01002', wasteCode: '20 02 02', mode: 'storage', tonnes: '1000' }),
+      flow({ commune: '75056', wasteCode: '20 03 01', mode: 'incineration', tonnes: '400' }),
     ],
   },
   'dechets/emission-factors': {
@@ -74,7 +84,7 @@ function toEstimator(dataSource: DataSource): Estimator {
   return (request) => estimateDechetsSobriete(request, context)
 }
 
-const REDUCTIONS: Parameters = {
+const REDUCTIONS: ReductionParameters = {
   storageReductionFraction: '0.5',
   incinerationReductionFraction: '0.1',
 }
@@ -82,7 +92,7 @@ const REDUCTIONS: Parameters = {
 function request(
   level: ComputedLevels<'dechets_sobriete'>,
   code: string,
-  parameters: Parameters = REDUCTIONS,
+  parameters: ReductionParameters = REDUCTIONS,
 ): DechetsSobrieteRequest {
   const parsed = dechetsSobrieteRequestSchema.parse({
     id: 'dechets_sobriete',
@@ -110,7 +120,7 @@ describe('estimate, dechets_sobriete', () => {
         ...FIXTURES,
         'dechets/treatment-flows': {
           keyColumn: 'flow_id',
-          rows: [flow('75056', '20 03 01', 'incineration', '400')],
+          rows: [flow({ commune: '75056', wasteCode: '20 03 01', mode: 'incineration', tonnes: '400' })],
         },
       }),
     )
@@ -144,7 +154,7 @@ describe('estimate, dechets_sobriete', () => {
         ...FIXTURES,
         'dechets/treatment-flows': {
           keyColumn: 'flow_id',
-          rows: [flow('01001', '20 03 01', 'storage', 'beaucoup')],
+          rows: [flow({ commune: '01001', wasteCode: '20 03 01', mode: 'storage', tonnes: 'beaucoup' })],
         },
       }),
     )
