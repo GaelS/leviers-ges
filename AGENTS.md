@@ -13,6 +13,7 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm test:coverage` | vitest, seuil de 100 % sur `src/` |
 | `pnpm build` | `dist/` (sans les constructeurs de données) |
 | `pnpm build:data:reseaux-chaleur` | reconstruit `data/reseaux-chaleur/networks.csv` depuis ses sources |
+| `pnpm build:data:dechets` | reconstruit `data/dechets/` (flux de traitement et facteurs d'émission) depuis ses sources |
 
 Une PR passe les quatre premières.
 
