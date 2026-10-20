@@ -209,3 +209,33 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
 | Valeurs sans source dans le classeur | 0,0791, 55,88, 78, 5,733, 1,17, 1,165, 0,0229, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |
+| Bornes et défauts des paramètres | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut ; `ParametreDeterminants` n'a aucune borne et ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1) ; `ElevageDurable!F19:F21` et `ProduitsBois!F19` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides | des bornes et des défauts donnés par le tableur |
+
+---
+
+## 4. Erreurs apparentes du tableur
+
+Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépend pas de la réponse, sauf mention.
+
+| Levier | Cellule | Constat | Ce que fait le code |
+|---|---|---|---|
+| `batiments_machines_agricoles`, `residentiel_sobriete` | forme « FE électricité * 67,4% » | coefficient sans cellule ni explication ; le facteur de base date de 2017 | repris tel quel (facteur 0,0533 au lieu de 0,0791 kgCO2e/kWh) |
+| `batiments_machines_agricoles` | `DonneesReference!D16` | demande de « convertir GJ en kWh » sans donner de nombre | 0,0036 GJ/kWh, conversion physique |
+| `elevage_durable` | prose de `ElevageDurable` | `− b ×` pour le N2O et rien sur les déjections ; ne donne pas zéro quand rien ne change | formule des formes dessinées, avec `(1 − b)` sur les déjections et le N2O |
+| `elevage_durable` | forme « dioxyde d'azote » | libellé pour la réduction de N2O | lu comme protoxyde d'azote (`DonneesReference!A14`) |
+| `elevage_durable` | `ParametreDeterminants!D9` | annonce un encadrement de la baisse du facteur entérique sans le donner | borne de 0 à 1 |
+| `elevage_durable` | `DonneesReference!K10` et `K14` | « p. 28 du Secten » ; le code cite la page 34 | valeurs 28 et 265, identiques |
+| `produits_bois` | `DonneesReference!E21`, `K21`, `K22` | « OMINEA 2025, tableau 83, p. 131 » | OMINEA 2026, tableau 45, p. 97 |
+| `residentiel_sobriete` | `Residentiel_Sobriete!A20`, `ParametreDeterminants!E49` | le paramètre de baisse de consommation est rattaché au levier « Tertiaire - Sobriété des bâtiments » | utilisé pour ce levier |
+| `residentiel_sobriete` | `Residentiel_Sobriete!D33` | facteur du réseau de chaleur en « g éq. CO2/kWh » alors que les valeurs du SDES (0 à 0,50) sont des kg/kWh | lu en kg/kWh ; lu en g, il serait 1 000 fois plus petit |
+| `residentiel_sobriete` | `Residentiel_Sobriete!A25` | parc de logements listé comme donnée de territoire, absent de la formule | non utilisé |
+| `transport_personnes_efficacite` | `TrsptPers_Efficacité!B13` | le texte dit que la baisse totale est une somme, le dessin la calcule comme un produit | produit : 15,9 % de baisse contre 16,6 % dans un cas de test |
+| `transport_personnes_efficacite` | `ParametreDeterminants!B30:B33` | même abréviation pour deux paramètres (« % Application de l'éco conduite voyageurs », « % Augmentation nombre de voyageurs par véhicule ») | un paramètre par mode |
+| `transport_personnes_efficacite` | `DonneesReference!D29` | deux potentiels d'écoconduite pour une seule ligne, dont la valeur est dans la colonne des commentaires | 15 % pour les voitures et les bus |
+| `transport_personnes_efficacite` | `TrsptPers_Efficacité!A37` | « Taux de remplissage moyen des VP autres trajets » listé, inutilisé par la formule | non utilisé |
+| `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | `TrsptPers_SobriétéDéplacements!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser (pour les voitures seulement) | division par 1,165, étendue au bus |
+| `transport_personnes_report_modal` | `ParametreDeterminants!H34` et `H35` | « inférieur à 100 % » sans dire strict ou large | 100 % accepté |
+| `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade | ignorée (+22 % si gardée, région 84) |
+| `transport_marchandises_efficacite` | `TrsptMarch_Efficacité!B13` | le texte dit « somme », le dessin donne un produit | produit : 15,9 % contre 16,6 % dans un cas de test |
+| `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 ne figurent dans aucun document REMOVE lu | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |
+| `transport_marchandises_electrification` | forme de `TrsptMarch_Electrification`, `DonneesReference!D38`, `C40`, `D27` | le dessin multiplie le facteur thermique par le taux de chargement ; `D38` l'exprime par véhicule.km alors que `C40` et `D27` le libellent en « kgeqCO2/t.km » | division par le taux de chargement : la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 |
