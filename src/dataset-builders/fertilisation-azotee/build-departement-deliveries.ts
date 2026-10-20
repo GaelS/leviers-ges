@@ -1,6 +1,6 @@
 import { sortBy } from 'es-toolkit'
 import { Result } from 'neverthrow'
-import { requireColumn } from '../../application/require-column.ts'
+import { requireNonEmptyColumn, requireColumn } from '../../application/require-column.ts'
 import { sum, toBig } from '../../domain/big-number.ts'
 import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
@@ -34,7 +34,7 @@ const DEPARTEMENT_CODE_LENGTH = 2
 function toDelivery(row: DataRow): Result<DepartementDelivery, InvalidDataset> {
   const dataset = departementDeliveriesDataset
   return Result.combine([
-    requireColumn({ dataset, row, column: 'code_departement' }),
+    requireNonEmptyColumn({ dataset, row, column: 'code_departement' }),
     requireColumn({ dataset, row, column: 'azote_total_t' }).andThen((text) =>
       roundToLoaderPrecision({ dataset, column: 'azote_total_t', text }),
     ),

@@ -21,9 +21,9 @@
       "sources": [
         {
           "file": "sources/azote-livre-par-region.csv",
-          "source": "Tableau extrait à la main des pages région des PDF UNIFA et France Fertilisants, colonne N (azote) de la ligne Total, campagnes 2014-2015 à 2022-2023 ; seules 2021-2022 et 2022-2023 servent",
+          "source": "Tableau extrait à la main des pages région des PDF UNIFA et France Fertilisants, colonne N (azote) de la ligne Total, campagnes 2021-2022 et 2022-2023 seules (les campagnes antérieures, dont les PDF ne sont pas versionnés, sont retirées)",
           "retrievedOn": "2026-10-07",
-          "checksum": "134dc454bbf0de6798650630d074fe8d7ca3b4a793b24670c66d8cc0d2aca5af"
+          "checksum": "069d869ac1a51bc464d5855e75bcae8e8d6753772e83a80c91ced1e038db8c82"
         },
         {
           "file": "sources/francefertilisants-livraisons-2022-2023-regions.pdf",

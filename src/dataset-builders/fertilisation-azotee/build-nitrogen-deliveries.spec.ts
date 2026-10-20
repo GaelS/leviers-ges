@@ -74,6 +74,24 @@ describe('buildNitrogenDeliveries, régions', () => {
     expect(regions.csv).toBe(`${REGION_COLUMNS}\n11,10,11\n`)
   })
 
+  it('refuse deux lignes de la même région pour la même campagne', () => {
+    expect(
+      buildNitrogenDeliveries({
+        regionDeliveriesCsv: toRegionCsv(
+          regionLine('2021-2022', '11', '1'),
+          regionLine('2021-2022', '11', '999'),
+          regionLine('2022-2023', '11', '2'),
+        ),
+        departementDeliveriesCsv: A_DEPARTEMENT_CSV,
+      })._unsafeUnwrapErr(),
+    ).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'fertilisation-azotee/sources/azote-livre-par-region.csv',
+      reason: 'duplicate_key',
+      detail: '11 2021-2022',
+    })
+  })
+
   it('refuse une région sans l’une des deux campagnes', () => {
     expect(
       buildNitrogenDeliveries({
@@ -135,7 +153,25 @@ describe('buildNitrogenDeliveries, départements', () => {
     const departements = departementsOf(
       toDepartementCsv(departementLine('1', '7'), departementLine(code, '100')),
     )
-    expect(departements.csv).toBe(`${DEPARTEMENT_COLUMNS}\n01,7\n`)
+    expect(departements).toEqual({
+      csv: `${DEPARTEMENT_COLUMNS}\n01,7\n`,
+      departementCount: 1,
+      tonnes: '7',
+    })
+  })
+
+  it('refuse un code de département vide', () => {
+    expect(
+      buildNitrogenDeliveries({
+        regionDeliveriesCsv: A_REGION_CSV,
+        departementDeliveriesCsv: toDepartementCsv(departementLine('', '7')),
+      })._unsafeUnwrapErr(),
+    ).toEqual({
+      kind: 'invalid_dataset',
+      dataset: 'fertilisation-azotee/sources/azote-livre-par-departement-2021-2022.csv',
+      reason: 'empty_key',
+      detail: 'code_departement',
+    })
   })
 
   it('refuse des tonnes qui ne sont pas un nombre', () => {

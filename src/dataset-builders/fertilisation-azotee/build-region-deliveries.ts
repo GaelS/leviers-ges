@@ -27,6 +27,9 @@ type RegionCampaign = {
   readonly tonnes: string
 }
 
+// Source : data/fertilisation-azotee/sources/azote-livre-par-region.csv : la ligne « France métropolitaine » de chaque campagne n'a pas de code de région
+const NATIONAL_LINE_REGION_CODE = ''
+
 const regionDeliveriesDataset = 'fertilisation-azotee/sources/azote-livre-par-region.csv'
 
 // Source : data/fertilisation-azotee/manifest.json, colonnes de regions.csv
@@ -39,8 +42,12 @@ const REGION_COLUMNS = [
 // Source : hypothèse nommée nitrogenCampaigns (docs/methodology/assumptions.md) : région, moyenne des campagnes 2021-2022 et 2022-2023 ; DonneesTerritoires!D8 : « Prendre la moyenne sur 2 ans »
 const FIRST_CAMPAIGN = '2021-2022'
 
-// Source : hypothèse nommée nitrogenCampaigns (docs/methodology/assumptions.md) : 2022-2023 est la dernière campagne publiée par région (2023-2024 et 2024-2025 ne le sont qu'au national)
+// Source : hypothèse nommée nitrogenCampaigns (docs/methodology/assumptions.md) : 2022-2023 est la dernière campagne retenue pour les régions
 const SECOND_CAMPAIGN = '2022-2023'
+
+function isNationalLine(regionCode: string): boolean {
+  return regionCode === NATIONAL_LINE_REGION_CODE
+}
 
 function toRegionCampaign(row: DataRow): Result<RegionCampaign, InvalidDataset> {
   const dataset = regionDeliveriesDataset
@@ -62,12 +69,13 @@ function tonnesOf({
   campaigns: readonly RegionCampaign[]
   campaign: string
 }): Result<string, InvalidDataset> {
-  const found = campaigns.find((candidate) => candidate.campaign === campaign)
-  if (found !== undefined) return ok(found.tonnes)
+  const sameCampaign = campaigns.filter((candidate) => candidate.campaign === campaign)
+  const [campaignDelivery, ...duplicates] = sameCampaign
+  if (campaignDelivery !== undefined && duplicates.length === 0) return ok(campaignDelivery.tonnes)
   return err(
     invalidDataset({
       dataset: regionDeliveriesDataset,
-      reason: 'missing_key_column',
+      reason: campaignDelivery === undefined ? 'missing_key_column' : 'duplicate_key',
       detail: `${regionCode} ${campaign}`,
     }),
   )
@@ -96,10 +104,10 @@ function buildRegionDeliveries(
   return parseCsvText({ text: regionDeliveriesCsv, delimiter: ',' })
     .mapErr(toInvalidDataset(regionDeliveriesDataset))
     .andThen((rows) => Result.combine(rows.map(toRegionCampaign)))
-    .map((campaigns) => campaigns.filter(({ regionCode }) => regionCode !== ''))
-    .andThen((regional) =>
+    .map((campaigns) => campaigns.filter(({ regionCode }) => !isNationalLine(regionCode)))
+    .andThen((regionalCampaigns) =>
       Result.combine(
-        Object.entries(groupBy(regional, ({ regionCode }) => regionCode)).map(
+        Object.entries(groupBy(regionalCampaigns, ({ regionCode }) => regionCode)).map(
           ([regionCode, campaigns]) => toRegionLine({ regionCode, campaigns }),
         ),
       ),
