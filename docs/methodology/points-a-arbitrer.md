@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 12 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 13 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
 
 Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `assumptions.md` ; ce registre en recoupe quelques-unes (`wasteScope`, `passengerCarLastLineKept`, `railElectricityUpstreamShare`). Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`. Les limites de données sans décision à prendre restent dans le `methodology.md` du levier.
 
@@ -48,6 +48,21 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `reseaux_chaleur` | deux sources de contenu CO2 pour un même réseau | Conception | France Chaleur Urbaine avant le SDES | pour 259 réseaux sur 821 l'écart dépasse 0,001 kgCO2e/kWh (29,9 % de l'énergie) |
 | `reseaux_chaleur` | livraisons SDES 2024 à la place de la bibliothèque FEDENE citée par le tableur (`G29`, derrière un formulaire) | ADEME | SDES | substitution de source |
 | `reseaux_chaleur`, `residentiel_sobriete` | réseaux de froid, réseaux sous secret, imputation à la commune d'implantation, arrondissements | Conception | réseaux de froid conservés (27 réseaux, 418 577 MWh) ; 140 réseaux sous secret exclus (1,4 % de la production) ; réseau imputé à sa commune ; arrondissements rapportés à leur commune | un département servi par un réseau implanté ailleurs n'en reçoit pas la chaleur |
+
+## Élevage
+
+| Levier | Point | Statut | Choix actuel | Effet |
+|---|---|---|---|---|
+| `elevage_durable` | niveau EPCI non calculé | Conception | `not_computed` (décision du 2026-10-20) | le fichier Agreste par EPCI se contredit sur les bovins (4,86 M de vaches laitières pour 3,48 M en France) et le secret retire 18 à 41 % des têtes ; la fiche d'analyse le jugeait faisable avec réserve |
+| `elevage_durable` | formule lue dans le dessin : `(1 − b)` sur les déjections et le N2O | ADEME | dessin retenu | la prose du tableur est incohérente (`− b ×` pour le N2O, rien sur les déjections) et ne donne pas zéro quand rien ne change |
+| `elevage_durable` | constantes OMINEA 2013 plutôt que 2026 | ADEME | 2013, comme `DonneesReference` | vache laitière : 121 contre 121,9 à 152,5 kg de CH4 ; excrétion azotée 115,6 contre 118,7 kg |
+| `elevage_durable` | facteurs de la méthanisation (`methanisationFactors`) | ADEME | OMINEA 2026 pour les bovins et les porcins, indisponible pour les autres | une requête qui méthanise d'autres animaux est refusée |
+| `elevage_durable` | borne de la baisse du facteur entérique | ADEME | 0 à 1 | `ParametreDeterminants!D9` annonce un encadrement sans le donner |
+| `elevage_durable` | correspondance entre catégories du recensement agricole et types d'animaux | Conception | déduction par sommes et différences, secret = 0 | jusqu'à 1,3 % des volailles perdues dans 53 départements |
+| `elevage_durable` | SV des bovins et lecture du tableau FCM | Conception | milieu des plages ; cellules fusionnées lues à la main | 3,79 et 1,96 kg par jour |
+| `elevage_durable` | méthanisation initiale à 0 | ADEME | comme `ElevageDurable!B15` | l'OMINEA 2026 donne 9,5 % et 9,8 % pour les porcins |
+| `elevage_durable` | animaux absents de la requête | Conception | inchangés, sans contribution | renvoyés dans `appliedAssumptions.unchangedAnimals` |
+| `elevage_durable` | Paris absent du recensement agricole, outre-mer exclu | Conception | `missing_data` | pas de zéro inventé |
 
 ## Résidentiel
 
@@ -109,4 +124,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les cinq leviers calculables restants (élevage durable, transport de marchandises) ajouteront leurs lignes à leur PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les quatre leviers calculables restants (transport de marchandises) ajouteront leurs lignes à leur PR.

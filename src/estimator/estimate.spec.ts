@@ -817,6 +817,68 @@ describe('estimate', () => {
     })
   })
 
+  describe('elevage_durable', () => {
+    const withLivestock = createEstimator(
+      createTemporaryCsvDataSource({
+        'elevage-durable/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              dairy_cows: '1000',
+              other_cattle: '0',
+              sows: '0',
+              other_pigs: '0',
+              goats: '0',
+              sheep: '0',
+              horses: '0',
+              mules_and_donkeys: '0',
+              laying_hens: '0',
+              broilers: '0',
+              other_poultry: '0',
+            },
+          ],
+        },
+      }),
+    )
+
+    function elevageDurableRequest(headcountReductionFraction: string): RequestInput {
+      return {
+        id: 'elevage_durable',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          animals: {
+            dairyCows: {
+              headcountReductionFraction,
+              targetManureShares: { liquid: '0.41', solid: '0.2', pasture: '0.39', anaerobicDigestion: '0' },
+            },
+          },
+        },
+      }
+    }
+
+    it('aiguille la région vers son levier : 1 000 vaches laitières supprimées évitent 5 008,45 tCO2e', () => {
+      const result = withLivestock(elevageDurableRequest('1'))
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5008.45')
+    })
+
+    it('refuse un EPCI, niveau non calculé', () => {
+      const result = withLivestock({
+        ...elevageDurableRequest('1'),
+        territory: { level: 'epci', code: '200000001' },
+      })
+      expect(result._unsafeUnwrapErr()).toMatchObject({ kind: 'level_not_computed' })
+    })
+
+    it.each(['abc', '1.5'])('refuse la baisse %j', (reduction) => {
+      expect(withLivestock(elevageDurableRequest(reduction))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.animals.dairyCows.headcountReductionFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)

@@ -9,7 +9,7 @@ type LevelStatuses = Readonly<Record<Level, Status>>
 // section 1 « Tableau par levier et par maille » (2026-10-07) : 16 no_open_question, 24 workaround, 23 not_computed
 const LEVERS = {
   fertilisation_azotee: { region: 'workaround', departement: 'workaround', epci: 'not_computed' },
-  elevage_durable: { region: 'workaround', departement: 'workaround', epci: 'workaround' },
+  elevage_durable: { region: 'workaround', departement: 'workaround', epci: 'not_computed' },
   batiments_machines_agricoles: {
     region: 'no_open_question',
     departement: 'no_open_question',
