@@ -19,6 +19,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | La cellule « Formule » ne contient que « Réduction GES = » ; les formules sont lues dans les formes dessinées du classeur | ADEME | lecture des positions des formes du dessin | une forme mal lue change le résultat ; les ambiguïtés de lecture sont chacune une ligne ci-dessous |
 | Une valeur négative dans un CSV (MWh, GWh, hectares, tonnes) passe la lecture sans contrôle | Conception | aucune borne (`require-column.ts`, partagé) ; les fichiers sont protégés par leur empreinte | un hectare négatif donnerait une part hors de 0 à 1 ; à décider une fois pour tous les leviers |
 | Territoires d'outre-mer | Conception | absents de la plupart des jeux, ces leviers renvoient `missing_data` ; les déchets les incluent | résultat absent, pas faux |
+| Cumul des leviers d'un même secteur (feuilles `SG Agriculture`, `SG UTCATF`, `SG Résidentiel`, `Scénario global …`) | ADEME | chaque levier se calcule seul sur les valeurs initiales (correction 4 de `formula-corrections.md`) | le tableur enchaîne les leviers ; la somme des résultats diffère du scénario cumulé |
 
 ## Agriculture et bois
 
@@ -48,6 +49,15 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `reseaux_chaleur` | deux sources de contenu CO2 pour un même réseau | Conception | France Chaleur Urbaine avant le SDES | pour 259 réseaux sur 821 l'écart dépasse 0,001 kgCO2e/kWh (29,9 % de l'énergie) |
 | `reseaux_chaleur` | livraisons SDES 2024 à la place de la bibliothèque FEDENE citée par le tableur (`G29`, derrière un formulaire) | ADEME | SDES | substitution de source |
 | `reseaux_chaleur`, `residentiel_sobriete` | réseaux de froid, réseaux sous secret, imputation à la commune d'implantation, arrondissements | Conception | réseaux de froid conservés (27 réseaux, 418 577 MWh) ; 140 réseaux sous secret exclus (1,4 % de la production) ; réseau imputé à sa commune ; arrondissements rapportés à leur commune | un département servi par un réseau implanté ailleurs n'en reçoit pas la chaleur |
+| `batiments_machines_agricoles` | trois séries d'énergie (régionale, IRIS, EPCI) qui ne se réconcilient pas | Conception | chacune sert à son niveau, on ne les additionne ni ne les compare | gaz local supérieur au gaz régional en PCS ; écart DROM de 38 125,283 MWh d'électricité |
+| `batiments_machines_agricoles` | communes de la SAU absentes de la géographie | Conception | écartées sans erreur, hors de toute part | aucune aujourd'hui, un test fixe ce nombre à 0 ; un millésime futur qui en ajouterait casserait ce test |
+| `fertilisation_azotee` | masse du territoire = masse livrée à la région ou au département, sans ventilation | ADEME | `ChgtPratiques!B13` : « à la maille régionale (à utiliser pour les régions) » ; aucune formule départementale n'est dessinée | le département applique la logique régionale |
+| `fertilisation_azotee` | facteur d'émission de la France continentale appliqué à la Corse | Conception | même facteur partout, renvoyé dans `appliedAssumptions.nitrogenSpreadingEmissionFactor` | pas de facteur propre à la Corse |
+| `fertilisation_azotee` | départements et régions non réconciliés | Conception | on ne les additionne pas | 1 746 534 t avec la Corse contre 1 746 521 t pour les 13 régions en 2021-2022 |
+| `produits_bois` | régions et départements non réconciliés | Conception | arrondis de la source | écart de 3 milliers de m³ pour les départements ; les régions retombent sur le national |
+| `produits_bois` | récolte nationale nulle non gérée | Conception | aucun contrôle | une récolte nationale à 0 dans `constants.csv` donnerait un résultat infini sans erreur ; la donnée versionnée vaut 19 975 et 10 311 |
+| `reseaux_chaleur` | réseau dont la commune est absente de la géographie actuelle | Conception | facteur nul | 1 réseau (2515C, Goux-les-Usiers, commune fusionnée), sans effet |
+| `reseaux_chaleur` | réseaux privés non recensés | Conception | non comptés | l'identification des réseaux n'est pas exhaustive |
 
 ## Élevage
 
@@ -63,6 +73,11 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `elevage_durable` | méthanisation initiale à 0 | ADEME | comme `ElevageDurable!B15` | l'OMINEA 2026 donne 9,5 % et 9,8 % pour les porcins |
 | `elevage_durable` | animaux absents de la requête | Conception | inchangés, sans contribution | renvoyés dans `appliedAssumptions.unchangedAnimals` |
 | `elevage_durable` | Paris absent du recensement agricole, outre-mer exclu | Conception | `missing_data` | pas de zéro inventé |
+| `elevage_durable` | proportions actuelles de gestion des déjections nationales | ADEME | `DonneesTerritoires!H22` : « Nationale », renvoyées dans `appliedAssumptions.currentManureShares` | un territoire à dominante pâture ou lisier part des mêmes proportions |
+| `elevage_durable` | lapines et ruches non comptées | Conception | aucun facteur dans le tableur | 422 790 lapines reproductrices en France |
+| `elevage_durable` | effectifs au siège de l'exploitation | Conception | siège | un élevage sur deux départements est compté au siège |
+| `elevage_durable` | vaches laitières de 21 départements sous secret | Conception | estimation de cartostat reprise, méthode non décrite | 91 et 93 sans valeur |
+| `elevage_durable` | zones pédoclimatiques et millésime | Conception | non prises en compte (`ElevageDurable!B15`) ; un seul millésime, 2020 | pas de variation locale des facteurs |
 
 ## Transport de marchandises
 
@@ -88,6 +103,13 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_electrification` | part saisie en points de parc supplémentaires, plafonnée à la part thermique | Conception | plafond renvoyé dans `appliedAssumptions` | `ParametreDeterminants!D41` ne donne pas de borne ; 0,15 % du parc (907 poids lourds sur 614 131) est déjà zéro émission |
 | `transport_marchandises_electrification` | un seul facteur électrique pour tous les poids lourds | ADEME | 0,0467 kgCO2e/t.km (3,5 à 7,5 t, validité avril 2021, incertitude 70 %) | `DonneesReference!D39` le dit pour les véhicules entre 3,5 et 7 t |
 | `transport_marchandises_electrification` | facteur thermique seul dans la formule, pas le mixte | ADEME | thermique, comme la forme dessinée | les autres leviers de marchandises prennent le mixte |
+| `transport_marchandises_sobriete_logistique`, `_report_modal`, `_efficacite`, `_electrification` | biodiesel, t.km non rattachées, millésimes | Conception | biodiesel hors moyenne diesel ; t.km à région « non précisé » et DOM hors des 13 régions ; t.km 2024, parc 2024 (révisable), OMINEA 2024 | 2 485 poids lourds nationaux dans le parc mais pas dans la moyenne ; 6,7 milliards de t.km non rattachées |
+| `transport_marchandises_efficacite`, `_report_modal` | `FE TRM` lu comme le facteur mixte (thermique et électrique), pas le thermique seul | ADEME | mixte, comme la sobriété logistique | l'électrification prend le thermique seul |
+| `transport_marchandises_efficacite` | baisse des émissions égale à la baisse de consommation | Conception | comme la formule dessinée | hypothèse implicite de la formule, non vérifiée |
+| `transport_marchandises_electrification` | t.km réparties uniformément entre les poids lourds | ADEME | la part de parc s'applique aux t.km, comme le tableur | hypothèse implicite du tableur, non vérifiée |
+| `transport_marchandises_report_modal` | 344 barges non motorisées et 348 pousseurs | Conception | les barges reçoivent les facteurs des automoteurs ; les pousseurs sont comptés comme barges de 5 937,5 t (`FE_fluvial!B18:B23`) | 32 % des 1 088 bateaux |
+| `transport_marchandises_report_modal` | un seul facteur ferroviaire et fluvial pour toutes les régions | Conception | national | pas de variation régionale |
+| `transport_marchandises_report_modal`, `_electrification` | résultat négatif | Conception | possible, sans alerte | si le mode reporté émet plus que la route évitée, ou si la cyclologistique dépasse les t.km ; si le facteur électrique dépassait le thermique |
 
 ## Résidentiel
 
@@ -105,6 +127,9 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `residentiel_sobriete` | facteurs OMINEA arrondis à deux décimales | Conception | 55,88 et 74,52 | l'écart est inférieur à 0,01 % |
 | `residentiel_sobriete` | départements et régions | Conception | électricité et gaz départementaux par le jeu IRIS, régionaux par le bilan | la somme des 96 départements dépasse celle des 13 régions de 1,1 % |
 | `residentiel_sobriete` | paramètre rattaché au levier « Tertiaire », facteur du réseau en « g » alors qu'il est en kg, parc de logements listé hors formule | Erratum | le facteur en kg/kWh est la correction 5 de `formula-corrections.md`, appliquée au code ; les deux autres n'ont pas d'effet | trois constats à remonter (`Residentiel_Sobriete!A20`, `D33`, `A25`) |
+| `residentiel_sobriete` | année 2024 pour toutes les données | Conception | 2024 | le tableur ne fixe pas l'année des facteurs OMINEA |
+| `residentiel_sobriete` | jeux IRIS agrégés hors dépôt | Conception | extraits déjà sommés par département, versionnés | le jeu IRIS résidentiel complet n'est pas versionné : la somme ne se reconstruit pas depuis le dépôt |
+| `residentiel_sobriete` | chaleur : bilan pour la quantité, réseaux pour le facteur | Conception | chaleur régionale du bilan (14,7 TWh en métropole), facteur des réseaux hors secret (13,7 TWh) | les deux ensembles ne coïncident pas |
 
 ## Transport de personnes
 
@@ -131,6 +156,14 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_personnes_sobriete_deplacements` | passagers.km de transport en commun | Conception | comptés en entier, ferré et routier | l'efficacité ne compte que le routier |
 | `transport_personnes_sobriete_deplacements` | facteur du bus ÷ 10 | Conception | par analogie avec la voiture ; `B15` ne cite que les voitures | le tableur annonce pourtant ses facteurs de bus en kgCO2e/passager |
 | `transport_personnes_sobriete_deplacements` | 273 EPCI avec transport en commun mais sans bus classé | Conception | facteur national de bus pour leur part routière | à corriger en saisissant `railShareFraction` si le réseau est surtout ferré |
+| `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | périmètre des trajets : hexagone, moins de 100 km, domicile-travail, millésime 2022 | Conception | périmètre de la base, « Annuelle sans garantie » | 772 644 actifs métropolitains qui se déplacent hors champ ; DOM absents ; les autres motifs de déplacement ne sont pas comptés |
+| `transport_personnes_efficacite`, `_electrification`, `_sobriete_deplacements` | deux-roues motorisés | Conception | sans terme | 1,4 % des passagers.km |
+| `transport_personnes_efficacite`, `_electrification`, `_sobriete_deplacements` | parc de bus et cars immatriculé au siège | Conception | parc du territoire d'immatriculation | trois communes portent 17,7 % du parc métropolitain ; 276 des 1 243 EPCI n'ont aucun bus ni car classé et 11 aucune voiture : moyenne nationale en efficacité, résultat nul en électrification |
+| `transport_personnes_efficacite` | carburants sans facteur | Conception | exclus de la moyenne du parc : « autre » pour les voitures, « essence » et « autre » pour les bus | la part exclue est renvoyée dans `appliedAssumptions` quand elle n'est pas nulle |
+| `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | passagers.km pour moitié côté résidence et pour moitié côté travail | ADEME | lecture de `TrsptPers_SobriétéDéplacements!B13` | hypothèse du tableur, non vérifiée par les données |
+| `transport_personnes_report_modal`, `_sobriete_deplacements` | un seul facteur pour tout le ferré | Conception | national, ou corse | un territoire avec métro ou tram a son propre facteur, souvent plus bas |
+| `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | facteur du parc de voitures, pas celui du trajet | Conception | parc | les voitures d'un trajet donné diffèrent du parc moyen |
+| `transport_personnes_report_modal` | report sans effet de capacité ni de distance | Conception | la fraction porte sur les passagers.km | aucune saturation du transport en commun ; les modes actifs ne couvrent pas les mêmes distances que la voiture |
 
 ## Déchets
 
@@ -146,7 +179,28 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `dechets_mode_de_traitement`, `dechets_sobriete` | arrondissements de Paris, Lyon et Marseille | Conception | rapportés à leur commune | comme les réseaux de chaleur |
 | `dechets_mode_de_traitement`, `dechets_sobriete` | un seul millésime | Conception | 2022 | 2023 et 2024 sont publiés |
 | `dechets_mode_de_traitement`, `dechets_sobriete` | récupération d'énergie non créditée, valorisation matière à zéro | ADEME | comme le tableur (`ChangementModeTraitement!B13`) | limites assumées par le tableur |
+| `dechets_sobriete` | réduction à la source | Conception | retire des tonnes au mode de traitement actuel du territoire | ne dit pas où vont les déchets évités |
+| `dechets_sobriete` | deux réductions indépendantes, sans plafond | Conception | 0 à 100 % chacune | aucune borne dans le tableur |
+
+## Niveaux non calculés
+
+Une ligne par cellule `not_computed` du registre `src/domain/lever-registry.ts` : un test échoue si une cellule n'a pas sa raison ici.
+
+| Levier | Niveaux | Raison | Statut | Détail |
+|---|---|---|---|---|
+| `fertilisation_azotee` | EPCI | les livraisons d'azote sont publiées par département : pas de ventilation sous le département | Conception | `methodology.md` du levier, limites |
+| `elevage_durable` | EPCI | le fichier Agreste par EPCI se contredit sur les bovins (4,86 M de vaches laitières pour 3,48 M en France) et le secret retire 18 à 41 % des têtes ; décision du 2026-10-20 | Conception | section Élevage |
+| `produits_bois` | EPCI | la récolte de bois n'existe pas à cette maille ; la ventilation par la surface de forêt n'est pas vérifiable | Conception | section Agriculture et bois |
+| `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels n'existent pas à cette maille | Conception | `methodology.md` du levier |
+| `transport_marchandises_sobriete_logistique` | département, EPCI | le tableur déclare ces niveaux hors périmètre ; les données sont régionales | Conception | section Transport de marchandises |
+| `transport_marchandises_report_modal` | département, EPCI | idem | Conception | section Transport de marchandises |
+| `transport_marchandises_efficacite` | département, EPCI | idem | Conception | section Transport de marchandises |
+| `transport_marchandises_electrification` | département, EPCI | idem | Conception | section Transport de marchandises |
+| `pratiques_stockantes` | région, département, EPCI | le périmètre de validité est « LIMITEE » à chaque maille, sans commentaire ni surface applicable | ADEME | `assumptions.md` |
+| `occupation_des_sols` | région, département, EPCI | l'unité du facteur de conversion n'est pas tranchée (tCO2e/ha/an ou variation totale) : le résultat varie jusqu'à 20 fois | ADEME | `assumptions.md`, questions sans contournement |
+| `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation est renvoyée au CEREN, « Pas disponible en open source » | ADEME | `assumptions.md`, questions sans contournement |
+| `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage et les rendements du GPL et des pompes à chaleur manquent | ADEME | `assumptions.md`, questions sans contournement |
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les 17 leviers calculables sont faits : toute nouvelle PR de levier ou de niveau ajoute ses lignes ici.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement », et résumées dans « Niveaux non calculés ». Les 17 leviers calculables sont faits : toute nouvelle PR de levier ou de niveau ajoute ses lignes ici.
