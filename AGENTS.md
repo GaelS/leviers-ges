@@ -16,6 +16,7 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm build:data:dechets` | reconstruit `data/dechets/` (flux de traitement et facteurs d'émission) depuis ses sources |
 | `pnpm build:data:fertilisation-azotee` | reconstruit `data/fertilisation-azotee/` (azote livré par région et par département) depuis ses sources |
 | `pnpm build:data:elevage-durable` | reconstruit `data/elevage-durable/` (effectifs d'animaux par région et département) depuis ses sources |
+| `pnpm build:data:transport-marchandises` | reconstruit `data/transport-marchandises/` (tonnes.kilomètres et parc de poids lourds par région) depuis ses sources |
 
 Une PR passe les quatre premières.
 
