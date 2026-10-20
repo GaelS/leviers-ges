@@ -42,6 +42,10 @@ import {
   type TransportMarchandisesEfficaciteRequestInput,
 } from '../levers/transport-marchandises-efficacite/index.ts'
 import {
+  estimate as estimateTransportMarchandisesElectrification,
+  type TransportMarchandisesElectrificationRequestInput,
+} from '../levers/transport-marchandises-electrification/index.ts'
+import {
   estimate as estimateTransportMarchandisesReportModal,
   type TransportMarchandisesReportModalRequestInput,
 } from '../levers/transport-marchandises-report-modal/index.ts'
@@ -79,6 +83,7 @@ type RequestInput =
   | ReseauxChaleurRequestInput
   | ResidentielSobrieteRequestInput
   | TransportMarchandisesEfficaciteRequestInput
+  | TransportMarchandisesElectrificationRequestInput
   | TransportMarchandisesReportModalRequestInput
   | TransportMarchandisesSobrieteLogistiqueRequestInput
   | TransportPersonnesEfficaciteRequestInput
@@ -148,6 +153,15 @@ function createEstimator(dataSource: DataSource): Estimator {
             (computedLevelRequest) =>
               estimateTransportMarchandisesEfficacite(computedLevelRequest, context),
           ),
+        )
+        .with(
+          { id: 'transport_marchandises_electrification' },
+          (transportMarchandisesElectrificationRequest) =>
+            estimateOnComputedLevel(
+              transportMarchandisesElectrificationRequest,
+              (computedLevelRequest) =>
+                estimateTransportMarchandisesElectrification(computedLevelRequest, context),
+            ),
         )
         .with({ id: 'transport_marchandises_report_modal' }, (transportMarchandisesReportModalRequest) =>
           estimateOnComputedLevel(

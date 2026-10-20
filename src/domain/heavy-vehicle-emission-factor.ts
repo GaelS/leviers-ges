@@ -43,6 +43,10 @@ function calculateZeroEmissionShare({
   return quantity<'Fraction'>(zeroEmissionFleet.dividedBy(heavyVehicleFleet).toFixed())
 }
 
+function calculateThermalShare(zeroEmissionShare: Fraction): Fraction {
+  return quantity<'Fraction'>(ONE.minus(zeroEmissionShare).toFixed())
+}
+
 function calculateHeavyVehicleEmissionFactors({
   dieselEmissionFactor,
   heavyVehicleFleet,
@@ -54,7 +58,7 @@ function calculateHeavyVehicleEmissionFactors({
 }): HeavyVehicleEmissionFactors {
   const thermal = calculateThermalEmissionFactor(dieselEmissionFactor)
   const zeroEmissionShare = calculateZeroEmissionShare({ heavyVehicleFleet, zeroEmissionFleet })
-  const thermalShare = ONE.minus(zeroEmissionShare)
+  const thermalShare = calculateThermalShare(zeroEmissionShare)
   const thermalContribution = thermalShare.times(thermal)
   const electricContribution = zeroEmissionShare.times(ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR)
   return {
@@ -66,6 +70,7 @@ function calculateHeavyVehicleEmissionFactors({
 
 export {
   calculateHeavyVehicleEmissionFactors,
+  calculateThermalShare,
   ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR,
   HEAVY_VEHICLE_LOADING_RATE,
 }
