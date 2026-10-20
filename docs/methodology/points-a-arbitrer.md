@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 15 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce registre rassemble les points que les 16 leviers déjà faits ont laissés ouverts. Il reprend les listes « À arbitrer » des PR, qui disparaissent de la vue après le merge. Le détail de chaque point (formule, chiffres, tests) est dans le `methodology.md` du levier ; ce registre dit seulement quoi faire valider, par qui, et ce que le choix actuel change.
 
 Les hypothèses nommées, avec leur valeur par défaut modifiable, sont dans `assumptions.md` ; ce registre en recoupe quelques-unes (`wasteScope`, `passengerCarLastLineKept`, `railElectricityUpstreamShare`). Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`. Les limites de données sans décision à prendre restent dans le `methodology.md` du levier.
 
@@ -76,6 +76,9 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_sobriete_logistique` | facteur thermique : CO2 seul, Euro choisi par Crit'Air, vignettes 1 à 5 seulement | Conception | OMINEA 2024, 3 à 14 % du parc diesel écarté | CH4 et N2O ajouteraient 1,7 % |
 | `transport_marchandises_sobriete_logistique` | hydrogène et autres zéro émission avec l'électrique | Conception | facteur électrique (0,0467) | 907 poids lourds en métropole |
 | `transport_marchandises_sobriete_logistique` | parc immatriculé dans la région | Conception | parc de la région | le parc circulant diffère |
+| `transport_marchandises_efficacite` | potentiel d'écoconduite de 15 %, le même pour tous les poids lourds | ADEME | 15 % (`DonneesReference!D29`, « ~15% ») | la page citée dit « jusqu'à 15 % » ; le guide EVE de l'ADEME donne 5 à 15 % (10 % en moyenne) qui s'estompent |
+| `transport_marchandises_efficacite` | deux effets combinés par produit | ADEME | produit, comme le dessin (correction 2) | `B13` dit « somme » : dans le cas de la correction 2 (10 % en plus, 50 %, 15 %) la somme donne 16,6 % de baisse et le produit 15,9 % |
+| `transport_marchandises_efficacite` | hausse du chargement sans plafond | ADEME | acceptée à toute valeur positive | 200 % de chargement en plus donnent plus de 66 % de baisse avant écoconduite |
 | `transport_marchandises_report_modal` | formule lue dans le dessin ; appariement des facteurs ferroviaire et fluvial | ADEME | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM` (correction 3) | le dessin croise les deux facteurs ; les coefficients du Scénario global tranchent |
 | `transport_marchandises_report_modal` | coefficients 0,8064, 1,0164, 0,8176, 0,9576 | ADEME | repris tels quels | introuvables dans les documents REMOVE lus |
 | `transport_marchandises_report_modal` | facteurs ferroviaire (combustion et amont) et fluvial (combustion seule) | ADEME | 0,007278 et 0,0206283 kgCO2e/t.km | périmètres différents, une part de l'amont « non chiffrée » (`DonneesReference!D42`) |
@@ -142,4 +145,4 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 
 ## Non concernés ici
 
-Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Les deux leviers calculables restants (efficacité et électrification du transport de marchandises) ajouteront leurs lignes à leur PR.
+Les leviers `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés ; leurs questions sont dans `assumptions.md`, section « Questions sans contournement ». Le levier calculable restant (électrification du transport de marchandises) ajouteront leurs lignes à leur PR.

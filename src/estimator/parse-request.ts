@@ -10,6 +10,7 @@ import { haiesRequestSchema } from '../levers/haies/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
 import { residentielSobrieteRequestSchema } from '../levers/residentiel-sobriete/index.ts'
+import { transportMarchandisesEfficaciteRequestSchema } from '../levers/transport-marchandises-efficacite/index.ts'
 import { transportMarchandisesReportModalRequestSchema } from '../levers/transport-marchandises-report-modal/index.ts'
 import { transportMarchandisesSobrieteLogistiqueRequestSchema } from '../levers/transport-marchandises-sobriete-logistique/index.ts'
 import { transportPersonnesElectrificationRequestSchema } from '../levers/transport-personnes-electrification/index.ts'
@@ -27,6 +28,7 @@ const requestSchema = z.discriminatedUnion('id', [
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
   residentielSobrieteRequestSchema,
+  transportMarchandisesEfficaciteRequestSchema,
   transportMarchandisesReportModalRequestSchema,
   transportMarchandisesSobrieteLogistiqueRequestSchema,
   transportPersonnesEfficaciteRequestSchema,
