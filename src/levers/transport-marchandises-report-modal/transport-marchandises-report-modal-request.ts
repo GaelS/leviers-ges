@@ -7,7 +7,7 @@ import {
 import type { ComputedLevels } from '../../domain/lever-registry.ts'
 import { quantity, type Fraction } from '../../domain/units.ts'
 
-// Source : ParametreDeterminants, lignes « report modal route vers fluvial » et « route vers ferroviaire » (marchandises) : le report total ne dépasse pas 100 % des t.km routières (choix de conception, non validé : le tableur ne pose pas de borne)
+// Source : choix de conception, non validé : le tableur ne borne pas la somme des reports de marchandises (ParametreDeterminants!H24:H25 vides) alors qu'il la borne à moins de 100 % pour les personnes (H34:H35)
 const TOTAL_FREIGHT_SHIFT_CEILING: Fraction = quantity<'Fraction'>('1')
 
 const transportMarchandisesReportModalRequestSchema = z.strictObject({

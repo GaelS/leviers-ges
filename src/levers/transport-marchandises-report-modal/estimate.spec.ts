@@ -57,7 +57,7 @@ function request(
 const estimate = toEstimator(createTemporaryCsvDataSource(FIXTURES))
 
 describe('estimate, transport_marchandises_report_modal', () => {
-  it('évite 7,994181076 tCO2e pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 10 % de ferroviaire et 5 % de fluvial', () => {
+  it('évite 7,99 tCO2e (7,994181076 avant arrondi) pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 10 % de ferroviaire et 5 % de fluvial', () => {
     expect(estimate(request('84'))._unsafeUnwrap().reduction.toFixed()).toBe('7.99')
   })
 
