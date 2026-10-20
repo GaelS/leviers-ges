@@ -8,6 +8,8 @@ type UnitName =
   | 'Kilometres'
   | 'Tonnes'
   | 'TonneKilometres'
+  | 'BillionTonneKilometres'
+  | 'GramsCo2ePerVehicleKilometre'
   | 'Hectares'
   | 'TCo2ePerKmPerYear'
   | 'MegawattHours'
@@ -16,6 +18,7 @@ type UnitName =
   | 'KgCo2ePerGigajoule'
   | 'KgCo2ePerVehicleKilometre'
   | 'KgCo2ePerTonne'
+  | 'KgCo2ePerTonneKilometre'
   | 'KgCo2ePerKgNitrogen'
   | 'KgCo2ePerPassengerKilometre'
   | 'PassengerKilometresPerWeek'
@@ -32,6 +35,8 @@ type Fraction = Quantity<'Fraction'>
 type Kilometres = Quantity<'Kilometres'>
 type Tonnes = Quantity<'Tonnes'>
 type TonneKilometres = Quantity<'TonneKilometres'>
+type BillionTonneKilometres = Quantity<'BillionTonneKilometres'>
+type GramsCo2ePerVehicleKilometre = Quantity<'GramsCo2ePerVehicleKilometre'>
 type Hectares = Quantity<'Hectares'>
 type TCo2ePerKmPerYear = Quantity<'TCo2ePerKmPerYear'>
 type MegawattHours = Quantity<'MegawattHours'>
@@ -40,6 +45,7 @@ type KgCo2ePerKwh = Quantity<'KgCo2ePerKwh'>
 type KgCo2ePerGigajoule = Quantity<'KgCo2ePerGigajoule'>
 type KgCo2ePerVehicleKilometre = Quantity<'KgCo2ePerVehicleKilometre'>
 type KgCo2ePerTonne = Quantity<'KgCo2ePerTonne'>
+type KgCo2ePerTonneKilometre = Quantity<'KgCo2ePerTonneKilometre'>
 type KgCo2ePerKgNitrogen = Quantity<'KgCo2ePerKgNitrogen'>
 type KgCo2ePerPassengerKilometre = Quantity<'KgCo2ePerPassengerKilometre'>
 type PassengerKilometresPerWeek = Quantity<'PassengerKilometresPerWeek'>
@@ -72,7 +78,9 @@ function parseFraction(value: string): Result<Fraction, InvalidParameter> {
 
 export { gigawattHoursToMegawattHours, parseFraction, quantity }
 export type {
+  BillionTonneKilometres,
   Fraction,
+  GramsCo2ePerVehicleKilometre,
   GigawattHours,
   Hectares,
   Heads,
@@ -81,6 +89,7 @@ export type {
   KgCo2ePerKwh,
   KgCo2ePerPassengerKilometre,
   KgCo2ePerTonne,
+  KgCo2ePerTonneKilometre,
   KgCo2ePerVehicleKilometre,
   Kilometres,
   MegawattHours,
