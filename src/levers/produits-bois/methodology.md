@@ -27,7 +27,7 @@ La part de la récolte en m³ tient lieu de part de la production de produits bo
 |---|---|---|
 | `woodProductionIncrease` | variation relative | aucune, comme dans le tableur : une valeur négative (baisse de production) donne un stockage négatif, une valeur supérieure à 1 (plus de 100 %) est admise |
 
-Valeur par défaut du tableur : 0 ; colonne « valeur de référence de la SNBC 3 » vide (`ParametreDeterminants!H21`). Une seule entrée s'applique au bois d'œuvre et au bois d'industrie ensemble.
+Pas de valeur par défaut dans `ParametreDeterminants` (`I21` absente) : `ProduitsBois!F19` affiche 0 par une recherche sur cette cellule vide ; colonne « valeur de référence de la SNBC 3 » vide (`ParametreDeterminants!H21`). Une seule entrée s'applique au bois d'œuvre et au bois d'industrie ensemble.
 
 ## Constantes
 
@@ -45,7 +45,7 @@ Valeur par défaut du tableur : 0 ; colonne « valeur de référence de la SNBC 
 | `produits-bois/departements` | idem | département |
 | `produits-bois/constants` | récolte nationale 2022 (ligne `METRO` du tableau EXFNR00) ; carbone des produits bois 2022 | national |
 
-Construits par `pnpm build:data:produits-bois` à partir d'Agreste (enquête EXFSRI, tableau EXFNR00) et d'OMINEA 2026 (UTCATF, tableau 45, p. 97). `tC_BO` = 1 495 194 (sciages) + 211 509 (contreplaqués) = 1 706 703 ; `tC_BI` = 1 304 599 (panneaux) + 930 031 (papier) = 2 234 630. Récolte nationale : 19 975 milliers de m³ de grumes et 10 311 de bois d'industrie.
+Construits par `pnpm build:data:produits-bois` à partir d'Agreste (enquête EXFSRI, tableau EXFNR00) et d'OMINEA 2026 (UTCATF, tableau 45, p. 97), alors que le tableur cite le rapport OMINEA 2025 (tableau 83, p. 131, `DonneesReference!E21`). `tC_BO` = 1 495 194 (sciages) + 211 509 (contreplaqués) = 1 706 703 ; `tC_BI` = 1 304 599 (panneaux) + 930 031 (papier) = 2 234 630. Récolte nationale : 19 975 milliers de m³ de grumes et 10 311 de bois d'industrie.
 
 La même année, 2022, vaut pour la récolte et pour les tC (le tableur ne fixe pas l'année des séries OMINEA).
 

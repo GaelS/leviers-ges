@@ -20,6 +20,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | Une valeur négative dans un CSV (MWh, GWh, hectares, tonnes) passe la lecture sans contrôle | Conception | aucune borne (`require-column.ts`, partagé) ; les fichiers sont protégés par leur empreinte | un hectare négatif donnerait une part hors de 0 à 1 ; à décider une fois pour tous les leviers |
 | Territoires d'outre-mer | Conception | absents de la plupart des jeux, ces leviers renvoient `missing_data` ; les déchets les incluent | résultat absent, pas faux |
 | Cumul des leviers d'un même secteur (feuilles `SG Agriculture`, `SG UTCATF`, `SG Résidentiel`, `Scénario global …`) | ADEME | chaque levier se calcule seul sur les valeurs initiales (correction 4 de `formula-corrections.md`) | le tableur enchaîne les leviers ; la somme des résultats diffère du scénario cumulé |
+| Bornes des paramètres et valeurs par défaut | Conception | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut | `ParametreDeterminants` n'a aucune borne ; ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1). Les champs `F19:F21` d'`ElevageDurable` et `F19` de `ProduitsBois` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides |
 
 ## Agriculture et bois
 
@@ -58,6 +59,9 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `produits_bois` | récolte nationale nulle non gérée | Conception | aucun contrôle | une récolte nationale à 0 dans `constants.csv` donnerait un résultat infini sans erreur ; la donnée versionnée vaut 19 975 et 10 311 |
 | `reseaux_chaleur` | réseau dont la commune est absente de la géographie actuelle | Conception | facteur nul | 1 réseau (2515C, Goux-les-Usiers, commune fusionnée), sans effet |
 | `reseaux_chaleur` | réseaux privés non recensés | Conception | non comptés | l'identification des réseaux n'est pas exhaustive |
+| `batiments_machines_agricoles` | millésime des produits pétroliers et de la chaleur par région | Conception | 2024 (SDES) | `DonneesTerritoires!O26` indique 2023 pour ces deux séries ; `O25` (gaz et électricité locaux) indique 2024, comme le code |
+| `batiments_machines_agricoles` | maille des produits pétroliers | ADEME | région répartie à l'EPCI et au département au prorata de la SAU | `DonneesTerritoires!H25` et `Bâtiment&MachinesAgricoles!H27` désignent des données départementales pour les produits pétroliers, `B15` une donnée régionale répartie par la SAU |
+| `produits_bois` | rapport source des tC | ADEME | OMINEA 2026 (UTCATF, tableau 45, p. 97) | le tableur cite « Rapport OMINEA 2025, tableau 83, p. 131 » (`DonneesReference!E21`, `K21`, `K22`) |
 
 ## Élevage
 
@@ -78,6 +82,8 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `elevage_durable` | effectifs au siège de l'exploitation | Conception | siège | un élevage sur deux départements est compté au siège |
 | `elevage_durable` | vaches laitières de 21 départements sous secret | Conception | estimation de cartostat reprise, méthode non décrite | 91 et 93 sans valeur |
 | `elevage_durable` | zones pédoclimatiques et millésime | Conception | non prises en compte (`ElevageDurable!B15`) ; un seul millésime, 2020 | pas de variation locale des facteurs |
+| `elevage_durable` | baisse de têtes et répartition cible sans valeur par défaut | Conception | obligatoires | le tableur affiche 0 dans `ElevageDurable!F19:F21` par recherche dans `ParametreDeterminants` ; seule la baisse entérique a une valeur saisie (`I9` = 0) |
+| `elevage_durable` | page citée du Secten pour les PRG | Conception | « Secten 2026, page 34 » | `DonneesReference!K10` et `K14` disent « p. 28 du Secten » ; les valeurs (28 et 265) sont identiques |
 
 ## Transport de marchandises
 
@@ -110,6 +116,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_marchandises_report_modal` | 344 barges non motorisées et 348 pousseurs | Conception | les barges reçoivent les facteurs des automoteurs ; les pousseurs sont comptés comme barges de 5 937,5 t (`FE_fluvial!B18:B23`) | 32 % des 1 088 bateaux |
 | `transport_marchandises_report_modal` | un seul facteur ferroviaire et fluvial pour toutes les régions | Conception | national | pas de variation régionale |
 | `transport_marchandises_report_modal`, `_electrification` | résultat négatif | Conception | possible, sans alerte | si le mode reporté émet plus que la route évitée, ou si la cyclologistique dépasse les t.km ; si le facteur électrique dépassait le thermique |
+| `transport_marchandises_sobriete_logistique`, `_report_modal`, `_efficacite`, `_electrification` | poids lourds thermiques non diesel | Conception | comptés au facteur diesel | le facteur ne se calcule que sur le diesel, la part thermique est le parc entier moins les zéro émission : 10 462 poids lourds au gaz (1,70 %), 500 à l'essence (0,08 %) et 209 « inconnu » prennent le facteur diesel ; `FE_transports` donne un facteur propre à chaque carburant, non chiffrable ici |
 
 ## Résidentiel
 
@@ -137,7 +144,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 |---|---|---|---|---|
 | `transport_personnes_efficacite` | potentiel d'écoconduite : 15 % pour les voitures et les bus | ADEME | 15 %, valeur unique du tableur (`DonneesReference!D29`, « ~15% ») | la page citée dit « jusqu'à 15 % » : un plafond pris pour une moyenne |
 | `transport_personnes_efficacite` | hausse de passagers sans plafond | ADEME | comme le tableur | 200 % de passagers en plus et 100 % d'application de l'écoconduite à 15 % donnent 71,7 % de baisse |
-| `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | part du ferré des passagers.km de transport en commun | Conception | 82 % en Île-de-France, 24 % ailleurs (SDES), renvoyée avec sa limite | un territoire avec un grand métro hors Île-de-France a une part plus haute ; hypothèse sur le facteur du bus |
+| `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | part du ferré des passagers.km de transport en commun | Conception | 82 % en Île-de-France, 24 % ailleurs (SDES 2024), renvoyée avec sa limite ; le tableur donne 84 % et 23 % à titre indicatif 2023 (`ParametreDeterminants!D38`) | un territoire avec un grand métro hors Île-de-France a une part plus haute ; hypothèse sur le facteur du bus |
 | `transport_personnes_efficacite` | facteurs d'émission des voitures issus d'un calcul d'essai non reproduit dans le dépôt | Conception | calcul d'essai sur OMINEA v23.1 de la fiche d'analyse | non reproduit dans le dépôt |
 | `transport_personnes_efficacite`, `_electrification` | facteur de bus : OMINEA 2024 (valeur basse) plutôt que Base Empreinte | Conception | 0,0805 kgCO2e/passager.km | Base Empreinte donne 0,0874 |
 | `transport_personnes_efficacite` | EPCI à cheval sur l'Île-de-France | Conception | 24 % de ferré | l'EPCI 247800550 est à 89 % francilien |
@@ -146,7 +153,7 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_personnes_electrification` | sens de `x` | ADEME | part du parc entier, pas des seuls véhicules thermiques | le parc entier couvre aussi les trajets de plus de 100 km, hors du champ des passagers.km |
 | `transport_personnes_electrification` | facteur électrique | Conception | amont seul, identique partout (`electricVehicleEmissionFactors`) | pas de mix électrique local |
 | `transport_personnes_electrification` | gaz des voitures mis au-dessus de l'essence ; bus diesel à la valeur basse | Conception | choix 7 de la méthodologie | voir le `methodology.md` |
-| `transport_personnes_electrification`, `_efficacite`, `_report_modal`, `_sobriete_deplacements` | taux de remplissage de 1,165 | ADEME | repris du tableur (motif « professionnel ») | les données sont des trajets domicile-travail |
+| `transport_personnes_electrification`, `_efficacite`, `_report_modal`, `_sobriete_deplacements` | taux de remplissage de 1,165 | ADEME | valeur de la source SDES, motif « professionnel » (`DonneesReference!D26` ne donne que la méthode : 88 %, 9 % et 3 %) | les données sont des trajets domicile-travail |
 | `transport_personnes_report_modal` | dernière ligne dessinée de la formule, `PK × 52,14 × r_actifs × FE_TC` | ADEME | ignorée (`passengerCarLastLineKept`) | +22 % si elle est gardée (région 84 : 207 826,72 contre 253 636,77 tCO2e) |
 | `transport_personnes_report_modal`, `_sobriete_deplacements` | facteur du ferré | ADEME | 0,0229 amont seul, combustion supposée nulle ; 0,187 en Corse (`railElectricityUpstreamShare`) | si les TER diesel comptent, le gain du transport en commun baisse |
 | `transport_personnes_report_modal` | somme des reports ≤ 100 % | ADEME | 100 % accepté | le tableur dit « inférieur », strict ou large non tranché |
@@ -164,6 +171,8 @@ Quand un point est tranché : la ligne passe en « résolu » avec la date et la
 | `transport_personnes_report_modal`, `_sobriete_deplacements` | un seul facteur pour tout le ferré | Conception | national, ou corse | un territoire avec métro ou tram a son propre facteur, souvent plus bas |
 | `transport_personnes_efficacite`, `_electrification`, `_report_modal`, `_sobriete_deplacements` | facteur du parc de voitures, pas celui du trajet | Conception | parc | les voitures d'un trajet donné diffèrent du parc moyen |
 | `transport_personnes_report_modal` | report sans effet de capacité ni de distance | Conception | la fraction porte sur les passagers.km | aucune saturation du transport en commun ; les modes actifs ne couvrent pas les mêmes distances que la voiture |
+| `transport_personnes_electrification`, `_efficacite` | facteurs des bus en CO2 seul | Conception | OMINEA 2024, CO2 seul (804,5 et 709,8 g/véh.km) | les voitures comptent CO2, CH4 et N2O ; le CH4 et le N2O des bus ne sont pas comptés |
+| `transport_personnes_electrification`, `_efficacite` | pondération Crit'Air perdue | Conception | un facteur national par carburant, bus à Euro VI | `FE_transports` pondère par la norme Euro de chaque territoire |
 
 ## Déchets
 
