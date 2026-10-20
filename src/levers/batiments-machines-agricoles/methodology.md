@@ -39,7 +39,7 @@ Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à 0. L
 | Coefficient sur l'électricité | 67,4 % | forme « FE de l'électricité * 67,4% » du tableur ; aucune cellule ne le contient ni ne l'explique, repris tel quel (FE appliqué : 0,0533134) |
 | FE gaz naturel | 55,88 kg/GJ PCI | OMINEA, NAPFUE 301, SNAP 020302, 2024 |
 | FE produits pétroliers | 78 kg/GJ | OMINEA, fioul lourd, NAPFUE 203, SNAP 020302 ; la forme du tableur le nomme « FE du fioul lourd » pour les « autres produits pétroliers » |
-| Conversion | 0,0036 GJ/kWh | `DonneesReference!D16`, « convertir GJ en kWh » |
+| Conversion | 0,0036 GJ/kWh | `DonneesReference!D16` demande de « convertir GJ en kWh » sans donner de nombre ; 0,0036 est la conversion physique |
 
 Les FE en kg/GJ deviennent des kg/kWh par `FE × 0,0036` : gaz 0,201168, produits pétroliers 0,2808.
 

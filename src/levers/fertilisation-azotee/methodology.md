@@ -24,7 +24,7 @@ La formule est un proxy (`B12`) : `B13` utilise « la masse de fertilisants min�
 |---|---|---|
 | `nitrogenReductionFraction` | fraction de la masse d'azote livrée | 0 à 1 |
 
-Obligatoire, sans valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H8` est vide). Le tableur ne pose aucune borne ; 0 à 1 par construction.
+Obligatoire, sans valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H8` est vide, `I8` vaut 0). Le tableur ne pose aucune borne ; 0 à 1 par construction.
 
 ## Constantes
 
