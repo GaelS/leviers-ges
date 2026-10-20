@@ -40,4 +40,12 @@ function requireQuantityColumn<U extends UnitName>(
   )
 }
 
-export { requireColumn, requireNonEmptyColumn, requireQuantityColumn }
+function requireOptionalQuantityColumn<U extends UnitName>(
+  reference: ColumnReference,
+): Result<Quantity<U> | undefined, InvalidDataset> {
+  return requireColumn(reference).andThen((value) =>
+    value === '' ? ok(undefined) : requireQuantityColumn<U>(reference),
+  )
+}
+
+export { requireColumn, requireNonEmptyColumn, requireOptionalQuantityColumn, requireQuantityColumn }

@@ -10,7 +10,8 @@ import {
   type PassengerKilometresPerWeek,
   type TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-import { KILOGRAMS_PER_TONNE, WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
+import { KILOGRAMS_PER_TONNE } from '../../domain/mass-conversions.ts'
+import { WEEKS_PER_YEAR } from '../../domain/transport-conversions.ts'
 import {
   BUS_PASSENGERS_PER_VEHICLE,
   CAR_PASSENGERS_PER_VEHICLE,

@@ -12,6 +12,7 @@ code_irep,libelle_irep,libelle_be,id_be_stockage,fe_stockage_kgco2e_t,id_be_inci
 20 01 21*,Tubes fluorescents et autres déchets contenant du mercure,DIS,34714,128,34712,844,✓ Correspondance directe,Déchet dangereux (mercure) — FE DIS utilisé par défaut
 20 01 23*,Équipements mis au rebut contenant des chlorofluorocarbones,DIS,34714,128,34712,844,✓ Correspondance directe,Déchet dangereux (CFC/HCFC) — FE DIS; gros électroménager froid
 20 01 25,Huiles et matières grasses alimentaires,Déchets putrescibles,34648,692,34646,45,✓ Correspondance directe,Huiles alimentaires usagées (HAU) — FE déchets putrescibles par proxy
+20 01 26*,Huiles et matières grasses autres que celles visées à la rubrique 20 01 25,DIS,34714,128,34712,844,✓ Correspondance directe,Déchet dangereux — FE DIS utilisé par défaut
 20 01 27*,"Peintures, encres, colles et résines contenant des substances dangereuses",DIS,34714,128,34712,844,✓ Correspondance directe,Déchet dangereux — FE DIS utilisé par défaut
 20 01 28,"Peintures, encres, colles et résines autres que celles visées à la rubrique 20 01 27",DIS,34714,128,34712,844,✓ Correspondance directe,utiliser FE DIS par défaut 
 20 01 29*,Détergents contenant des substances dangereuses,DIS,34714,128,34712,844,✓ Correspondance directe,Déchet dangereux — FE DIS utilisé par défaut

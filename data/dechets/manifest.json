@@ -28,7 +28,7 @@
           "file": "sources/fe-dechets-tableur.csv",
           "source": "Tableur PlanET V1, feuille FE_déchets : facteurs de la Base Empreinte de l'ADEME par code de déchet, copie sans modification",
           "retrievedOn": "2026-10-07",
-          "checksum": "c05e34b466d18f71a98f04a3bd73f16371eaf2902311f4808393a364c7ff17f2"
+          "checksum": "f6c117f9f043abc5c91f9306133aacf6e46c6c48706db62be34efe44a6d6826e"
         }
       ]
     },
@@ -38,7 +38,7 @@
       "link": "https://base-empreinte.ademe.fr/",
       "vintage": "Base Empreinte, versions citées par la feuille FE_déchets",
       "retrievedOn": "2026-10-07",
-      "checksum": "83a74e0ff8989827ffb6d70e3d367da94b889d0b0f849f3857192558aa226429",
+      "checksum": "ad18a307d8c8e8670ba1c4fba62dcf3f0539a3d63edfe07e1231acb345a0b670",
       "keyColumn": "waste_code",
       "columns": [
         { "name": "waste_code", "unit": "code de la nomenclature européenne des déchets (chapitre 20), avec * pour un déchet dangereux" },

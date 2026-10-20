@@ -40,6 +40,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `id` | État | Pour creuser |
 |---|---|---|
 | `batiments_machines_agricoles` | fait | `src/levers/batiments-machines-agricoles/methodology.md` |
+| `dechets_mode_de_traitement` | fait | `src/levers/dechets-mode-de-traitement/methodology.md` |
 | `haies` | fait | `src/levers/haies/methodology.md` |
 | `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
@@ -48,7 +49,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `transport_personnes_electrification` | fait | `src/levers/transport-personnes-electrification/methodology.md` |
 | `transport_personnes_report_modal` | fait | `src/levers/transport-personnes-report-modal/methodology.md` |
 | `transport_personnes_sobriete_deplacements` | fait | `src/levers/transport-personnes-sobriete-deplacements/methodology.md` |
-| les 8 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
+| les 7 autres leviers calculables | à faire | statut par niveau dans `src/domain/lever-registry.ts` |
 
 `pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés (`not_computed` partout).
 

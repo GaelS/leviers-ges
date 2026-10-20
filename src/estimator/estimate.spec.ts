@@ -634,6 +634,89 @@ describe('estimate', () => {
     })
   })
 
+  describe('dechets_mode_de_traitement', () => {
+    const withDechets = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'dechets/treatment-flows': {
+          keyColumn: 'flow_id',
+          rows: [
+            {
+              flow_id: '01001:20 03 01:storage',
+              commune_code: '01001',
+              waste_code: '20 03 01',
+              treatment_mode: 'storage',
+              tonnes_per_year: '100',
+            },
+          ],
+        },
+        'dechets/emission-factors': {
+          keyColumn: 'waste_code',
+          rows: [
+            {
+              waste_code: '20 03 01',
+              storage_emission_factor_kg_per_tonne: '400',
+              incineration_emission_factor_kg_per_tonne: '100',
+            },
+          ],
+        },
+      }),
+    )
+
+    function dechetsModeDeTraitementRequest({
+      storageToIncineration,
+      storageToMaterialRecovery,
+    }: {
+      storageToIncineration: string
+      storageToMaterialRecovery: string
+    }): RequestInput {
+      return {
+        id: 'dechets_mode_de_traitement',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          storageToIncinerationFraction: storageToIncineration,
+          storageToMaterialRecoveryFraction: storageToMaterialRecovery,
+          incinerationToMaterialRecoveryFraction: '0',
+        },
+      }
+    }
+
+    it('aiguille la région vers son levier : 100 t stockées, tout vers l’incinération, évitent 30 tCO2e', () => {
+      const result = withDechets(
+        dechetsModeDeTraitementRequest({ storageToIncineration: '1', storageToMaterialRecovery: '0' }),
+      )
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('30')
+    })
+
+    it.each(['abc', '1.5'])('refuse la part %j', (storageToIncineration) => {
+      expect(
+        withDechets(
+          dechetsModeDeTraitementRequest({ storageToIncineration, storageToMaterialRecovery: '0' }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.storageToIncinerationFraction' }],
+      })
+    })
+
+    it('refuse de déplacer plus de 100 % du stockage', () => {
+      expect(
+        withDechets(
+          dechetsModeDeTraitementRequest({
+            storageToIncineration: '0.7',
+            storageToMaterialRecovery: '0.4',
+          }),
+        )._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.storageToMaterialRecoveryFraction' }],
+      })
+    })
+  })
+
   describe('entrée invalide', () => {
     it.each([{ id: 'inconnu' }, { id: 3 }, {}])('refuse l’entrée %j sans levier connu', (input) => {
       const result = estimate(input as unknown as RequestInput)
