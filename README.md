@@ -161,7 +161,7 @@ const result = estimate({
 | `transport_personnes_report_modal` | `carToPublicTransportFraction` | fraction des passagers.km en voiture reportée vers le transport en commun |
 | | `carToActiveModesFraction` | fraction des passagers.km en voiture reportée vers les modes actifs ; la somme des deux reports ne dépasse pas 1 |
 | | `railShareFraction` | facultatif |
-| `transport_personnes_efficacite` | `carEcodrivingApplicationFraction`, `busEcodrivingApplicationFraction` | fraction des conducteurs qui appliquent l'écoconduite |
+| `transport_personnes_efficacite` | `carEcodrivingApplicationFraction`, `busEcodrivingApplicationFraction` | part d'application de l'écoconduite (voitures, bus et cars) |
 | | `carPassengerIncrease`, `busPassengerIncrease` | hausse relative du nombre de passagers par véhicule (`'0.2'` = +20 %), 0 ou plus, sans plafond |
 | | `railShareFraction` | facultatif |
 | `transport_personnes_electrification` | `carElectrificationFraction` | fraction du parc de voitures à électrifier ; plafonnée à la part thermique du parc, valeur renvoyée dans `appliedAssumptions` quand le plafond joue |
@@ -175,7 +175,7 @@ const result = estimate({
 | `transport_marchandises_sobriete_logistique` | `roadFreightReductionFraction` | fraction de baisse des tonnes.kilomètres routières |
 | `transport_marchandises_report_modal` | `roadToRailFraction`, `roadToWaterwayFraction` | fractions des t.km routières reportées vers le ferroviaire et le fluvial ; la somme ne dépasse pas 1 |
 | | `cyclologisticTonneKilometres` | t.km reportées vers la cyclologistique (facultatif, `'0'` par défaut, positif ou nul) |
-| `transport_marchandises_efficacite` | `ecodrivingApplicationFraction` | fraction des poids lourds qui appliquent l'écoconduite |
+| `transport_marchandises_efficacite` | `ecodrivingApplicationFraction` | part d'application de l'écoconduite |
 | | `loadFactorIncrease` | hausse relative du chargement (`'0.2'` = +20 %), 0 ou plus, sans plafond |
 | `transport_marchandises_electrification` | `additionalElectrifiedFleetFraction` | points de parc de poids lourds électrifiés en plus ; plafonnée à la part thermique du parc de la région |
 
