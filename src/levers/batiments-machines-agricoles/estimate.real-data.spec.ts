@@ -60,7 +60,7 @@ function reduction(target: { level: Level; code: string; parameters: Reductions 
   return estimate(toRequest(target), context)._unsafeUnwrap().reduction.toFixed()
 }
 
-describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020', () => {
+describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020', { timeout: SLOW_TEST_TIMEOUT_MS }, () => {
   it.each(regions.map((row) => [row['code_region'] ?? '', row['petroleum_products_gwh'] ?? ''] as const))(
     'la région %s évite ses %s GWh de produits pétroliers à 0,2808 tCO2e par MWh',
     (region, gigawattHours) => {
@@ -92,7 +92,6 @@ describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020'
       expect(departements).toHaveLength(96)
       expect(difference.isLessThanOrEqualTo(toBig('0.005').times('96'))).toBe(true)
     },
-    SLOW_TEST_TIMEOUT_MS,
   )
 
   it.each([
