@@ -38,7 +38,7 @@ La somme des deux reports ne dépasse pas 100 % : le tableur n'en pose pas, la r
 
 | Constante | Valeur | Source |
 |---|---|---|
-| 0,8064 ; 1,0164 ; 0,8176 ; 0,9576 | | `TrsptMarch_ReportModal` (formes et `B13`) : « issus de l'analyse du programme CEE REMOVE » ; introuvables dans les guides, FAQ et manuels REMOVE lus |
+| 0,8064 ; 1,0164 ; 0,8176 ; 0,9576 | | `TrsptMarch_ReportModal` (formes et `B13`) : « issus de l'analyse du programme CEE REMOVE » ; expliqués par la documentation fonctionnelle (pp. 64-65) : allongement de distance de 21 % (ferroviaire) et 14 % (fluvial), part routière de 16 %, part de l'autre mode de 84 % ; analyse interne ADEME non publiée |
 | `FE_TFM` | 0,007278 kgCO2e/t.km | Base Empreinte, élément 47691 « Train, motorisation moyenne, chargement moyen », France continentale : combustion 0,004715 + amont 0,002563 (somme exacte 0,0072778944, arrondie à 0,007278 : au plus 0,34 tCO2e d'écart sur la région 84) ; fabrication 0,002991 exclue ; `DonneesReference!D42` « avec prise en compte d'une part de l'amont » |
 | `FE_TFlM` | 0,0206283 kgCO2e/t.km | `FE_fluvial!D25` : moyenne des six facteurs par classe de bateau, poste Combustion seul, pondérée par le nombre de bateaux de la flotte active VNF 2016 |
 
@@ -77,7 +77,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 
 | Limite | Effet |
 |---|---|
-| Coefficients sans source accessible | 0,8064, 1,0164, 0,8176 et 0,9576 ne se retrouvent dans aucun document REMOVE lu |
+| Coefficients d'une analyse non publiée | 0,8064 (1 − 1,21 × 0,16), 1,0164 (1,21 × 0,84), 0,8176 (1 − 1,14 × 0,16) et 0,9576 (1,14 × 0,84) viennent d'une analyse interne ADEME du programme REMOVE, non publiée (documentation fonctionnelle, pp. 64-65) |
 | Périmètres de facteurs différents | fluvial : combustion seule ; ferroviaire : combustion et amont ; thermique routier : émissions directes OMINEA |
 | Barges | 344 barges non motorisées (32 % des 1 088 bateaux, Tableau 9 du rapport ADEME-VNF 2019 repris par `FE_fluvial!B18:B23`) reçoivent les facteurs des automoteurs ; les 348 pousseurs (`FE_fluvial!B23`, `C23`) sont comptés comme barges de 5 937,5 t |
 | Cyclologistique sans effet positif | le paramètre retire des t.km de la base et ne crédite rien |

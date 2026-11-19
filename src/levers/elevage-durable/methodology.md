@@ -82,7 +82,7 @@ Jeux `elevage-durable/regions` et `elevage-durable/departements`, construits par
 | # | Choix | Source ou statut |
 |---|---|---|
 | 1 | Pas de calcul à l'EPCI | fichier Agreste par EPCI contradictoire sur les bovins, secret ; décision du 2026-10-20 |
-| 2 | La formule du dessin, avec `(1 − b)` sur les déjections et le N2O | la prose du tableur est incohérente et ne donne pas zéro quand rien ne change ; à confirmer avec l'ADEME |
+| 2 | La formule du dessin, avec `(1 − b)` sur les déjections et le N2O | la prose du tableur est incohérente et ne donne pas zéro quand rien ne change ; formule confirmée par la documentation fonctionnelle (équation 3, p. 47) |
 | 3 | La proportion actuelle de méthanisation est 0 | `ElevageDurable!B15` |
 | 4 | Les proportions actuelles sont nationales | `DonneesTerritoires!H22` : « Nationale » ; renvoyé dans `appliedAssumptions.currentManureShares` |
 | 5 | Constantes de l'OMINEA 2013, pas de l'OMINEA 2026 | `DonneesReference!D11` à `D15` ; l'OMINEA 2026 donne 121,9 à 152,5 kg de CH4 par vache laitière (121 ici) et 118,7 kg d'azote excrété (115,6) ; renvoyé dans `appliedAssumptions.animalParameters` |
