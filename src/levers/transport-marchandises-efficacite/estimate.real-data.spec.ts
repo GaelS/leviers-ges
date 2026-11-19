@@ -23,11 +23,11 @@ function toRequest(code: string): TransportMarchandisesEfficaciteRequest {
 
 describe('estimate transport_marchandises_efficacite, SDES 2024 et OMINEA 2024', () => {
   it.each([
-    ['84', '755043.33'],
-    ['53', '322132.53'],
-    ['11', '503373.32'],
-    ['94', '5629.67'],
-    ['32', '711569.68'],
+    ['84', '686403.03'],
+    ['53', '292847.76'],
+    ['11', '457612.11'],
+    ['94', '5117.88'],
+    ['32', '646881.53'],
   ])(
     'à 50 %% d’écoconduite et 20 %% de chargement en plus, la région %s évite %s tCO2e',
     (code, expected) => {

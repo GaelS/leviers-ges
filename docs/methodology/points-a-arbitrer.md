@@ -183,7 +183,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
 | Taux de remplissage de 1,4 | les quatre | valeur « courte distance » de la Base Carbone (v23.11, p. 173, ENTD 2008), valeur par défaut du domicile-travail selon la documentation (pp. 58 et 60) ; remplace le 1,165 du tableur (SDES, motif « Professionnel ») | « mixte France » (1,6) ou une valeur domicile-travail | valeur « courte distance » validée par l'équipe le 2026-11-19 ; le taux plus récent du SDES (2018-2019) est plus bas |
-| Potentiel d'écoconduite | efficacité | 15 % unique | une moyenne et non un plafond | le résultat lui est proportionnel |
+| Potentiel d'écoconduite | efficacité | 10 % unique, valeur par défaut de la documentation (p. 61), confirmée le 2026-11-19 ; le tableur donne 15 % | une valeur par mode | le résultat lui est proportionnel |
 | Part du ferré par défaut | les quatre | 82 % en Île-de-France, 24 % ailleurs | une part par territoire | l'EPCI 247800550 est à 89 % francilien et prend 24 % |
 | Facteur du ferré | report modal, sobriété | amont × 67,4 % (documentation fonctionnelle, p. 65), combustion nulle ; 0,187 en Corse | la combustion des TER diesel et le périmètre du facteur corse | limite reconnue par la documentation (p. 58) ; si les TER diesel comptent, le gain baisse |
 | Facteur des voitures | les quatre | parc, calcul d'essai non reproduit | le facteur du trajet, un calcul reproduit | non chiffré |
@@ -213,7 +213,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Hydrogène avec l'électrique | les quatre | facteur électrique | un facteur propre | 907 poids lourds en métropole |
 | Facteurs ferroviaire et fluvial | report modal | périmètres différents | des périmètres identiques | une part de l'amont « non chiffrée » |
 | Barges et pousseurs | report modal | facteurs des automoteurs | des facteurs par type | 344 barges (32 % des 1 088 bateaux) |
-| Potentiel d'écoconduite de 15 % | efficacité | 15 % pour tous les poids lourds | des gains par type d'activité | le guide EVE donne 5 à 15 % (10 % en moyenne) qui s'estompent |
+| Potentiel d'écoconduite de 10 % | efficacité | 10 % pour tous les poids lourds, comme le transport de personnes (documentation pp. 61 et 66, qui écrit aussi 15 % à la p. 66 : tranché le 2026-11-19) | des gains par type d'activité | le guide EVE donne 5 à 15 % (10 % en moyenne) qui s'estompent |
 | Un seul facteur électrique | électrification | 0,0467, validité avril 2021 | un facteur par catégorie | incertitude de 70 % ; valable de 3,5 à 7,5 t |
 | Part électrifiée plafonnée | électrification | plafonnée à la part thermique | une règle du tableur | 0,15 % du parc est déjà zéro émission |
 | T.km réparties uniformément entre les poids lourds | électrification | uniforme | une répartition réelle | non chiffré |
@@ -263,7 +263,7 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `residentiel_sobriete` | `Residentiel_Sobriete!A25` | parc de logements listé comme donnée de territoire, absent de la formule | non utilisé |
 | `transport_personnes_efficacite` | `TrsptPers_Efficacité!B13` | le texte dit que la baisse totale est une somme, le dessin la calcule comme un produit | produit : 15,9 % de baisse contre 16,6 % dans un cas de test |
 | `transport_personnes_efficacite` | `ParametreDeterminants!B30:B33` | même abréviation pour deux paramètres (« % Application de l'éco conduite voyageurs », « % Augmentation nombre de voyageurs par véhicule ») | un paramètre par mode |
-| `transport_personnes_efficacite` | `DonneesReference!D29` | deux potentiels d'écoconduite pour une seule ligne, dont la valeur est dans la colonne des commentaires | 15 % pour les voitures et les bus |
+| `transport_personnes_efficacite` | `DonneesReference!D29` | deux potentiels d'écoconduite pour une seule ligne, dont la valeur est dans la colonne des commentaires | 10 % pour les voitures et les bus (documentation, p. 61) |
 | `transport_personnes_efficacite` | `TrsptPers_Efficacité!A37` | « Taux de remplissage moyen des VP autres trajets » listé, inutilisé par la formule | non utilisé |
 | `transport_personnes_sobriete_deplacements` | `TrsptPers_SobriétéDéplacements!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser pour les voitures et ne dit rien du bus | division par 1,4, étendue au bus par analogie |
 | `transport_personnes_report_modal` | `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser (voitures) | division par 1,4 |

@@ -23,7 +23,7 @@ facteur par tonne.km    = facteur par véhicule.km ÷ taux de chargement
 | Leviers | transport de personnes et de marchandises, efficacité |
 | Tableur | `B13` dit « somme » des baisses (éco-conduite, chargement) ; la formule affichée les multiplie |
 | Correction | produit, comme affiché |
-| Raison | les résultats diffèrent : 15,9 % contre 16,6 % (10 % de passagers en plus, 50 % d'application, 15 % de potentiel) |
+| Raison | les résultats diffèrent : 13,6 % contre 14,1 % (10 % de passagers en plus, 50 % d'application, 10 % de potentiel) |
 
 ```
 baisse totale =

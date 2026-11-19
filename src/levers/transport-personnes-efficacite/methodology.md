@@ -5,7 +5,7 @@ Identifiant : `transport_personnes_efficacite`. Niveaux : région, département 
 ## Formule
 
 ```
-baisse_m = 1 − 1 / (1 + p_m) × (1 − a_m × 15 %)
+baisse_m = 1 − 1 / (1 + p_m) × (1 − a_m × 10 %)
 
 Émissions évitées (tCO2e/an) = Σ_m  baisse_m × PK_m × 52,14 × FE_m ÷ T_m ÷ 1 000
 
@@ -42,7 +42,7 @@ Les quatre premières sont obligatoires : le tableur les laisse vides, et la col
 | Constante | Valeur | Source |
 |---|---|---|
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille `TrsptPers_Efficacité` |
-| Potentiel de baisse par écoconduite | 15 % | `DonneesReference!D29` : « ~15% » ; la page citée dit « jusqu'à 15 % de carburant » |
+| Potentiel de baisse par écoconduite | 10 % | documentation fonctionnelle, 7.3.4.3 (p. 61) : identique pour les TC routiers et les VP, 10 % par défaut (enquête IPSOS) ; le tableur donne « ~15% » (`DonneesReference!D29`), la documentation l'emporte ; valeur confirmée par l'équipe le 2026-11-19 |
 | Taux de remplissage des voitures | 1,4 passager | Base Carbone (documentation générale v23.11, p. 173) : courte distance, ENTD 2008 ; documentation fonctionnelle PlanET, pp. 58 et 60 ; le tableur donne 1,165 (`DonneesReference!D26`, SDES, motif « Professionnel »), la documentation l'emporte |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
 | Part du ferré par défaut | 82 % en Île-de-France, 24 % ailleurs | SDES, Bilan annuel des transports 2024, figures F1-4 et F2-1 |
@@ -63,7 +63,7 @@ La part du ferré par défaut dépend de la région : un territoire dont toutes 
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Un seul potentiel d'écoconduite, 15 %, pour les voitures et pour les bus et cars | le tableur donne une seule valeur (`DonneesReference!D29`) pour deux paramètres ; choix de conception, non validé. Le plafond « jusqu'à 15 % » sert de moyenne |
+| 1 | Un seul potentiel d'écoconduite, 10 %, pour les voitures et pour les bus et cars | la documentation (p. 61) donne une valeur identique pour les TC routiers et les VP, le tableur une seule (`DonneesReference!D29`) pour deux paramètres |
 | 2 | Facteur du bus : la valeur basse de OMINEA 2024 (0,0805 kgCO2e/passager.km pour le diesel) contre 0,0874 pour Base Empreinte | choix de conception, non validé ; renvoyé dans `appliedAssumptions.busEmissionFactor` |
 | 3 | Les carburants sans facteur sont exclus de la moyenne du parc : « autre » pour les voitures, « essence » et « autre » pour les bus | la part exclue est renvoyée dans `carFleetUnclassifiedShare` et `busFleetUnclassifiedShare` quand elle n'est pas nulle |
 | 4 | Un territoire sans voiture ou sans bus classé prend la moyenne nationale | renvoyé dans `nationalCarEmissionFactor` et `nationalBusEmissionFactor` |
@@ -77,22 +77,22 @@ La part du ferré par défaut dépend de la région : un territoire dont toutes 
 
 | Entrée | Résultat |
 |---|---|
-| voitures seules, 1 000 passagers.km par semaine à 0,083214285714285714285714285714 kgCO2e/passager.km, écoconduite à 100 % | 0,650819 tCO2e |
-| idem, écoconduite à 50 % et 10 % de passagers en plus | 0,690262 tCO2e (baisse de 15,9 %, 16,6 % si les gains s'additionnaient) |
+| voitures seules, 1 000 passagers.km par semaine à 0,083214285714285714285714285714 kgCO2e/passager.km, écoconduite à 100 % | 0,433879 tCO2e |
+| idem, écoconduite à 50 % et 10 % de passagers en plus | 0,591654 tCO2e (baisse de 13,6 %, 14,1 % si les gains s'additionnaient) |
 | voitures seules, écoconduite à 0 % et 100 % de passagers en plus | 2,169396 tCO2e |
-| bus seuls, 1 000 passagers.km par semaine dont 60 % en ferré, 0,8 kgCO2e/véh.km, écoconduite à 100 % | 0,250272 tCO2e |
-| idem, écoconduite à 50 % et 20 % de passagers en plus | 0,38236 tCO2e |
+| bus seuls, 1 000 passagers.km par semaine dont 60 % en ferré, 0,8 kgCO2e/véh.km, écoconduite à 100 % | 0,166848 tCO2e |
+| idem, écoconduite à 50 % et 20 % de passagers en plus | 0,3476 tCO2e |
 | tout le transport en commun en ferré | 0 tCO2e |
-| région 84, jeu de test, hors Île-de-France | 1 126,34 tCO2e |
-| région 84, jeu de test, voiture à 100 % et +10 %, bus à 50 % et +20 % | 1 712,57 tCO2e |
-| région 11, jeu de test, Île-de-France | 763,44 tCO2e |
-| région 84, données réelles, 100 % d'écoconduite | 263 796,9 tCO2e |
-| région 53 (Bretagne) | 122 881,52 tCO2e |
-| région 11 (Île-de-France) | 249 826,98 tCO2e |
-| département 69 | 55 526,25 tCO2e |
-| département 75 | 25 190,81 tCO2e |
-| EPCI 200046977 | 38 051,41 tCO2e |
-| région 84, 50 % d'écoconduite et 10 % de passagers en plus | 279 784,59 tCO2e |
+| région 84, jeu de test, hors Île-de-France | 750,89 tCO2e |
+| région 84, jeu de test, voiture à 100 % et +10 %, bus à 50 % et +20 % | 1 449,31 tCO2e |
+| région 11, jeu de test, Île-de-France | 508,96 tCO2e |
+| région 84, données réelles, 100 % d'écoconduite | 175 864,6 tCO2e |
+| région 53 (Bretagne) | 81 921,01 tCO2e |
+| région 11 (Île-de-France) | 166 551,32 tCO2e |
+| département 69 | 37 017,5 tCO2e |
+| département 75 | 16 793,87 tCO2e |
+| EPCI 200046977 | 25 367,61 tCO2e |
+| région 84, 50 % d'écoconduite et 10 % de passagers en plus | 239 815,36 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -101,7 +101,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Limite | Effet |
 |---|---|
 | Hexagone et moins de 100 km | 772 644 actifs métropolitains qui se déplacent sont hors champ de la base, ainsi que les DOM ; millésime 2022, « Annuelle sans garantie » |
-| Potentiel d'écoconduite | un plafond, pas une moyenne : le résultat lui est proportionnel |
+| Potentiel d'écoconduite | une moyenne (10 %) : le résultat lui est proportionnel ; la documentation cite jusqu'à 23 % pour une berline compacte essence |
 | Deux-roues motorisés | sans terme : 1,4 % des passagers.km ; hors périmètre selon la documentation fonctionnelle (p. 58) |
 | Parc de bus et cars immatriculé au siège | trois communes portent 17,7 % du parc métropolitain ; 276 des 1 243 EPCI n'ont aucun bus ni car classé et 11 aucune voiture : ils prennent la moyenne nationale |
 | Part du ferré par défaut | une valeur par groupe de régions : un territoire avec un grand métro hors Île-de-France (Lyon, Marseille, Lille) a une part ferrée plus haute, et ses bus sont surévalués |

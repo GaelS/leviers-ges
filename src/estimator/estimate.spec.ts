@@ -493,16 +493,16 @@ describe('estimate', () => {
       }
     }
 
-    it('aiguille la région vers son levier : 1 000 000 passagers.km par semaine avec 15 % d’écoconduite', () => {
+    it('aiguille la région vers son levier : 1 000 000 passagers.km par semaine avec 100 % d’écoconduite', () => {
       const result = withTransport(transportPersonnesEfficaciteRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('650.82')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('433.88')
     })
 
     it('accepte une hausse de passagers supérieure à 100 %, mais pas négative', () => {
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: 2 }))._unsafeUnwrap()
           .reduction.toFixed(),
-      ).toBe('3109.47')
+      ).toBe('3037.15')
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: '-0.1' }))._unsafeUnwrapErr(),
       ).toEqual({
@@ -1244,14 +1244,14 @@ describe('estimate', () => {
       } as RequestInput
     }
 
-    it('aiguille la région vers son levier : 100 % d’écoconduite évitent 12 tCO2e pour 1 000 000 t.km à 0,08', () => {
+    it('aiguille la région vers son levier : 100 % d’écoconduite évitent 8 tCO2e pour 1 000 000 t.km à 0,08', () => {
       const result = withGoods(
         transportMarchandisesEfficaciteRequest({
           ecodrivingApplicationFraction: '1',
           loadFactorIncrease: '0',
         }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('12')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('8')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
