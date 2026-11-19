@@ -66,5 +66,5 @@ function calculatePratiquesStockantesReduction(surfaces: StockingPracticeSurface
   return quantity<'TonnesCo2ePerYear'>(totalStorage.toFixed())
 }
 
-export { calculatePratiquesStockantesReduction, STORAGE_FACTORS }
+export { calculatePratiquesStockantesReduction }
 export type { StockingPracticeSurfaces }

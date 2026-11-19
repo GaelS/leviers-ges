@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import { quantity } from '../../domain/units.ts'
 import {
   calculatePratiquesStockantesReduction,
-  STORAGE_FACTORS,
   type StockingPracticeSurfaces,
 } from './calculate-pratiques-stockantes-reduction.ts'
 
@@ -16,13 +15,13 @@ const NO_SURFACE: Record<keyof StockingPracticeSurfaces, string> = {
 }
 
 function reductionOf(overrides: Partial<Record<keyof StockingPracticeSurfaces, string>>): string {
-  const values = { ...NO_SURFACE, ...overrides }
+  const filledSurfaces = { ...NO_SURFACE, ...overrides }
   return calculatePratiquesStockantesReduction({
-    intermediateCrops: quantity<'Hectares'>(values.intermediateCrops),
-    permanentVineyardGrassing: quantity<'Hectares'>(values.permanentVineyardGrassing),
-    winterIntercropVineyard: quantity<'Hectares'>(values.winterIntercropVineyard),
-    agroforestry: quantity<'Hectares'>(values.agroforestry),
-    temporaryGrasslandExtension: quantity<'Hectares'>(values.temporaryGrasslandExtension),
+    intermediateCrops: quantity<'Hectares'>(filledSurfaces.intermediateCrops),
+    permanentVineyardGrassing: quantity<'Hectares'>(filledSurfaces.permanentVineyardGrassing),
+    winterIntercropVineyard: quantity<'Hectares'>(filledSurfaces.winterIntercropVineyard),
+    agroforestry: quantity<'Hectares'>(filledSurfaces.agroforestry),
+    temporaryGrasslandExtension: quantity<'Hectares'>(filledSurfaces.temporaryGrasslandExtension),
   }).toFixed()
 }
 
@@ -55,20 +54,6 @@ describe('calculatePratiquesStockantesReduction', () => {
 
   it('1 000 ha de cultures intermédiaires et 200 ha d’agroforesterie stockent 1 568,6 tCO2e par an', () => {
     expect(reductionOf({ intermediateCrops: '1000', agroforestry: '200' })).toBe('1568.6')
-  })
-
-  it('les facteurs de stockage sont ceux de l’étude du coût marginal d’abattement, en valeur absolue', () => {
-    expect(
-      Object.fromEntries(
-        Object.entries(STORAGE_FACTORS).map(([practice, factor]) => [practice, factor.toFixed()]),
-      ),
-    ).toEqual({
-      intermediateCrops: '0.753',
-      permanentVineyardGrassing: '1.534',
-      winterIntercropVineyard: '1.087',
-      agroforestry: '4.078',
-      temporaryGrasslandExtension: '0.903',
-    })
   })
 
   it('la réduction est linéaire : f(a) + f(b) = f(a + b)', () => {

@@ -115,6 +115,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|---|
 | Surfaces d'application | saisies par la collectivité, sans borne | des bornes par pratique selon la surface de prairies, vergers, vignes ou cultures (ALDO) | non chiffré ; limite à maintenir selon la documentation (p. 78) |
 | Facteurs de stockage | cinq valeurs moyennes potentielles (Bamière et al. 2023, documentation p. 73), prises en valeur absolue | des valeurs par type de sol et de climat | non chiffré ; la documentation rappelle que ces moyennes ne sont pas toujours atteintes (p. 73) |
+| Surfaces négatives | refusées | un net négatif, comme celui des haies | non chiffré ; choix de conception, non validé |
 | Pratiques écartées | labour occasionnel, bandes enherbées, intensification des prairies permanentes peu productives | leur prise en compte | écartées par la documentation (p. 72) |
 
 ### Produits bois (`produits_bois`, région, département)

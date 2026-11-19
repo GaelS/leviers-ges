@@ -2,7 +2,7 @@
 
 Les formules du tableur ADEME PlanET V1 (21 leviers de décarbonation) sous forme de fonctions TypeScript. Une requête par levier, en retour les tonnes de CO2e évitées par an pour une région, un département ou un EPCI.
 
-17 leviers sont calculés. Les quatre autres (`pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
+18 leviers sont calculés. Les trois autres (`occupation_des_sols`, `residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
