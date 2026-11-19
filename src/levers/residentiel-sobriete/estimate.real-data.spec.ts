@@ -87,7 +87,7 @@ describe('estimate residentiel_sobriete, énergie SDES 2024, CEREN 2024 et rése
     expect(reduction({ level: 'departement', code: '2A', parameters: FULL })).toBe('19931')
   })
 
-  it('les 13 régions de métropole évitent 39 495 128,07 tCO2e à 100 %', () => {
+  it('les 13 régions de métropole évitent 36 785 947,91 tCO2e à 100 %', () => {
     const regionalReductions = regions.map((row) =>
       toBig(reduction({ level: 'region', code: row['code_region'] ?? '', parameters: FULL })),
     )
@@ -95,7 +95,7 @@ describe('estimate residentiel_sobriete, énergie SDES 2024, CEREN 2024 et rése
     expect(sum(regionalReductions).toFixed()).toBe('36785947.91')
   })
 
-  it('les 96 départements de métropole évitent 39 937 077,48 tCO2e à 100 %, 1,1 % de plus que les régions', () => {
+  it('les 96 départements de métropole évitent 37 133 226,16 tCO2e à 100 %, 0,9 % de plus que les régions', () => {
     const departmentalReductions = departements.map((row) =>
       toBig(reduction({ level: 'departement', code: row['code_departement'] ?? '', parameters: FULL })),
     )

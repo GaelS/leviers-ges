@@ -141,7 +141,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Bois non compté | non compté | sa consommation | non chiffré |
 | Secret statistique | lignes secrètes à 0 | les valeurs | électricité 2,6 %, gaz 5,3 % des lignes, 14 % des réseaux |
 | Formule appliquée à la consommation initiale | consommation initiale | la consommation restante après les deux autres leviers résidentiels | non chiffré |
-| Départements et régions | sources différentes | une source commune | la somme des 96 départements dépasse celle des 13 régions de 1,1 % |
+| Départements et régions | sources différentes | une source commune | la somme des 96 départements dépasse celle des 13 régions de 0,9 % |
 
 ### Transport de personnes (`transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification`)
 

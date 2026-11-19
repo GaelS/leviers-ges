@@ -63,7 +63,7 @@ describe('calculateResidentielSobrieteReduction', () => {
     expect(reduction({ vectors: { heat: '1000' }, heatEmissionFactor: '0.1' })).toBe('100')
   })
 
-  it('additionne les cinq vecteurs : 1 000 MWh de chacun évitent 849,9134 tCO2e', () => {
+  it('additionne les cinq vecteurs : 1 000 MWh de chacun évitent 831,5806 tCO2e', () => {
     const vectors = {
       electricity: '1000',
       naturalGas: '1000',
@@ -74,7 +74,7 @@ describe('calculateResidentielSobrieteReduction', () => {
     expect(reduction({ vectors, heatEmissionFactor: '0.1' })).toBe('831.5806')
   })
 
-  it('applique la part des foyers puis la baisse : 50 % des foyers × 10 % de baisse = 5 % de 849,9134', () => {
+  it('applique la part des foyers puis la baisse : 50 % des foyers × 10 % de baisse = 5 % de 831,5806', () => {
     const vectors = {
       electricity: '1000',
       naturalGas: '1000',
