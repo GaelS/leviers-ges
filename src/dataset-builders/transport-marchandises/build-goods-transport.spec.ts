@@ -9,13 +9,9 @@ const REGION_COLUMNS =
   'code_region,billion_tonne_kilometres,heavy_vehicle_fleet,zero_emission_heavy_vehicle_fleet,diesel_emission_factor_g_per_vehicle_km,diesel_unclassified_share'
 
 const EURO_FACTORS = [
-  ['070301PL', 'Euro VI', '700'],
   ['070302PL', 'Euro VI', '600'],
-  ['070301PL', 'Euro V', '640'],
   ['070302PL', 'Euro V', '540'],
-  ['070301PL', 'Euro IV', '620'],
   ['070302PL', 'Euro IV', '520'],
-  ['070301PL', 'Euro III', '600'],
   ['070302PL', 'Euro III', '500'],
   ['070303PL', 'Euro VI', '900'],
   ['070303PL', 'Euro V', '800'],
@@ -159,7 +155,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        omineaCsv: [OMINEA_HEADER, '070301PL,Euro VI,205,CO2,g/(veh.km),700'].join('\n'),
+        omineaCsv: [OMINEA_HEADER, '070302PL,Euro VI,205,CO2,g/(veh.km),600'].join('\n'),
       })._unsafeUnwrapErr(),
     ).toMatchObject({
       dataset: 'transport-marchandises/sources/ominea-co2-poids-lourds-diesel-g-par-vehicule-km-2024.csv',

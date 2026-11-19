@@ -18,7 +18,7 @@ const EURO_STANDARD_BY_CRIT_AIR: ReadonlyMap<string, string> = new Map([
 ])
 
 // Source : tableur PlanET V1, FE_transports!A22 et A31 : le domicile-travail est le type de mobilité par défaut, avec 50 % du facteur SNAP « route » (070302PL) et 50 % de « ville » (070303PL), comme les autres courtes distances ; hypothèse nommée heavyVehicleTripType
-const DEFAULT_TRIP_SNAP_WEIGHTS: ReadonlyMap<string, BigNumber> = new Map([
+const ROAD_AND_CITY_SNAP_WEIGHTS: ReadonlyMap<string, BigNumber> = new Map([
   ['070302PL', toBig('0.5')],
   ['070303PL', toBig('0.5')],
 ])
@@ -50,14 +50,14 @@ function findFactor({
   )
 }
 
-function calculateDefaultTripFactor({
+function calculateRoadAndCityFactor({
   rows,
   euroStandard,
 }: {
   rows: readonly DataRow[]
   euroStandard: string
 }): Result<BigNumber, InvalidDataset> {
-  const weightedFactors = [...DEFAULT_TRIP_SNAP_WEIGHTS].map(([snapCode, weight]) =>
+  const weightedFactors = [...ROAD_AND_CITY_SNAP_WEIGHTS].map(([snapCode, weight]) =>
     findFactor({ rows, snapCode, euroStandard }).map((factor) => factor.times(weight)),
   )
   return Result.combine(weightedFactors).map(sum)
@@ -71,7 +71,7 @@ function readEuroFactors(
     .andThen((rows) =>
       Result.combine(
         [...EURO_STANDARD_BY_CRIT_AIR].map(([critAir, euroStandard]) =>
-          calculateDefaultTripFactor({ rows, euroStandard }).map(
+          calculateRoadAndCityFactor({ rows, euroStandard }).map(
             (factor): readonly [string, BigNumber] => [critAir, factor],
           ),
         ),
