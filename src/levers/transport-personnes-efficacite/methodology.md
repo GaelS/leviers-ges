@@ -102,7 +102,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 |---|---|
 | Hexagone et moins de 100 km | 772 644 actifs métropolitains qui se déplacent sont hors champ de la base, ainsi que les DOM ; millésime 2022, « Annuelle sans garantie » |
 | Potentiel d'écoconduite | un plafond, pas une moyenne : le résultat lui est proportionnel |
-| Deux-roues motorisés | sans terme : 1,4 % des passagers.km |
+| Deux-roues motorisés | sans terme : 1,4 % des passagers.km ; hors périmètre selon la documentation fonctionnelle (p. 58) |
 | Parc de bus et cars immatriculé au siège | trois communes portent 17,7 % du parc métropolitain ; 276 des 1 243 EPCI n'ont aucun bus ni car classé et 11 aucune voiture : ils prennent la moyenne nationale |
 | Part du ferré par défaut | une valeur par groupe de régions : un territoire avec un grand métro hors Île-de-France (Lyon, Marseille, Lille) a une part ferrée plus haute, et ses bus sont surévalués |
 | Territoire à cheval ou commune sans région | un territoire dont les communes ne sont pas toutes en Île-de-France prend 24 %, y compris un EPCI à cheval sur l'Île-de-France et une autre région (l'EPCI 247800550 : 32 communes en région 11 et 4 en région 24, il prend 24 % alors que 89 % de ses communes sont franciliennes) |
