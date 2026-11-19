@@ -2,7 +2,7 @@
 
 Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit, levier par levier, où le calcul est possible, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs existants. Il constate ; il ne décide rien. Les réponses du CGDD (Brice et Laurent) au document de questions du 29 octobre 2026 et la documentation fonctionnelle PlanET (juin 2026) tranchent une partie des points : leurs lignes sont retirées ou mises à jour. « Limite reconnue » signale une limite que la documentation déclare, dans sa section 7.8 ou dans les limites du levier concerné, à maintenir ou à faire évoluer.
 
-✅ calculé, aucune question ouverte. ❓ calculé grâce à une hypothèse nommée (`docs/methodology/assumptions.md`) ou à un choix décrit en partie 2. ❌ non calculé, raison en partie 1.
+✅ calculé, aucune question ouverte. ❓ calculé grâce à une hypothèse nommée (`docs/methodology/assumptions.md`) ou à un choix décrit en partie 2. ❌ non calculé, raison en partie 1 (bloqué par une donnée, à décider ou à implémenter, ou hors périmètre).
 
 ## Vue d'ensemble
 
@@ -36,26 +36,33 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 ---
 
-## 1. Niveaux non calculés : ce qui les débloquerait
+## 1. Niveaux non calculés : où ils en sont
 
-### 1.1 Leviers non calculés à aucun niveau (2 leviers, 6 niveaux)
+Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retient : une donnée qu'on n'a pas, un choix à valider alors que la donnée existe, ou le périmètre du tableur. Mise à jour le 2026-11-19 sur la documentation fonctionnelle, le tableur et les réponses du CGDD.
 
-| Levier | Niveaux | Ce qui manque | Ordre de grandeur de l'enjeu |
+### 1.1 Bloqués par une donnée que nous n'avons pas (3 leviers, 7 niveaux)
+
+| Levier | Niveaux | Ce qui manque | Où en est la piste |
 |---|---|---|---|
-| `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département (renvoyée au CEREN, « pas disponible en open source ») | levier entier |
-| `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | levier entier |
+| `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département : le CEREN, « pas disponible en open source » (tableur, documentation p. 51) | le CGDD (Brice, Laurent) : pas d'avancées notables avec le CEREN ; documentation des données demandée (Q3, Q4) |
+| `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie : le CEREN ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | idem, relance commune avec la rénovation |
+| `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | le jeu « RGA2020 EPCI » de data.gouv.fr ne couvre que le Pays Basque : impasse ; reste à vérifier le jeu communal « RGA 2020 - Commune » ; le tableur donne l'EPCI « OUI » |
 
-### 1.2 Leviers calculés à certains niveaux seulement (12 niveaux)
+### 1.2 À décider ou à implémenter : la donnée existe (2 leviers, 3 niveaux)
 
-| Levier | Niveaux à débloquer | Ce qui manque | Ce que le tableur dit |
+| Levier | Niveaux | Pourquoi ce n'est pas calculé | Ce qui reste à faire |
 |---|---|---|---|
-| `occupation_des_sols` | région, département | les facteurs de conversion d'ALDO Flux 2 n'existent qu'à l'EPCI et varient d'un EPCI à l'autre au-delà de la zone pédoclimatique ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger | maille région : OUI, département : OUI |
-| `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | EPCI : OUI |
-| `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels à l'EPCI, ou une clé de répartition validée | EPCI : OUI |
-| `transport_marchandises_sobriete_logistique` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) ; le tableur déclare ces niveaux hors périmètre | hors périmètre |
-| `transport_marchandises_report_modal` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) | hors périmètre |
-| `transport_marchandises_efficacite` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) | hors périmètre |
-| `transport_marchandises_electrification` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) | hors périmètre |
+| `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels ne sont pas publiés à l'EPCI ; le tableur (`Residentiel_Sobriete!A25`) et la documentation (p. 51) désignent le Fichier Logements du recensement INSEE à la commune, ouvert, dont la variable `CMBL` distingue le fioul du gaz en bouteille ou en citerne | construire le jeu (millésime 2018) et répartir la consommation du département par combustible au prorata de la surface des logements chauffés à ce combustible : choix de conception à faire valider (Q9, Laurent « pas de réponse de tête ») |
+| `occupation_des_sols` | région, département | les facteurs d'ALDO Flux 2 sont publiés à l'EPCI et à la commune (35 066 communes, jeu « flux 2 - unitaire - communes ») ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger ; les valeurs EPCI d'ALDO ne sont pas la moyenne simple de leurs communes (écart médian de 0 à 1,2 tCO2e/ha selon la conversion) | question au CGDD sur la règle d'agrégation, ou choix de conception documenté ; le tableur donne région et département « OUI » |
+
+### 1.3 Hors périmètre selon le tableur (4 leviers, 8 niveaux)
+
+| Levier | Niveaux | Ce que dit le tableur | Remarque |
+|---|---|---|---|
+| `transport_marchandises_sobriete_logistique` | département, EPCI | « Maille EPCI : NON, Maille Département : NON, Maille Région : OUI » | les tonnes.kilomètres du SDES sont régionales ; pas à débloquer |
+| `transport_marchandises_report_modal` | département, EPCI | idem | idem |
+| `transport_marchandises_efficacite` | département, EPCI | idem | idem |
+| `transport_marchandises_electrification` | département, EPCI | idem | idem |
 
 ---
 
