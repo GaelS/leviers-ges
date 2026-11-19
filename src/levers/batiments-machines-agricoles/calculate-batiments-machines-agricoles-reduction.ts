@@ -22,9 +22,10 @@ type ReductionFractions = {
   readonly heat: Fraction
 }
 
-// Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 203 (fioul lourd), SNAP 020302, valeur constante de 2013 à 2024 :
-// 78 kg CO2/GJ. PlanET V1, forme « FE du fioul lourd » (intitulé de « autres produits pétroliers »)
-const PETROLEUM_PRODUCTS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('78')
+// Source : OMINEA, base BDD_OMINEA_A_EF v23.1, NAPFUE 205 (gazole), SNAP 080601 (engins spéciaux, agriculture, échappement moteur), 2024 :
+// 74,5229 kg CO2/GJ, arrondi à 74,52 (choix de conception, non validé, comme le fioul domestique du résidentiel). Documentation fonctionnelle PlanET (juin 2026),
+// 7.1.3.6, p. 51 : « le facteur d'émission des produits pétroliers est celui du Gazole non routier » ; remplace le fioul lourd à 78 kg/GJ (PlanET V1, forme « FE du fioul lourd »), la documentation l'emportant sur le tableur
+const PETROLEUM_PRODUCTS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('74.52')
 
 function calculateAvoidedEmissions({
   consumption,

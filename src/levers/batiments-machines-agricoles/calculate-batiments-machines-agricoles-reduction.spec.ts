@@ -50,8 +50,8 @@ describe('calculateBatimentsMachinesAgricolesReduction', () => {
     expect(reduction({ consumption: { naturalGas: ONE_THOUSAND_MWH } })).toBe('201.168')
   })
 
-  it('1000 MWh de produits pétroliers évitent 280,8 tCO2e : 78 kg/GJ × 0,0036 GJ/kWh', () => {
-    expect(reduction({ consumption: { petroleumProducts: ONE_THOUSAND_MWH } })).toBe('280.8')
+  it('1000 MWh de produits pétroliers évitent 268,272 tCO2e : 74,52 kg/GJ × 0,0036 GJ/kWh', () => {
+    expect(reduction({ consumption: { petroleumProducts: ONE_THOUSAND_MWH } })).toBe('268.272')
   })
 
   it('1000 MWh de chaleur à 0,1 kgCO2e/kWh évitent 100 tCO2e', () => {
@@ -65,7 +65,7 @@ describe('calculateBatimentsMachinesAgricolesReduction', () => {
       petroleumProducts: ONE_THOUSAND_MWH,
       heat: ONE_THOUSAND_MWH,
     }
-    expect(reduction({ consumption })).toBe('616.9486')
+    expect(reduction({ consumption })).toBe('604.4206')
   })
 
   it('applique le pourcentage de chaque vecteur à ce vecteur seul', () => {
@@ -81,7 +81,7 @@ describe('calculateBatimentsMachinesAgricolesReduction', () => {
       petroleumProducts: quantity<'Fraction'>('0.5'),
       heat: quantity<'Fraction'>('0'),
     }
-    expect(reduction({ consumption, reductionFractions })).toBe('140.4')
+    expect(reduction({ consumption, reductionFractions })).toBe('134.136')
   })
 
   it('une chaleur à facteur nul n’évite rien', () => {

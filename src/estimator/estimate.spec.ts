@@ -246,7 +246,7 @@ describe('estimate', () => {
           heatReductionFraction: '0',
         },
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('280.8')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('268.27')
     })
 
     function batimentsMachinesAgricolesRequest(parameters: object): RequestInput {
@@ -270,7 +270,7 @@ describe('estimate', () => {
         petroleumProductsReductionFraction: 0.5,
         heatReductionFraction: '0',
       })
-      expect(withEnergy(request)._unsafeUnwrap().reduction.toFixed()).toBe('140.4')
+      expect(withEnergy(request)._unsafeUnwrap().reduction.toFixed()).toBe('134.14')
     })
 
     it.each([
