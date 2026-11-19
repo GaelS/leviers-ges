@@ -17,6 +17,10 @@ const EURO_FACTORS = [
   ['070302PL', 'Euro IV', '520'],
   ['070301PL', 'Euro III', '600'],
   ['070302PL', 'Euro III', '500'],
+  ['070303PL', 'Euro VI', '900'],
+  ['070303PL', 'Euro V', '800'],
+  ['070303PL', 'Euro IV', '760'],
+  ['070303PL', 'Euro III', '740'],
 ] as const
 
 const OMINEA_CSV = [
@@ -64,7 +68,7 @@ describe('buildGoodsTransport', () => {
   it('pondère les facteurs Euro des diesel classés par le parc, et compte les parts hors vignette', () => {
     const goods = build({ fleetCsv: BRETAGNE_FLEET })._unsafeUnwrap()
     expect(goods).toEqual({
-      csv: `${REGION_COLUMNS}\n53,13.5,620,15,618,0.166666666667\n`,
+      csv: `${REGION_COLUMNS}\n53,13.5,620,15,708,0.166666666667\n`,
       regionCount: 1,
       totals: {
         billion_tonne_kilometres: '13.5',
