@@ -1,6 +1,6 @@
 # Fertilisation azotée
 
-Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas calculé : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département, sans que le résultat se vérifie (`not_computed`). Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas encore calculé (`not_computed`) : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département. Le CGDD (Brice) valide cette ventilation par les surfaces de culture hors agriculture biologique ; elle n'est pas encore implémentée, faute de surfaces versionnées (voir `docs/methodology/points-a-arbitrer.md`). Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
