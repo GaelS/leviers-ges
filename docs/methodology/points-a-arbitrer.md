@@ -76,7 +76,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|---|
 | Pêche comprise dans les produits pétroliers | comprise, comme le tableur | la part agricole seule | 9,0 % des produits pétroliers de métropole, 22 % en Bretagne |
 | Facteur de l'électricité : millésime | mix moyen 2024 × 67,4 % | la valeur de l'année du calcul | 0,0519 (2024) à 0,058 (2023) avant le coefficient de 67,4 % |
-| Facteur du fioul lourd pour tous les produits pétroliers | fioul lourd (78) | le facteur des engins agricoles | OMINEA : 74,52 et 72,48, soit 4,5 % et 7,1 % de moins |
+| Facteur du gazole non routier pour tous les produits pétroliers | gazole des engins agricoles (74,52), comme la documentation (p. 51) ; le tableur donne le fioul lourd (78) | une pondération par produit (gazole, essence) | OMINEA : l'essence vaut 72,48, soit 2,7 % de moins |
 | Produits pétroliers répartis par la part de SAU | part de SAU | la part de gazole non routier | écart de 3,0 points en médiane, 11,6 au 90e centile ; limite reconnue par la documentation fonctionnelle PlanET (p. 77, à maintenir) |
 | Secret statistique | lignes secrètes à 0 | les valeurs sous secret | électricité : 38 % des lignes IRIS ; gaz : 66 % |
 | Maille des produits pétroliers | région répartie par la SAU | la donnée départementale que désigne le tableur (`H25`) | non chiffré |

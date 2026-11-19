@@ -33,8 +33,8 @@ const PETROLEUM_ONLY = {
   heatReductionFraction: '0',
 }
 
-// Source : 78 kg CO2/GJ × 0,0036 GJ/kWh = 0,2808 kgCO2e/kWh, soit 0,2808 tCO2e par MWh (OMINEA, fioul lourd)
-const PETROLEUM_PRODUCTS_TONNES_PER_MWH = '0.2808'
+// Source : 74,52 kg CO2/GJ × 0,0036 GJ/kWh = 0,268272 kgCO2e/kWh, soit 0,268272 tCO2e par MWh (OMINEA, gazole des engins agricoles)
+const PETROLEUM_PRODUCTS_TONNES_PER_MWH = '0.268272'
 
 const MEGAWATT_HOURS_PER_GIGAWATT_HOUR = '1000'
 
@@ -62,7 +62,7 @@ function reduction(target: { level: Level; code: string; parameters: Reductions 
 
 describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020', { timeout: SLOW_TEST_TIMEOUT_MS }, () => {
   it.each(regions.map((row) => [row['code_region'] ?? '', row['petroleum_products_gwh'] ?? ''] as const))(
-    'la région %s évite ses %s GWh de produits pétroliers à 0,2808 tCO2e par MWh',
+    'la région %s évite ses %s GWh de produits pétroliers à 0,268272 tCO2e par MWh',
     (region, gigawattHours) => {
       const expected = toBig(gigawattHours)
         .times(MEGAWATT_HOURS_PER_GIGAWATT_HOUR)
@@ -95,14 +95,14 @@ describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020'
   )
 
   it.each([
-    ['region', '84', '960281.02'],
-    ['region', '53', '2001409.79'],
-    ['region', '94', '46052.63'],
-    ['departement', '01', '82512.98'],
-    ['departement', '35', '537039.19'],
-    ['departement', '75', '589.59'],
-    ['epci', '200054781', '3600.51'],
-    ['epci', '200000172', '1178.25'],
+    ['region', '84', '919124.85'],
+    ['region', '53', '1918102.2'],
+    ['region', '94', '44034.39'],
+    ['departement', '01', '78982.65'],
+    ['departement', '35', '514448.28'],
+    ['departement', '75', '589.57'],
+    ['epci', '200054781', '3576.25'],
+    ['epci', '200000172', '1130.03'],
   ] as const)('à 100 %% sur les quatre vecteurs, le niveau %s %s évite %s tCO2e', (level, code, expected) => {
     expect(reduction({ level, code, parameters: FULL })).toBe(expected)
   })
