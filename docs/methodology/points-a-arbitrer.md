@@ -42,7 +42,7 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 | Levier | Niveaux | Ce qui manque | Ordre de grandeur de l'enjeu |
 |---|---|---|---|
-| `occupation_des_sols` | région, département, EPCI | l'unité du facteur de conversion : par an (tCO2e/ha/an) ou variation totale (tCO2e/ha) | le résultat varie jusqu'à 20 fois |
+| `occupation_des_sols` | région, département, EPCI | unité tranchée par le CGDD (Q2) : flux annuel, formule de la documentation (équation 27) ; les surfaces et les facteurs par EPCI sont versionnés (ALDO « stocks de carbone » et Flux 2, `data/occupation-des-sols`) mais le levier n'est pas encore codé ; région et département : les facteurs Flux 2 n'existent qu'à l'EPCI, une agrégation reste à définir | `LIMITEE` |
 | `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département (renvoyée au CEREN, « pas disponible en open source ») | levier entier |
 | `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | levier entier |
 

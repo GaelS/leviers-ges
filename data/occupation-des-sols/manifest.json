@@ -1,0 +1,92 @@
+{
+  "datasets": [
+    {
+      "file": "epcis-surfaces.csv",
+      "source": "Surfaces des types de sol (ha) par EPCI, somme des communes ALDO « stocks de carbone » ; les 4 communes sans EPCI (îles) sont écartées. « arbustif » est la colonne ALDO « sols artificiels arbustifs », lue comme « sols artificialisé enherbé » de la documentation fonctionnelle (choix de conception, non validé). Construit par pnpm build:data:occupation-des-sols",
+      "link": "https://data.ademe.fr/datasets/aldo-stocks-de-carbone",
+      "vintage": "ALDO, Corine Land Cover",
+      "retrievedOn": "2026-11-19",
+      "checksum": "f14081817629d882ad3e4404473eb40241b5e7ff98c21a62b1a7207ff87bf0f0",
+      "level": "epci",
+      "keyColumn": "code_epci",
+      "columns": [
+        { "name": "code_epci", "unit": "code SIREN de l'EPCI" },
+        { "name": "cropland_ha", "unit": "hectares" },
+        { "name": "wooded_grassland_ha", "unit": "hectares" },
+        { "name": "herbaceous_grassland_ha", "unit": "hectares" },
+        { "name": "shrub_grassland_ha", "unit": "hectares" },
+        { "name": "wetland_ha", "unit": "hectares" },
+        { "name": "artificial_shrub_ha", "unit": "hectares" },
+        { "name": "artificial_impervious_ha", "unit": "hectares" },
+        { "name": "artificial_wooded_ha", "unit": "hectares" },
+        { "name": "forest_mixed_ha", "unit": "hectares" },
+        { "name": "forest_broadleaf_ha", "unit": "hectares" },
+        { "name": "forest_conifer_ha", "unit": "hectares" },
+        { "name": "forest_poplar_ha", "unit": "hectares" }
+      ],
+      "controlTotals": {
+        "cropland_ha": "19427350.5",
+        "wooded_grassland_ha": "100286.5",
+        "herbaceous_grassland_ha": "8408574.75",
+        "shrub_grassland_ha": "1316110.25",
+        "wetland_ha": "604301.25",
+        "artificial_shrub_ha": "2203912.95649875",
+        "artificial_impervious_ha": "2396738.11071875",
+        "artificial_wooded_ha": "417211.1874835",
+        "forest_mixed_ha": "3294506.5",
+        "forest_broadleaf_ha": "11470955",
+        "forest_conifer_ha": "3561259.5",
+        "forest_poplar_ha": "170661"
+      },
+      "sources": [
+        {
+          "file": "sources/aldo-stocks-carbone-communes-surfaces.csv",
+          "source": "ADEME, ALDO, « stocks de carbone - communes » : colonnes insee, epci, departement et surfaces des types de sol de l'export brut (35 066 lignes) ; les codes commune de Corse y sont tronqués, non utilisés",
+          "link": "https://data.ademe.fr/datasets/aldo-stocks-de-carbone",
+          "retrievedOn": "2026-11-19",
+          "checksum": "e08c175ffe01ee13da96d177bba8de15e3b74cf723137b5daef84c3434171384"
+        }
+      ]
+    },
+    {
+      "file": "epcis-facteurs.csv",
+      "source": "Facteurs de conversion d'un type de sol à un autre (tCO2e par ha, flux annuel selon la réponse du CGDD), par EPCI, ALDO Flux 2 : réservoirs sol, biomasse et litière additionnés ; une colonne absente du jeu n'a pas de flux. Positif : stockage. Construit par pnpm build:data:occupation-des-sols",
+      "link": "https://data.ademe.fr/datasets/flux2-epci",
+      "vintage": "ALDO, Flux 2",
+      "retrievedOn": "2026-11-19",
+      "checksum": "19afbeabc0cc9a11447d1381d6e912fba7294fb2a2bef6459d3dc66b7600b5ed",
+      "level": "epci",
+      "keyColumn": "code_epci",
+      "columns": [
+        { "name": "code_epci", "unit": "code SIREN de l'EPCI" },
+        { "name": "wooded_grassland_to_forest_mixed", "unit": "tCO2e par hectare" },
+        { "name": "wooded_grassland_to_forest_broadleaf", "unit": "tCO2e par hectare" },
+        { "name": "wooded_grassland_to_forest_conifer", "unit": "tCO2e par hectare" },
+        { "name": "wooded_grassland_to_forest_poplar", "unit": "tCO2e par hectare" },
+        { "name": "herbaceous_grassland_to_forest_mixed", "unit": "tCO2e par hectare" },
+        { "name": "herbaceous_grassland_to_forest_broadleaf", "unit": "tCO2e par hectare" },
+        { "name": "herbaceous_grassland_to_forest_conifer", "unit": "tCO2e par hectare" },
+        { "name": "herbaceous_grassland_to_forest_poplar", "unit": "tCO2e par hectare" },
+        { "name": "shrub_grassland_to_forest_mixed", "unit": "tCO2e par hectare" },
+        { "name": "shrub_grassland_to_forest_broadleaf", "unit": "tCO2e par hectare" },
+        { "name": "shrub_grassland_to_forest_conifer", "unit": "tCO2e par hectare" },
+        { "name": "shrub_grassland_to_forest_poplar", "unit": "tCO2e par hectare" },
+        { "name": "cropland_to_wetland", "unit": "tCO2e par hectare" },
+        { "name": "wooded_grassland_to_wetland", "unit": "tCO2e par hectare" },
+        { "name": "herbaceous_grassland_to_wetland", "unit": "tCO2e par hectare" },
+        { "name": "shrub_grassland_to_wetland", "unit": "tCO2e par hectare" },
+        { "name": "impervious_to_artificial_shrub", "unit": "tCO2e par hectare" },
+        { "name": "impervious_to_artificial_wooded", "unit": "tCO2e par hectare" }
+      ],
+      "sources": [
+        {
+          "file": "sources/aldo-flux2-epci-facteurs.csv",
+          "source": "ADEME, ALDO, « flux 2 - unitaire - EPCI » : colonne insee (code de l'EPCI) et 34 colonnes de flux sol, biomasse et litière de l'export brut (1 241 EPCI)",
+          "link": "https://data.ademe.fr/datasets/flux2-epci",
+          "retrievedOn": "2026-11-19",
+          "checksum": "b370f6cec8cf745a85c20feaf1d17605d1b87cbfb8921472a188cee9e66e6372"
+        }
+      ]
+    }
+  ]
+}
