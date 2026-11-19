@@ -12,6 +12,7 @@ const context = createEstimationContext(dataSource)
 
 const regions = dataSource.rows('produits-bois/regions')._unsafeUnwrap()
 const departements = dataSource.rows('produits-bois/departements')._unsafeUnwrap()
+const epciForests = dataSource.rows('produits-bois/foret-epci-departement')._unsafeUnwrap()
 
 function toRequest({
   level,
@@ -63,8 +64,18 @@ describe('estimate produits_bois, récolte Agreste 2022 et produits bois OMINEA 
     ['departement', '35', '54473.07'],
     ['departement', '2A', '1566.44'],
     ['departement', '75', '0'],
+    ['epci', '200000172', '2818.43'],
+    ['epci', '200046977', '12256.43'],
+    ['epci', '200054781', '3430.94'],
   ] as const)('à +100 %%, le niveau %s %s stocke %s tCO2e', (level, code, expected) => {
     expect(storageAtFullIncrease(level, code)).toBe(expected)
+  })
+
+  it('à +100 %, les EPCI stockent 14 449 897,70 tCO2e, 212,55 de moins que les départements (forêt des communes sans EPCI)', () => {
+    const epciCodes = [...new Set(epciForests.map((row) => row['code_epci'] ?? ''))]
+    const difference = toBig(sumOfStorages('epci', epciCodes)).minus('14449897.70').abs()
+    expect(epciCodes).toHaveLength(1241)
+    expect(difference.isLessThanOrEqualTo(toBig('0.005').times('1241'))).toBe(true)
   })
 
   it.each([
