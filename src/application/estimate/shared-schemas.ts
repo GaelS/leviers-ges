@@ -22,6 +22,13 @@ const fractionSchema =decimalInputSchema.transform((text, context) =>
   ),
 )
 
+const nonNegativeHectaresSchema = decimalInputSchema.transform((text, context) => {
+  const hectares = quantity<'Hectares'>(text)
+  if (!hectares.isNegative()) return hectares
+  context.addIssue({ code: 'custom', message: 'must not be negative', input: text })
+  return z.NEVER
+})
+
 const nonNegativeTonneKilometresSchema = decimalInputSchema.transform((text, context) => {
   const tonneKilometres = quantity<'TonneKilometres'>(text)
   if (!tonneKilometres.isNegative()) return tonneKilometres
@@ -37,6 +44,7 @@ const territorySchema = z.strictObject({
 export {
   fractionSchema,
   kilometresSchema,
+  nonNegativeHectaresSchema,
   nonNegativeTonneKilometresSchema,
   relativeChangeSchema,
   territorySchema,

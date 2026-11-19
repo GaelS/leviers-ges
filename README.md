@@ -2,7 +2,7 @@
 
 Les formules du tableur ADEME PlanET V1 (21 leviers de décarbonation) sous forme de fonctions TypeScript. Une requête par levier, en retour les tonnes de CO2e évitées par an pour une région, un département ou un EPCI.
 
-17 leviers sont calculés. Les quatre autres (`pratiques_stockantes`, `occupation_des_sols`, `residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
+18 leviers sont calculés. Les trois autres (`occupation_des_sols`, `residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
@@ -61,7 +61,7 @@ const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: 'abc
 
 ## Règles de la requête
 
-- `id` : l'identifiant du levier. `territory` : `{ level: 'region' | 'departement' | 'epci', code }`, absent pour `haies`.
+- `id` : l'identifiant du levier. `territory` : `{ level: 'region' | 'departement' | 'epci', code }`, absent pour `haies` et `pratiques_stockantes`.
 - `territory.code` : texte (`'84'`, `'69'`, `'2A'`, SIREN de l'EPCI `'200046977'`).
 - Types et bornes des valeurs : voir « Types et bornes » plus bas.
 - Un schéma refuse toute clé inconnue : `wasteReductionFraction` n'existe pas, `dechets_sobriete` prend `storageReductionFraction` et `incinerationReductionFraction`.
@@ -78,7 +78,7 @@ Le détail d'un levier (formule, constantes sourcées, données, limites, cas de
 | `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | région, département, EPCI |
 | `fertilisation_azotee`, `elevage_durable`, `produits_bois`, `residentiel_sobriete` | région, département |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | région |
-| `haies` | sans territoire |
+| `haies`, `pratiques_stockantes` | sans territoire |
 
 Tous les paramètres sont de la forme `parameters: { … }`. Une « fraction » va de 0 à 1 (`'0.1'` = 10 %). Un paramètre est obligatoire sauf mention « facultatif ».
 
@@ -104,6 +104,7 @@ Toute valeur numérique se passe en texte décimal (`'0.1'`, `'-2'`) ou en nombr
 | `batiments_machines_agricoles` | `electricityReductionFraction`, `naturalGasReductionFraction`, `petroleumProductsReductionFraction`, `heatReductionFraction` | fraction | baisse de chaque vecteur d'énergie. Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à `'0'` |
 | `fertilisation_azotee` | `nitrogenReductionFraction` | fraction | baisse de la masse d'azote livrée |
 | `haies` | `hedgeKmCreatedPerYear` | kilomètres | haies créées par an ; négatif = arrachage net, réduction négative |
+| `pratiques_stockantes` | `intermediateCropsHectares`, `permanentVineyardGrassingHectares`, `winterIntercropVineyardHectares`, `agroforestryHectares`, `temporaryGrasslandExtensionHectares` | hectares, à partir de 0 | surface d'application de chaque pratique stockante. Les cinq sont obligatoires : une pratique non appliquée se saisit à `'0'` |
 | `produits_bois` | `woodProductionIncrease` | variation relative | variation de la production de produits bois, une seule valeur pour le bois d'œuvre et le bois d'industrie ; une valeur supérieure à 1 est admise |
 
 ### Élevage durable

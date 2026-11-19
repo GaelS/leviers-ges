@@ -18,7 +18,7 @@ describe('ensureLevelComputed', () => {
   it.each([
     ['fertilisation_azotee', 'epci'],
     ['transport_marchandises_report_modal', 'departement'],
-    ['pratiques_stockantes', 'region'],
+    ['occupation_des_sols', 'region'],
   ] as const)('refuse %s au niveau %s', (lever, level) => {
     expect(ensureLevelComputed({ lever, level })._unsafeUnwrapErr()).toEqual({
       kind: 'level_not_computed',
