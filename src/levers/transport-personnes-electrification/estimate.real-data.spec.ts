@@ -53,14 +53,14 @@ function estimation(target: { level: Level; code: string; parameters: Parameters
 
 describe('estimate transport_personnes_electrification, Insee-SDES 2022 et parc SDES 2025', () => {
   it.each([
-    ['region', '84', '988260.06'],
-    ['region', '53', '461119.62'],
-    ['region', '11', '936872.82'],
-    ['region', '94', '35114.76'],
-    ['departement', '69', '206654.02'],
-    ['departement', '75', '92557.47'],
-    ['departement', '2A', '15829.34'],
-    ['epci', '200046977', '140960.17'],
+    ['region', '84', '829754.99'],
+    ['region', '53', '385388.18'],
+    ['region', '11', '792057.81'],
+    ['region', '94', '29258.78'],
+    ['departement', '69', '175358.27'],
+    ['departement', '75', '80881.99'],
+    ['departement', '2A', '13186.32'],
+    ['epci', '200046977', '120325.65'],
   ] as const)(
     'à 50 %% du parc électrifié, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -68,13 +68,13 @@ describe('estimate transport_personnes_electrification, Insee-SDES 2022 et parc 
     },
   )
 
-  it('plafonne le parc entier demandé à la part thermique de la région 84 : 1 917 970,69 tCO2e', () => {
+  it('plafonne le parc entier demandé à la part thermique de la région 84 : 1 610 272,35 tCO2e', () => {
     const result = estimation({ level: 'region', code: '84', parameters: WHOLE_FLEET })
     expect({
       reduction: result.reduction.toFixed(),
       cars: result.appliedAssumptions['carElectrificationFraction']?.value,
       buses: result.appliedAssumptions['busElectrificationFraction']?.value,
-    }).toEqual({ reduction: '1917970.69', cars: '0.970626173013', buses: '0.965038140211' })
+    }).toEqual({ reduction: '1610272.35', cars: '0.970626173013', buses: '0.965038140211' })
   })
 
   it('l’Île-de-France prend 82 % de ferré par défaut, la Bretagne 24 %', () => {

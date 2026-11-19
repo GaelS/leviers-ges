@@ -45,16 +45,16 @@ describe('calculateTransportPersonnesSobrieteDeplacementsReduction', () => {
     expect(reduction({ distanceReduction: '0' })).toBe('0')
   })
 
-  it('supprime tous les trajets : 1 000 passagers.km en voiture à 0,1 et 1 000 en transport en commun à 0,044 évitent 7,50816 tCO2e', () => {
-    expect(reduction({})).toBe('7.50816')
+  it('supprime tous les trajets : 1 000 passagers.km en voiture à 0,1 et 1 000 en transport en commun à 0,044 évitent 6,632953 tCO2e', () => {
+    expect(reduction({})).toBe('6.632953')
   })
 
   it('est proportionnelle à la réduction : la moitié évite la moitié', () => {
-    expect(reduction({ distanceReduction: '0.5' })).toBe('3.75408')
+    expect(reduction({ distanceReduction: '0.5' })).toBe('3.316476')
   })
 
-  it('compte les voitures seules : 5,214 tCO2e', () => {
-    expect(reduction({ input: flows({ publicTransportWeeklyPassengerKm: '0' }) })).toBe('5.214')
+  it('compte les voitures seules : 4,338793 tCO2e', () => {
+    expect(reduction({ input: flows({ publicTransportWeeklyPassengerKm: '0' }) })).toBe('4.338793')
   })
 
   it('compte le transport en commun seul, ferré et bus ensemble : 2,29416 tCO2e', () => {

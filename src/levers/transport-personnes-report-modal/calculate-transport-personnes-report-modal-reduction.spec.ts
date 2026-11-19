@@ -56,14 +56,14 @@ describe('calculateTransportPersonnesReportModalReduction', () => {
     expect(reduction({})).toBe('0')
   })
 
-  it('reporte toute la voiture vers les transports en commun : 1 000 passagers.km par semaine, 60 % de ferré à 0,02, évitent 2,91984 tCO2e', () => {
+  it('reporte toute la voiture vers les transports en commun : 1 000 passagers.km par semaine, 60 % de ferré à 0,02, évitent 2,044633 tCO2e', () => {
     expect(reduction({ fractions: { carToPublicTransport: quantity<'Fraction'>('1') } })).toBe(
-      '2.91984',
+      '2.044633',
     )
   })
 
-  it('reporte toute la voiture vers les modes actifs, sans émission : 1 000 passagers.km par semaine évitent 5,214 tCO2e', () => {
-    expect(reduction({ fractions: { carToActiveModes: quantity<'Fraction'>('1') } })).toBe('5.214')
+  it('reporte toute la voiture vers les modes actifs, sans émission : 1 000 passagers.km par semaine évitent 4,338793 tCO2e', () => {
+    expect(reduction({ fractions: { carToActiveModes: quantity<'Fraction'>('1') } })).toBe('4.338793')
   })
 
   it('reporte tout le transport en commun vers les modes actifs : 1 000 passagers.km par semaine à 0,044 kgCO2e/passager.km (60 % de ferré à 0,02, bus à 0,08) évitent 2,29416 tCO2e', () => {
@@ -86,7 +86,7 @@ describe('calculateTransportPersonnesReportModalReduction', () => {
           carToActiveModes: quantity<'Fraction'>('0.5'),
         },
       }),
-    ).toBe('4.06692')
+    ).toBe('3.191713')
   })
 
   it('renvoie un résultat négatif quand le transport en commun émet plus que la voiture', () => {
@@ -96,7 +96,7 @@ describe('calculateTransportPersonnesReportModalReduction', () => {
         railShare: '0',
         input: flows({ carEmissionFactor: '0.0233' }),
       }),
-    ).toBe('-3.1284')
+    ).toBe('-3.303441')
   })
 
   it('est proportionnelle aux passagers.km en voiture', () => {
@@ -105,6 +105,6 @@ describe('calculateTransportPersonnesReportModalReduction', () => {
         fractions: { carToActiveModes: quantity<'Fraction'>('1') },
         input: flows({ carWeeklyPassengerKm: '2000' }),
       }),
-    ).toBe('10.428')
+    ).toBe('8.677586')
   })
 })

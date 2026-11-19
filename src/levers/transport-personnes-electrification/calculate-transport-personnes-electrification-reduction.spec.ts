@@ -87,13 +87,13 @@ describe('calculateTransportPersonnesElectrificationReduction', () => {
     ).toBe('1.470348')
   })
 
-  it('électrifie des voitures : 1 000 passagers.km par semaine, 0,1165 contre 0,013345 kgCO2e/véh.km, tout le parc, évitent 4,616740 tCO2e', () => {
+  it('électrifie des voitures : 1 000 passagers.km par semaine, 0,1165 contre 0,013345 kgCO2e/véh.km, tout le parc, évitent 3,841787 tCO2e', () => {
     expect(
       reduction({
         fractions: { carElectrification: quantity<'Fraction'>('1') },
         flows: transportFlows({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('4.61674')
+    ).toBe('3.841787')
   })
 
   it('est proportionnelle à la part électrifiée : la moitié du parc évite la moitié', () => {
@@ -141,7 +141,7 @@ describe('calculateTransportPersonnesElectrificationReduction', () => {
         railShare: '0.6',
         flows: transportFlows({ carWeeklyPassengerKm: '1000', publicTransportWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('6.087088')
+    ).toBe('5.312135')
   })
 })
 

@@ -8,7 +8,7 @@ Identifiant : `transport_personnes_sobriete_deplacements`. Niveaux : région, d�
 Émissions évitées (tCO2e/an) =
   r × 52,14 ÷ 1 000 × ( PK_voiture × FE_voiture + PK_TC × FE_TC )
 
-FE_voiture = facteur du parc de voitures ÷ 1,165
+FE_voiture = facteur du parc de voitures ÷ 1,4
 FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc de bus ÷ 10
 ```
 
@@ -36,7 +36,7 @@ La formule est lue dans les formes de la feuille `TrsptPers_SobriétéDéplaceme
 | Constante | Valeur | Source |
 |---|---|---|
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille |
-| Taux de remplissage des voitures | 1,165 passager | `DonneesReference!D26` |
+| Taux de remplissage des voitures | 1,4 passager | Base Carbone (documentation générale v23.11, p. 173) : courte distance, ENTD 2008 ; documentation fonctionnelle PlanET, pp. 58 et 60 ; le tableur donne 1,165 (`DonneesReference!D26`), la documentation l'emporte |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
 | Facteur du ferré, France continentale | 0,0154346 kgCO2e/passager.km | `DonneesReference!D37` et G37 ; Base Empreinte, TER 2022 (élément 43255) : amont de l'électricité 0,0229 × 67,4 % (documentation fonctionnelle PlanET, p. 65), fabrication (0,00479) non comptée, poste combustion nul |
 | Facteur du ferré, Corse | 0,187 kgCO2e/passager.km | Base Empreinte, train de voyageurs de Corse |
@@ -61,22 +61,22 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 
 | Entrée | Résultat |
 |---|---|
-| 1 000 passagers.km par semaine en voiture à 0,1 kgCO2e/passager.km et 1 000 en transport en commun à 0,044 (60 % de ferré à 0,02, bus à 0,08), tous supprimés | 7,50816 tCO2e |
-| idem, la moitié supprimée | 3,75408 tCO2e |
-| voitures seules | 5,214 tCO2e |
+| 1 000 passagers.km par semaine en voiture à 0,1 kgCO2e/passager.km et 1 000 en transport en commun à 0,044 (60 % de ferré à 0,02, bus à 0,08), tous supprimés | 6,632953 tCO2e |
+| idem, la moitié supprimée | 3,316476 tCO2e |
+| voitures seules | 4,338793 tCO2e |
 | transport en commun seul | 2,29416 tCO2e |
-| région 84, jeu de test, 10 % de distance en moins | 857,73 tCO2e |
-| région 11, jeu de test | 662,47 tCO2e |
-| région 94, jeu de test, ferré corse | 1 072,42 tCO2e |
-| région 84, données réelles | 209 987,21 tCO2e |
-| région 53 (Bretagne) | 98 138,77 tCO2e |
-| région 11 (Île-de-France) | 211 946,59 tCO2e |
-| région 94 (Corse) | 7 400,08 tCO2e |
-| département 69 | 43 871,78 tCO2e |
-| département 75 | 23 927,39 tCO2e |
-| département 2A | 3 361,87 tCO2e |
-| EPCI 200046977 | 29 950,53 tCO2e |
-| région 84, données réelles, 60 % de ferré saisi | 206 291,76 tCO2e |
+| région 84, jeu de test, 10 % de distance en moins | 770,2 tCO2e |
+| région 11, jeu de test | 574,95 tCO2e |
+| région 94, jeu de test, ferré corse | 984,89 tCO2e |
+| région 84, données réelles | 176 477,68 tCO2e |
+| région 53 (Bretagne) | 82 058,93 tCO2e |
+| région 11 (Île-de-France) | 181 557,2 tCO2e |
+| région 94 (Corse) | 6 172,87 tCO2e |
+| département 69 | 37 300,37 tCO2e |
+| département 75 | 21 505,93 tCO2e |
+| département 2A | 2 803 tCO2e |
+| EPCI 200046977 | 25 618,38 tCO2e |
+| région 84, données réelles, 60 % de ferré saisi | 172 782,24 tCO2e |
 
 Les lignes « données réelles » sont calculées à 10 % de distance en moins (`r` = 0,1). Elles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

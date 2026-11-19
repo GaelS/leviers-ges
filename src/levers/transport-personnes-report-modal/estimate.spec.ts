@@ -107,39 +107,39 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, transport_personnes_report_modal', () => {
   it.each([
-    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '445.77'],
-    ['le département 01, hors Île-de-France', request('departement', '01'), '445.77'],
-    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '445.77'],
-    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '641.03'],
-    ['le département 75, Île-de-France', request('departement', '75'), '641.03'],
-    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '641.03'],
+    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '314.49'],
+    ['le département 01, hors Île-de-France', request('departement', '01'), '314.49'],
+    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '314.49'],
+    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '509.75'],
+    ['le département 75, Île-de-France', request('departement', '75'), '509.75'],
+    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '509.75'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
-  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 566,97 tCO2e', () => {
+  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 435,69 tCO2e', () => {
     const parameters = { ...MIXED_SHIFT, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '566.97',
+      '435.69',
     )
   })
 
-  it('prend le facteur du train de Corse pour la région 94 : 231,08 tCO2e', () => {
+  it('prend le facteur du train de Corse pour la région 94 : 99,8 tCO2e', () => {
     const result = estimate(request('region', '94'))._unsafeUnwrap()
     expect({
       reduction: result.reduction.toFixed(),
       railEmissionFactor: result.appliedAssumptions['railEmissionFactor']?.value,
-    }).toEqual({ reduction: '231.08', railEmissionFactor: '0.187' })
+    }).toEqual({ reduction: '99.8', railEmissionFactor: '0.187' })
   })
 
-  it('ne compte que les modes actifs quand rien ne va vers les transports en commun : 260,7 tCO2e', () => {
+  it('ne compte que les modes actifs quand rien ne va vers les transports en commun : 216,94 tCO2e', () => {
     const parameters = {
       carToPublicTransportFraction: '0',
       carToActiveModesFraction: '0.05',
       publicTransportToActiveModesFraction: '0',
     }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '260.7',
+      '216.94',
     )
   })
 

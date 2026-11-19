@@ -10,7 +10,7 @@ Identifiant : `transport_personnes_report_modal`. Niveaux : région, départemen
   × ( r_TC × (FE_voiture − FE_TC) + r_actifs × (FE_voiture − 0) )
   + PK_TC × 52,14 ÷ 1 000 × r_TC→actifs × (FE_TC − 0)
 
-FE_voiture = facteur du parc de voitures ÷ 1,165
+FE_voiture = facteur du parc de voitures ÷ 1,4
 FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc de bus ÷ 10
 ```
 
@@ -44,7 +44,7 @@ Les trois reports sont obligatoires. Les deux reports depuis la voiture ne dépa
 | Constante | Valeur | Source |
 |---|---|---|
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille |
-| Taux de remplissage des voitures | 1,165 passager | `DonneesReference!D26` |
+| Taux de remplissage des voitures | 1,4 passager | Base Carbone (documentation générale v23.11, p. 173) : courte distance, ENTD 2008 ; documentation fonctionnelle PlanET, pp. 58 et 60 ; le tableur donne 1,165 (`DonneesReference!D26`), la documentation l'emporte |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
 | Facteur du ferré, France continentale | 0,0154346 kgCO2e/passager.km | `DonneesReference!D37` et G37 ; Base Empreinte, TER 2022 (élément 43255) : amont de l'électricité 0,0229 × 67,4 % (documentation fonctionnelle PlanET, p. 65), fabrication (0,00479) non comptée, poste combustion nul |
 | Facteur du ferré, Corse | 0,187 kgCO2e/passager.km | Base Empreinte, train de voyageurs de Corse |
@@ -64,32 +64,32 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | 4 | Le report des transports en commun vers les modes actifs porte sur les passagers.km en transport en commun initiaux, sans enchaîner avec le report de la voiture vers les transports en commun | choix de conception, non validé |
 | 5 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
 | 6 | Le facteur du transport en commun pondère le ferré et le bus avec la part du ferré, la même qui sert à l'efficacité | `ParametreDeterminants` ligne 38 ; part par défaut renvoyée dans `appliedAssumptions.railShare` |
-| 7 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 55,6 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −25 087,34 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
+| 7 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 33,8 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −37 359,43 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
 | 8 | Les passagers.km comptent pour moitié côté résidence et pour moitié côté travail | `TrsptPers_ReportModal!B13` |
 
 ## Cas de test chiffrés
 
 | Entrée | Résultat |
 |---|---|
-| voitures seules, 1 000 passagers.km par semaine à 0,1 kgCO2e/passager.km, tout vers les modes actifs | 5,214 tCO2e |
-| idem, tout vers les transports en commun, 60 % de ferré à 0,02 et bus à 0,08 | 2,91984 tCO2e |
-| idem, moitié vers chaque | 4,06692 tCO2e |
-| transport en commun plus émetteur que la voiture (0,0233 contre 0,08), tout reporté | −3,1284 tCO2e |
+| voitures seules, 1 000 passagers.km par semaine à 0,1 kgCO2e/passager.km, tout vers les modes actifs | 4,338793 tCO2e |
+| idem, tout vers les transports en commun, 60 % de ferré à 0,02 et bus à 0,08 | 2,044633 tCO2e |
+| idem, moitié vers chaque | 3,191713 tCO2e |
+| transport en commun plus émetteur que la voiture (0,0233 contre 0,08), tout reporté | −3,303441 tCO2e |
 | 1 000 passagers.km par semaine en transport en commun à 0,044 kgCO2e/passager.km, tous reportés vers les modes actifs | 2,29416 tCO2e |
-| région 84, jeu de test, 10 % vers les transports en commun et 5 % vers les modes actifs | 445,77 tCO2e |
-| région 11, jeu de test | 641,03 tCO2e |
-| région 94, jeu de test, ferré corse | 231,08 tCO2e |
-| région 84, données réelles | 210 377,15 tCO2e |
-| région 53 (Bretagne) | 100 753,61 tCO2e |
-| région 11 (Île-de-France) | 237 825,39 tCO2e |
-| région 94 (Corse) | 5 437,77 tCO2e |
-| département 69 | 41 397,47 tCO2e |
-| département 75 | 18 991,1 tCO2e |
-| département 2A | 2 522,32 tCO2e |
-| EPCI 200046977 | 27 424,95 tCO2e |
-| région 84, données réelles, 60 % de ferré saisi | 242 160,85 tCO2e |
-| région 84, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 231 089,14 tCO2e |
-| région 11, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 299 632,2 tCO2e |
+| région 84, jeu de test, 10 % vers les transports en commun et 5 % vers les modes actifs | 314,49 tCO2e |
+| région 11, jeu de test | 509,75 tCO2e |
+| région 94, jeu de test, ferré corse | 99,8 tCO2e |
+| région 84, données réelles | 160 112,86 tCO2e |
+| région 53 (Bretagne) | 76 633,85 tCO2e |
+| région 11 (Île-de-France) | 192 241,31 tCO2e |
+| région 94 (Corse) | 3 596,96 tCO2e |
+| département 69 | 31 540,35 tCO2e |
+| département 75 | 15 358,91 tCO2e |
+| département 2A | 1 684,01 tCO2e |
+| EPCI 200046977 | 20 926,73 tCO2e |
+| région 84, données réelles, 60 % de ferré saisi | 191 896,56 tCO2e |
+| région 84, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 180 824,85 tCO2e |
+| région 11, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 254 048,11 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

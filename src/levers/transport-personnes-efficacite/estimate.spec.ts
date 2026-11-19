@@ -100,20 +100,20 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, transport_personnes_efficacite', () => {
   it.each([
-    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '1257.62'],
-    ['le département 01, hors Île-de-France', request('departement', '01'), '1257.62'],
-    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '1257.62'],
-    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '894.72'],
-    ['le département 75, Île-de-France', request('departement', '75'), '894.72'],
-    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '894.72'],
+    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '1126.34'],
+    ['le département 01, hors Île-de-France', request('departement', '01'), '1126.34'],
+    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '1126.34'],
+    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '763.44'],
+    ['le département 75, Île-de-France', request('departement', '75'), '763.44'],
+    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '763.44'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
-  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 1 032,37 tCO2e', () => {
+  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 901,09 tCO2e', () => {
     const parameters = { ...ECODRIVING_ONLY, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '1032.37',
+      '901.09',
     )
   })
 
@@ -125,7 +125,7 @@ describe('estimate, transport_personnes_efficacite', () => {
       busPassengerIncrease: '0.2',
     }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '1911.48',
+      '1712.57',
     )
   })
 
