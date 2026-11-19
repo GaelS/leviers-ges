@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit, levier par levier, où le calcul est possible, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs existants. Il constate ; il ne décide rien.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit, levier par levier, où le calcul est possible, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs existants. Il constate ; il ne décide rien. Les réponses du CGDD (Brice et Laurent) au document de questions du 29 octobre 2026 et la documentation fonctionnelle PlanET (juin 2026) tranchent une partie des points : leurs lignes sont retirées ou mises à jour. « Limite reconnue » signale une limite que la documentation déclare, dans sa section 7.8 ou dans les limites du levier concerné, à maintenir ou à faire évoluer.
 
 ✅ calculé, aucune question ouverte. ❓ calculé grâce à une hypothèse nommée (`docs/methodology/assumptions.md`) ou à un choix décrit en partie 2. ❌ non calculé, raison en partie 1.
 
@@ -73,7 +73,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Pêche comprise dans les produits pétroliers | comprise, comme le tableur | la part agricole seule | 9,0 % des produits pétroliers de métropole, 22 % en Bretagne |
 | Facteur de l'électricité : millésime | mix moyen 2024 × 67,4 % | la valeur de l'année du calcul | 0,0519 (2024) à 0,058 (2023) avant le coefficient de 67,4 % |
 | Facteur du fioul lourd pour tous les produits pétroliers | fioul lourd (78) | le facteur des engins agricoles | OMINEA : 74,52 et 72,48, soit 4,5 % et 7,1 % de moins |
-| Produits pétroliers répartis par la part de SAU | part de SAU | la part de gazole non routier | écart de 3,0 points en médiane, 11,6 au 90e centile |
+| Produits pétroliers répartis par la part de SAU | part de SAU | la part de gazole non routier | écart de 3,0 points en médiane, 11,6 au 90e centile ; limite reconnue par la documentation fonctionnelle PlanET (p. 77, à maintenir) |
 | Secret statistique | lignes secrètes à 0 | les valeurs sous secret | électricité : 38 % des lignes IRIS ; gaz : 66 % |
 | Maille des produits pétroliers | région répartie par la SAU | la donnée départementale que désigne le tableur (`H25`) | non chiffré |
 | Millésime | 2024 | le millésime 2023 du tableur pour les produits pétroliers et la chaleur régionaux | non chiffré |
@@ -93,29 +93,29 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Constantes OMINEA 2013 | 2013, comme le tableur | OMINEA 2026 | vache laitière : 121 contre 121,9 à 152,5 kg de CH4 ; excrétion azotée 115,6 contre 118,7 kg |
-| Méthanisation initiale à 0 | 0, comme le tableur | la part initiale | OMINEA 2026 : 9,5 % des truies, 9,8 % des autres porcins |
+| Constantes OMINEA 2013 | 2013, comme le tableur | OMINEA 2026 | vache laitière : 121 contre 121,9 à 152,5 kg de CH4 ; excrétion azotée 115,6 contre 118,7 kg ; limite reconnue par la documentation fonctionnelle PlanET (p. 77, à maintenir) |
+| Méthanisation initiale à 0 | 0, comme le tableur | la part initiale | OMINEA 2026 : 9,5 % des truies, 9,8 % des autres porcins ; limite reconnue par la documentation fonctionnelle PlanET (p. 77, évolution possible) |
 | Méthanisation des autres animaux | refusée | des facteurs pour caprins, ovins, équins, volailles | aucun facteur disponible |
-| Répartition actuelle des déjections nationale | OMINEA 2013 | une répartition par territoire | un territoire à dominante pâture ou lisier part des mêmes proportions |
+| Répartition actuelle des déjections nationale | OMINEA 2013 | une répartition par territoire | un territoire à dominante pâture ou lisier part des mêmes proportions ; limite reconnue par la documentation fonctionnelle PlanET (p. 77, évolution possible) |
 | Effectifs au siège de l'exploitation | siège | l'effectif réel | un élevage sur deux départements est compté au siège |
 | Secret statistique | une catégorie secrète vaut 0 | les valeurs | 0,2 % des volailles des régions, jusqu'à 1,3 % dans 53 départements |
 | Vaches laitières de 21 départements sous secret | estimation de cartostat, méthode non décrite | une méthode documentée | 91 et 93 sans valeur |
 | Lapines et ruches | non comptées | des facteurs | 422 790 lapines reproductrices en France |
 | SV des bovins | milieu de la plage | la valeur retenue par l'inventaire | 3,79 et 1,96 kg par jour |
-| Zones pédoclimatiques, millésime | non prises en compte, 2020 | un millésime plus récent et des facteurs locaux | non chiffré |
+| Zones pédoclimatiques, millésime | non prises en compte, 2020 | un millésime plus récent et des facteurs locaux | non chiffré ; limite reconnue par la documentation fonctionnelle PlanET (p. 76, à maintenir) |
 
 ### Haies (`haies`, région, département, EPCI)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest |
+| Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) ; le webinaire du 25/01/2021 (`haies/methodology.md`) donne la même valeur basse |
 
 ### Produits bois (`produits_bois`, région, département)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Part de la récolte en m³ prise pour part de la production en tC | proxy | la production de produits bois par département | résultat départemental indicatif |
-| Sortie de stock supposée invariante | invariante | l'effet de la hausse de production | non chiffré |
+| Part de la récolte en m³ prise pour part de la production en tC | proxy | la production de produits bois par département | résultat départemental indicatif ; limite reconnue par la documentation fonctionnelle PlanET (p. 72) |
+| Sortie de stock supposée invariante | invariante | l'effet de la hausse de production | non chiffré ; limite reconnue par la documentation fonctionnelle PlanET (pp. 72, 78, à maintenir) |
 | Bois d'industrie absent pour 2A, 2B, 75, 93, 94 | compté 0 | les valeurs | 3 milliers de m³ sur 10 311 |
 | Millésime | 2022 | 2024 existe pour les tC | non chiffré |
 | Source des tC | OMINEA 2026 | l'OMINEA 2025 citée par le tableur (tableau 83, p. 131) | non chiffré |
@@ -171,14 +171,13 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|---|---|
 | Taux de chargement des poids lourds | les quatre | 8,1 t (2019) | la valeur SNBC 3 | 8,7 t en 2030 : −7 % sur le facteur par t.km |
 | Courte ou longue distance | les quatre | route et ville, type de trajet par défaut du tableur (`FE_transports!A22`, `A31`) | le trajet réel du fret, que le tableur ne nomme pas | la longue distance donne un facteur de 24,5 % plus bas (0,0796 contre 0,1055 kgCO2e/t.km) |
-| Flux avec l'étranger | les quatre | avec l'étranger | la définition du tableur | 239,97 contre 171,71 milliards de t.km |
+| Flux avec l'étranger | les quatre | trafic interne + 50 % du trafic chargé ou déchargé dans la région, étranger compris (SDES, `reg_type_flux`) | la règle de la documentation fonctionnelle (p. 63) : moitié des tonnes.km chargées et moitié des déchargées, importations affectées à 100 % à la région de destination | 239,97 contre 171,71 milliards de t.km avec ou sans l'étranger ; la règle des importations n'est pas vérifiée dans le jeu SDES |
 | Poids lourds non diesel au facteur diesel | les quatre | diesel | un facteur par carburant | 10 462 au gaz (1,70 %), 500 à l'essence (0,08 %), 209 « inconnu » |
 | Biodiesel, vignettes sans correspondance | les quatre | écartés de la moyenne | leur facteur | 2 485 poids lourds biodiesel ; 3 à 14 % du parc diesel d'une région |
 | CO2 seul | les quatre | CO2 | CH4 et N2O | environ +1,7 % |
 | Parc immatriculé, pas circulant | les quatre | parc de la région | le parc circulant | non chiffré |
 | T.km non rattachées | les quatre | hors des 13 régions | leur rattachement | 6,7 milliards de t.km et celles des DOM |
 | Hydrogène avec l'électrique | les quatre | facteur électrique | un facteur propre | 907 poids lourds en métropole |
-| Coefficients 0,8064 / 1,0164 / 0,8176 / 0,9576 | report modal | repris tels quels | leur source | introuvables dans les documents REMOVE lus |
 | Facteurs ferroviaire et fluvial | report modal | périmètres différents | des périmètres identiques | une part de l'amont « non chiffrée » |
 | Barges et pousseurs | report modal | facteurs des automoteurs | des facteurs par type | 344 barges (32 % des 1 088 bateaux) |
 | Potentiel d'écoconduite de 15 % | efficacité | 15 % pour tous les poids lourds | des gains par type d'activité | le guide EVE donne 5 à 15 % (10 % en moyenne) qui s'estompent |
@@ -190,14 +189,14 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
-| Tonnes des sites ou déchets du territoire | les deux | sites de traitement (IREP 2022) | les déchets collectés | 911 EPCI sur 1 255 sans site ont un résultat nul ; Paris au département |
-| Terres et pierres sans facteur | les deux | terme non calculé | un facteur pour 20 02 02 | 28,2 % du stockage ; région 84 : 51 700,6 t ; Île-de-France : 2 527 010,76 t |
-| Incinération sans récupération (D10) | les deux | comptée avec le stockage | une séparation | 1 207 376 t contre 61 517 t dans SINOE 2021 (19,6 fois) |
+| Tonnes des sites ou déchets du territoire | les deux | sites de traitement (IREP 2022), confirmé par Laurent et la documentation (p. 68) | les déchets collectés, que la collectivité pourrait fournir | 911 EPCI sur 1 255 sans site ont un résultat nul ; Paris au département ; approche cadastrale reconnue par la documentation (p. 70) |
+| Terres et pierres sans facteur | les deux | terme non calculé, Laurent confirmant qu'il n'existe pas de facteur d'émission | un facteur pour 20 02 02 | 28,2 % du stockage ; région 84 : 51 700,6 t ; Île-de-France : 2 527 010,76 t |
+| Incinération sans récupération (D10) | les deux | comptée avec le stockage | une séparation | 1 207 376 t contre 61 517 t dans SINOE 2021 (19,6 fois) ; limite reconnue par la documentation fonctionnelle PlanET (p. 69) |
 | Facteurs d'une famille voisine | les deux | 23 codes sur 35 | des facteurs propres | non chiffré |
 | Récupération d'énergie non créditée | les deux | zéro, comme le tableur | un crédit | limite assumée par le tableur |
 | Un seul millésime | les deux | 2022 | 2023 ou 2024 | publiés |
 | Arrondissements de Paris, Lyon, Marseille | les deux | rapportés à leur commune | l'arrondissement | non chiffré |
-| Cumul avec le changement de mode | sobriété | chaque levier seul | l'enchaînement du tableur | la somme des deux diffère du cumul |
+| Cumul avec le changement de mode | sobriété | chaque levier seul | l'enchaînement du tableur, que le CGDD demande de reproduire | la somme des deux diffère du cumul |
 
 ---
 
@@ -205,9 +204,9 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Aujourd'hui | Ce qui l'affinerait |
 |---|---|---|
-| Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % ») |
+| Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % »), demandé par le CGDD (Brice, Laurent) : les calculs unitaires restent des ordres de grandeur |
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
-| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,17, 1,165, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
+| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,165, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |
 | Bornes et défauts des paramètres | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut ; `ParametreDeterminants` n'a aucune borne et ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1) ; `ElevageDurable!F19:F21` et `ProduitsBois!F19` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides | des bornes et des défauts donnés par le tableur |
 
@@ -221,8 +220,8 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 |---|---|---|---|
 | `batiments_machines_agricoles`, `residentiel_sobriete` | forme « FE électricité * 67,4% » | le coefficient n'a pas de cellule ; la documentation fonctionnelle l'explique (part « combustion à la centrale », valeur 2024) ; le tableur renvoie au jeu « mix moyen » de la Base Empreinte sans en fixer le millésime | mix moyen 2024 × 67,4 % = 0,0519 × 0,674 = 0,0349806 kgCO2e/kWh (élément 43642), en remplacement de l'élément 15591 (« Autres pays du monde », AIE 2013) retenu à tort |
 | `batiments_machines_agricoles` | `DonneesReference!D16` | demande de « convertir GJ en kWh » sans donner de nombre | 0,0036 GJ/kWh, conversion physique |
-| `elevage_durable` | prose de `ElevageDurable` | `− b ×` pour le N2O et rien sur les déjections ; ne donne pas zéro quand rien ne change | formule des formes dessinées, avec `(1 − b)` sur les déjections et le N2O |
-| `elevage_durable` | forme « dioxyde d'azote » | libellé pour la réduction de N2O | lu comme protoxyde d'azote (`DonneesReference!A14`) |
+| `elevage_durable` | prose de `ElevageDurable` | `− b ×` pour le N2O et rien sur les déjections ; ne donne pas zéro quand rien ne change | formule des formes dessinées, avec `(1 − b)` sur les déjections et le N2O, confirmée par la documentation fonctionnelle (équation 3, p. 47) |
+| `elevage_durable` | forme « dioxyde d'azote » | libellé pour la réduction de N2O | lu comme protoxyde d'azote (`DonneesReference!A14`), confirmé par Laurent |
 | `elevage_durable` | `ParametreDeterminants!D9` | annonce un encadrement de la baisse du facteur entérique sans le donner | borne de 0 à 1 |
 | `elevage_durable` | `DonneesReference!K10` et `K14` | « p. 28 du Secten » ; le code cite la page 34 | valeurs 28 et 265, identiques |
 | `produits_bois` | `DonneesReference!E21`, `K21`, `K22` | « OMINEA 2025, tableau 83, p. 131 » | OMINEA 2026, tableau 45, p. 97 |
@@ -241,6 +240,6 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade | ignorée (+22 % si gardée, région 84) |
 | `transport_personnes_report_modal`, `transport_personnes_sobriete_deplacements` | `DonneesReference!G37` | « une partie du poste amont à déterminer » pour l'électricité du ferré, sans valeur | amont × 67,4 %, valeur que fixe la documentation fonctionnelle (p. 65) |
 | `transport_marchandises_efficacite` | `TrsptMarch_Efficacité!B13` | le texte dit « somme », le dessin donne un produit | produit : 15,9 % contre 16,6 % dans un cas de test |
-| `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 ne figurent dans aucun document REMOVE lu | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |
+| `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 s'expliquent par la documentation fonctionnelle (pp. 64-65 : distances ×1,21 et ×1,14, part routière 16 %, part de l'autre mode 84 %), issue d'une analyse interne ADEME non publiée | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |
 | `transport_marchandises_electrification` | forme de `TrsptMarch_Electrification`, `DonneesReference!D38`, `C40`, `D27` | le dessin multiplie le facteur thermique par le taux de chargement ; `D38` l'exprime par véhicule.km alors que `C40` et `D27` le libellent en « kgeqCO2/t.km » | division par le taux de chargement : la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | `FE_transports!A22` | le type de mobilité par défaut est « domicile-travail » ; l'onglet ne nomme pas le fret | route et ville (070302PL et 070303PL) appliqués aux poids lourds |

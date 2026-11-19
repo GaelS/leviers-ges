@@ -67,7 +67,7 @@ Modes : stockage = opérations D1 et D5 (dépôt sur ou dans le sol, mise en dé
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Les tonnes sont celles des sites de traitement situés dans le territoire | hypothèse nommée `wasteScope` ; `DonneesTerritoires!L21` contre `ChangementModeTraitement!A25` ; renvoyé dans `appliedAssumptions.wasteScope` |
+| 1 | Les tonnes sont celles des sites de traitement situés dans le territoire | hypothèse nommée `wasteScope` ; `DonneesTerritoires!L21` contre `ChangementModeTraitement!A25` ; renvoyé dans `appliedAssumptions.wasteScope` ; confirmée par Laurent (CGDD) et par la documentation fonctionnelle (p. 68) |
 | 2 | Les trois « Tonnes de DM type de déchet » de la forme sont lues comme les tonnes du mode de départ du terme : stockage pour les termes 1 et 3, incinération avec récupération pour le terme 2 | la forme écrit trois fois le même libellé ; `Scénario global Déchets` applique chaque pourcentage à la fraction du mode de départ ; choix de conception, non validé |
 | 3 | D1, D5 et D10 sont le stockage, R1 l'incinération avec récupération | `DonneesReference!A49:A50` ; correspondance avec les codes d'opération : choix de conception, non validé |
 | 4 | Un terme dont un facteur nécessaire manque n'est pas calculé : le terme 1 demande les deux facteurs, les termes 2 et 3 un seul | « Pas de FE disponible » dans `FE_déchets` ; les tonnes ignorées sont renvoyées dans `appliedAssumptions.wasteTonnesWithoutEmissionFactor` |

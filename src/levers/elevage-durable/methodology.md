@@ -31,7 +31,7 @@ FE_déj,a = SV_a × 365 × Bo_a × 0,67
 | `FD_k` | facteur d'émission directe de N2O du mode k | kg de N-N2O par kg d'azote excrété |
 | `PRG_CH4`, `PRG_N2O` | 28 et 265 (AR5, Secten 2026 du Citepa) | kgCO2e par kg |
 
-La formule est lue dans les formes de la feuille `ElevageDurable` ; la cellule « Formule » ne contient que « Réduction GES = ». Trois formes sont dessinées : la réduction de N2O par tête, celle de méthane par tête, et leur somme multipliée par la taille du cheptel. La forme dit « dioxyde d'azote » pour la réduction de N2O : lu comme protoxyde d'azote (`DonneesReference!A14`). Le facteur `(1 − b)` s'applique aux déjections comme à la fermentation entérique, et au N2O comme au CH4, d'après le dessin ; la prose du tableur (`Formule` de l'extrait brut) le place autrement (`− b × après` pour le N2O, rien sur les déjections de méthane) et ne donne pas zéro quand rien ne change : le dessin est retenu. Le résultat du tableur est en kgCO2e ; il est divisé par 1 000.
+La formule est lue dans les formes de la feuille `ElevageDurable` ; la cellule « Formule » ne contient que « Réduction GES = ». Trois formes sont dessinées : la réduction de N2O par tête, celle de méthane par tête, et leur somme multipliée par la taille du cheptel. La forme dit « dioxyde d'azote » pour la réduction de N2O : lu comme protoxyde d'azote (`DonneesReference!A14`), confirmé par Laurent (CGDD) et par la documentation fonctionnelle (équation 3, p. 47). Le facteur `(1 − b)` s'applique aux déjections comme à la fermentation entérique, et au N2O comme au CH4, d'après le dessin ; la prose du tableur (`Formule` de l'extrait brut) le place autrement (`− b × après` pour le N2O, rien sur les déjections de méthane) et ne donne pas zéro quand rien ne change : le dessin est retenu. Le résultat du tableur est en kgCO2e ; il est divisé par 1 000.
 
 ## Entrées
 
@@ -82,7 +82,7 @@ Jeux `elevage-durable/regions` et `elevage-durable/departements`, construits par
 | # | Choix | Source ou statut |
 |---|---|---|
 | 1 | Pas de calcul à l'EPCI | fichier Agreste par EPCI contradictoire sur les bovins, secret ; décision du 2026-10-20 |
-| 2 | La formule du dessin, avec `(1 − b)` sur les déjections et le N2O | la prose du tableur est incohérente et ne donne pas zéro quand rien ne change ; à confirmer avec l'ADEME |
+| 2 | La formule du dessin, avec `(1 − b)` sur les déjections et le N2O | la prose du tableur est incohérente et ne donne pas zéro quand rien ne change ; formule confirmée par la documentation fonctionnelle (équation 3, p. 47) |
 | 3 | La proportion actuelle de méthanisation est 0 | `ElevageDurable!B15` |
 | 4 | Les proportions actuelles sont nationales | `DonneesTerritoires!H22` : « Nationale » ; renvoyé dans `appliedAssumptions.currentManureShares` |
 | 5 | Constantes de l'OMINEA 2013, pas de l'OMINEA 2026 | `DonneesReference!D11` à `D15` ; l'OMINEA 2026 donne 121,9 à 152,5 kg de CH4 par vache laitière (121 ici) et 118,7 kg d'azote excrété (115,6) ; renvoyé dans `appliedAssumptions.animalParameters` |
