@@ -182,7 +182,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        omineaCsv: 'snap,rubric\n070301PL,Euro VI',
+        omineaCsv: 'snap,rubric\n070302PL,Euro VI',
       })._unsafeUnwrapErr(),
     ).toMatchObject({ reason: 'columns_mismatch', detail: 'valeur_2024' })
   })

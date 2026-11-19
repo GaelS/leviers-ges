@@ -63,13 +63,13 @@ La somme des deux reports ne dépasse pas 100 % : le tableur n'en pose pas, la r
 | idem, 400 000 t.km de cyclologistique, tout vers le ferroviaire | 34,26878448 tCO2e |
 | route à 0,005, tout vers le ferroviaire | −3,3653592 tCO2e |
 | région 84, jeu de test, 10 % et 5 % | 7,99 tCO2e |
-| région 84, données réelles, 10 % et 5 % | 248 249,26 tCO2e |
-| région 53 (Bretagne) | 106 147,13 tCO2e |
-| région 11 (Île-de-France) | 165 986,06 tCO2e |
-| région 94 (Corse) | 1 838,05 tCO2e |
-| région 32 (Hauts-de-France) | 235 219,05 tCO2e |
-| région 84, un milliard de t.km de cyclologistique | 240 308,58 tCO2e |
-| région 94, un milliard de t.km de cyclologistique (plus que ses 0,235 milliard) | −5 967,19 tCO2e |
+| région 84, données réelles, 10 % et 5 % | 346 371,89 tCO2e |
+| région 53 (Bretagne) | 147 840,07 tCO2e |
+| région 11 (Île-de-France) | 230 868,34 tCO2e |
+| région 94 (Corse) | 2 578,45 tCO2e |
+| région 32 (Hauts-de-France) | 326 766,11 tCO2e |
+| région 84, un milliard de t.km de cyclologistique | 335 292,59 tCO2e |
+| région 94, un milliard de t.km de cyclologistique (plus que ses 0,235 milliard) | −8 370,9 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

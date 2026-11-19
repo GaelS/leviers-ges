@@ -20,11 +20,11 @@ function toFlowsAssumption(): AppliedAssumptions {
 function toEmissionFactorAssumptions({ inputs, emissionFactors }: GoodsTransport): AppliedAssumptions {
   return {
     heavyVehicleTripType: {
-      value: 'long distance, diesel heavy vehicles of the region',
+      value: 'default trip type of the spreadsheet, road and city, diesel heavy vehicles of the region',
       source:
-        "OMINEA 2024 (CITEPA), CO2 of diesel heavy vehicles, long distance: 50% SNAP 070301PL and 50% 070302PL, Euro standard chosen by Crit'Air (FE_transports), weighted by the region's fleet, divided by the loading rate",
+        "OMINEA 2024 (CITEPA), CO2 of diesel heavy vehicles, default trip type of FE_transports (A22, A31): 50% SNAP 070302PL and 50% 070303PL, Euro standard chosen by Crit'Air (FE_transports), weighted by the region's fleet, divided by the loading rate",
       limit:
-        'Short distance (070302PL and 070303PL) is 32% higher. CO2 only: CH4 and N2O would add about 1.7%. The fleet is the one registered in the region, not the one that drives there',
+        'The spreadsheet does not say which trip type applies to goods transport: its default is applied. Long distance (070301PL and 070302PL) is 24.5% lower. CO2 only: CH4 and N2O would add about 1.7%. The fleet is the one registered in the region, not the one that drives there',
     },
     heavyVehicleThermalEmissionFactor: {
       value: emissionFactors.thermal.decimalPlaces(DISPLAYED_DECIMAL_PLACES).toFixed(),

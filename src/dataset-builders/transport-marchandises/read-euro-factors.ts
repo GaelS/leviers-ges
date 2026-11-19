@@ -17,10 +17,10 @@ const EURO_STANDARD_BY_CRIT_AIR: ReadonlyMap<string, string> = new Map([
   ["Crit'Air 5", 'Euro III'],
 ])
 
-// Source : tableur PlanET V1, FE_transports!A31 : longues distances, 50 % du facteur SNAP « autoroute » (070301PL) et 50 % de « route » (070302PL) ; hypothèse nommée heavyVehicleTripType
-const LONG_DISTANCE_SNAP_WEIGHTS: ReadonlyMap<string, BigNumber> = new Map([
-  ['070301PL', toBig('0.5')],
+// Source : tableur PlanET V1, FE_transports!A22 et A31 : le domicile-travail est le type de mobilité par défaut, avec 50 % du facteur SNAP « route » (070302PL) et 50 % de « ville » (070303PL), comme les autres courtes distances ; hypothèse nommée heavyVehicleTripType
+const DEFAULT_TRIP_SNAP_WEIGHTS: ReadonlyMap<string, BigNumber> = new Map([
   ['070302PL', toBig('0.5')],
+  ['070303PL', toBig('0.5')],
 ])
 
 function findFactor({
@@ -50,14 +50,14 @@ function findFactor({
   )
 }
 
-function calculateLongDistanceFactor({
+function calculateDefaultTripFactor({
   rows,
   euroStandard,
 }: {
   rows: readonly DataRow[]
   euroStandard: string
 }): Result<BigNumber, InvalidDataset> {
-  const weightedFactors = [...LONG_DISTANCE_SNAP_WEIGHTS].map(([snapCode, weight]) =>
+  const weightedFactors = [...DEFAULT_TRIP_SNAP_WEIGHTS].map(([snapCode, weight]) =>
     findFactor({ rows, snapCode, euroStandard }).map((factor) => factor.times(weight)),
   )
   return Result.combine(weightedFactors).map(sum)
@@ -71,7 +71,7 @@ function readEuroFactors(
     .andThen((rows) =>
       Result.combine(
         [...EURO_STANDARD_BY_CRIT_AIR].map(([critAir, euroStandard]) =>
-          calculateLongDistanceFactor({ rows, euroStandard }).map(
+          calculateDefaultTripFactor({ rows, euroStandard }).map(
             (factor): readonly [string, BigNumber] => [critAir, factor],
           ),
         ),

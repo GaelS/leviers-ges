@@ -33,21 +33,21 @@ function toRequest({
 
 describe('estimate transport_marchandises_report_modal, SDES 2024 et OMINEA 2024', () => {
   it.each([
-    ['84', '248249.26'],
-    ['53', '106147.13'],
-    ['11', '165986.06'],
-    ['94', '1838.05'],
-    ['32', '235219.05'],
+    ['84', '346371.89'],
+    ['53', '147840.07'],
+    ['11', '230868.34'],
+    ['94', '2578.45'],
+    ['32', '326766.11'],
   ])('à 10 %% de ferroviaire et 5 %% de fluvial, la région %s évite %s tCO2e', (code, expected) => {
     expect(estimate(toRequest({ code }), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
   it.each([
-    ['84', '240308.58'],
-    ['53', '98166.91'],
-    ['11', '158033.55'],
-    ['94', '-5967.19'],
-    ['32', '227182.2'],
+    ['84', '335292.59'],
+    ['53', '136725.33'],
+    ['11', '219807.27'],
+    ['94', '-8370.9'],
+    ['32', '315601.31'],
   ])(
     'avec un milliard de t.km de cyclologistique, la région %s évite %s tCO2e',
     (code, expected) => {
