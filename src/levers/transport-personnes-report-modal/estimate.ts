@@ -31,6 +31,7 @@ function estimate(
           fractions: {
             carToPublicTransport: parameters.carToPublicTransportFraction,
             carToActiveModes: parameters.carToActiveModesFraction,
+            publicTransportToActiveModes: parameters.publicTransportToActiveModesFraction,
           },
           railShare: railShare.fraction,
           railEmissionFactor: railEmissionFactor.emissionFactor,

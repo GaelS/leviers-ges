@@ -173,7 +173,8 @@ const result = estimate({
 | `transport_personnes_sobriete_deplacements` | `commutingDistanceReductionFraction` | fraction | baisse des distances domicile-travail (voiture et transport en commun) |
 | | `railShareFraction` | fraction, facultatif | |
 | `transport_personnes_report_modal` | `carToPublicTransportFraction` | fraction | passagers.km en voiture reportés vers le transport en commun |
-| | `carToActiveModesFraction` | fraction | passagers.km en voiture reportés vers les modes actifs ; la somme des deux reports ne dépasse pas 1 |
+| | `carToActiveModesFraction` | fraction | passagers.km en voiture reportés vers les modes actifs ; la somme des deux reports depuis la voiture ne dépasse pas 1 |
+| | `publicTransportToActiveModesFraction` | fraction | passagers.km en transport en commun reportés vers les modes actifs |
 | | `railShareFraction` | fraction, facultatif | |
 | `transport_personnes_efficacite` | `carEcodrivingApplicationFraction`, `busEcodrivingApplicationFraction` | fraction | part d'application de l'écoconduite (voitures, bus et cars) |
 | | `carPassengerIncrease`, `busPassengerIncrease` | variation relative positive | hausse du nombre de passagers par véhicule |

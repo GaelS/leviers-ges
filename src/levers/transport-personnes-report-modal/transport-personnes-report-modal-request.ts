@@ -13,6 +13,7 @@ const transportPersonnesReportModalRequestSchema = z.strictObject({
     .strictObject({
       carToPublicTransportFraction: fractionSchema,
       carToActiveModesFraction: fractionSchema,
+      publicTransportToActiveModesFraction: fractionSchema,
       railShareFraction: fractionSchema.optional(),
     })
     .refine(

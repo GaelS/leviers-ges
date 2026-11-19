@@ -159,7 +159,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Parc de bus et cars immatriculé au siège | efficacité, électrification, sobriété | siège | le parc circulant | trois communes portent 17,7 % du parc ; 276 des 1 243 EPCI sans bus classé |
 | Trajets de moins de 100 km, domicile-travail | les quatre | périmètre de la base | autres motifs et longues distances | 772 644 actifs métropolitains hors champ ; DOM absents |
 | Deux-roues motorisés | efficacité, électrification, sobriété | sans terme | un terme | 1,4 % des passagers.km |
-| Dernière ligne dessinée du report modal | report modal | ignorée | sa signification | +22 % si gardée (région 84) |
+| Base du report des transports en commun vers les modes actifs | report modal | passagers.km en transport en commun initiaux, sans enchaîner avec le report de la voiture vers les transports en commun | l'enchaînement du tableur | non chiffré |
 | Électrification : sens de `x` | électrification | part du parc entier | part des véhicules thermiques | le parc entier couvre aussi les trajets de plus de 100 km |
 | Facteur électrique | électrification | amont seul, identique partout | le mix local | non chiffré |
 | Facteur du bus ÷ 10 | sobriété | par analogie avec la voiture | la cellule pour les bus | non chiffré |
@@ -237,7 +237,7 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `transport_personnes_efficacite` | `TrsptPers_Efficacité!B15`, `TrsptPers_SobriétéDéplacements!B15`, `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage ; `B15` de l'efficacité ne le dit pas, celles des onglets de sobriété et de report modal disent de diviser (voitures) | division par 1,165 |
 | `transport_personnes_electrification` | `TrsptPers_Electrification!B15` | le dessin multiplie les facteurs par le taux de remplissage ; la cellule est vide | division par 1,165, par analogie avec les autres onglets |
 | `transport_personnes_report_modal` | `ParametreDeterminants!H34` et `H35` | « inférieur à 100 % » sans dire strict ou large | 100 % accepté |
-| `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade | ignorée (+22 % si gardée, région 84) |
+| `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade avec les passagers.km en voiture, dans le tableur comme dans la documentation (p. 60) | lue comme le report des transports en commun vers les modes actifs, sur les passagers.km en transport en commun (Laurent, CGDD) |
 | `transport_personnes_report_modal`, `transport_personnes_sobriete_deplacements` | `DonneesReference!G37` | « une partie du poste amont à déterminer » pour l'électricité du ferré, sans valeur | amont × 67,4 %, valeur que fixe la documentation fonctionnelle (p. 65) |
 | `transport_marchandises_efficacite` | `TrsptMarch_Efficacité!B13` | le texte dit « somme », le dessin donne un produit | produit : 15,9 % contre 16,6 % dans un cas de test |
 | `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 s'expliquent par la documentation fonctionnelle (pp. 64-65 : distances ×1,21 et ×1,14, part routière 16 %, part de l'autre mode 84 %), issue d'une analyse interne ADEME non publiée | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |

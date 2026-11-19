@@ -540,6 +540,7 @@ describe('estimate', () => {
         parameters: {
           carToPublicTransportFraction: toPublicTransport,
           carToActiveModesFraction: toActiveModes,
+          publicTransportToActiveModesFraction: '0',
         },
       }
     }

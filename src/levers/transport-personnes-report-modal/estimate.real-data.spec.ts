@@ -14,6 +14,7 @@ type Level = ComputedLevels<'transport_personnes_report_modal'>
 type Parameters = {
   readonly carToPublicTransportFraction: string
   readonly carToActiveModesFraction: string
+  readonly publicTransportToActiveModesFraction: string
   readonly railShareFraction?: string
 }
 
@@ -24,6 +25,7 @@ const context = createEstimationContext(
 const MIXED_SHIFT: Parameters = {
   carToPublicTransportFraction: '0.1',
   carToActiveModesFraction: '0.05',
+  publicTransportToActiveModesFraction: '0',
 }
 
 function toRequest({
@@ -70,6 +72,17 @@ describe('estimate transport_personnes_report_modal, Insee-SDES 2022 et parc SDE
       '242160.85',
     )
   })
+
+  it.each([
+    ['84', '231089.14'],
+    ['11', '299632.2'],
+  ])(
+    'avec 20 %% des passagers.km de transport en commun reportés vers les modes actifs en plus, la région %s évite %s tCO2e',
+    (code, expected) => {
+      const parameters = { ...MIXED_SHIFT, publicTransportToActiveModesFraction: '0.2' }
+      expect(estimation({ level: 'region', code, parameters }).reduction.toFixed()).toBe(expected)
+    },
+  )
 
   it('la Corse prend le facteur du train de Corse, la Bretagne celui du TER', () => {
     const railFactorOf = (code: string) =>
