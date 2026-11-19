@@ -244,19 +244,19 @@ const estimateStraddling = toEstimator(
 
 describe('estimate, batiments_machines_agricoles', () => {
   it.each([
-    ['la région 84', request('region', '84'), '32084.47'],
-    ['la région 11, sans réseau de chaleur ni chaleur', request('region', '11'), '14294.48'],
-    ['le département 01, avec 40 % de la SAU de la région', request('departement', '01'), '12239.21'],
-    ['le département 69, avec 60 % de la SAU de la région', request('departement', '69'), '19528.64'],
-    ['le département 75, sans réseau de chaleur', request('departement', '75'), '14055.39'],
-    ['l’EPCI 200000001', request('epci', '200000001'), '12192.44'],
-    ['l’EPCI 200000002', request('epci', '200000002'), '19528.64'],
+    ['la région 84', request('region', '84'), '31901.14'],
+    ['la région 11, sans réseau de chaleur ni chaleur', request('region', '11'), '14276.15'],
+    ['le département 01, avec 40 % de la SAU de la région', request('departement', '01'), '12202.55'],
+    ['le département 69, avec 60 % de la SAU de la région', request('departement', '69'), '19473.64'],
+    ['le département 75, sans réseau de chaleur', request('departement', '75'), '14053.56'],
+    ['l’EPCI 200000001', request('epci', '200000001'), '12164.94'],
+    ['l’EPCI 200000002', request('epci', '200000002'), '19473.64'],
   ])('évite pour %s à 100 % : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
   it.each([
-    ['l’électricité', { ...NONE, electricityReductionFraction: '0.5' }, '266.57'],
+    ['l’électricité', { ...NONE, electricityReductionFraction: '0.5' }, '174.9'],
     ['le gaz naturel', { ...NONE, naturalGasReductionFraction: '0.5' }, '402.34'],
     ['les produits pétroliers', { ...NONE, petroleumProductsReductionFraction: '0.5' }, '14040'],
     ['la chaleur', { ...NONE, heatReductionFraction: '0.5' }, '1333.33'],
@@ -285,11 +285,11 @@ describe('estimate, batiments_machines_agricoles', () => {
   })
 
   it('une région sans SAU garde son électricité et perd ses produits pétroliers et sa chaleur', () => {
-    expect(estimate(request('region', '94'))._unsafeUnwrap().reduction.toFixed()).toBe('106.63')
+    expect(estimate(request('region', '94'))._unsafeUnwrap().reduction.toFixed()).toBe('69.96')
   })
 
   it('un département sans SAU garde son électricité et perd les produits pétroliers et la chaleur de sa région', () => {
-    expect(estimate(request('departement', '2A'))._unsafeUnwrap().reduction.toFixed()).toBe('5.33')
+    expect(estimate(request('departement', '2A'))._unsafeUnwrap().reduction.toFixed()).toBe('3.5')
   })
 
   it('refuse un territoire inconnu', () => {

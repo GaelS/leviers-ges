@@ -8,7 +8,7 @@ Identifiant : `residentiel_sobriete`. Niveaux : région et département ; l'EPCI
 Émissions évitées (tCO2e/an) = f × b × Σ_v  C_v × FE_v
 
 v : électricité, gaz naturel, fioul domestique, GPL, chaleur commercialisée
-FE_électricité = 0,0791 × 67,4 %
+FE_électricité = 0,0519 × 67,4 %
 ```
 
 | Terme | Sens | Unité |
@@ -33,8 +33,8 @@ Les deux sont obligatoires. Le tableur donne une valeur par défaut à la baisse
 
 | Constante | Valeur | Source |
 |---|---|---|
-| FE électricité, mix moyen | 0,0791 kgCO2e/kWh | Base Empreinte, élément 15591, version 23.11, validité décembre 2017 |
-| Coefficient sur l'électricité | 67,4 % | forme « FE électricité * 67,4% » du tableur ; aucune cellule ne le contient ni ne l'explique, repris tel quel (FE appliqué : 0,0533134) |
+| FE électricité, mix moyen 2024 | 0,0519 kgCO2e/kWh | Base Empreinte, élément 43642 (« Electricité 2024 - mix moyen », consommation, France continentale) ; le tableur renvoie au jeu « mix moyen » sans valeur figée |
+| Coefficient sur l'électricité | 67,4 % | part « combustion à la centrale » du facteur 2024 (0,0350 ÷ 0,0519, élément 43642), documentation fonctionnelle PlanET, pp. 43, 50, 52 et 56 ; forme « FE de l'électricité * 67,4% » du tableur (FE appliqué : 0,0349806) |
 | FE gaz naturel | 55,88 kg/GJ PCI | OMINEA, NAPFUE 301, SNAP 020202, 2024 (55,8796 arrondi, choix 17) |
 | FE fioul domestique | 74,52 kg/GJ PCI | OMINEA, NAPFUE 204, SNAP 020202, 2024 (74,5229 arrondi, choix 17) |
 | FE GPL | 63,1 kg/GJ PCI | OMINEA, NAPFUE 303, SNAP 020202, 2024 |
@@ -74,7 +74,7 @@ Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six s
 | 8 | Réseaux de froid conservés (31 réseaux, 0,14 % de `CONSOR`) | comme `reseaux_chaleur` |
 | 9 | Réseaux sous secret statistique exclus (140 sur 992) ; arrondissements rapportés à leur commune | comme `reseaux_chaleur` |
 | 10 | Bois non compté | `Residentiel_Sobriete!B13` dit « consommations énergétiques totales du bâtiment », mais la forme ne liste que l'électricité, le gaz, le GPL, le fioul et la chaleur |
-| 11 | Coefficient de 67,4 % sur l'électricité repris tel quel | forme du tableur, non expliqué |
+| 11 | Coefficient de 67,4 % sur l'électricité | part « combustion à la centrale » du facteur 2024, documentation fonctionnelle PlanET, pp. 43, 50, 52 et 56 |
 | 12 | FE du fioul : valeur PCI d'OMINEA | une alerte des fiches d'analyse note que le jeu ouvert n'a le fioul domestique qu'en PCI et que le tableur annonce du PCS |
 | 13 | Formule appliquée à la consommation initiale du territoire | dans le scénario, `SG Résidentiel!E13` l'applique à la consommation restante après les deux premiers leviers résidentiels |
 | 14 | Les deux fractions sont obligatoires, la baisse n'a pas de valeur par défaut | le tableur donne 0,1 (`F20`) ; les autres leviers n'ont pas de défaut et `appliedAssumptions` reste vide |
@@ -86,23 +86,23 @@ Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six s
 
 | Entrée | Résultat |
 |---|---|
-| 1 000 MWh d'électricité, f = b = 100 % | 53,3134 tCO2e |
+| 1 000 MWh d'électricité, f = b = 100 % | 34,9806 tCO2e |
 | 1 000 MWh de gaz naturel | 201,168 tCO2e |
 | 1 000 MWh de fioul | 268,272 tCO2e |
 | 1 000 MWh de GPL | 227,16 tCO2e |
 | 1 000 MWh de chaleur à 0,1 kgCO2e/kWh | 100 tCO2e |
-| 1 000 MWh de chaque vecteur, chaleur à 0,1 | 849,9134 tCO2e |
-| idem, 50 % des foyers et 10 % de baisse | 42,49567 tCO2e |
+| 1 000 MWh de chaque vecteur, chaleur à 0,1 | 831,5806 tCO2e |
+| idem, 50 % des foyers et 10 % de baisse | 41,57903 tCO2e |
 | 1 000 MWh à 0,1 et 3 000 MWh à 0,2 | facteur de chaleur de 0,175 |
-| région 84, jeu de test, 100 % | 8 372,38 tCO2e |
-| département 01, jeu de test, 100 % | 1 266,35 tCO2e |
-| région 84, données réelles, 100 % | 5 027 015,09 tCO2e |
-| région 53 (Bretagne), 100 % | 1 894 270,79 tCO2e |
-| département 35, 100 % | 607 488,23 tCO2e |
-| département 75, 100 % | 1 349 053,38 tCO2e |
-| région 84, 50 % des foyers et 10 % de baisse | 251 350,75 tCO2e |
-| somme des 13 régions, 100 % | 39 495 128,07 tCO2e |
-| somme des 96 départements, 100 % | 39 937 077,48 tCO2e |
+| région 84, jeu de test, 100 % | 8 189,05 tCO2e |
+| département 01, jeu de test, 100 % | 1 229,68 tCO2e |
+| région 84, données réelles, 100 % | 4 686 750,91 tCO2e |
+| région 53 (Bretagne), 100 % | 1 741 315,05 tCO2e |
+| département 35, 100 % | 564 332,91 tCO2e |
+| département 75, 100 % | 1 283 555,75 tCO2e |
+| région 84, 50 % des foyers et 10 % de baisse | 234 337,55 tCO2e |
+| somme des 13 régions, 100 % | 36 785 947,91 tCO2e |
+| somme des 96 départements, 100 % | 37 133 226,16 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -119,13 +119,12 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Limite | Effet |
 |---|---|
 | SDES et non CEREN | le CEREN donne des consommations à climat normal, le SDES des consommations constatées ; l'électricité IRIS dépasse le bilan de 3,5 % (152,9 contre 147,8 TWh en métropole), le gaz IRIS vaut 101,7 TWh contre 100,2 au bilan en PCI |
-| Départements et régions | la somme des 96 départements dépasse celle des 13 régions de 1,1 % (39,94 contre 39,50 MtCO2e à 100 %), parce que l'électricité et le gaz départementaux viennent du jeu IRIS et ceux des régions du bilan : on ne les additionne ni ne les compare |
+| Départements et régions | la somme des 96 départements dépasse celle des 13 régions de 0,9 % (37,13 contre 36,79 MtCO2e à 100 %), parce que l'électricité et le gaz départementaux viennent du jeu IRIS et ceux des régions du bilan : on ne les additionne ni ne les compare |
 | Ventes de FOD et de GPL | tous clients, unité non publiée, GPL carburant compris ; en 2024 le FOD de la Haute-Corse (110 570) vaut 27 fois celui de la Corse-du-Sud (4 027), et la répartition suit les ventes telles que publiées |
 | Secret statistique | électricité : 1 330 lignes IRIS sur 50 786 (2,6 %) ; gaz : 1 283 sur 24 291 (5,3 %) ; chaleur : 140 réseaux sur 992 (14 %) ; les lignes secrètes comptent pour 0 |
 | Chaleur à la commune du réseau | la chaleur n'est pas attribuée à la commune des clients ; un département servi par un réseau implanté dans un autre n'en reçoit pas la chaleur |
 | Chaleur : bilan et réseaux | la chaleur d'une région vient du bilan (14,7 TWh en métropole) et son facteur des réseaux hors secret (13,7 TWh) |
 | Départements sans réseau | 4 départements n'ont aucun réseau hors secret : leur chaleur et son facteur valent 0 |
-| FE de l'électricité | le FE de base date de 2017 ; les séries 2021 à 2024 de la Base Empreinte valent 0,052 à 0,058, sans le coefficient |
 | Outre-mer | absent des données énergétiques |
 | Jeux IRIS agrégés hors dépôt | `sdes-electricite-iris-…-par-departement.csv` et `sdes-gaz-iris-…-par-departement.csv` sont des extraits déjà sommés par département ; le jeu IRIS résidentiel complet n'est pas versionné |
 

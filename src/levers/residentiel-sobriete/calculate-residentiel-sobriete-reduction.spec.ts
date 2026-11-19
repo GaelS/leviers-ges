@@ -51,7 +51,7 @@ function reduction({
 
 describe('calculateResidentielSobrieteReduction', () => {
   it.each([
-    ['1 000 MWh d’électricité : 0,0791 × 67,4 % kgCO2e/kWh', { electricity: '1000' }, '53.3134'],
+    ['1 000 MWh d’électricité : 0,0519 × 67,4 % kgCO2e/kWh', { electricity: '1000' }, '34.9806'],
     ['1 000 MWh de gaz naturel : 55,88 kg/GJ × 0,0036', { naturalGas: '1000' }, '201.168'],
     ['1 000 MWh de fioul : 74,52 kg/GJ × 0,0036', { fuelOil: '1000' }, '268.272'],
     ['1 000 MWh de GPL : 63,1 kg/GJ × 0,0036', { liquefiedPetroleumGas: '1000' }, '227.16'],
@@ -71,7 +71,7 @@ describe('calculateResidentielSobrieteReduction', () => {
       liquefiedPetroleumGas: '1000',
       heat: '1000',
     }
-    expect(reduction({ vectors, heatEmissionFactor: '0.1' })).toBe('849.9134')
+    expect(reduction({ vectors, heatEmissionFactor: '0.1' })).toBe('831.5806')
   })
 
   it('applique la part des foyers puis la baisse : 50 % des foyers × 10 % de baisse = 5 % de 849,9134', () => {
@@ -88,7 +88,7 @@ describe('calculateResidentielSobrieteReduction', () => {
         sobrietyFractions: fractionsOf('0.5', '0.1'),
         heatEmissionFactor: '0.1',
       }),
-    ).toBe('42.49567')
+    ).toBe('41.57903')
   })
 
   it.each([

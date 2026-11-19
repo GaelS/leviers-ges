@@ -70,7 +70,6 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Coefficient de 67,4 % sur le facteur de l'électricité | repris tel quel, sans explication | l'origine du coefficient | facteur 0,0533 au lieu de 0,0791 kgCO2e/kWh, soit −32,6 % sur l'électricité |
 | Pêche comprise dans les produits pétroliers | comprise, comme le tableur | la part agricole seule | 9,0 % des produits pétroliers de métropole, 22 % en Bretagne |
 | Facteur du fioul lourd pour tous les produits pétroliers | fioul lourd (78) | le facteur des engins agricoles | OMINEA : 74,52 et 72,48, soit 4,5 % et 7,1 % de moins |
 | Produits pétroliers répartis par la part de SAU | part de SAU | la part de gazole non routier | écart de 3,0 points en médiane, 11,6 au 90e centile |
@@ -141,7 +140,6 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Fioul et GPL départementaux | ventes 2024 de FOD et GPL | les consommations | ventes tous clients, unité non publiée : la Haute-Corse vend 27 fois la Corse-du-Sud |
 | Bois non compté | non compté | sa consommation | non chiffré |
 | Secret statistique | lignes secrètes à 0 | les valeurs | électricité 2,6 %, gaz 5,3 % des lignes, 14 % des réseaux |
-| Coefficient de 67,4 % | repris tel quel | son origine | −32,6 % sur l'électricité |
 | Formule appliquée à la consommation initiale | consommation initiale | la consommation restante après les deux autres leviers résidentiels | non chiffré |
 | Départements et régions | sources différentes | une source commune | la somme des 96 départements dépasse celle des 13 régions de 1,1 % |
 
@@ -207,7 +205,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|
 | Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % ») |
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
-| Valeurs sans source dans le classeur | 0,0791, 55,88, 78, 5,733, 1,17, 1,165, 0,0229, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
+| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,17, 1,165, 0,0229, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |
 | Bornes et défauts des paramètres | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut ; `ParametreDeterminants` n'a aucune borne et ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1) ; `ElevageDurable!F19:F21` et `ProduitsBois!F19` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides | des bornes et des défauts donnés par le tableur |
 
@@ -219,7 +217,7 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 
 | Levier | Cellule | Constat | Ce que fait le code |
 |---|---|---|---|
-| `batiments_machines_agricoles`, `residentiel_sobriete` | forme « FE électricité * 67,4% » | coefficient sans cellule ni explication ; le facteur de base date de 2017 | repris tel quel (facteur 0,0533 au lieu de 0,0791 kgCO2e/kWh) |
+| `batiments_machines_agricoles`, `residentiel_sobriete` | forme « FE électricité * 67,4% » | le coefficient n'a pas de cellule ; la documentation fonctionnelle l'explique (part « combustion à la centrale », valeur 2024) ; le tableur renvoie au jeu « mix moyen » de la Base Empreinte sans en fixer le millésime | mix moyen 2024 × 67,4 % = 0,0519 × 0,674 = 0,0349806 kgCO2e/kWh (élément 43642), en remplacement de l'élément 15591 (« Autres pays du monde », AIE 2013) retenu à tort |
 | `batiments_machines_agricoles` | `DonneesReference!D16` | demande de « convertir GJ en kWh » sans donner de nombre | 0,0036 GJ/kWh, conversion physique |
 | `elevage_durable` | prose de `ElevageDurable` | `− b ×` pour le N2O et rien sur les déjections ; ne donne pas zéro quand rien ne change | formule des formes dessinées, avec `(1 − b)` sur les déjections et le N2O |
 | `elevage_durable` | forme « dioxyde d'azote » | libellé pour la réduction de N2O | lu comme protoxyde d'azote (`DonneesReference!A14`) |

@@ -357,14 +357,14 @@ describe('estimate', () => {
       })
     })
 
-    it('aiguille la région vers son levier : 10 GWh d’électricité à 0,0533134 kgCO2e/kWh', () => {
+    it('aiguille la région vers son levier : 10 GWh d’électricité à 0,0349806 kgCO2e/kWh', () => {
       const result = withResidentialEnergy(residentielSobrieteRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('533.13')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('349.81')
     })
 
     it('accepte la baisse en nombre', () => {
       const result = withResidentialEnergy(residentielSobrieteRequest({ consumptionReduction: 0.5 }))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('266.57')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('174.9')
     })
 
     it.each(['-0.1', '1.01'])('refuse la baisse %s hors de 0 à 1', (consumptionReduction) => {

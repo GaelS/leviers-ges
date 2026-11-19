@@ -8,15 +8,16 @@ import type {
   KgCo2ePerVehicleKilometre,
 } from './units.ts'
 
-// Source : Base Empreinte, élément 15591 (électricité, mix moyen), version 23.11, validité décembre 2017,
-// incertitude 10 % : 0,0791 kgCO2e/kWh. PlanET V1, onglets Bâtiment&MachinesAgricoles et Residentiel_Sobriete
-const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.0791')
+// Source : Base Empreinte, élément 43642 (« Electricité 2024 - mix moyen », consommation, France continentale),
+// validité de l'année 2024 : 0,0519 kgCO2e/kWh. PlanET V1, onglets Bâtiment&MachinesAgricoles et Residentiel_Sobriete :
+// « Electricité mix moyen », renvoi au jeu de données de la Base Empreinte sans valeur figée
+const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.0519')
 
-// Source : PlanET V1, onglets Bâtiment&MachinesAgricoles et Residentiel_Sobriete, forme « FE de l'électricité * 67,4% » ;
-// aucune cellule du classeur ne contient ni n'explique ce coefficient, repris tel quel
+// Source : documentation fonctionnelle PlanET (juin 2026), pp. 43, 50, 52 et 56 : 67,4 % est la part « combustion à la centrale »
+// du facteur de la Base Empreinte, valeur 2024 (0,0350 ÷ 0,0519, élément 43642). PlanET V1, forme « FE de l'électricité * 67,4% »
 const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction = quantity<'Fraction'>('0.674')
 
-// Source : produit des deux constantes précédentes : 0,0791 × 67,4 % = 0,0533134 kgCO2e/kWh
+// Source : produit des deux constantes précédentes : 0,0519 × 67,4 % = 0,0349806 kgCO2e/kWh
 const ELECTRICITY_APPLIED_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>(
   ELECTRICITY_EMISSION_FACTOR.times(ELECTRICITY_EMISSION_FACTOR_SHARE).toFixed(),
 )
