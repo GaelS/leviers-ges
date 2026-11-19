@@ -32,7 +32,7 @@ describe('toGoodsTransportAssumptions', () => {
       electric: assumptions['electricHeavyVehicleEmissionFactor']?.value,
       flows: assumptions['includeInternationalFlows']?.limit,
     }).toEqual({
-      tripType: 'long distance, diesel heavy vehicles of the region',
+      tripType: 'default trip type of the spreadsheet, road and city, diesel heavy vehicles of the region',
       factor: '0.1',
       loading: '8.1',
       unclassified: '0.09',

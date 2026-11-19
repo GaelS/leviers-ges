@@ -170,7 +170,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
 | Taux de chargement des poids lourds | les quatre | 8,1 t (2019) | la valeur SNBC 3 | 8,7 t en 2030 : −7 % sur le facteur par t.km |
-| Courte ou longue distance | les quatre | longue distance | le trajet réel | la courte distance donne un facteur de 32 % plus haut |
+| Courte ou longue distance | les quatre | route et ville, type de trajet par défaut du tableur (`FE_transports!A22`, `A31`) | le trajet réel du fret, que le tableur ne nomme pas | la longue distance donne un facteur de 24,5 % plus bas (0,0796 contre 0,1055 kgCO2e/t.km) |
 | Flux avec l'étranger | les quatre | avec l'étranger | la définition du tableur | 239,97 contre 171,71 milliards de t.km |
 | Poids lourds non diesel au facteur diesel | les quatre | diesel | un facteur par carburant | 10 462 au gaz (1,70 %), 500 à l'essence (0,08 %), 209 « inconnu » |
 | Biodiesel, vignettes sans correspondance | les quatre | écartés de la moyenne | leur facteur | 2 485 poids lourds biodiesel ; 3 à 14 % du parc diesel d'une région |
@@ -243,3 +243,4 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `transport_marchandises_efficacite` | `TrsptMarch_Efficacité!B13` | le texte dit « somme », le dessin donne un produit | produit : 15,9 % contre 16,6 % dans un cas de test |
 | `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 ne figurent dans aucun document REMOVE lu | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |
 | `transport_marchandises_electrification` | forme de `TrsptMarch_Electrification`, `DonneesReference!D38`, `C40`, `D27` | le dessin multiplie le facteur thermique par le taux de chargement ; `D38` l'exprime par véhicule.km alors que `C40` et `D27` le libellent en « kgeqCO2/t.km » | division par le taux de chargement : la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 |
+| `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | `FE_transports!A22` | le type de mobilité par défaut est « domicile-travail » ; l'onglet ne nomme pas le fret | route et ville (070302PL et 070303PL) appliqués aux poids lourds |

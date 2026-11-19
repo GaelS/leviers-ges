@@ -9,14 +9,14 @@ const REGION_COLUMNS =
   'code_region,billion_tonne_kilometres,heavy_vehicle_fleet,zero_emission_heavy_vehicle_fleet,diesel_emission_factor_g_per_vehicle_km,diesel_unclassified_share'
 
 const EURO_FACTORS = [
-  ['070301PL', 'Euro VI', '700'],
   ['070302PL', 'Euro VI', '600'],
-  ['070301PL', 'Euro V', '640'],
   ['070302PL', 'Euro V', '540'],
-  ['070301PL', 'Euro IV', '620'],
   ['070302PL', 'Euro IV', '520'],
-  ['070301PL', 'Euro III', '600'],
   ['070302PL', 'Euro III', '500'],
+  ['070303PL', 'Euro VI', '900'],
+  ['070303PL', 'Euro V', '800'],
+  ['070303PL', 'Euro IV', '760'],
+  ['070303PL', 'Euro III', '740'],
 ] as const
 
 const OMINEA_CSV = [
@@ -64,7 +64,7 @@ describe('buildGoodsTransport', () => {
   it('pondère les facteurs Euro des diesel classés par le parc, et compte les parts hors vignette', () => {
     const goods = build({ fleetCsv: BRETAGNE_FLEET })._unsafeUnwrap()
     expect(goods).toEqual({
-      csv: `${REGION_COLUMNS}\n53,13.5,620,15,618,0.166666666667\n`,
+      csv: `${REGION_COLUMNS}\n53,13.5,620,15,708,0.166666666667\n`,
       regionCount: 1,
       totals: {
         billion_tonne_kilometres: '13.5',
@@ -155,7 +155,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        omineaCsv: [OMINEA_HEADER, '070301PL,Euro VI,205,CO2,g/(veh.km),700'].join('\n'),
+        omineaCsv: [OMINEA_HEADER, '070302PL,Euro VI,205,CO2,g/(veh.km),600'].join('\n'),
       })._unsafeUnwrapErr(),
     ).toMatchObject({
       dataset: 'transport-marchandises/sources/ominea-co2-poids-lourds-diesel-g-par-vehicule-km-2024.csv',
@@ -178,7 +178,7 @@ describe('buildGoodsTransport', () => {
     expect(
       build({
         fleetCsv: BRETAGNE_FLEET,
-        omineaCsv: 'snap,rubric\n070301PL,Euro VI',
+        omineaCsv: 'snap,rubric\n070302PL,Euro VI',
       })._unsafeUnwrapErr(),
     ).toMatchObject({ reason: 'columns_mismatch', detail: 'valeur_2024' })
   })
