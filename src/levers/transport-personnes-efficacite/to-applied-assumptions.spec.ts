@@ -76,7 +76,7 @@ describe('toAppliedAssumptions', () => {
       'nationalCarEmissionFactor',
       'nationalBusEmissionFactor',
     ])
-    expect(assumptions['nationalCarEmissionFactor']?.value).toBe('0.1')
+    expect(assumptions['nationalCarEmissionFactor']?.value).toBe('0.083214285714285714285714285714')
     expect(assumptions['nationalBusEmissionFactor']?.value).toBe('0.08')
   })
 

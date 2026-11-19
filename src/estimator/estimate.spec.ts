@@ -495,14 +495,14 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 000 passagers.km par semaine avec 15 % d’écoconduite', () => {
       const result = withTransport(transportPersonnesEfficaciteRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('782.1')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('650.82')
     })
 
     it('accepte une hausse de passagers supérieure à 100 %, mais pas négative', () => {
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: 2 }))._unsafeUnwrap()
           .reduction.toFixed(),
-      ).toBe('3736.7')
+      ).toBe('3109.47')
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: '-0.1' }))._unsafeUnwrapErr(),
       ).toEqual({
@@ -551,9 +551,9 @@ describe('estimate', () => {
       }
     }
 
-    it('aiguille la région vers son levier : 1 000 passagers.km par semaine électrifiés évitent 4,62 tCO2e', () => {
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine électrifiés évitent 3,84 tCO2e', () => {
       const result = withTransport(transportPersonnesElectrificationRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.62')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('3.84')
     })
 
     it('refuse une part électrifiée hors de 0 à 1', () => {
@@ -615,11 +615,11 @@ describe('estimate', () => {
       }
     }
 
-    it('aiguille la région vers son levier : 1 000 passagers.km par semaine reportés vers les modes actifs évitent 5,21 tCO2e', () => {
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine reportés vers les modes actifs évitent 4,34 tCO2e', () => {
       const result = withTransport(
         transportPersonnesReportModalRequest({ toPublicTransport: '0', toActiveModes: '1' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5.21')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.34')
     })
 
     it.each(['abc', ''])('refuse le report %j qui n’est pas un nombre, sans lever', (toPublicTransport) => {
@@ -690,9 +690,9 @@ describe('estimate', () => {
       }
     }
 
-    it('aiguille la région vers son levier : 1 000 passagers.km par semaine en voiture, tous supprimés, évitent 5,21 tCO2e', () => {
+    it('aiguille la région vers son levier : 1 000 passagers.km par semaine en voiture, tous supprimés, évitent 4,34 tCO2e', () => {
       const result = withTransport(transportPersonnesSobrieteDeplacementsRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5.21')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.34')
     })
 
     it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {

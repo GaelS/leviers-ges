@@ -162,7 +162,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
-| Taux de remplissage de 1,165 | les quatre | motif « professionnel » (SDES) | le motif domicile-travail | les données sont des trajets domicile-travail |
+| Taux de remplissage de 1,4 | les quatre | valeur « courte distance » de la Base Carbone (v23.11, p. 173, ENTD 2008), valeur par défaut du domicile-travail selon la documentation (pp. 58 et 60) ; remplace le 1,165 du tableur (SDES, motif « Professionnel ») | « mixte France » (1,6) ou une valeur domicile-travail | interprétation de « courte distance » à confirmer ; le taux plus récent du SDES (2018-2019) est plus bas |
 | Potentiel d'écoconduite | efficacité | 15 % unique | une moyenne et non un plafond | le résultat lui est proportionnel |
 | Part du ferré par défaut | les quatre | 82 % en Île-de-France, 24 % ailleurs | une part par territoire | l'EPCI 247800550 est à 89 % francilien et prend 24 % |
 | Facteur du ferré | report modal, sobriété | amont × 67,4 % (documentation fonctionnelle, p. 65), combustion nulle ; 0,187 en Corse | la combustion des TER diesel et le périmètre du facteur corse | limite reconnue par la documentation (p. 58) ; si les TER diesel comptent, le gain baisse |
@@ -219,7 +219,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|
 | Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % »), demandé par le CGDD (Brice, Laurent) : les calculs unitaires restent des ordres de grandeur |
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
-| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,165, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
+| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |
 | Bornes et défauts des paramètres | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut ; `ParametreDeterminants` n'a aucune borne et ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1) ; `ElevageDurable!F19:F21` et `ProduitsBois!F19` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides | des bornes et des défauts donnés par le tableur |
 
@@ -245,10 +245,10 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `transport_personnes_efficacite` | `ParametreDeterminants!B30:B33` | même abréviation pour deux paramètres (« % Application de l'éco conduite voyageurs », « % Augmentation nombre de voyageurs par véhicule ») | un paramètre par mode |
 | `transport_personnes_efficacite` | `DonneesReference!D29` | deux potentiels d'écoconduite pour une seule ligne, dont la valeur est dans la colonne des commentaires | 15 % pour les voitures et les bus |
 | `transport_personnes_efficacite` | `TrsptPers_Efficacité!A37` | « Taux de remplissage moyen des VP autres trajets » listé, inutilisé par la formule | non utilisé |
-| `transport_personnes_sobriete_deplacements` | `TrsptPers_SobriétéDéplacements!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser pour les voitures et ne dit rien du bus | division par 1,165, étendue au bus par analogie |
-| `transport_personnes_report_modal` | `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser (voitures) | division par 1,165 |
-| `transport_personnes_efficacite` | `TrsptPers_Efficacité!B15`, `TrsptPers_SobriétéDéplacements!B15`, `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage ; `B15` de l'efficacité ne le dit pas, celles des onglets de sobriété et de report modal disent de diviser (voitures) | division par 1,165 |
-| `transport_personnes_electrification` | `TrsptPers_Electrification!B15` | le dessin multiplie les facteurs par le taux de remplissage ; la cellule est vide | division par 1,165, par analogie avec les autres onglets |
+| `transport_personnes_sobriete_deplacements` | `TrsptPers_SobriétéDéplacements!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser pour les voitures et ne dit rien du bus | division par 1,4, étendue au bus par analogie |
+| `transport_personnes_report_modal` | `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage, la cellule dit de diviser (voitures) | division par 1,4 |
+| `transport_personnes_efficacite` | `TrsptPers_Efficacité!B15`, `TrsptPers_SobriétéDéplacements!B15`, `TrsptPers_ReportModal!B15` | le dessin multiplie les facteurs par le taux de remplissage ; `B15` de l'efficacité ne le dit pas, celles des onglets de sobriété et de report modal disent de diviser (voitures) | division par 1,4 |
+| `transport_personnes_electrification` | `TrsptPers_Electrification!B15` | le dessin multiplie les facteurs par le taux de remplissage ; la cellule est vide | division par 1,4, par analogie avec les autres onglets |
 | `transport_personnes_report_modal` | `ParametreDeterminants!H34` et `H35` | « inférieur à 100 % » sans dire strict ou large | 100 % accepté |
 | `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade avec les passagers.km en voiture, dans le tableur comme dans la documentation (p. 60) | lue comme le report des transports en commun vers les modes actifs, sur les passagers.km en transport en commun (Laurent, CGDD) |
 | `transport_personnes_report_modal`, `transport_personnes_sobriete_deplacements` | `DonneesReference!G37` | « une partie du poste amont à déterminer » pour l'électricité du ferré, sans valeur | amont × 67,4 %, valeur que fixe la documentation fonctionnelle (p. 65) |

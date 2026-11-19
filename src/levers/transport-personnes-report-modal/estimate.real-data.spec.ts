@@ -51,14 +51,14 @@ function estimation(target: { level: Level; code: string; parameters: Parameters
 
 describe('estimate transport_personnes_report_modal, Insee-SDES 2022 et parc SDES 2025', () => {
   it.each([
-    ['region', '84', '210377.15'],
-    ['region', '53', '100753.61'],
-    ['region', '11', '237825.39'],
-    ['region', '94', '5437.77'],
-    ['departement', '69', '41397.47'],
-    ['departement', '75', '18991.1'],
-    ['departement', '2A', '2522.32'],
-    ['epci', '200046977', '27424.95'],
+    ['region', '84', '160112.86'],
+    ['region', '53', '76633.85'],
+    ['region', '11', '192241.31'],
+    ['region', '94', '3596.96'],
+    ['departement', '69', '31540.35'],
+    ['departement', '75', '15358.91'],
+    ['departement', '2A', '1684.01'],
+    ['epci', '200046977', '20926.73'],
   ] as const)(
     'à 10 %% vers les transports en commun et 5 %% vers les modes actifs, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -66,16 +66,16 @@ describe('estimate transport_personnes_report_modal, Insee-SDES 2022 et parc SDE
     },
   )
 
-  it('avec 60 % de ferré saisi, la région 84 évite 242 160,85 tCO2e', () => {
+  it('avec 60 % de ferré saisi, la région 84 évite 191 896,56 tCO2e', () => {
     const parameters = { ...MIXED_SHIFT, railShareFraction: '0.6' }
     expect(estimation({ level: 'region', code: '84', parameters }).reduction.toFixed()).toBe(
-      '242160.85',
+      '191896.56',
     )
   })
 
   it.each([
-    ['84', '231089.14'],
-    ['11', '299632.2'],
+    ['84', '180824.85'],
+    ['11', '254048.11'],
   ])(
     'avec 20 %% des passagers.km de transport en commun reportés vers les modes actifs en plus, la région %s évite %s tCO2e',
     (code, expected) => {

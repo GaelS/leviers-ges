@@ -100,27 +100,27 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, transport_personnes_electrification', () => {
   it.each([
-    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '4902.41'],
-    ['le département 01, hors Île-de-France', request('departement', '01'), '4902.41'],
-    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '4902.41'],
-    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '3836.4'],
-    ['le département 75, Île-de-France', request('departement', '75'), '3836.4'],
-    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '3836.4'],
+    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '4313.97'],
+    ['le département 01, hors Île-de-France', request('departement', '01'), '4313.97'],
+    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '4313.97'],
+    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '3247.97'],
+    ['le département 75, Île-de-France', request('departement', '75'), '3247.97'],
+    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '3247.97'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
-  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 4 240,75 tCO2e', () => {
+  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 3 652,31 tCO2e', () => {
     const parameters = { ...HALF_OF_FLEET, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '4240.75',
+      '3652.31',
     )
   })
 
-  it('plafonne chaque mode à sa part thermique : tout le parc demandé évite 8 544,97 tCO2e', () => {
+  it('plafonne chaque mode à sa part thermique : tout le parc demandé évite 7 485,78 tCO2e', () => {
     const parameters = { carElectrificationFraction: '1', busElectrificationFraction: '1' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '8544.97',
+      '7485.78',
     )
   })
 

@@ -52,14 +52,14 @@ function estimation(target: { level: Level; code: string; parameters: Parameters
 
 describe('estimate transport_personnes_efficacite, Insee-SDES 2022 et parc SDES 2025', () => {
   it.each([
-    ['region', '84', '314061.19'],
-    ['region', '53', '147001.27'],
-    ['region', '11', '295411.07'],
-    ['region', '94', '11043.18'],
-    ['departement', '69', '65383.38'],
-    ['departement', '75', '28823'],
-    ['departement', '2A', '5021.91'],
-    ['epci', '200046977', '44549.63'],
+    ['region', '84', '263796.9'],
+    ['region', '53', '122881.52'],
+    ['region', '11', '249826.98'],
+    ['region', '94', '9202.37'],
+    ['departement', '69', '55526.25'],
+    ['departement', '75', '25190.81'],
+    ['departement', '2A', '4183.6'],
+    ['epci', '200046977', '38051.41'],
   ] as const)(
     'à 100 %% d’écoconduite, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -67,7 +67,7 @@ describe('estimate transport_personnes_efficacite, Insee-SDES 2022 et parc SDES 
     },
   )
 
-  it('à 50 % d’écoconduite et 10 % de passagers en plus, la région 84 évite 333 095,2 tCO2e', () => {
+  it('à 50 % d’écoconduite et 10 % de passagers en plus, la région 84 évite 279 784,59 tCO2e', () => {
     const parameters = {
       carEcodrivingApplicationFraction: '0.5',
       busEcodrivingApplicationFraction: '0.5',
@@ -75,7 +75,7 @@ describe('estimate transport_personnes_efficacite, Insee-SDES 2022 et parc SDES 
       busPassengerIncrease: '0.1',
     }
     expect(estimation({ level: 'region', code: '84', parameters }).reduction.toFixed()).toBe(
-      '333095.2',
+      '279784.59',
     )
   })
 

@@ -75,7 +75,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         fractions: { carEcodrivingApplication: quantity<'Fraction'>('1') },
         inputs: transportInputs({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.7821')
+    ).toBe('0.650819')
   })
 
   it('combine les deux gains par un produit : 50 % d’écoconduite et 10 % de passagers en plus donnent 15,9 %', () => {
@@ -87,7 +87,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         },
         inputs: transportInputs({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.8295')
+    ).toBe('0.690262')
   })
 
   it('une hausse de 100 % des passagers divise les émissions par deux', () => {
@@ -96,7 +96,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         fractions: { carPassengerIncrease: quantity<'RelativeChange'>('1') },
         inputs: transportInputs({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('2.607')
+    ).toBe('2.169396')
   })
 
   it('divise le facteur du bus par 10 passagers et retire la part ferrée : 400 passagers.km routiers par semaine', () => {
@@ -145,6 +145,6 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
           publicTransportWeeklyPassengerKm: '1000',
         }),
       }),
-    ).toBe('1.032372')
+    ).toBe('0.901091')
   })
 })

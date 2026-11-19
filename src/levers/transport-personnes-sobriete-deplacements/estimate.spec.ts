@@ -101,29 +101,29 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, transport_personnes_sobriete_deplacements', () => {
   it.each([
-    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '857.73'],
-    ['le département 01, hors Île-de-France', request('departement', '01'), '857.73'],
-    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '857.73'],
-    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '662.47'],
-    ['le département 75, Île-de-France', request('departement', '75'), '662.47'],
-    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '662.47'],
+    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '770.2'],
+    ['le département 01, hors Île-de-France', request('departement', '01'), '770.2'],
+    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '770.2'],
+    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '574.95'],
+    ['le département 75, Île-de-France', request('departement', '75'), '574.95'],
+    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '574.95'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
-  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 736,53 tCO2e', () => {
+  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 649,01 tCO2e', () => {
     const parameters = { ...TENTH_LESS, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '736.53',
+      '649.01',
     )
   })
 
-  it('prend le facteur du train de Corse pour la région 94 : 1 072,42 tCO2e', () => {
+  it('prend le facteur du train de Corse pour la région 94 : 984,89 tCO2e', () => {
     const result = estimate(request('region', '94'))._unsafeUnwrap()
     expect({
       reduction: result.reduction.toFixed(),
       railEmissionFactor: result.appliedAssumptions['railEmissionFactor']?.value,
-    }).toEqual({ reduction: '1072.42', railEmissionFactor: '0.187' })
+    }).toEqual({ reduction: '984.89', railEmissionFactor: '0.187' })
   })
 
   it('renvoie la part ferrée par défaut, mais pas celle de la requête', () => {

@@ -21,7 +21,7 @@ PK_bus = passagers.km hebdomadaires en transport en commun × (1 − part du fer
 | `PK_m` | passagers.km hebdomadaires du mode, 50 % côté résidence et 50 % côté travail | passagers.km par semaine |
 | `FE_thermique_m` | facteur d'émission moyen des véhicules thermiques du parc du mode | kgCO2e par véhicule.km |
 | `FE_électrique_m` | facteur d'émission d'un véhicule électrique, amont seul | kgCO2e par véhicule.km |
-| `T_m` | taux de remplissage : 1,165 passager par voiture, 10 par bus | passagers par véhicule |
+| `T_m` | taux de remplissage : 1,4 passager par voiture, 10 par bus | passagers par véhicule |
 | part du ferré | part des passagers.km de transport en commun en ferré, saisie ou par défaut | fraction |
 
 ## Entrées
@@ -39,7 +39,7 @@ Les deux premières sont obligatoires. La part du ferré est facultative (voir c
 | Constante | Valeur | Source |
 |---|---|---|
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille `TrsptPers_Efficacité` ; reprise à l'identique |
-| Taux de remplissage des voitures | 1,165 passager | SDES, « Se déplacer en voiture » ; `DonneesReference!D26` |
+| Taux de remplissage des voitures | 1,4 passager | Base Carbone (documentation générale v23.11, p. 173) : courte distance, ENTD 2008 ; documentation fonctionnelle PlanET, pp. 58 et 60 ; le tableur donne 1,165 (`DonneesReference!D26`), la documentation l'emporte |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
 | Facteur d'une voiture électrique | 0,013345 kgCO2e/véh.km | fiche d'analyse 11, amont seul |
 | Facteur d'un bus électrique | 0,095 kgCO2e/véh.km | 0,0095 kgCO2e/passager.km (Base Empreinte) × 10 passagers, amont seul |
@@ -73,19 +73,19 @@ Construction : `pnpm build:data:transport-personnes`. Les voitures thermiques so
 | Entrée | Résultat |
 |---|---|
 | bus seuls, 1 000 passagers.km par semaine dont 60 % en ferré, 0,8 contre 0,095 kgCO2e/véh.km, tout le parc | 1,470348 tCO2e |
-| voitures seules, 1 000 passagers.km par semaine, 0,1165 contre 0,013345 kgCO2e/véh.km, tout le parc | 4,61674 tCO2e |
-| voitures et bus ensemble, mêmes données | 6,087088 tCO2e |
+| voitures seules, 1 000 passagers.km par semaine, 0,1165 contre 0,013345 kgCO2e/véh.km, tout le parc | 3,841787 tCO2e |
+| voitures et bus ensemble, mêmes données | 5,312135 tCO2e |
 | tout le transport en commun en ferré | 0 tCO2e |
-| région 84, jeu de test, moitié du parc | 4 902,41 tCO2e |
-| région 84, jeu de test, parc entier demandé, plafonné à 90 % et 80 % | 8 544,97 tCO2e |
-| région 11, jeu de test, moitié du parc | 3 836,4 tCO2e |
-| région 84, données réelles, moitié du parc | 988 260,06 tCO2e |
-| région 53 (Bretagne) | 461 119,62 tCO2e |
-| région 11 (Île-de-France) | 936 872,82 tCO2e |
-| département 69 | 206 654,02 tCO2e |
-| département 75 | 92 557,47 tCO2e |
-| EPCI 200046977 | 140 960,17 tCO2e |
-| région 84, données réelles, parc entier demandé (plafonné à 97,06 % des voitures et 96,50 % des bus) | 1 917 970,69 tCO2e |
+| région 84, jeu de test, moitié du parc | 4 313,97 tCO2e |
+| région 84, jeu de test, parc entier demandé, plafonné à 90 % et 80 % | 7 485,78 tCO2e |
+| région 11, jeu de test, moitié du parc | 3 247,97 tCO2e |
+| région 84, données réelles, moitié du parc | 829 754,99 tCO2e |
+| région 53 (Bretagne) | 385 388,18 tCO2e |
+| région 11 (Île-de-France) | 792 057,81 tCO2e |
+| département 69 | 175 358,27 tCO2e |
+| département 75 | 80 881,99 tCO2e |
+| EPCI 200046977 | 120 325,65 tCO2e |
+| région 84, données réelles, parc entier demandé (plafonné à 97,06 % des voitures et 96,50 % des bus) | 1 610 272,35 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -100,5 +100,5 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Voiture et bus déjà électriques | leur part est écartée par le plafond : on ne peut pas électrifier deux fois |
 | Territoire sans parc | 276 des 1 243 EPCI n'ont aucun bus ni car immatriculé, 11 aucune voiture : leur part thermique est nulle et le résultat de ce mode est nul, signalé dans `appliedAssumptions` par une limite propre |
 | Périmètre des trajets | seuls les trajets domicile-travail de moins de 100 km comptent, alors que la part saisie porte sur le parc entier |
-| Taux de remplissage des voitures | 1,165 vient du motif « Professionnel » de la source SDES, alors que les données sont domicile-travail ; repris du tableur, partagé avec l'efficacité |
+| Taux de remplissage des voitures | 1,4 est la valeur « courte distance » de la Base Carbone (ENTD 2008), rapprochée du domicile-travail : interprétation à confirmer ; partagé avec l'efficacité |
 | Deux-roues motorisés | sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58) |
