@@ -69,16 +69,16 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
     ).toBe('0')
   })
 
-  it('applique le potentiel de 15 % aux voitures : 1 000 passagers.km par semaine à 0,1 kgCO2e/passager.km', () => {
+  it('applique le potentiel de 10 % aux voitures : 1 000 passagers.km par semaine à 0,1 kgCO2e/passager.km', () => {
     expect(
       reduction({
         fractions: { carEcodrivingApplication: quantity<'Fraction'>('1') },
         inputs: transportInputs({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.650819')
+    ).toBe('0.433879')
   })
 
-  it('combine les deux gains par un produit : 50 % d’écoconduite et 10 % de passagers en plus donnent 15,9 %', () => {
+  it('combine les deux gains par un produit : 50 % d’écoconduite et 10 % de passagers en plus donnent 13,6 %', () => {
     expect(
       reduction({
         fractions: {
@@ -87,7 +87,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         },
         inputs: transportInputs({ carWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.690262')
+    ).toBe('0.591654')
   })
 
   it('une hausse de 100 % des passagers divise les émissions par deux', () => {
@@ -106,7 +106,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         railShare: '0.6',
         inputs: transportInputs({ publicTransportWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.250272')
+    ).toBe('0.166848')
   })
 
   it('applique au bus sa propre hausse de passagers : 20 % et 50 % d’écoconduite sur 400 passagers.km routiers', () => {
@@ -119,7 +119,7 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
         railShare: '0.6',
         inputs: transportInputs({ publicTransportWeeklyPassengerKm: '1000' }),
       }),
-    ).toBe('0.38236')
+    ).toBe('0.3476')
   })
 
   it('ne compte aucun bus quand tout le transport en commun est ferré', () => {
@@ -145,6 +145,6 @@ describe('calculateTransportPersonnesEfficaciteReduction', () => {
           publicTransportWeeklyPassengerKm: '1000',
         }),
       }),
-    ).toBe('0.901091')
+    ).toBe('0.600727')
   })
 })

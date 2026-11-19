@@ -13,8 +13,8 @@ import {
 // Source : élément neutre de la multiplication
 const ONE: BigNumber = toBig('1')
 
-// Source : DonneesReference!D29, « ~15% » ; la page citée, mission-transition-ecologique.beta.gouv.fr (écoconduite), dit « jusqu'à 15 % de carburant ». Choix de conception, non validé : le même potentiel vaut pour tous les poids lourds, le guide EVE de l'ADEME donne 5 à 15 % (10 % en moyenne) qui s'estompent
-const ECODRIVING_POTENTIAL: Fraction = quantity<'Fraction'>('0.15')
+// Source : documentation fonctionnelle PlanET (juin 2026), 7.3.9, p. 66 : le potentiel d'écoconduite des poids lourds est celui du transport de personnes, soit 10 % par défaut (7.3.4.3, p. 61) ; la documentation écrit aussi « 15 % » à la p. 66, contradiction tranchée par l'équipe le 2026-11-19 en faveur de 10 % ; remplace le « ~15% » de DonneesReference!D29
+const ECODRIVING_POTENTIAL: Fraction = quantity<'Fraction'>('0.1')
 
 function calculateReductionFraction({
   ecodrivingApplication,

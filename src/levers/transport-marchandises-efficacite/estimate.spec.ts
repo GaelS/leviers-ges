@@ -51,8 +51,8 @@ function request(code: string): TransportMarchandisesEfficaciteRequest {
 const estimate = toEstimator(createTemporaryCsvDataSource(FIXTURES))
 
 describe('estimate, transport_marchandises_efficacite', () => {
-  it('évite 18,33 tCO2e pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 50 % d’écoconduite et 20 % de chargement en plus', () => {
-    expect(estimate(request('84'))._unsafeUnwrap().reduction.toFixed()).toBe('18.33')
+  it('évite 16,67 tCO2e pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 50 % d’écoconduite et 20 % de chargement en plus', () => {
+    expect(estimate(request('84'))._unsafeUnwrap().reduction.toFixed()).toBe('16.67')
   })
 
   it('renvoie le potentiel d’écoconduite et les hypothèses de données', () => {
@@ -61,7 +61,7 @@ describe('estimate, transport_marchandises_efficacite', () => {
       ecodriving: appliedAssumptions['ecodrivingPotential']?.value,
       keys: Object.keys(appliedAssumptions),
     }).toEqual({
-      ecodriving: '0.15',
+      ecodriving: '0.1',
       keys: [
         'includeInternationalFlows',
         'heavyVehicleTripType',

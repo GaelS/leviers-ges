@@ -33,8 +33,8 @@ type TransportFlows = {
 // Source : élément neutre de la multiplication
 const ONE: BigNumber = toBig('1')
 
-// Source : DonneesReference!D29, « ~15% » ; la page citée, mission-transition-ecologique.beta.gouv.fr/projets-entreprise/ecoconduite, dit « jusqu'à 15 % de carburant ». Choix de conception, non validé : le même potentiel vaut pour les voitures et pour les bus et cars, le tableur n'en donne qu'un
-const ECODRIVING_POTENTIAL: Fraction = quantity<'Fraction'>('0.15')
+// Source : documentation fonctionnelle PlanET (juin 2026), 7.3.4.3, p. 61 : « le pourcentage de potentiel de baisse par écoconduite est identique pour les TC routiers et les VP. PlanET propose une valeur par défaut de 10 % » (enquête IPSOS pour la Fondation Vinci Autoroutes) ; remplace le « ~15% » de DonneesReference!D29, la documentation l'emportant sur le tableur ; valeur confirmée par l'équipe le 2026-11-19
+const ECODRIVING_POTENTIAL: Fraction = quantity<'Fraction'>('0.1')
 
 function calculateReductionFraction({
   ecodrivingApplication,

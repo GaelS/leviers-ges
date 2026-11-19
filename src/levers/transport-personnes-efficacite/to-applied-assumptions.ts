@@ -16,9 +16,9 @@ function toEcodrivingPotentialAssumption(): AppliedAssumptions {
     ecodrivingPotential: {
       value: ECODRIVING_POTENTIAL.toFixed(),
       source:
-        'DonneesReference!D29 (~15%); mission-transition-ecologique.beta.gouv.fr: up to 15% of fuel. Design choice, not validated: the same potential for cars and buses',
+        'Functional documentation (June 2026), 7.3.4.3, p. 61: the potential is the same for road public transport and cars, 10% by default (IPSOS survey); the spreadsheet gives ~15% (DonneesReference!D29), the documentation prevails; confirmed by the team on 2026-11-19',
       limit:
-        'A ceiling, not an average, used for cars and for buses alike: the result is proportional to it',
+        'One average potential for cars and for buses alike: the result is proportional to it. The documentation reports a maximum of 23% of fuel for a compact petrol car and about half of the eco-driving gestures already applied',
     },
   }
 }

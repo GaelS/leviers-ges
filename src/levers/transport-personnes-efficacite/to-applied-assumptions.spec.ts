@@ -37,7 +37,7 @@ describe('toAppliedAssumptions', () => {
   it('annonce toujours le potentiel d’écoconduite et le facteur du bus par passager.km', () => {
     const assumptions = toAppliedAssumptions({ transportInputs: transportInputs(), railShare: REQUESTED })
     expect(Object.keys(assumptions)).toEqual(['ecodrivingPotential', 'busEmissionFactor'])
-    expect(assumptions['ecodrivingPotential']?.value).toBe('0.15')
+    expect(assumptions['ecodrivingPotential']?.value).toBe('0.1')
     expect(assumptions['busEmissionFactor']?.value).toBe('0.08')
   })
 
