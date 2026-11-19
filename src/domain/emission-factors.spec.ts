@@ -16,8 +16,8 @@ describe('emission-factors', () => {
     }).toEqual({ car: '0.013345', bus: '0.095' })
   })
 
-  it('l’électricité vaut 0,0791 × 67,4 % = 0,0533134 kgCO2e/kWh', () => {
-    expect(ELECTRICITY_APPLIED_EMISSION_FACTOR.toFixed()).toBe('0.0533134')
+  it('l’électricité vaut le mix moyen 2024 × 67,4 % = 0,0519 × 0,674 = 0,0349806 kgCO2e/kWh', () => {
+    expect(ELECTRICITY_APPLIED_EMISSION_FACTOR.toFixed()).toBe('0.0349806')
   })
 
   it('le gaz naturel vaut 55,88 kg/GJ × 0,0036 = 0,201168 kgCO2e/kWh', () => {

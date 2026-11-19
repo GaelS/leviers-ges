@@ -95,14 +95,14 @@ describe('estimate batiments_machines_agricoles, énergie SDES 2024 et SAU 2020'
   )
 
   it.each([
-    ['region', '84', '971101.16'],
-    ['region', '53', '2022182.16'],
-    ['region', '94', '46480.35'],
-    ['departement', '01', '83669.71'],
-    ['departement', '35', '541088.79'],
-    ['departement', '75', '717.73'],
-    ['epci', '200054781', '3787.65'],
-    ['epci', '200000172', '1193.15'],
+    ['region', '84', '960281.02'],
+    ['region', '53', '2001409.79'],
+    ['region', '94', '46052.63'],
+    ['departement', '01', '82512.98'],
+    ['departement', '35', '537039.19'],
+    ['departement', '75', '589.59'],
+    ['epci', '200054781', '3600.51'],
+    ['epci', '200000172', '1178.25'],
   ] as const)('à 100 %% sur les quatre vecteurs, le niveau %s %s évite %s tCO2e', (level, code, expected) => {
     expect(reduction({ level, code, parameters: FULL })).toBe(expected)
   })

@@ -141,11 +141,11 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, residentiel_sobriete', () => {
   it.each([
-    ['la région 84, chaleur pondérée par les trois réseaux de la région', request('region', '84'), '8372.38'],
-    ['la région 11, sans réseau de chaleur', request('region', '11'), '411.33'],
-    ['le département 01, chaleur des réseaux A et C', request('departement', '01'), '1266.35'],
-    ['le département 69, chaleur du réseau B', request('departement', '69'), '640.69'],
-    ['le département 75, sans réseau de chaleur', request('departement', '75'), '19.21'],
+    ['la région 84, chaleur pondérée par les trois réseaux de la région', request('region', '84'), '8189.05'],
+    ['la région 11, sans réseau de chaleur', request('region', '11'), '393'],
+    ['le département 01, chaleur des réseaux A et C', request('departement', '01'), '1229.68'],
+    ['le département 69, chaleur du réseau B', request('departement', '69'), '585.69'],
+    ['le département 75, sans réseau de chaleur', request('departement', '75'), '17.37'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
@@ -156,7 +156,7 @@ describe('estimate, residentiel_sobriete', () => {
       consumptionReductionFraction: '0.1',
     }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '418.62',
+      '409.45',
     )
   })
 
@@ -165,7 +165,7 @@ describe('estimate, residentiel_sobriete', () => {
     expect({
       department: withoutNetworks(request('departement', '01'))._unsafeUnwrap().reduction.toFixed(),
       region: withoutNetworks(request('region', '84'))._unsafeUnwrap().reduction.toFixed(),
-    }).toEqual({ department: '566.35', region: '7839.05' })
+    }).toEqual({ department: '529.68', region: '7655.72' })
   })
 
   it('ne réduit rien à 0 % des foyers', () => {

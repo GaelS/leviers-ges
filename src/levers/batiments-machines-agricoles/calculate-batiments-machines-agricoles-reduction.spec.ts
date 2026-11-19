@@ -42,8 +42,8 @@ function reduction({
 }
 
 describe('calculateBatimentsMachinesAgricolesReduction', () => {
-  it('1000 MWh d’électricité évitent 53,3134 tCO2e : 0,0791 × 67,4 % kgCO2e/kWh', () => {
-    expect(reduction({ consumption: { electricity: ONE_THOUSAND_MWH } })).toBe('53.3134')
+  it('1000 MWh d’électricité évitent 34,9806 tCO2e : 0,0519 × 67,4 % kgCO2e/kWh', () => {
+    expect(reduction({ consumption: { electricity: ONE_THOUSAND_MWH } })).toBe('34.9806')
   })
 
   it('1000 MWh de gaz naturel évitent 201,168 tCO2e : 55,88 kg/GJ × 0,0036 GJ/kWh', () => {
@@ -65,7 +65,7 @@ describe('calculateBatimentsMachinesAgricolesReduction', () => {
       petroleumProducts: ONE_THOUSAND_MWH,
       heat: ONE_THOUSAND_MWH,
     }
-    expect(reduction({ consumption })).toBe('635.2814')
+    expect(reduction({ consumption })).toBe('616.9486')
   })
 
   it('applique le pourcentage de chaque vecteur à ce vecteur seul', () => {

@@ -56,16 +56,16 @@ function reduction(target: { level: Level; code: string; parameters: Parameters 
 
 describe('estimate residentiel_sobriete, énergie SDES 2024, CEREN 2024 et réseaux de chaleur SDES 2024', () => {
   it.each([
-    ['region', '84', '5027015.09'],
-    ['region', '53', '1894270.79'],
-    ['region', '11', '7346387.73'],
-    ['region', '94', '70676.7'],
-    ['departement', '01', '380420.66'],
-    ['departement', '35', '607488.23'],
-    ['departement', '75', '1349053.38'],
-    ['departement', '69', '1211601.1'],
-    ['departement', '2A', '29107.1'],
-    ['departement', '48', '73097.08'],
+    ['region', '84', '4686750.91'],
+    ['region', '53', '1741315.05'],
+    ['region', '11', '6964521.96'],
+    ['region', '94', '52254.52'],
+    ['departement', '01', '349174.98'],
+    ['departement', '35', '564332.91'],
+    ['departement', '75', '1283555.75'],
+    ['departement', '69', '1147014.9'],
+    ['departement', '2A', '19931'],
+    ['departement', '48', '69692.26'],
   ] as const)(
     'à 100 %% des foyers et 100 %% de baisse, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -74,8 +74,8 @@ describe('estimate residentiel_sobriete, énergie SDES 2024, CEREN 2024 et rése
   )
 
   it.each([
-    ['region', '84', '251350.75'],
-    ['departement', '35', '30374.41'],
+    ['region', '84', '234337.55'],
+    ['departement', '35', '28216.65'],
   ] as const)(
     'à 50 %% des foyers et 10 %% de baisse, le niveau %s %s évite 5 %% du maximum : %s tCO2e',
     (level, code, expected) => {
@@ -84,23 +84,23 @@ describe('estimate residentiel_sobriete, énergie SDES 2024, CEREN 2024 et rése
   )
 
   it('la Corse-du-Sud n’a ni gaz ni réseau de chaleur : seuls l’électricité, le fioul et le GPL comptent', () => {
-    expect(reduction({ level: 'departement', code: '2A', parameters: FULL })).toBe('29107.1')
+    expect(reduction({ level: 'departement', code: '2A', parameters: FULL })).toBe('19931')
   })
 
-  it('les 13 régions de métropole évitent 39 495 128,07 tCO2e à 100 %', () => {
+  it('les 13 régions de métropole évitent 36 785 947,91 tCO2e à 100 %', () => {
     const regionalReductions = regions.map((row) =>
       toBig(reduction({ level: 'region', code: row['code_region'] ?? '', parameters: FULL })),
     )
     expect(regions).toHaveLength(13)
-    expect(sum(regionalReductions).toFixed()).toBe('39495128.07')
+    expect(sum(regionalReductions).toFixed()).toBe('36785947.91')
   })
 
-  it('les 96 départements de métropole évitent 39 937 077,48 tCO2e à 100 %, 1,1 % de plus que les régions', () => {
+  it('les 96 départements de métropole évitent 37 133 226,16 tCO2e à 100 %, 0,9 % de plus que les régions', () => {
     const departmentalReductions = departements.map((row) =>
       toBig(reduction({ level: 'departement', code: row['code_departement'] ?? '', parameters: FULL })),
     )
     expect(departements).toHaveLength(96)
-    expect(sum(departmentalReductions).toFixed()).toBe('39937077.48')
+    expect(sum(departmentalReductions).toFixed()).toBe('37133226.16')
   })
 
   it.each([
