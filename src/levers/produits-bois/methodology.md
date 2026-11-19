@@ -1,6 +1,6 @@
 # Produits bois
 
-Identifiant : `produits_bois`. Niveaux : région, département. L'EPCI n'est pas encore calculé (`level_not_computed`) : la récolte de bois n'existe pas à cette maille. Le CGDD (Brice, Laurent) valide la ventilation par la surface de forêt que suggère le tableur ; elle n'est pas encore implémentée, faute de surfaces de forêt versionnées par couple EPCI-département, à tirer du jeu ALDO communal (`data.ademe.fr/datasets/aldo-stocks-de-carbone`). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation fonctionnelle, p. 71). Voir `docs/methodology/points-a-arbitrer.md`. Aucune question ouverte sur les niveaux calculés ; les interprétations ci-dessous sont encodées dans les données et le code. Métropole seule : l'outre-mer est absent de la récolte et renvoie `missing_data`.
+Identifiant : `produits_bois`. Niveaux : région, département. L'EPCI n'est pas encore calculé (`level_not_computed`) : la récolte de bois n'existe pas à cette maille. Le CGDD (Brice, Laurent) valide la ventilation par la surface de forêt que suggère le tableur ; elle n'est pas encore implémentée dans le levier ; les surfaces de forêt par couple EPCI-département sont versionnées (jeu ALDO communal, `data.ademe.fr/datasets/aldo-stocks-de-carbone`, voir « Données »). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation fonctionnelle, p. 71). Voir `docs/methodology/points-a-arbitrer.md`. Aucune question ouverte sur les niveaux calculés ; les interprétations ci-dessous sont encodées dans les données et le code. Métropole seule : l'outre-mer est absent de la récolte et renvoie `missing_data`.
 
 ## Formule
 
@@ -44,10 +44,14 @@ Pas de valeur par défaut dans `ParametreDeterminants` (`I21` absente) : `Produi
 | `produits-bois/regions` | grumes et bois d'industrie, 2022, en milliers de m³ | région |
 | `produits-bois/departements` | idem | département |
 | `produits-bois/constants` | récolte nationale 2022 (ligne `METRO` du tableau EXFNR00) ; carbone des produits bois 2022 | national |
+| `produits-bois/foret-epci-departement` | hectares de forêt (mixte, feuillu, conifère, peupleraie) par couple EPCI-département, somme des communes ALDO ; une ligne par département pour un EPCI à cheval ; pas encore lu par le levier | EPCI × département |
+| `produits-bois/foret-departement` | hectares de forêt par département, communes sans EPCI comprises ; pas encore lu par le levier | département |
 
 Construits par `pnpm build:data:produits-bois` à partir d'Agreste (enquête EXFSRI, tableau EXFNR00) et d'OMINEA 2026 (UTCATF, tableau 45, p. 97), alors que le tableur cite le rapport OMINEA 2025 (tableau 83, p. 131, `DonneesReference!E21`). `tC_BO` = 1 495 194 (sciages) + 211 509 (contreplaqués) = 1 706 703 ; `tC_BI` = 1 304 599 (panneaux) + 930 031 (papier) = 2 234 630. Récolte nationale : 19 975 milliers de m³ de grumes et 10 311 de bois d'industrie.
 
 La même année, 2022, vaut pour la récolte et pour les tC (le tableur ne fixe pas l'année des séries OMINEA).
+
+Les deux jeux de forêt viennent de l'export brut du jeu ALDO « stocks de carbone - communes » (35 066 lignes, 96 départements ; 18 497 934,5 ha de forêt). Les codes commune de Corse y sont tronqués (« 2 »), d'où l'agrégation par les colonnes `epci` et `departement` du jeu et non par jointure sur les communes du référentiel. Les EPCI sont ceux du millésime ALDO : 18 EPCI de métropole du référentiel `territoires` n'y figurent pas, et 27 EPCI d'ALDO ne sont pas dans le référentiel (environ 270 000 ha, 1,5 % de la forêt). Quatre communes sans EPCI (552,5 ha) ne comptent que dans les totaux départementaux.
 
 ## Cas de test
 
