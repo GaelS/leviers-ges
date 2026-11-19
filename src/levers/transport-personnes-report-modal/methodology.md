@@ -1,6 +1,6 @@
 # Transport de personnes, report modal
 
-Identifiant : `transport_personnes_report_modal`. Niveaux : région, département et EPCI. Deux hypothèses nommées de `docs/methodology/assumptions.md` s'appliquent (`railElectricityUpstreamShare`, `passengerCarLastLineKept`) ; les valeurs par défaut que le calcul applique sont renvoyées dans `appliedAssumptions`, avec leur source et leur limite. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `transport_personnes_report_modal`. Niveaux : région, département et EPCI. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`railElectricityUpstreamShare`) ; les valeurs par défaut que le calcul applique sont renvoyées dans `appliedAssumptions`, avec leur source et leur limite. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
@@ -8,6 +8,7 @@ Identifiant : `transport_personnes_report_modal`. Niveaux : région, départemen
 Émissions évitées (tCO2e/an) =
   PK_voiture × 52,14 ÷ 1 000
   × ( r_TC × (FE_voiture − FE_TC) + r_actifs × (FE_voiture − 0) )
+  + PK_TC × 52,14 ÷ 1 000 × r_TC→actifs × (FE_TC − 0)
 
 FE_voiture = facteur du parc de voitures ÷ 1,165
 FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc de bus ÷ 10
@@ -17,13 +18,15 @@ FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc 
 |---|---|---|
 | `r_TC` | « Pourcentage de report modal de la voiture vers les transports en commun (proportion des km en voiture) », saisi | fraction des passagers.km en voiture |
 | `r_actifs` | « Pourcentage de report modal de la voiture vers les modes actifs », saisi ; leur facteur est nul | fraction des passagers.km en voiture |
+| `r_TC→actifs` | report modal des transports en commun vers les modes actifs, saisi ; leur facteur est nul | fraction des passagers.km en transport en commun |
+| `PK_TC` | passagers.km hebdomadaires domicile-travail en transport en commun, 50 % côté résidence et 50 % côté travail | passagers.km par semaine |
 | `PK_voiture` | passagers.km hebdomadaires domicile-travail en voiture, 50 % côté résidence et 50 % côté travail | passagers.km par semaine |
 | `FE_voiture` | facteur du parc de voitures par passager.km | kgCO2e par passager.km |
 | `FE_TC` | facteur du transport en commun, moyenne pondérée du ferré et du bus | kgCO2e par passager.km |
 | `FE_ferré` | 0,0154346 (0,0229 × 67,4 %) en France continentale, 0,187 en Corse | kgCO2e par passager.km |
 | part du ferré | part des passagers.km de transport en commun en ferré, saisie ou par défaut | fraction |
 
-La formule est lue dans les formes de la feuille `TrsptPers_ReportModal` ; la cellule « Formule » ne contient que « Réduction GES = ». L'écart de la correction 1 de `docs/methodology/formula-corrections.md` s'applique : le facteur est divisé par le taux de remplissage, il n'est pas multiplié.
+La formule est lue dans les formes de la feuille `TrsptPers_ReportModal` ; la cellule « Formule » ne contient que « Réduction GES = ». L'écart de la correction 1 de `docs/methodology/formula-corrections.md` s'applique : le facteur est divisé par le taux de remplissage, il n'est pas multiplié. La dernière ligne, dessinée hors de l'accolade avec les passagers.km en voiture, est lue comme le report des transports en commun vers les modes actifs, sur les passagers.km en transport en commun, comme l'indique Laurent (CGDD) : « la première boîte devrait être les passagers.km parcourus en TC ».
 
 ## Entrées
 
@@ -31,9 +34,10 @@ La formule est lue dans les formes de la feuille `TrsptPers_ReportModal` ; la ce
 |---|---|---|
 | `carToPublicTransportFraction` | fraction des passagers.km en voiture | 0 à 1 |
 | `carToActiveModesFraction` | fraction des passagers.km en voiture | 0 à 1 |
+| `publicTransportToActiveModesFraction` | fraction des passagers.km en transport en commun | 0 à 1 |
 | `railShareFraction` | fraction | 0 à 1, facultative |
 
-Les deux reports sont obligatoires et leur somme ne dépasse pas 1 : le tableur dit « Le report modal total doit être inférieur à 100% » (`ParametreDeterminants`, lignes 34 et 35). La requête est refusée sinon ; une somme égale à 100 % est acceptée (le tableur dit « inférieur », strict ou large n'est pas tranché).
+Les trois reports sont obligatoires. Les deux reports depuis la voiture ne dépassent pas 1 ensemble, celui des transports en commun vers les modes actifs porte sur une autre base et ne s'y ajoute pas : le tableur dit « Le report modal total doit être inférieur à 100% » (`ParametreDeterminants`, lignes 34 et 35). La requête est refusée sinon ; une somme égale à 100 % est acceptée (le tableur dit « inférieur », strict ou large n'est pas tranché).
 
 ## Constantes
 
@@ -56,7 +60,8 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 |---|---|---|
 | 1 | Le facteur du ferré est l'amont de l'électricité × 67,4 %, sans la fabrication | hypothèse nommée `railElectricityUpstreamShare`, résolue par la documentation fonctionnelle (p. 65) ; le tableur disait « une partie du poste amont à déterminer » ; renvoyé dans `appliedAssumptions.railEmissionFactor` |
 | 2 | Un territoire dont toutes les communes sont en Corse prend le facteur corse, les autres le facteur continental | `DonneesReference!D37` ; un territoire à cheval sur la Corse et une autre région, ou sans commune connue, prend le facteur continental : choix de conception, non validé |
-| 3 | La dernière ligne de la formule des voitures est ignorée : dessinée hors de l'accolade, elle vaut `PK × 52,14 × r_actifs × FE_TC` et ferait gagner au report vers les modes actifs le facteur du transport en commun, en plus de celui de la voiture ; l'ignorer ou la garder change le résultat de 21 % (région 84 : 210 377,15 contre 254 911,98 tCO2e) | hypothèse nommée `passengerCarLastLineKept` ; choix de conception, non validé |
+| 3 | La dernière ligne dessinée est le report des transports en commun vers les modes actifs, sur les passagers.km en transport en commun | réponse de Laurent (CGDD) au document du 29 octobre 2026 ; le tableur et la documentation fonctionnelle (p. 60) la dessinent avec les passagers.km en voiture |
+| 4 | Le report des transports en commun vers les modes actifs porte sur les passagers.km en transport en commun initiaux, sans enchaîner avec le report de la voiture vers les transports en commun | choix de conception, non validé |
 | 4 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
 | 5 | Le facteur du transport en commun pondère le ferré et le bus avec la part du ferré, la même qui sert à l'efficacité | `ParametreDeterminants` ligne 38 ; part par défaut renvoyée dans `appliedAssumptions.railShare` |
 | 6 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 55,6 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −25 087,34 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
@@ -70,6 +75,7 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | idem, tout vers les transports en commun, 60 % de ferré à 0,02 et bus à 0,08 | 2,91984 tCO2e |
 | idem, moitié vers chaque | 4,06692 tCO2e |
 | transport en commun plus émetteur que la voiture (0,0233 contre 0,08), tout reporté | −3,1284 tCO2e |
+| 1 000 passagers.km par semaine en transport en commun à 0,044 kgCO2e/passager.km, tous reportés vers les modes actifs | 2,29416 tCO2e |
 | région 84, jeu de test, 10 % vers les transports en commun et 5 % vers les modes actifs | 445,77 tCO2e |
 | région 11, jeu de test | 641,03 tCO2e |
 | région 94, jeu de test, ferré corse | 231,08 tCO2e |
@@ -82,6 +88,8 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | département 2A | 2 522,32 tCO2e |
 | EPCI 200046977 | 27 424,95 tCO2e |
 | région 84, données réelles, 60 % de ferré saisi | 242 160,85 tCO2e |
+| région 84, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 231 089,14 tCO2e |
+| région 11, données réelles, 20 % des passagers.km de transport en commun reportés en plus | 299 632,2 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

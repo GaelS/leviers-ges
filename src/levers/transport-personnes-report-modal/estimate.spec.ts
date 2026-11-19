@@ -20,6 +20,7 @@ type Fixtures = Readonly<Record<string, DatasetFixture>>
 type Parameters = {
   readonly carToPublicTransportFraction: string
   readonly carToActiveModesFraction: string
+  readonly publicTransportToActiveModesFraction: string
   readonly railShareFraction?: string
 }
 
@@ -86,6 +87,7 @@ function toEstimator(dataSource: DataSource): Estimator {
 const MIXED_SHIFT: Parameters = {
   carToPublicTransportFraction: '0.1',
   carToActiveModesFraction: '0.05',
+  publicTransportToActiveModesFraction: '0',
 }
 
 function request(
@@ -131,7 +133,11 @@ describe('estimate, transport_personnes_report_modal', () => {
   })
 
   it('ne compte que les modes actifs quand rien ne va vers les transports en commun : 260,7 tCO2e', () => {
-    const parameters = { carToPublicTransportFraction: '0', carToActiveModesFraction: '0.05' }
+    const parameters = {
+      carToPublicTransportFraction: '0',
+      carToActiveModesFraction: '0.05',
+      publicTransportToActiveModesFraction: '0',
+    }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
       '260.7',
     )
@@ -189,7 +195,11 @@ describe('estimate, transport_personnes_report_modal', () => {
     const parsed = transportPersonnesReportModalRequestSchema.safeParse({
       id: 'transport_personnes_report_modal',
       territory: { level: 'region', code: '84' },
-      parameters: { carToPublicTransportFraction: '0.7', carToActiveModesFraction: '0.4' },
+      parameters: {
+        carToPublicTransportFraction: '0.7',
+        carToActiveModesFraction: '0.4',
+        publicTransportToActiveModesFraction: '0',
+      },
     })
     expect(parsed.success).toBe(false)
   })

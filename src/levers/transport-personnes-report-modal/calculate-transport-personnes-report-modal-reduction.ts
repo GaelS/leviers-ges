@@ -15,10 +15,12 @@ import { calculateCarEmissionFactorPerPassengerKm } from '../../domain/vehicle-o
 type ReportModalFractions = {
   readonly carToPublicTransport: Fraction
   readonly carToActiveModes: Fraction
+  readonly publicTransportToActiveModes: Fraction
 }
 
 type ReportModalFlows = {
   readonly carWeeklyPassengerKm: PassengerKilometresPerWeek
+  readonly publicTransportWeeklyPassengerKm: PassengerKilometresPerWeek
   readonly carEmissionFactor: KgCo2ePerVehicleKilometre
   readonly busEmissionFactor: KgCo2ePerVehicleKilometre
 }
@@ -52,7 +54,15 @@ function calculateTransportPersonnesReportModalReduction({
     activeModesAvoidedPerPassengerKm,
   ])
   const annualPassengerKm = flows.carWeeklyPassengerKm.times(WEEKS_PER_YEAR)
-  const avoidedEmissionsKg = annualPassengerKm.times(avoidedPerPassengerKm)
+  const carShiftAvoidedEmissionsKg = annualPassengerKm.times(avoidedPerPassengerKm)
+  const annualPublicTransportPassengerKm = flows.publicTransportWeeklyPassengerKm.times(WEEKS_PER_YEAR)
+  const shiftedPublicTransportPassengerKm = annualPublicTransportPassengerKm.times(
+    fractions.publicTransportToActiveModes,
+  )
+  const publicTransportShiftAvoidedEmissionsKg = shiftedPublicTransportPassengerKm.times(
+    publicTransportEmissionFactor,
+  )
+  const avoidedEmissionsKg = sum([carShiftAvoidedEmissionsKg, publicTransportShiftAvoidedEmissionsKg])
   return quantity<'TonnesCo2ePerYear'>(avoidedEmissionsKg.dividedBy(KILOGRAMS_PER_TONNE).toFixed())
 }
 
