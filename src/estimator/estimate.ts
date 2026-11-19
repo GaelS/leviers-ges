@@ -26,6 +26,10 @@ import {
 } from '../levers/fertilisation-azotee/index.ts'
 import { type HaiesRequestInput, estimate as estimateHaies } from '../levers/haies/index.ts'
 import {
+  estimate as estimatePratiquesStockantes,
+  type PratiquesStockantesRequestInput,
+} from '../levers/pratiques-stockantes/index.ts'
+import {
   estimate as estimateProduitsBois,
   type ProduitsBoisRequestInput,
 } from '../levers/produits-bois/index.ts'
@@ -79,6 +83,7 @@ type RequestInput =
   | ElevageDurableRequestInput
   | FertilisationAzoteeRequestInput
   | HaiesRequestInput
+  | PratiquesStockantesRequestInput
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
   | ResidentielSobrieteRequestInput
@@ -132,6 +137,9 @@ function createEstimator(dataSource: DataSource): Estimator {
           ),
         )
         .with({ id: 'haies' }, (haiesRequest) => ok(estimateHaies(haiesRequest)))
+        .with({ id: 'pratiques_stockantes' }, (pratiquesStockantesRequest) =>
+          ok(estimatePratiquesStockantes(pratiquesStockantesRequest)),
+        )
         .with({ id: 'produits_bois' }, (produitsBoisRequest) =>
           estimateOnComputedLevel(produitsBoisRequest, (computedLevelRequest) =>
             estimateProduitsBois(computedLevelRequest, context),

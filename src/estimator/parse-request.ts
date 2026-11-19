@@ -7,6 +7,7 @@ import { dechetsSobrieteRequestSchema } from '../levers/dechets-sobriete/index.t
 import { elevageDurableRequestSchema } from '../levers/elevage-durable/index.ts'
 import { fertilisationAzoteeRequestSchema } from '../levers/fertilisation-azotee/index.ts'
 import { haiesRequestSchema } from '../levers/haies/index.ts'
+import { pratiquesStockantesRequestSchema } from '../levers/pratiques-stockantes/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
 import { residentielSobrieteRequestSchema } from '../levers/residentiel-sobriete/index.ts'
@@ -26,6 +27,7 @@ const requestSchema = z.discriminatedUnion('id', [
   elevageDurableRequestSchema,
   fertilisationAzoteeRequestSchema,
   haiesRequestSchema,
+  pratiquesStockantesRequestSchema,
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
   residentielSobrieteRequestSchema,

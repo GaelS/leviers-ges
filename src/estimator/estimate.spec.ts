@@ -9,6 +9,7 @@ import { createEstimator, type Estimate, type RequestInput } from './estimate.ts
 import type { requestSchema } from './parse-request.ts'
 
 type HaiesRequestInput = Extract<RequestInput, { id: 'haies' }>
+type PratiquesStockantesRequestInput = Extract<RequestInput, { id: 'pratiques_stockantes' }>
 
 const estimate = createEstimator(dataSourceFromDatasets({}))
 
@@ -19,7 +20,75 @@ function haiesRequest(hedgeKmCreatedPerYear: string | number): HaiesRequestInput
   }
 }
 
+function pratiquesStockantesRequest(
+  overrides: Partial<PratiquesStockantesRequestInput['parameters']> = {},
+): PratiquesStockantesRequestInput {
+  return {
+    id: 'pratiques_stockantes',
+    parameters: {
+      intermediateCropsHectares: '0',
+      permanentVineyardGrassingHectares: '0',
+      winterIntercropVineyardHectares: '0',
+      agroforestryHectares: '0',
+      temporaryGrasslandExtensionHectares: '0',
+      ...overrides,
+    },
+  }
+}
+
 describe('estimate', () => {
+  describe('pratiques_stockantes', () => {
+    it.each([
+      [{}, '0'],
+      [{ intermediateCropsHectares: '1000', agroforestryHectares: 200 }, '1568.6'],
+      [
+        {
+          intermediateCropsHectares: '1',
+          permanentVineyardGrassingHectares: '1',
+          winterIntercropVineyardHectares: '1',
+          agroforestryHectares: '1',
+          temporaryGrasslandExtensionHectares: '1',
+        },
+        '8.36',
+      ],
+    ])('%j hectares donnent %s tCO2e par an', (parameters, expected) => {
+      const estimation = estimate(pratiquesStockantesRequest(parameters))._unsafeUnwrap()
+      expect(estimation.reduction.toFixed()).toBe(expected)
+    })
+
+    it('annonce l’absence de borne sur les surfaces', () => {
+      const assumptions = estimate(pratiquesStockantesRequest())._unsafeUnwrap().appliedAssumptions
+      expect(Object.keys(assumptions)).toEqual(['applicationSurfaceBounds'])
+    })
+
+    it('refuse une surface négative', () => {
+      const result = estimate(pratiquesStockantesRequest({ agroforestryHectares: '-1' }))
+      expect(result._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.agroforestryHectares', message: 'must not be negative' }],
+      })
+    })
+
+    it('refuse un texte qui n’est pas un nombre d’hectares', () => {
+      const result = estimate(pratiquesStockantesRequest({ intermediateCropsHectares: 'abc' }))
+      expect(result._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.intermediateCropsHectares', message: 'must be a decimal number' }],
+      })
+    })
+
+    it('refuse un territoire, que son résultat n’utilise pas', () => {
+      const result = estimate({
+        ...pratiquesStockantesRequest(),
+        territory: { level: 'region', code: '53' },
+      } as unknown as RequestInput)
+      expect(result._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'territory', message: 'Unrecognized key: "territory"' }],
+      })
+    })
+  })
+
   describe('haies', () => {
     it.each([
       ['1', '1.17'],

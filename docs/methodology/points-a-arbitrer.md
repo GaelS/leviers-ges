@@ -13,7 +13,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 |   | Élevage durable (`elevage_durable`) | ❓ | ❓ | ❌ |
 |   | Haies (`haies`) | ✅ | ✅ | ✅ |
 |   | Produits bois (`produits_bois`) | ✅ | ✅ | ❌ |
-|   | Pratiques stockantes (`pratiques_stockantes`) | ❌ | ❌ | ❌ |
+|   | Pratiques stockantes (`pratiques_stockantes`) | ❓ | ❓ | ❓ |
 |   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❌ |
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
 |   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❌ |
@@ -30,7 +30,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Déchets | Changement de mode de traitement (`dechets_mode_de_traitement`) | ❓ | ❓ | ❓ |
 |   | Sobriété (`dechets_sobriete`) | ❓ | ❓ | ❓ |
 
-Calculés : 17 leviers sur 21 en région, 13 en département, 9 en EPCI.
+Calculés : 18 leviers sur 21 en région, 14 en département, 10 en EPCI.
 
 Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `methodology.md` du levier est corrigé dans la même PR. Une nouvelle PR de levier ajoute ses lignes en partie 2, et en partie 1 pour chaque niveau qu'elle ne calcule pas. Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`.
 
@@ -38,11 +38,10 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 ## 1. Niveaux non calculés : ce qui les débloquerait
 
-### 1.1 Leviers non calculés à aucun niveau (4 leviers, 12 niveaux)
+### 1.1 Leviers non calculés à aucun niveau (3 leviers, 9 niveaux)
 
 | Levier | Niveaux | Ce qui manque | Ordre de grandeur de l'enjeu |
 |---|---|---|---|
-| `pratiques_stockantes` | région, département, EPCI | le périmètre de validité est « LIMITEE » à chaque niveau, sans commentaire ni surface applicable | levier entier |
 | `occupation_des_sols` | région, département, EPCI | l'unité du facteur de conversion : par an (tCO2e/ha/an) ou variation totale (tCO2e/ha) | le résultat varie jusqu'à 20 fois |
 | `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département (renvoyée au CEREN, « pas disponible en open source ») | levier entier |
 | `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | levier entier |
@@ -109,6 +108,14 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
 | Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) ; le webinaire du 25/01/2021 (`haies/methodology.md`) donne la même valeur basse |
+
+### Pratiques stockantes (`pratiques_stockantes`, région, département, EPCI)
+
+| Point | Aujourd'hui | Ce qui l'affinerait | Écart |
+|---|---|---|---|
+| Surfaces d'application | saisies par la collectivité, sans borne | des bornes par pratique selon la surface de prairies, vergers, vignes ou cultures (ALDO) | non chiffré ; limite à maintenir selon la documentation (p. 78) |
+| Facteurs de stockage | cinq valeurs moyennes potentielles (Bamière et al. 2023, documentation p. 73), prises en valeur absolue | des valeurs par type de sol et de climat | non chiffré ; la documentation rappelle que ces moyennes ne sont pas toujours atteintes (p. 73) |
+| Pratiques écartées | labour occasionnel, bandes enherbées, intensification des prairies permanentes peu productives | leur prise en compte | écartées par la documentation (p. 72) |
 
 ### Produits bois (`produits_bois`, région, département)
 
