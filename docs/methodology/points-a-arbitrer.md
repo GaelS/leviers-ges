@@ -14,7 +14,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 |   | Haies (`haies`) | ✅ | ✅ | ✅ |
 |   | Produits bois (`produits_bois`) | ✅ | ✅ | ✅ |
 |   | Pratiques stockantes (`pratiques_stockantes`) | ❓ | ❓ | ❓ |
-|   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❌ |
+|   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❓ |
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
 |   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❌ |
 |   | Résidentiel, rénovation (`residentiel_renovation`) | ❌ | ❌ | ❌ |
@@ -30,7 +30,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Déchets | Changement de mode de traitement (`dechets_mode_de_traitement`) | ❓ | ❓ | ❓ |
 |   | Sobriété (`dechets_sobriete`) | ❓ | ❓ | ❓ |
 
-Calculés : 18 leviers sur 21 en région, 14 en département, 10 en EPCI.
+Calculés : 18 leviers sur 21 en région, 14 en département, 13 en EPCI.
 
 Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `methodology.md` du levier est corrigé dans la même PR. Une nouvelle PR de levier ajoute ses lignes en partie 2, et en partie 1 pour chaque niveau qu'elle ne calcule pas. Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`.
 
@@ -38,11 +38,10 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 ## 1. Niveaux non calculés : ce qui les débloquerait
 
-### 1.1 Leviers non calculés à aucun niveau (3 leviers, 9 niveaux)
+### 1.1 Leviers non calculés à aucun niveau (2 leviers, 6 niveaux)
 
 | Levier | Niveaux | Ce qui manque | Ordre de grandeur de l'enjeu |
 |---|---|---|---|
-| `occupation_des_sols` | région, département, EPCI | unité tranchée par le CGDD (Q2) : flux annuel, formule de la documentation (équation 27) ; les surfaces et les facteurs par EPCI sont versionnés (ALDO « stocks de carbone » et Flux 2, `data/occupation-des-sols`) mais le levier n'est pas encore codé ; région et département : les facteurs Flux 2 n'existent qu'à l'EPCI, une agrégation reste à définir | `LIMITEE` |
 | `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département (renvoyée au CEREN, « pas disponible en open source ») | levier entier |
 | `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | levier entier |
 
@@ -50,6 +49,7 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 | Levier | Niveaux à débloquer | Ce qui manque | Ce que le tableur dit |
 |---|---|---|---|
+| `occupation_des_sols` | région, département | les facteurs de conversion d'ALDO Flux 2 n'existent qu'à l'EPCI et varient d'un EPCI à l'autre au-delà de la zone pédoclimatique ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger | maille région : OUI, département : OUI |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | EPCI : OUI |
 | `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels à l'EPCI, ou une clé de répartition validée | EPCI : OUI |
 | `transport_marchandises_sobriete_logistique` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) ; le tableur déclare ces niveaux hors périmètre | hors périmètre |
@@ -111,6 +111,19 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
 | Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) ; le webinaire du 25/01/2021 (`haies/methodology.md`) donne la même valeur basse |
+
+### Changement d'occupation des sols (`occupation_des_sols`, EPCI)
+
+| Point | Aujourd'hui | Ce qui l'affinerait | Écart |
+|---|---|---|---|
+| Désimperméabilisation sans horizon | facteur en tCO2e/ha, non multiplié par l'horizon, comme le dessin de l'équation 27 et la réponse du CGDD (Q2) | confirmer que ALDO Flux 2 donne un flux annuel pour les deux premiers termes et une variation ponctuelle pour le troisième | le même fichier sert aux trois termes ; non chiffré |
+| Prairie | les trois types ALDO (arborée, herbacée, arbustive) au prorata de leur surface, la documentation n'en nommant qu'un | le type visé par l'afforestation et les zones humides | choix de conception, non validé ; tableur, B15 : « au prorata des surfaces existantes » |
+| Sol artificialisé enherbé | « sols artificiels arbustifs » d'ALDO | une colonne ALDO « enherbés » | choix de conception, non validé |
+| Surface sans objet | un terme dont la surface de référence est nulle vaut 0 | un refus explicite | choix de conception, non validé |
+| Rythme et horizon sans borne | acceptés tels quels, même au-delà des surfaces disponibles ; le tableur dit « selon surface disponible des types de sols concernés » | des bornes par surface disponible | non chiffré |
+| Facteur négatif | le résultat peut être négatif | seuls les mouvements positifs comptent selon la documentation (p. 73), qui parle des stratégies, pas du signe des facteurs | non chiffré |
+| EPCI du millésime ALDO | 18 EPCI de métropole du référentiel renvoient `missing_data` | les EPCI à jour dans ALDO | comme `produits_bois` |
+| Ordre de grandeur des facteurs | zones humides : de 101 à 324 tCO2e/ha/an selon l'EPCI (médiane 250), désimperméabilisation : de 77 à 209 tCO2e/ha, lues comme un flux annuel pour le premier | la même donnée lue comme variation totale diviserait par 20 | le CGDD a tranché (Q2) ; à surveiller |
 
 ### Pratiques stockantes (`pratiques_stockantes`, région, département, EPCI)
 

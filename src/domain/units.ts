@@ -11,7 +11,10 @@ type UnitName =
   | 'BillionTonneKilometres'
   | 'GramsCo2ePerVehicleKilometre'
   | 'Hectares'
+  | 'HectaresPerYear'
+  | 'Years'
   | 'TCo2ePerKmPerYear'
+  | 'TCo2ePerHectare'
   | 'TCo2ePerHectarePerYear'
   | 'MegawattHours'
   | 'GigawattHours'
@@ -39,7 +42,10 @@ type TonneKilometres = Quantity<'TonneKilometres'>
 type BillionTonneKilometres = Quantity<'BillionTonneKilometres'>
 type GramsCo2ePerVehicleKilometre = Quantity<'GramsCo2ePerVehicleKilometre'>
 type Hectares = Quantity<'Hectares'>
+type HectaresPerYear = Quantity<'HectaresPerYear'>
+type Years = Quantity<'Years'>
 type TCo2ePerKmPerYear = Quantity<'TCo2ePerKmPerYear'>
+type TCo2ePerHectare = Quantity<'TCo2ePerHectare'>
 type TCo2ePerHectarePerYear = Quantity<'TCo2ePerHectarePerYear'>
 type MegawattHours = Quantity<'MegawattHours'>
 type GigawattHours = Quantity<'GigawattHours'>
@@ -85,6 +91,7 @@ export type {
   GramsCo2ePerVehicleKilometre,
   GigawattHours,
   Hectares,
+  HectaresPerYear,
   Heads,
   KgCo2ePerGigajoule,
   KgCo2ePerKgNitrogen,
@@ -98,6 +105,7 @@ export type {
   PassengerKilometresPerWeek,
   Quantity,
   RelativeChange,
+  TCo2ePerHectare,
   TCo2ePerHectarePerYear,
   TCo2ePerKmPerYear,
   ThousandCubicMetres,
@@ -107,4 +115,5 @@ export type {
   TonnesCo2ePerYear,
   UnitName,
   Vehicles,
+  Years,
 }

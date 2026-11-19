@@ -891,6 +891,128 @@ describe('estimate', () => {
     })
   })
 
+  describe('occupation_des_sols', () => {
+    const AREAS = {
+      code_epci: '200000001',
+      cropland_ha: '100',
+      wooded_grassland_ha: '10',
+      herbaceous_grassland_ha: '30',
+      shrub_grassland_ha: '60',
+      artificial_shrub_ha: '40',
+      artificial_wooded_ha: '60',
+      forest_mixed_ha: '100',
+      forest_broadleaf_ha: '300',
+      forest_conifer_ha: '600',
+      forest_poplar_ha: '0',
+    }
+    const FACTORS: Record<string, string> = Object.fromEntries([
+      ['code_epci', '200000001'],
+      ...['wooded', 'herbaceous', 'shrub'].flatMap((grassland) =>
+        ['mixed', 'broadleaf', 'conifer', 'poplar'].map((forest): [string, string] => [
+          `${grassland}_grassland_to_forest_${forest}`,
+          '10',
+        ]),
+      ),
+      ['cropland_to_wetland', '10'],
+      ['wooded_grassland_to_wetland', '10'],
+      ['herbaceous_grassland_to_wetland', '10'],
+      ['shrub_grassland_to_wetland', '10'],
+      ['impervious_to_artificial_shrub', '10'],
+      ['impervious_to_artificial_wooded', '10'],
+    ])
+    const withOccupation = createEstimator(
+      createTemporaryCsvDataSource({
+        'occupation-des-sols/epcis-surfaces': { keyColumn: 'code_epci', level: 'epci', rows: [AREAS] },
+        'occupation-des-sols/epcis-facteurs': { keyColumn: 'code_epci', level: 'epci', rows: [FACTORS] },
+      }),
+    )
+
+    function occupationDesSolsRequest({
+      level = 'epci',
+      parameters = {},
+    }: {
+      level?: string
+      parameters?: Record<string, string | number>
+    }): RequestInput {
+      return {
+        id: 'occupation_des_sols',
+        territory: { level, code: '200000001' },
+        parameters: {
+          afforestationHectaresPerYear: '2',
+          wetlandDevelopmentHectaresPerYear: '3',
+          desealingHectaresPerYear: '1',
+          horizonYears: '10',
+          ...parameters,
+        },
+      } as RequestInput
+    }
+
+    it('aiguille l’EPCI vers son levier : facteurs de 10 partout, (2 × 10 + 3 × 10) × 10 + 1 × 10 = 510 tCO2e', () => {
+      expect(withOccupation(occupationDesSolsRequest({}))._unsafeUnwrap().reduction.toFixed()).toBe(
+        '510',
+      )
+    })
+
+    it.each(['region', 'departement'])('refuse le niveau %s, non calculé', (level) => {
+      expect(withOccupation(occupationDesSolsRequest({ level }))._unsafeUnwrapErr()).toEqual({
+        kind: 'level_not_computed',
+        lever: 'occupation_des_sols',
+        level,
+      })
+    })
+
+    it.each([
+      ['afforestationHectaresPerYear', '-1', 'must not be negative'],
+      ['wetlandDevelopmentHectaresPerYear', '-0.5', 'must not be negative'],
+      ['desealingHectaresPerYear', '-2', 'must not be negative'],
+      ['horizonYears', '0', 'must be greater than 0'],
+      ['horizonYears', '-5', 'must be greater than 0'],
+    ])('refuse %s à %s', (parameter, value, message) => {
+      expect(
+        withOccupation(occupationDesSolsRequest({ parameters: { [parameter]: value } }))._unsafeUnwrapErr(),
+      ).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: `parameters.${parameter}`, message }],
+      })
+    })
+
+    it('exige les quatre paramètres et nomme ceux qui manquent', () => {
+      const incomplete = {
+        id: 'occupation_des_sols',
+        territory: { level: 'epci', code: '200000001' },
+        parameters: { afforestationHectaresPerYear: '1' },
+      } as RequestInput
+      const parameters = withOccupation(incomplete)._unsafeUnwrapErr()
+      expect(parameters).toMatchObject({
+        kind: 'invalid_request',
+        issues: [
+          { parameter: 'parameters.wetlandDevelopmentHectaresPerYear' },
+          { parameter: 'parameters.desealingHectaresPerYear' },
+          { parameter: 'parameters.horizonYears' },
+        ],
+      })
+    })
+
+    it('refuse un paramètre inconnu', () => {
+      const extra = occupationDesSolsRequest({ parameters: { unknownParameter: '1' } })
+      expect(withOccupation(extra)._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.unknownParameter' }],
+      })
+    })
+
+    it('accepte des rythmes nuls et un horizon fractionnaire : (0 + 0) × 0,5 + 1 × 10 = 10 tCO2e', () => {
+      const zeroRates = occupationDesSolsRequest({
+        parameters: {
+          afforestationHectaresPerYear: '0',
+          wetlandDevelopmentHectaresPerYear: 0,
+          horizonYears: '0.5',
+        },
+      })
+      expect(withOccupation(zeroRates)._unsafeUnwrap().reduction.toFixed()).toBe('10')
+    })
+  })
+
   describe('elevage_durable', () => {
     const withLivestock = createEstimator(
       createTemporaryCsvDataSource({

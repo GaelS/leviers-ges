@@ -2,7 +2,7 @@
 
 Les formules du tableur ADEME PlanET V1 (21 leviers de décarbonation) sous forme de fonctions TypeScript. Une requête par levier, en retour les tonnes de CO2e évitées par an pour une région, un département ou un EPCI.
 
-18 leviers sont calculés. Les trois autres (`occupation_des_sols`, `residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
+19 leviers sont calculés. Les deux autres (`residentiel_renovation`, `residentiel_changement_systeme_chauffage`) ne le sont à aucun niveau.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
@@ -77,6 +77,7 @@ Le détail d'un levier (formule, constantes sourcées, données, limites, cas de
 | `batiments_machines_agricoles`, `reseaux_chaleur`, `dechets_mode_de_traitement`, `dechets_sobriete`, `produits_bois`, `fertilisation_azotee` | région, département, EPCI |
 | `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | région, département, EPCI |
 | `elevage_durable`, `residentiel_sobriete` | région, département |
+| `occupation_des_sols` | EPCI |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | région |
 | `haies`, `pratiques_stockantes` | sans territoire |
 
@@ -105,6 +106,7 @@ Toute valeur numérique se passe en texte décimal (`'0.1'`, `'-2'`) ou en nombr
 | `fertilisation_azotee` | `nitrogenReductionFraction` | fraction | baisse de la masse d'azote livrée |
 | `haies` | `hedgeKmCreatedPerYear` | kilomètres | haies créées par an ; négatif = arrachage net, réduction négative |
 | `pratiques_stockantes` | `intermediateCropsHectares`, `permanentVineyardGrassingHectares`, `winterIntercropVineyardHectares`, `agroforestryHectares`, `temporaryGrasslandExtensionHectares` | hectares, à partir de 0 | surface d'application de chaque pratique stockante. Les cinq sont obligatoires : une pratique non appliquée se saisit à `'0'` |
+| `occupation_des_sols` | `afforestationHectaresPerYear`, `wetlandDevelopmentHectaresPerYear`, `desealingHectaresPerYear`, `horizonYears` | hectares par an, années | rythmes d'afforestation (prairies), de développement de zones humides (prairies et cultures) et de désimperméabilisation (sols artificiels), non négatifs ; horizon de temps en années, strictement positif |
 | `produits_bois` | `woodProductionIncrease` | variation relative | variation de la production de produits bois, une seule valeur pour le bois d'œuvre et le bois d'industrie ; une valeur supérieure à 1 est admise |
 
 ### Élevage durable

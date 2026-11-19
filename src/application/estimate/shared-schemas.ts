@@ -29,6 +29,20 @@ const nonNegativeHectaresSchema = decimalInputSchema.transform((text, context) =
   return z.NEVER
 })
 
+const nonNegativeHectaresPerYearSchema = decimalInputSchema.transform((text, context) => {
+  const hectaresPerYear = quantity<'HectaresPerYear'>(text)
+  if (!hectaresPerYear.isNegative()) return hectaresPerYear
+  context.addIssue({ code: 'custom', message: 'must not be negative', input: text })
+  return z.NEVER
+})
+
+const positiveYearsSchema = decimalInputSchema.transform((text, context) => {
+  const years = quantity<'Years'>(text)
+  if (years.isGreaterThan(0)) return years
+  context.addIssue({ code: 'custom', message: 'must be greater than 0', input: text })
+  return z.NEVER
+})
+
 const nonNegativeTonneKilometresSchema = decimalInputSchema.transform((text, context) => {
   const tonneKilometres = quantity<'TonneKilometres'>(text)
   if (!tonneKilometres.isNegative()) return tonneKilometres
@@ -44,8 +58,10 @@ const territorySchema = z.strictObject({
 export {
   fractionSchema,
   kilometresSchema,
+  nonNegativeHectaresPerYearSchema,
   nonNegativeHectaresSchema,
   nonNegativeTonneKilometresSchema,
+  positiveYearsSchema,
   relativeChangeSchema,
   territorySchema,
 }

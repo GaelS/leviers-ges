@@ -22,26 +22,25 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 27 workaround et 19 not_computed', () => {
+  it('compte 17 no_open_question, 28 workaround et 18 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 27, notComputed: 19 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 28, notComputed: 18 })
   })
 
-  it('compte 18 leviers calculables sur au moins un niveau', () => {
+  it('compte 19 leviers calculables sur au moins un niveau', () => {
     const computable = levers.filter(([, byLevel]) => Object.values<Status>(byLevel).some(isComputed))
-    expect(computable).toHaveLength(18)
+    expect(computable).toHaveLength(19)
   })
 
-  it('les trois leviers exclus sont ceux dont les trois niveaux sont not_computed', () => {
+  it('les deux leviers exclus sont ceux dont les trois niveaux sont not_computed', () => {
     const excluded = levers
       .filter(([, byLevel]) => !Object.values<Status>(byLevel).some(isComputed))
       .map(([lever]) => lever)
       .sort()
     expect(excluded).toEqual([
-      'occupation_des_sols',
       'residentiel_changement_systeme_chauffage',
       'residentiel_renovation',
     ])
@@ -57,6 +56,7 @@ describe('lever-registry', () => {
     expectTypeOf<ComputedLevels<'haies'>>().toEqualTypeOf<Level>()
     expectTypeOf<ComputedLevels<'elevage_durable'>>().toEqualTypeOf<'region' | 'departement'>()
     expectTypeOf<ComputedLevels<'transport_marchandises_report_modal'>>().toEqualTypeOf<'region'>()
-    expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<never>()
+    expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<'epci'>()
+    expectTypeOf<ComputedLevels<'residentiel_renovation'>>().toEqualTypeOf<never>()
   })
 })
