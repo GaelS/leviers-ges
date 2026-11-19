@@ -49,6 +49,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `elevage_durable` | fait | `src/levers/elevage-durable/methodology.md` |
 | `fertilisation_azotee` | fait | `src/levers/fertilisation-azotee/methodology.md` |
 | `haies` | fait | `src/levers/haies/methodology.md` |
+| `occupation_des_sols` | fait (EPCI) | `src/levers/occupation-des-sols/methodology.md` |
 | `pratiques_stockantes` | fait | `src/levers/pratiques-stockantes/methodology.md` |
 | `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
@@ -62,7 +63,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `transport_personnes_report_modal` | fait | `src/levers/transport-personnes-report-modal/methodology.md` |
 | `transport_personnes_sobriete_deplacements` | fait | `src/levers/transport-personnes-sobriete-deplacements/methodology.md` |
 
-`occupation_des_sols`, `residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés (`not_computed` partout).
+`residentiel_renovation` et `residentiel_changement_systeme_chauffage` ne sont pas calculés (`not_computed` partout). `occupation_des_sols` ne l'est qu'à l'EPCI.
 
 Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une question ouverte devient une hypothèse nommée avec son contournement dans `docs/methodology/assumptions.md` ; une formule corrigée par rapport au tableur est dans `docs/methodology/formula-corrections.md`.
 

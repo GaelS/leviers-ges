@@ -26,6 +26,10 @@ import {
 } from '../levers/fertilisation-azotee/index.ts'
 import { type HaiesRequestInput, estimate as estimateHaies } from '../levers/haies/index.ts'
 import {
+  estimate as estimateOccupationDesSols,
+  type OccupationDesSolsRequestInput,
+} from '../levers/occupation-des-sols/index.ts'
+import {
   estimate as estimatePratiquesStockantes,
   type PratiquesStockantesRequestInput,
 } from '../levers/pratiques-stockantes/index.ts'
@@ -83,6 +87,7 @@ type RequestInput =
   | ElevageDurableRequestInput
   | FertilisationAzoteeRequestInput
   | HaiesRequestInput
+  | OccupationDesSolsRequestInput
   | PratiquesStockantesRequestInput
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
@@ -137,6 +142,11 @@ function createEstimator(dataSource: DataSource): Estimator {
           ),
         )
         .with({ id: 'haies' }, (haiesRequest) => ok(estimateHaies(haiesRequest)))
+        .with({ id: 'occupation_des_sols' }, (occupationDesSolsRequest) =>
+          estimateOnComputedLevel(occupationDesSolsRequest, (computedLevelRequest) =>
+            estimateOccupationDesSols(computedLevelRequest, context),
+          ),
+        )
         .with({ id: 'pratiques_stockantes' }, (pratiquesStockantesRequest) =>
           ok(estimatePratiquesStockantes(pratiquesStockantesRequest)),
         )
