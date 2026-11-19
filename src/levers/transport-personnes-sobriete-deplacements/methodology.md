@@ -91,4 +91,4 @@ Les lignes « données réelles » sont calculées à 10 % de distance en moins 
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
 | EPCI sans bus ni car immatriculé | 273 EPCI ont des passagers.km de transport en commun et aucun bus classé : leur part routière est chiffrée au facteur national du parc de bus, signalé dans `appliedAssumptions` ; saisir `railShareFraction` si le réseau est surtout ferré |
 | Facteur des voitures | facteur du parc, pas celui du trajet |
-| Deux-roues motorisés | sans terme |
+| Deux-roues motorisés | sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58) |

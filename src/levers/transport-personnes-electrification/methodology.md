@@ -101,4 +101,4 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Territoire sans parc | 276 des 1 243 EPCI n'ont aucun bus ni car immatriculé, 11 aucune voiture : leur part thermique est nulle et le résultat de ce mode est nul, signalé dans `appliedAssumptions` par une limite propre |
 | Périmètre des trajets | seuls les trajets domicile-travail de moins de 100 km comptent, alors que la part saisie porte sur le parc entier |
 | Taux de remplissage des voitures | 1,165 vient du motif « Professionnel » de la source SDES, alors que les données sont domicile-travail ; repris du tableur, partagé avec l'efficacité |
-| Deux-roues motorisés | sans terme |
+| Deux-roues motorisés | sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58) |

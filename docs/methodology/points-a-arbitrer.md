@@ -171,7 +171,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Bus en CO2 seul | efficacité, électrification | OMINEA 2024, CO2 seul, valeur basse | CH4 et N2O, Base Empreinte | 0,0874 contre 0,0805 kgCO2e/passager.km |
 | Parc de bus et cars immatriculé au siège | efficacité, électrification, sobriété | siège | le parc circulant | trois communes portent 17,7 % du parc ; 276 des 1 243 EPCI sans bus classé |
 | Trajets de moins de 100 km, domicile-travail | les quatre | périmètre de la base | autres motifs et longues distances | 772 644 actifs métropolitains hors champ ; DOM absents |
-| Deux-roues motorisés | efficacité, électrification, sobriété | sans terme | un terme | 1,4 % des passagers.km |
+| Deux-roues motorisés | efficacité, électrification, sobriété | sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58 : « par manque de données » sur la motorisation du parc), le tableur donne un facteur (`DonneesReference!D25`) sans terme dans les formules | un terme | 1,4 % des passagers.km ; limite à maintenir |
 | Base du report des transports en commun vers les modes actifs | report modal | passagers.km en transport en commun initiaux, sans enchaîner avec le report de la voiture vers les transports en commun | l'enchaînement du tableur | non chiffré |
 | Électrification : sens de `x` | électrification | part du parc entier | part des véhicules thermiques | le parc entier couvre aussi les trajets de plus de 100 km |
 | Facteur électrique | électrification | amont seul, identique partout | le mix local | non chiffré |
