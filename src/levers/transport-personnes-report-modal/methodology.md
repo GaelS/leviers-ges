@@ -20,7 +20,7 @@ FE_TC = part du ferré × FE_ferré + (1 − part du ferré) × facteur du parc 
 | `PK_voiture` | passagers.km hebdomadaires domicile-travail en voiture, 50 % côté résidence et 50 % côté travail | passagers.km par semaine |
 | `FE_voiture` | facteur du parc de voitures par passager.km | kgCO2e par passager.km |
 | `FE_TC` | facteur du transport en commun, moyenne pondérée du ferré et du bus | kgCO2e par passager.km |
-| `FE_ferré` | 0,0229 en France continentale, 0,187 en Corse | kgCO2e par passager.km |
+| `FE_ferré` | 0,0154346 (0,0229 × 67,4 %) en France continentale, 0,187 en Corse | kgCO2e par passager.km |
 | part du ferré | part des passagers.km de transport en commun en ferré, saisie ou par défaut | fraction |
 
 La formule est lue dans les formes de la feuille `TrsptPers_ReportModal` ; la cellule « Formule » ne contient que « Réduction GES = ». L'écart de la correction 1 de `docs/methodology/formula-corrections.md` s'applique : le facteur est divisé par le taux de remplissage, il n'est pas multiplié.
@@ -42,7 +42,7 @@ Les deux reports sont obligatoires et leur somme ne dépasse pas 1 : le tableur 
 | Semaines par an | 52,14 | formule dessinée dans les formes de la feuille |
 | Taux de remplissage des voitures | 1,165 passager | `DonneesReference!D26` |
 | Taux de remplissage des bus | 10 passagers | `DonneesReference!D28` |
-| Facteur du ferré, France continentale | 0,0229 kgCO2e/passager.km | `DonneesReference!D37` et G37 (liens Base Empreinte) ; TER moyen 2022, amont de l'électricité sans la fabrication (0,00479), combustion nulle : choix de conception, non vérifié à la source (G37 demande « la partie combustion » et un TER moyen compte des TER diesel) |
+| Facteur du ferré, France continentale | 0,0154346 kgCO2e/passager.km | `DonneesReference!D37` et G37 ; Base Empreinte, TER 2022 (élément 43255) : amont de l'électricité 0,0229 × 67,4 % (documentation fonctionnelle PlanET, p. 65), fabrication (0,00479) non comptée, poste combustion nul |
 | Facteur du ferré, Corse | 0,187 kgCO2e/passager.km | Base Empreinte, train de voyageurs de Corse |
 | Part du ferré par défaut | 82 % en Île-de-France, 24 % ailleurs | `ParametreDeterminants` ligne 38 (le tableur donne 84 % et 23 % en 2023, à titre indicatif) ; SDES, Bilan annuel des transports 2024 |
 
@@ -54,9 +54,9 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Le facteur du ferré est celui de l'amont de l'électricité seul, sans la fabrication | hypothèse nommée `railElectricityUpstreamShare` ; le tableur dit « une partie du poste amont à déterminer » ; renvoyé dans `appliedAssumptions.railEmissionFactor` |
+| 1 | Le facteur du ferré est l'amont de l'électricité × 67,4 %, sans la fabrication | hypothèse nommée `railElectricityUpstreamShare`, résolue par la documentation fonctionnelle (p. 65) ; le tableur disait « une partie du poste amont à déterminer » ; renvoyé dans `appliedAssumptions.railEmissionFactor` |
 | 2 | Un territoire dont toutes les communes sont en Corse prend le facteur corse, les autres le facteur continental | `DonneesReference!D37` ; un territoire à cheval sur la Corse et une autre région, ou sans commune connue, prend le facteur continental : choix de conception, non validé |
-| 3 | La dernière ligne de la formule des voitures est ignorée : dessinée hors de l'accolade, elle vaut `PK × 52,14 × r_actifs × FE_TC` et ferait gagner au report vers les modes actifs le facteur du transport en commun, en plus de celui de la voiture ; l'ignorer ou la garder change le résultat de 22 % (région 84 : 207 826,72 contre 253 636,77 tCO2e) | hypothèse nommée `passengerCarLastLineKept` ; choix de conception, non validé |
+| 3 | La dernière ligne de la formule des voitures est ignorée : dessinée hors de l'accolade, elle vaut `PK × 52,14 × r_actifs × FE_TC` et ferait gagner au report vers les modes actifs le facteur du transport en commun, en plus de celui de la voiture ; l'ignorer ou la garder change le résultat de 21 % (région 84 : 210 377,15 contre 254 911,98 tCO2e) | hypothèse nommée `passengerCarLastLineKept` ; choix de conception, non validé |
 | 4 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
 | 5 | Le facteur du transport en commun pondère le ferré et le bus avec la part du ferré, la même qui sert à l'efficacité | `ParametreDeterminants` ligne 38 ; part par défaut renvoyée dans `appliedAssumptions.railShare` |
 | 6 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 55,6 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −25 087,34 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
@@ -70,18 +70,18 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | idem, tout vers les transports en commun, 60 % de ferré à 0,02 et bus à 0,08 | 2,91984 tCO2e |
 | idem, moitié vers chaque | 4,06692 tCO2e |
 | transport en commun plus émetteur que la voiture (0,0233 contre 0,08), tout reporté | −3,1284 tCO2e |
-| région 84, jeu de test, 10 % vers les transports en commun et 5 % vers les modes actifs | 436,43 tCO2e |
-| région 11, jeu de test | 609,11 tCO2e |
+| région 84, jeu de test, 10 % vers les transports en commun et 5 % vers les modes actifs | 445,77 tCO2e |
+| région 11, jeu de test | 641,03 tCO2e |
 | région 94, jeu de test, ferré corse | 231,08 tCO2e |
-| région 84, données réelles | 207 826,72 tCO2e |
-| région 53 (Bretagne) | 99 531,56 tCO2e |
-| région 11 (Île-de-France) | 229 901,3 tCO2e |
+| région 84, données réelles | 210 377,15 tCO2e |
+| région 53 (Bretagne) | 100 753,61 tCO2e |
+| région 11 (Île-de-France) | 237 825,39 tCO2e |
 | région 94 (Corse) | 5 437,77 tCO2e |
-| département 69 | 40 895,57 tCO2e |
-| département 75 | 18 356,06 tCO2e |
+| département 69 | 41 397,47 tCO2e |
+| département 75 | 18 991,1 tCO2e |
 | département 2A | 2 522,32 tCO2e |
-| EPCI 200046977 | 27 094,4 tCO2e |
-| région 84, données réelles, 60 % de ferré saisi | 235 784,77 tCO2e |
+| EPCI 200046977 | 27 424,95 tCO2e |
+| région 84, données réelles, 60 % de ferré saisi | 242 160,85 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -92,7 +92,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Hexagone et moins de 100 km | mêmes limites que le levier d'efficacité : millésime 2022, DOM absents |
 | Domicile-travail seul | les autres motifs de déplacement ne sont pas comptés ; `DonneesReference!D27`, le taux de remplissage des autres trajets, n'est pas utilisé |
 | Capacité du réseau | le report n'ajoute pas de véhicule-km : aucun effet de saturation du transport en commun ni d'offre supplémentaire |
-| Combustion du ferré continental | supposée nulle, non vérifiée dans la Base Empreinte : si les TER diesel comptent, le facteur continental monte et le gain du report vers les transports en commun baisse |
+| Combustion du ferré continental | nulle dans la Base Empreinte (TER 2022, élément 43255) alors que le TER moyen compte des TER diesel ; la documentation fonctionnelle reconnaît cette limite (p. 58) : si leur combustion comptait, le facteur continental monterait et le gain du report vers les transports en commun baisserait |
 | Un seul facteur pour tout le ferré | un territoire avec métro ou tram a son propre facteur, souvent plus bas |
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
 | Distance des trajets reportés | les modes actifs ne couvrent pas les mêmes distances que la voiture : la fraction porte sur les passagers.km, pas sur les trajets |

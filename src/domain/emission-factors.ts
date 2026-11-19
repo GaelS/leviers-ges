@@ -14,7 +14,8 @@ import type {
 const ELECTRICITY_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh'>('0.0519')
 
 // Source : documentation fonctionnelle PlanET (juin 2026), pp. 43, 50, 52 et 56 : 67,4 % est la part « combustion à la centrale »
-// du facteur de la Base Empreinte, valeur 2024 (0,0350 ÷ 0,0519, élément 43642). PlanET V1, forme « FE de l'électricité * 67,4% »
+// du facteur de la Base Empreinte, valeur 2024 (0,0350 ÷ 0,0519, élément 43642). PlanET V1, forme « FE de l'électricité * 67,4% » ;
+// la documentation applique le même ratio à l'amont de l'électricité du ferré (p. 65)
 const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction = quantity<'Fraction'>('0.674')
 
 // Source : produit des deux constantes précédentes : 0,0519 × 67,4 % = 0,0349806 kgCO2e/kWh
@@ -46,5 +47,6 @@ export {
   ELECTRIC_BUS_EMISSION_FACTOR,
   ELECTRIC_CAR_EMISSION_FACTOR,
   ELECTRICITY_APPLIED_EMISSION_FACTOR,
+  ELECTRICITY_EMISSION_FACTOR_SHARE,
   NATURAL_GAS_EMISSION_FACTOR,
 }

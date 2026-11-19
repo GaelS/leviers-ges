@@ -152,7 +152,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Taux de remplissage de 1,165 | les quatre | motif « professionnel » (SDES) | le motif domicile-travail | les données sont des trajets domicile-travail |
 | Potentiel d'écoconduite | efficacité | 15 % unique | une moyenne et non un plafond | le résultat lui est proportionnel |
 | Part du ferré par défaut | les quatre | 82 % en Île-de-France, 24 % ailleurs | une part par territoire | l'EPCI 247800550 est à 89 % francilien et prend 24 % |
-| Facteur du ferré | report modal, sobriété | amont seul, combustion nulle ; 0,187 en Corse | le périmètre exact | si les TER diesel comptent, le gain baisse |
+| Facteur du ferré | report modal, sobriété | amont × 67,4 % (documentation fonctionnelle, p. 65), combustion nulle ; 0,187 en Corse | la combustion des TER diesel et le périmètre du facteur corse | limite reconnue par la documentation (p. 58) ; si les TER diesel comptent, le gain baisse |
 | Facteur des voitures | les quatre | parc, calcul d'essai non reproduit | le facteur du trajet, un calcul reproduit | non chiffré |
 | Pondération Crit'Air | efficacité, électrification | un facteur national par carburant | une pondération par territoire | non chiffré |
 | Bus en CO2 seul | efficacité, électrification | OMINEA 2024, CO2 seul, valeur basse | CH4 et N2O, Base Empreinte | 0,0874 contre 0,0805 kgCO2e/passager.km |
@@ -207,7 +207,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|
 | Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % ») |
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
-| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,17, 1,165, 0,0229, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
+| Valeurs sans source dans le classeur | 55,88, 78, 5,733, 1,17, 1,165, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |
 | Bornes et défauts des paramètres | 0 à 1 pour les fractions, 0 ou plus pour les hausses, obligatoires sans défaut ; `ParametreDeterminants` n'a aucune borne et ses colonnes H et I sont vides, sauf `I8` et `I9` (0) et `I49` (0,1) ; `ElevageDurable!F19:F21` et `ProduitsBois!F19` affichent 0 par une recherche dans cette feuille, y compris sur des cellules vides | des bornes et des défauts donnés par le tableur |
 
@@ -239,6 +239,7 @@ Une ligne par constat sur une cellule ou une forme du classeur. Le code ne dépe
 | `transport_personnes_electrification` | `TrsptPers_Electrification!B15` | le dessin multiplie les facteurs par le taux de remplissage ; la cellule est vide | division par 1,165, par analogie avec les autres onglets |
 | `transport_personnes_report_modal` | `ParametreDeterminants!H34` et `H35` | « inférieur à 100 % » sans dire strict ou large | 100 % accepté |
 | `transport_personnes_report_modal` | forme de la troisième ligne | `PK × 52,14 × r_actifs × (FE_TC − 0)` dessinée hors de l'accolade | ignorée (+22 % si gardée, région 84) |
+| `transport_personnes_report_modal`, `transport_personnes_sobriete_deplacements` | `DonneesReference!G37` | « une partie du poste amont à déterminer » pour l'électricité du ferré, sans valeur | amont × 67,4 %, valeur que fixe la documentation fonctionnelle (p. 65) |
 | `transport_marchandises_efficacite` | `TrsptMarch_Efficacité!B13` | le texte dit « somme », le dessin donne un produit | produit : 15,9 % contre 16,6 % dans un cas de test |
 | `transport_marchandises_report_modal` | formes de `TrsptMarch_ReportModal` | le dessin croise les facteurs ferroviaire et fluvial ; les coefficients 0,8064, 1,0164, 0,8176 et 0,9576 ne figurent dans aucun document REMOVE lu | ferroviaire avec `FE_TFM`, fluvial avec `FE_TFlM`, comme le Scénario global |
 | `transport_marchandises_electrification` | forme de `TrsptMarch_Electrification`, `DonneesReference!D38`, `C40`, `D27` | le dessin multiplie le facteur thermique par le taux de chargement ; `D38` l'exprime par véhicule.km alors que `C40` et `D27` le libellent en « kgeqCO2/t.km » | division par le taux de chargement : la multiplication donnerait 5,2 kgCO2e/t.km au lieu de 0,080 |
