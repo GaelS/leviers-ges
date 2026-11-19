@@ -101,12 +101,12 @@ const estimate = toEstimator(createTemporaryCsvDataSource(toFixtures({})))
 
 describe('estimate, transport_personnes_sobriete_deplacements', () => {
   it.each([
-    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '867.07'],
-    ['le département 01, hors Île-de-France', request('departement', '01'), '867.07'],
-    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '867.07'],
-    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '694.39'],
-    ['le département 75, Île-de-France', request('departement', '75'), '694.39'],
-    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '694.39'],
+    ['la région 84, hors Île-de-France : 24 % de ferré', request('region', '84'), '857.73'],
+    ['le département 01, hors Île-de-France', request('departement', '01'), '857.73'],
+    ['l’EPCI 200000001, hors Île-de-France', request('epci', '200000001'), '857.73'],
+    ['la région 11, Île-de-France : 82 % de ferré', request('region', '11'), '662.47'],
+    ['le département 75, Île-de-France', request('departement', '75'), '662.47'],
+    ['l’EPCI 200000002, Île-de-France', request('epci', '200000002'), '662.47'],
   ])('évite pour %s : %s tCO2e par an', (_label, input, expected) => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
@@ -114,7 +114,7 @@ describe('estimate, transport_personnes_sobriete_deplacements', () => {
   it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 759,89 tCO2e', () => {
     const parameters = { ...TENTH_LESS, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
-      '759.89',
+      '736.53',
     )
   })
 
@@ -142,7 +142,7 @@ describe('estimate, transport_personnes_sobriete_deplacements', () => {
     expect({
       rail: assumptions['railEmissionFactor']?.value,
       bus: assumptions['busEmissionFactor']?.value,
-    }).toEqual({ rail: '0.0229', bus: '0.08' })
+    }).toEqual({ rail: '0.0154346', bus: '0.08' })
   })
 
   it.each([

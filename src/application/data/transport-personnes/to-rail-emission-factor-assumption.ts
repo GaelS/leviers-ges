@@ -7,7 +7,7 @@ function toRailEmissionFactorAssumption(railEmissionFactor: RailEmissionFactor):
       value: railEmissionFactor.emissionFactor.toFixed(),
       source: railEmissionFactor.isCorsican
         ? 'Base Empreinte, Corsican passenger train, in kgCO2e per passenger-km. Design choice, not validated: only a territory entirely in Corsica takes it, one straddling Corsica and another region takes the mainland factor'
-        : 'Base Empreinte, TER average 2022, upstream electricity only (manufacturing 0.00479 not counted), in kgCO2e per passenger-km. Design choice, not validated',
+        : 'Base Empreinte, TER average 2022, upstream electricity 0.0229 times the 67.4% share of the PlanET functional documentation, p. 65 (manufacturing 0.00479 not counted, combustion nil), in kgCO2e per passenger-km',
       limit:
         'One value for all rail (metro, tram, train): a territory with a metro or tram network has its own, usually lower, factor',
     },
