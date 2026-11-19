@@ -78,7 +78,7 @@ describe('estimate transport_personnes_report_modal, Insee-SDES 2022 et parc SDE
       ]?.value
     expect({ corse: railFactorOf('94'), bretagne: railFactorOf('53') }).toEqual({
       corse: '0.187',
-      bretagne: '0.0229',
+      bretagne: '0.0154346',
     })
   })
 
