@@ -115,7 +115,7 @@ describe('estimate, transport_personnes_report_modal', () => {
     expect(estimate(input)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
-  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 543,61 tCO2e', () => {
+  it('prend la part ferrée de la requête plutôt que celle par défaut : 60 % donnent 566,97 tCO2e', () => {
     const parameters = { ...MIXED_SHIFT, railShareFraction: '0.6' }
     expect(estimate(request('region', '84', parameters))._unsafeUnwrap().reduction.toFixed()).toBe(
       '566.97',

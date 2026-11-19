@@ -64,7 +64,7 @@ describe('estimate transport_personnes_report_modal, Insee-SDES 2022 et parc SDE
     },
   )
 
-  it('avec 60 % de ferré saisi, la région 84 évite 235 784,77 tCO2e', () => {
+  it('avec 60 % de ferré saisi, la région 84 évite 242 160,85 tCO2e', () => {
     const parameters = { ...MIXED_SHIFT, railShareFraction: '0.6' }
     expect(estimation({ level: 'region', code: '84', parameters }).reduction.toFixed()).toBe(
       '242160.85',
