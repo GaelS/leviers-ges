@@ -18,7 +18,11 @@ const LEVERS = {
   haies: { region: 'no_open_question', departement: 'no_open_question', epci: 'no_open_question' },
   pratiques_stockantes: { region: 'workaround', departement: 'workaround', epci: 'workaround' },
   occupation_des_sols: { region: 'not_computed', departement: 'not_computed', epci: 'not_computed' },
-  produits_bois: { region: 'no_open_question', departement: 'no_open_question', epci: 'not_computed' },
+  produits_bois: {
+    region: 'no_open_question',
+    departement: 'no_open_question',
+    epci: 'no_open_question',
+  },
   residentiel_renovation: { region: 'not_computed', departement: 'not_computed', epci: 'not_computed' },
   residentiel_changement_systeme_chauffage: {
     region: 'not_computed',

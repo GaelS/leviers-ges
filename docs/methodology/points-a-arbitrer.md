@@ -12,7 +12,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 |   | Fertilisation azotée (`fertilisation_azotee`) | ❓ | ❓ | ❌ |
 |   | Élevage durable (`elevage_durable`) | ❓ | ❓ | ❌ |
 |   | Haies (`haies`) | ✅ | ✅ | ✅ |
-|   | Produits bois (`produits_bois`) | ✅ | ✅ | ❌ |
+|   | Produits bois (`produits_bois`) | ✅ | ✅ | ✅ |
 |   | Pratiques stockantes (`pratiques_stockantes`) | ❓ | ❓ | ❓ |
 |   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❌ |
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
@@ -52,7 +52,6 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 |---|---|---|---|
 | `fertilisation_azotee` | EPCI | la ventilation par la surface de culture hors bio (rapport territoire/département, forme du tableur) est validée par le CGDD (Brice) ; reste à charger les surfaces : SAU du recensement agricole (déjà versionnée) et SAU en agriculture biologique de l'Agence Bio (documentation, p. 38), non versionnée. Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45) | `LIMITEE` |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | EPCI : OUI |
-| `produits_bois` | EPCI | la ventilation par la surface de forêt (`S_forêt_EPCI / S_forêt_dép`) est validée par le CGDD (Brice, Laurent) ; les surfaces de forêt par couple EPCI-département (jeu ALDO communal) sont versionnées mais le levier ne les lit pas encore ; EPCI du millésime ALDO : 18 EPCI de métropole du référentiel absents, 27 d'ALDO hors référentiel (environ 1,5 % de la forêt) ; un EPCI à cheval sur plusieurs départements se calculant département par département (documentation, p. 71) | `LIMITEE` |
 | `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels à l'EPCI, ou une clé de répartition validée | EPCI : OUI |
 | `transport_marchandises_sobriete_logistique` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) ; le tableur déclare ces niveaux hors périmètre | hors périmètre |
 | `transport_marchandises_report_modal` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) | hors périmètre |
@@ -118,7 +117,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Surfaces négatives | refusées | un net négatif, comme celui des haies | non chiffré ; choix de conception, non validé |
 | Pratiques écartées | labour occasionnel, bandes enherbées, intensification des prairies permanentes peu productives | leur prise en compte | écartées par la documentation (p. 72) |
 
-### Produits bois (`produits_bois`, région, département)
+### Produits bois (`produits_bois`, région, département, EPCI)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
@@ -126,6 +125,8 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Sortie de stock supposée invariante | invariante | l'effet de la hausse de production | non chiffré ; limite reconnue par la documentation fonctionnelle PlanET (pp. 72, 78, à maintenir) |
 | Bois d'industrie absent pour 2A, 2B, 75, 93, 94 | compté 0 | les valeurs | 3 milliers de m³ sur 10 311 |
 | Millésime | 2022 | 2024 existe pour les tC | non chiffré |
+| Ventilation à l'EPCI | récolte du département × part de la forêt de l'EPCI (ALDO, tous peuplements), validée par le CGDD | la récolte par EPCI | proxy ; un EPCI à cheval se calcule département par département (documentation, p. 71) |
+| EPCI du millésime ALDO | 18 EPCI de métropole du référentiel renvoient `missing_data` | les EPCI à jour dans ALDO | 27 EPCI d'ALDO hors référentiel, environ 1,5 % de la forêt, non attribués |
 | Source des tC | OMINEA 2026 | l'OMINEA 2025 citée par le tableur (tableau 83, p. 131) | non chiffré |
 | Hausse sans borne | acceptée | une borne | une baisse donne un stockage négatif |
 

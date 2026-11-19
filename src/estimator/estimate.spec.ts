@@ -337,11 +337,12 @@ describe('estimate', () => {
       } as RequestInput
     }
 
-    it('refuse l’EPCI, non calculé, sans lire de données', () => {
+    it('aiguille l’EPCI vers son levier, qui lit les surfaces de forêt', () => {
       expect(withWood(produitsBoisRequest({ level: 'epci' }))._unsafeUnwrapErr()).toEqual({
-        kind: 'level_not_computed',
-        lever: 'produits_bois',
-        level: 'epci',
+        kind: 'invalid_dataset',
+        dataset: 'produits-bois/foret-epci-departement',
+        reason: 'unknown_dataset',
+        detail: 'foret-epci-departement.csv',
       })
     })
 
