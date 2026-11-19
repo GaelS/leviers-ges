@@ -71,6 +71,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
 | Pêche comprise dans les produits pétroliers | comprise, comme le tableur | la part agricole seule | 9,0 % des produits pétroliers de métropole, 22 % en Bretagne |
+| Facteur de l'électricité : millésime | mix moyen 2024 × 67,4 % | la valeur de l'année du calcul | 0,0519 (2024) à 0,058 (2023) avant le coefficient de 67,4 % |
 | Facteur du fioul lourd pour tous les produits pétroliers | fioul lourd (78) | le facteur des engins agricoles | OMINEA : 74,52 et 72,48, soit 4,5 % et 7,1 % de moins |
 | Produits pétroliers répartis par la part de SAU | part de SAU | la part de gazole non routier | écart de 3,0 points en médiane, 11,6 au 90e centile |
 | Secret statistique | lignes secrètes à 0 | les valeurs sous secret | électricité : 38 % des lignes IRIS ; gaz : 66 % |
@@ -136,6 +137,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
 | CEREN indisponible | bilan SDES 2024 | le CEREN | concorde à 5 % près au national ; le SDES est constaté, le CEREN à climat normal |
+| Facteur de l'électricité : millésime | mix moyen 2024 × 67,4 % | la valeur de l'année du calcul | 0,0519 (2024) à 0,058 (2023) avant le coefficient de 67,4 % |
 | Répartition fioul 80 % / GPL 20 % | part nationale du CEREN 2024 | un CEREN par région ou une autre clé | change les deux vecteurs |
 | Fioul et GPL départementaux | ventes 2024 de FOD et GPL | les consommations | ventes tous clients, unité non publiée : la Haute-Corse vend 27 fois la Corse-du-Sud |
 | Bois non compté | non compté | sa consommation | non chiffré |
