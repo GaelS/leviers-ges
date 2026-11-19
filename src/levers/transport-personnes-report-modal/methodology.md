@@ -52,7 +52,7 @@ Les trois reports sont obligatoires. Les deux reports depuis la voiture ne dépa
 
 ## Données
 
-Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'efficacité : passagers.km en voiture, facteurs d'émission du parc de voitures et de bus. Le levier ne lit pas les passagers.km de transport en commun : le report ajoute des voyageurs au réseau existant.
+Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'efficacité : passagers.km en voiture, facteurs d'émission du parc de voitures et de bus. Le levier lit aussi les passagers.km de transport en commun, pour le report des transports en commun vers les modes actifs ; le report de la voiture ajoute des voyageurs au réseau existant sans modifier cette base.
 
 ## Choix faits
 
@@ -62,10 +62,10 @@ Les jeux `transport-personnes/regions`, `departements` et `epcis` du levier d'ef
 | 2 | Un territoire dont toutes les communes sont en Corse prend le facteur corse, les autres le facteur continental | `DonneesReference!D37` ; un territoire à cheval sur la Corse et une autre région, ou sans commune connue, prend le facteur continental : choix de conception, non validé |
 | 3 | La dernière ligne dessinée est le report des transports en commun vers les modes actifs, sur les passagers.km en transport en commun | réponse de Laurent (CGDD) au document du 29 octobre 2026 ; le tableur et la documentation fonctionnelle (p. 60) la dessinent avec les passagers.km en voiture |
 | 4 | Le report des transports en commun vers les modes actifs porte sur les passagers.km en transport en commun initiaux, sans enchaîner avec le report de la voiture vers les transports en commun | choix de conception, non validé |
-| 4 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
-| 5 | Le facteur du transport en commun pondère le ferré et le bus avec la part du ferré, la même qui sert à l'efficacité | `ParametreDeterminants` ligne 38 ; part par défaut renvoyée dans `appliedAssumptions.railShare` |
-| 6 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 55,6 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −25 087,34 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
-| 7 | Les passagers.km comptent pour moitié côté résidence et pour moitié côté travail | `TrsptPers_ReportModal!B13` |
+| 5 | Un seul facteur de bus : la moyenne du parc, en kgCO2e par véhicule.km ÷ 10, sans distinguer diesel, gaz et électrique | cohérent avec le levier d'efficacité |
+| 6 | Le facteur du transport en commun pondère le ferré et le bus avec la part du ferré, la même qui sert à l'efficacité | `ParametreDeterminants` ligne 38 ; part par défaut renvoyée dans `appliedAssumptions.railShare` |
+| 7 | Le résultat peut être négatif si le transport en commun émet plus que la voiture : en Corse, dès que la part du ferré saisie dépasse 55,6 % (région 94, 100 % vers les transports en commun et 100 % de ferré : −25 087,34 tCO2e) | aucune borne dans le tableur ; aucune alerte renvoyée |
+| 8 | Les passagers.km comptent pour moitié côté résidence et pour moitié côté travail | `TrsptPers_ReportModal!B13` |
 
 ## Cas de test chiffrés
 
