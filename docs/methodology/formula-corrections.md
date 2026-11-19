@@ -39,6 +39,7 @@ baisse totale =
 | Tableur | chaque mode porte le facteur de l'autre |
 | Correction | `FE TFM` pour le ferroviaire, `FE TFlM` pour le fluvial |
 | Raison | le Scénario global applique « report ferroviaire × 1,0164 » et « report fluvial × 0,9576 » |
+| Coefficients | expliqués par la documentation fonctionnelle (pp. 64-65) : distances ×1,21 (ferroviaire) et ×1,14 (fluvial), part routière de 16 %, part de l'autre mode de 84 % |
 
 Formule du tableur :
 

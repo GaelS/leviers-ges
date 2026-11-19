@@ -1,6 +1,6 @@
 # Points à arbitrer
 
-Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit, levier par levier, où le calcul est possible, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs existants. Il constate ; il ne décide rien. Les réponses du CGDD (Brice et Laurent, novembre 2026) et la documentation fonctionnelle PlanET (juin 2026) tranchent une partie des points : leurs lignes sont retirées ou mises à jour. « Limite reconnue » signale une limite que la section 7.8 de la documentation déclare à maintenir ou à faire évoluer.
+Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit, levier par levier, où le calcul est possible, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs existants. Il constate ; il ne décide rien. Les réponses du CGDD (Brice et Laurent) au document de questions du 29 octobre 2026 et la documentation fonctionnelle PlanET (juin 2026) tranchent une partie des points : leurs lignes sont retirées ou mises à jour. « Limite reconnue » signale une limite que la documentation déclare, dans sa section 7.8 ou dans les limites du levier concerné, à maintenir ou à faire évoluer.
 
 ✅ calculé, aucune question ouverte. ❓ calculé grâce à une hypothèse nommée (`docs/methodology/assumptions.md`) ou à un choix décrit en partie 2. ❌ non calculé, raison en partie 1.
 
@@ -108,7 +108,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) |
+| Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) ; le webinaire du 25/01/2021 (`haies/methodology.md`) donne la même valeur basse |
 
 ### Produits bois (`produits_bois`, région, département)
 
@@ -171,6 +171,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|---|---|
 | Taux de chargement des poids lourds | les quatre | 8,1 t (2019) | la valeur SNBC 3 | 8,7 t en 2030 : −7 % sur le facteur par t.km |
 | Courte ou longue distance | les quatre | route et ville, type de trajet par défaut du tableur (`FE_transports!A22`, `A31`) | le trajet réel du fret, que le tableur ne nomme pas | la longue distance donne un facteur de 24,5 % plus bas (0,0796 contre 0,1055 kgCO2e/t.km) |
+| Flux avec l'étranger | les quatre | trafic interne + 50 % du trafic chargé ou déchargé dans la région, étranger compris (SDES, `reg_type_flux`) | la règle de la documentation fonctionnelle (p. 63) : moitié des tonnes.km chargées et moitié des déchargées, importations affectées à 100 % à la région de destination | 239,97 contre 171,71 milliards de t.km avec ou sans l'étranger ; la règle des importations n'est pas vérifiée dans le jeu SDES |
 | Poids lourds non diesel au facteur diesel | les quatre | diesel | un facteur par carburant | 10 462 au gaz (1,70 %), 500 à l'essence (0,08 %), 209 « inconnu » |
 | Biodiesel, vignettes sans correspondance | les quatre | écartés de la moyenne | leur facteur | 2 485 poids lourds biodiesel ; 3 à 14 % du parc diesel d'une région |
 | CO2 seul | les quatre | CO2 | CH4 et N2O | environ +1,7 % |
@@ -188,8 +189,8 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
-| Tonnes des sites ou déchets du territoire | les deux | sites de traitement (IREP 2022), confirmé par le CGDD (Laurent) et la documentation (p. 68) | les déchets collectés, que la collectivité pourrait fournir | 911 EPCI sur 1 255 sans site ont un résultat nul ; Paris au département ; approche cadastrale reconnue par la documentation (p. 70) |
-| Terres et pierres sans facteur | les deux | terme non calculé, le CGDD confirmant qu'il n'existe pas de facteur d'émission | un facteur pour 20 02 02 | 28,2 % du stockage ; région 84 : 51 700,6 t ; Île-de-France : 2 527 010,76 t |
+| Tonnes des sites ou déchets du territoire | les deux | sites de traitement (IREP 2022), confirmé par Laurent et la documentation (p. 68) | les déchets collectés, que la collectivité pourrait fournir | 911 EPCI sur 1 255 sans site ont un résultat nul ; Paris au département ; approche cadastrale reconnue par la documentation (p. 70) |
+| Terres et pierres sans facteur | les deux | terme non calculé, Laurent confirmant qu'il n'existe pas de facteur d'émission | un facteur pour 20 02 02 | 28,2 % du stockage ; région 84 : 51 700,6 t ; Île-de-France : 2 527 010,76 t |
 | Incinération sans récupération (D10) | les deux | comptée avec le stockage | une séparation | 1 207 376 t contre 61 517 t dans SINOE 2021 (19,6 fois) ; limite reconnue par la documentation fonctionnelle PlanET (p. 69) |
 | Facteurs d'une famille voisine | les deux | 23 codes sur 35 | des facteurs propres | non chiffré |
 | Récupération d'énergie non créditée | les deux | zéro, comme le tableur | un crédit | limite assumée par le tableur |

@@ -32,7 +32,7 @@ Les deux sont obligatoires et indépendantes, sans valeur par défaut ni valeur 
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Les tonnes sont celles des sites de traitement situés dans le territoire | hypothèse nommée `wasteScope` ; renvoyé dans `appliedAssumptions.wasteScope` |
+| 1 | Les tonnes sont celles des sites de traitement situés dans le territoire | hypothèse nommée `wasteScope` ; renvoyé dans `appliedAssumptions.wasteScope` ; confirmée par Laurent (CGDD) et par la documentation fonctionnelle (p. 68) |
 | 2 | Les deux « Tonnes de DM type de déchet » de la forme sont lues comme les tonnes du mode du terme : stockage et incinération sans récupération pour le premier, incinération avec récupération pour le second | `SobriétéDéchets!A19` et `A20` donnent chaque pourcentage par mode ; choix de conception, non validé |
 | 3 | Un terme dont le facteur manque n'est pas calculé | « Pas de FE disponible » dans `FE_déchets` ; tonnes ignorées renvoyées dans `appliedAssumptions.wasteTonnesWithoutEmissionFactor` |
 | 4 | La correction 4 de `docs/methodology/formula-corrections.md` (« 1 − % » du Scénario global) ne concerne pas ce levier : il calcule la réduction seule, pas le reste des déchets après sobriété | `Scénario global Déchets` hors périmètre |
