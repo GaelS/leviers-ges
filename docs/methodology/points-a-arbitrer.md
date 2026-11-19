@@ -175,7 +175,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Leviers concernés | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|---|
-| Taux de remplissage de 1,4 | les quatre | valeur « courte distance » de la Base Carbone (v23.11, p. 173, ENTD 2008), valeur par défaut du domicile-travail selon la documentation (pp. 58 et 60) ; remplace le 1,165 du tableur (SDES, motif « Professionnel ») | « mixte France » (1,6) ou une valeur domicile-travail | interprétation de « courte distance » à confirmer ; le taux plus récent du SDES (2018-2019) est plus bas |
+| Taux de remplissage de 1,4 | les quatre | valeur « courte distance » de la Base Carbone (v23.11, p. 173, ENTD 2008), valeur par défaut du domicile-travail selon la documentation (pp. 58 et 60) ; remplace le 1,165 du tableur (SDES, motif « Professionnel ») | « mixte France » (1,6) ou une valeur domicile-travail | valeur « courte distance » validée par l'équipe le 2026-11-19 ; le taux plus récent du SDES (2018-2019) est plus bas |
 | Potentiel d'écoconduite | efficacité | 15 % unique | une moyenne et non un plafond | le résultat lui est proportionnel |
 | Part du ferré par défaut | les quatre | 82 % en Île-de-France, 24 % ailleurs | une part par territoire | l'EPCI 247800550 est à 89 % francilien et prend 24 % |
 | Facteur du ferré | report modal, sobriété | amont × 67,4 % (documentation fonctionnelle, p. 65), combustion nulle ; 0,187 en Corse | la combustion des TER diesel et le périmètre du facteur corse | limite reconnue par la documentation (p. 58) ; si les TER diesel comptent, le gain baisse |
