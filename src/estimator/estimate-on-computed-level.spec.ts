@@ -19,10 +19,10 @@ describe('estimateOnComputedLevel', () => {
 
   it('refuse un niveau non calculé sans appeler le levier', () => {
     const estimateLever = vi.fn(() => ok(ESTIMATE_RESULT))
-    const request = { id: 'fertilisation_azotee', territory: { level: 'epci' } } as const
+    const request = { id: 'elevage_durable', territory: { level: 'epci' } } as const
     expect(estimateOnComputedLevel(request, estimateLever)._unsafeUnwrapErr()).toEqual({
       kind: 'level_not_computed',
-      lever: 'fertilisation_azotee',
+      lever: 'elevage_durable',
       level: 'epci',
     })
     expect(estimateLever).not.toHaveBeenCalled()

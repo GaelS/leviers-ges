@@ -871,13 +871,16 @@ describe('estimate', () => {
       expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5733')
     })
 
-    it('refuse un EPCI, niveau non calculé', () => {
+    it('aiguille l’EPCI vers son levier, qui lit les communes et les surfaces', () => {
       const result = withNitrogen({
         id: 'fertilisation_azotee',
         territory: { level: 'epci', code: '200000001' },
         parameters: { nitrogenReductionFraction: '0.1' },
       })
-      expect(result._unsafeUnwrapErr()).toMatchObject({ kind: 'level_not_computed' })
+      expect(result._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        reason: 'unknown_dataset',
+      })
     })
 
     it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {

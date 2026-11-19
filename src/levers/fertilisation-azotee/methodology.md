@@ -1,6 +1,6 @@
 # Fertilisation azotée
 
-Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas encore calculé (`not_computed`) : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département. Le CGDD (Brice) valide cette ventilation par les surfaces de culture hors agriculture biologique ; elle n'est pas encore implémentée dans le levier ; les surfaces sont versionnées : SAU du recensement agricole (`data/surface-agricole-utile`) et SAU en agriculture biologique de l'Agence Bio 2024, par couple EPCI-département et par département (documentation fonctionnelle, p. 38 ; voir « Données »). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45). Voir `docs/methodology/points-a-arbitrer.md`. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `fertilisation_azotee`. Niveaux : région, département et EPCI. À l'EPCI, la masse livrée est ventilée depuis le département par le rapport des surfaces de culture hors agriculture biologique, validé par le CGDD (Brice) ; un EPCI à cheval sur plusieurs départements se calcule département par département (documentation fonctionnelle, p. 45). Voir `docs/methodology/points-a-arbitrer.md`. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
@@ -14,7 +14,15 @@ Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI 
 | `M` | « masse de fertilisants azotés livrés au territoire » (livrée, pas épandue) | kg d'azote par an, lue en tonnes d'azote |
 | `FE` | « FE par kg de fertilisant minéral azoté épandu » | 5,733 kgCO2e par kg d'azote |
 
-La formule est lue dans les formes de la feuille `ChgtPratiques` ; la cellule « Formule » ne contient que « Réduction GES = ». Deux formes sont dessinées : la réduction, et la masse livrée au territoire, ventilée depuis la masse livrée au département par le rapport des surfaces de culture hors bio. Cette seconde forme ne sert qu'à l'EPCI, qui n'est pas calculé : région et département prennent leur masse livrée directement. `M` est lue en tonnes d'azote, multipliée par 1 000 pour les kilogrammes, puis le résultat est divisé par 1 000.
+La formule est lue dans les formes de la feuille `ChgtPratiques` ; la cellule « Formule » ne contient que « Réduction GES = ». Deux formes sont dessinées : la réduction, et la masse livrée au territoire, ventilée depuis la masse livrée au département par le rapport des surfaces de culture hors bio. Cette seconde forme sert à l'EPCI : région et département prennent leur masse livrée directement. `M` est lue en tonnes d'azote, multipliée par 1 000 pour les kilogrammes, puis le résultat est divisé par 1 000.
+
+À l'EPCI `e`, pour chaque département `d` où il a de la SAU :
+
+```
+M(e) = Σ_d  N(d) × max(0, SAU(e,d) − bio(e,d)) ÷ (SAU(d) − bio(d))
+```
+
+`N(d)` est l'azote livré au département (campagne 2021-2022), `SAU(e,d)` la SAU des communes de l'EPCI dans `d` et `SAU(d)` celle du département (recensement agricole 2020), `bio(e,d)` et `bio(d)` la surface bio et en conversion 2024 de l'Agence Bio. La part d'un EPCI dans un département est plafonnée à 1 ; elle vaut 0 si `SAU(d) − bio(d)` n'est pas positif.
 
 La formule est un proxy (`B12`) : `B13` utilise « la masse de fertilisants minéraux azotés livrés et non épandus car la donnée disponible concerne uniquement les livraisons ».
 
@@ -42,7 +50,7 @@ Jeux `fertilisation-azotee/regions` et `fertilisation-azotee/departements`, cons
 | Région | tonnes d'azote livrées, moyenne des campagnes 2021-2022 et 2022-2023 |
 | Département | tonnes d'azote livrées, campagne 2021-2022 seule |
 
-Deux jeux de surface bio, non lus par le levier à ce stade, construits par le même script depuis les exports Agence Bio versionnés (`sources/agence-bio-surfaces-epci-2024.csv`, `…-departements-2024.csv`, lignes de l'année 2024) :
+Deux jeux de surface bio, lus par le levier à l'EPCI, construits par le même script depuis les exports Agence Bio versionnés (`sources/agence-bio-surfaces-epci-2024.csv`, `…-departements-2024.csv`, lignes de l'année 2024) :
 
 | Jeu | Contenu |
 |---|---|
@@ -60,7 +68,10 @@ Les 50 couples EPCI-département sous secret statistique (1 ou 2 exploitations) 
 | 3 | Les livraisons tiennent lieu d'épandage | proxy du tableur ; `B13` signale le problème des ports et entrepôts d'engrais |
 | 4 | Les départements 2A et 2B n'ont pas de livraison : le levier renvoie `missing_data` | la Corse est publiée sous le code 20 sans distinguer 2A et 2B ; choix de conception, non validé |
 | 5 | Le facteur d'émission est celui de la France continentale, y compris pour la Corse | Base Empreinte ; renvoyé dans `appliedAssumptions.nitrogenSpreadingEmissionFactor` |
-| 6 | La réduction est bornée de 0 à 1 | par construction ; une note antérieure citait une borne de 25 % (surplus national d'azote, bilan ClimAgri), absente du tableur actuel |
+| 6 | À l'EPCI, la masse est la somme des parts de chaque département, la part étant la SAU hors bio de l'EPCI dans le département sur celle du département | `ChgtPratiques!B13` ; documentation, p. 45 ; renvoyé dans `appliedAssumptions.nitrogenCampaigns` (campagne unique) |
+| 7 | La part d'un EPCI est plafonnée à 1, et vaut 0 quand la SAU hors bio du département n'est pas positive (Paris, Hauts-de-Seine) | choix de conception, non validé |
+| 8 | Un EPCI sous secret statistique (1 ou 2 fermes bio), ou dont un département n'a pas de livraison (Corse), renvoie `missing_data` ; un EPCI sans SAU renvoie 0 | choix de conception, non validé |
+| 9 | La réduction est bornée de 0 à 1 | par construction ; une note antérieure citait une borne de 25 % (surplus national d'azote, bilan ClimAgri), absente du tableur actuel |
 
 ## Cas de test chiffrés
 
@@ -77,6 +88,13 @@ Les 50 couples EPCI-département sous secret statistique (1 ou 2 exploitations) 
 | département 28 (Eure-et-Loir, 58 416 t), 10 % | 33 489,89 tCO2e |
 | département 75 (Paris, 17 415 t pour 1 ha de SAU), 10 % | 9 984,02 tCO2e |
 | département 35 (Ille-et-Vilaine, 32 568 t), 10 % | 18 671,23 tCO2e |
+| EPCI 200000001, jeu de test (48 % de la SAU hors bio du département 01 : 288 t), 10 % | 165,11 tCO2e |
+| EPCI 200000002, jeu de test, à cheval sur 01 et 69 (324 + 500 t), 10 % | 472,4 tCO2e |
+| EPCI 200000172 (département 74), 10 % | 20,47 tCO2e |
+| EPCI 200046977 (département 69), 10 % | 310,47 tCO2e |
+| EPCI 243500139 (département 35), 10 % | 1 567,33 tCO2e |
+| EPCI 200006682, à cheval sur 21 et 71, 10 % | 817,69 tCO2e |
+| EPCI 200054781 (Métropole du Grand Paris) | `missing_data` : bio du département 91 sous secret statistique |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -89,6 +107,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Corse départementale | 2A et 2B sans résultat ; la région 94 est calculée (215 et 136 t) |
 | Somme des départements et des régions | 1 746 534 t avec la Corse contre 1 746 521 t pour les 13 régions en 2021-2022 |
 | Incertitude du facteur | 400 % dans la Base Empreinte |
-| Pas de ventilation sous le département | l'EPCI n'est pas encore calculé ; le CGDD valide la ventilation par les surfaces de culture hors bio, à implémenter |
+| Ventilation à l'EPCI | proxy : l'azote du département réparti par la SAU hors bio, alors qu'il est livré où est le distributeur ; SAU de 2020 contre bio de 2024 ; Paris et Hauts-de-Seine (bio supérieure à la SAU) ne reçoivent aucune part à l'EPCI |
+| EPCI sans résultat | 50 couples EPCI-département sous secret statistique, dont celui de la Métropole du Grand Paris dans le département 91 ; la Corse (2A, 2B) n'a pas de livraison |
 | Métropole seulement | pas de calcul pour les départements d'outre-mer |
 | Leviers du secteur | les leviers de l'agriculture s'additionnent sans interaction (feuille `SG Agriculture`) |

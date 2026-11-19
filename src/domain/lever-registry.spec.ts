@@ -22,12 +22,12 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 26 workaround et 20 not_computed', () => {
+  it('compte 17 no_open_question, 27 workaround et 19 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 26, notComputed: 20 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 27, notComputed: 19 })
   })
 
   it('compte 18 leviers calculables sur au moins un niveau', () => {
@@ -48,14 +48,14 @@ describe('lever-registry', () => {
   })
 
   it('donne le statut d’un levier à un niveau', () => {
-    expect(getStatus({ lever: 'fertilisation_azotee', level: 'epci' })).toBe('not_computed')
+    expect(getStatus({ lever: 'elevage_durable', level: 'epci' })).toBe('not_computed')
     expect(getStatus({ lever: 'haies', level: 'epci' })).toBe('no_open_question')
     expect(getStatus({ lever: 'transport_marchandises_efficacite', level: 'region' })).toBe('workaround')
   })
 
   it('les niveaux calculés sont typés par levier', () => {
     expectTypeOf<ComputedLevels<'haies'>>().toEqualTypeOf<Level>()
-    expectTypeOf<ComputedLevels<'fertilisation_azotee'>>().toEqualTypeOf<'region' | 'departement'>()
+    expectTypeOf<ComputedLevels<'elevage_durable'>>().toEqualTypeOf<'region' | 'departement'>()
     expectTypeOf<ComputedLevels<'transport_marchandises_report_modal'>>().toEqualTypeOf<'region'>()
     expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<never>()
   })
