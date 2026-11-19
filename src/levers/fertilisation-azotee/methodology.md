@@ -1,6 +1,6 @@
 # Fertilisation azotée
 
-Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas encore calculé (`not_computed`) : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département. Le CGDD (Brice) valide cette ventilation par les surfaces de culture hors agriculture biologique ; elle n'est pas encore implémentée, faute de surfaces versionnées : SAU du recensement agricole (déjà dans `data/surface-agricole-utile`) et SAU en agriculture biologique de l'Agence Bio (documentation fonctionnelle, p. 38). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45). Voir `docs/methodology/points-a-arbitrer.md`. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas encore calculé (`not_computed`) : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département. Le CGDD (Brice) valide cette ventilation par les surfaces de culture hors agriculture biologique ; elle n'est pas encore implémentée dans le levier ; les surfaces sont versionnées : SAU du recensement agricole (`data/surface-agricole-utile`) et SAU en agriculture biologique de l'Agence Bio 2024, par couple EPCI-département et par département (documentation fonctionnelle, p. 38 ; voir « Données »). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45). Voir `docs/methodology/points-a-arbitrer.md`. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
@@ -41,6 +41,15 @@ Jeux `fertilisation-azotee/regions` et `fertilisation-azotee/departements`, cons
 |---|---|
 | Région | tonnes d'azote livrées, moyenne des campagnes 2021-2022 et 2022-2023 |
 | Département | tonnes d'azote livrées, campagne 2021-2022 seule |
+
+Deux jeux de surface bio, non lus par le levier à ce stade, construits par le même script depuis les exports Agence Bio versionnés (`sources/agence-bio-surfaces-epci-2024.csv`, `…-departements-2024.csv`, lignes de l'année 2024) :
+
+| Jeu | Contenu |
+|---|---|
+| `fertilisation-azotee/organic-epci-departements` | hectares bio et en conversion 2024 par couple EPCI-département, 1 248 lignes ; un EPCI à cheval a une ligne par département |
+| `fertilisation-azotee/organic-departements` | hectares bio et en conversion 2024 par département, 96 lignes (2 713 507,61 ha) |
+
+Les 50 couples EPCI-département sous secret statistique (1 ou 2 exploitations) et les lignes sans EPCI (`NA`, `ZZZZZZZZZ`, `992367730`) sont absents : le levier renverra `missing_data` pour ces EPCI. La somme des EPCI vaut 2 710 987,80 ha, 2 519,82 de moins que les départements : 247,23 ha portés par deux lignes sans code EPCI exploitable (`ZZZZZZZZZ` en Vendée, 101,34 ha ; `992367730` en Moselle, 145,90 ha, qui ressemble à un EPCI dont le code n'a pas le préfixe 2) et le reste sous secret statistique. Les totaux régionaux recoupent ceux de l'observatoire de l'Agence Bio à moins de 0,1 % près. Millésime 2024 pour la bio, 2020 pour la SAU du recensement : aucun EPCI n'a plus de bio que de SAU.
 
 ## Choix faits
 
