@@ -37,6 +37,10 @@ describe('estimate fertilisation_azotee, UNIFA et France Fertilisants', () => {
     ['departement', '28', '33489.89'],
     ['departement', '75', '9984.02'],
     ['departement', '35', '18671.23'],
+    ['epci', '200000172', '20.47'],
+    ['epci', '200046977', '310.47'],
+    ['epci', '243500139', '1567.33'],
+    ['epci', '200006682', '817.69'],
   ] as const)(
     'à 10 %% de réduction, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -51,6 +55,14 @@ describe('estimate fertilisation_azotee, UNIFA et France Fertilisants', () => {
     expect(estimation({ level, code })._unsafeUnwrapErr()).toMatchObject({
       kind: 'missing_data',
       dataset: 'fertilisation-azotee/departements',
+    })
+  })
+
+  it('refuse l’EPCI 200054781 : sa surface bio dans le département 91 est sous secret statistique', () => {
+    expect(estimation({ level: 'epci', code: '200054781' })._unsafeUnwrapErr()).toEqual({
+      kind: 'missing_data',
+      dataset: 'fertilisation-azotee/organic-epci-departements',
+      key: '200054781-91',
     })
   })
 })

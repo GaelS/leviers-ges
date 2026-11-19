@@ -16,7 +16,7 @@ describe('ensureLevelComputed', () => {
   })
 
   it.each([
-    ['fertilisation_azotee', 'epci'],
+    ['elevage_durable', 'epci'],
     ['transport_marchandises_report_modal', 'departement'],
     ['occupation_des_sols', 'region'],
   ] as const)('refuse %s au niveau %s', (lever, level) => {
@@ -28,7 +28,7 @@ describe('ensureLevelComputed', () => {
   })
 
   it('le niveau rendu exclut les niveaux non calculés du levier', () => {
-    const computed = ensureLevelComputed({ lever: 'fertilisation_azotee', level: 'region' })
+    const computed = ensureLevelComputed({ lever: 'elevage_durable', level: 'region' })
     expectTypeOf(computed._unsafeUnwrap()).toEqualTypeOf<'region' | 'departement'>()
   })
 })

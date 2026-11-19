@@ -9,7 +9,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Secteur | Levier | Région | Département | EPCI |
 |---|---|---|---|---|
 | Agriculture et bois | Bâtiments et machines agricoles (`batiments_machines_agricoles`) | ✅ | ✅ | ✅ |
-|   | Fertilisation azotée (`fertilisation_azotee`) | ❓ | ❓ | ❌ |
+|   | Fertilisation azotée (`fertilisation_azotee`) | ❓ | ❓ | ❓ |
 |   | Élevage durable (`elevage_durable`) | ❓ | ❓ | ❌ |
 |   | Haies (`haies`) | ✅ | ✅ | ✅ |
 |   | Produits bois (`produits_bois`) | ✅ | ✅ | ✅ |
@@ -50,7 +50,6 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 | Levier | Niveaux à débloquer | Ce qui manque | Ce que le tableur dit |
 |---|---|---|---|
-| `fertilisation_azotee` | EPCI | la ventilation par la surface de culture hors bio (rapport territoire/département, forme du tableur) est validée par le CGDD (Brice) ; les surfaces sont versionnées (SAU du recensement agricole 2020 ; SAU bio de l'Agence Bio 2024 par couple EPCI-département, 50 couples sous secret statistique absents donc `missing_data` ; deux lignes sans code EPCI exploitable écartées, `ZZZZZZZZZ` en Vendée 101,34 ha et `992367730` en Moselle 145,90 ha) mais le levier ne les lit pas encore. Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45) | `LIMITEE` |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | EPCI : OUI |
 | `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels à l'EPCI, ou une clé de répartition validée | EPCI : OUI |
 | `transport_marchandises_sobriete_logistique` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) ; le tableur déclare ces niveaux hors périmètre | hors périmètre |
@@ -78,7 +77,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Territoire sans réseau de chaleur | contribution nulle | un facteur de chaleur de repli | la chaleur agricole ne concerne que 15 communes |
 | Gaz en PCS ou PCI | PCI | la précision du jeu | écart de 10 % sur 3,0 % de l'énergie du secteur |
 
-### Fertilisation azotée (`fertilisation_azotee`, région, département)
+### Fertilisation azotée (`fertilisation_azotee`, région, département, EPCI)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
@@ -86,6 +85,11 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Livré pris pour épandu | livraisons au département du distributeur | des épandages | Paris reçoit 17 415 t d'azote pour 1 ha de SAU |
 | Facteur d'émission national | 5,733 kgCO2e/kg pour tous | un facteur par territoire | incertitude de 400 % |
 | Corse départementale | 2A et 2B sans résultat | une publication distinguant 2A et 2B | la Corse est publiée sous le code 20 |
+| Ventilation à l'EPCI | azote du département × (SAU − SAU bio de l'EPCI) ÷ (SAU − SAU bio du département), validée par le CGDD (Brice), département par département pour un EPCI à cheval (documentation, p. 45) | l'azote épandu par EPCI | proxy ; SAU du recensement 2020 contre bio 2024 |
+| Département plus bio que cultivé | Paris et Hauts-de-Seine (bio 2024 de 190 et 275 ha contre 1 et 5 ha de SAU 2020) : l'EPCI n'en reçoit aucune part | une SAU à jour | les 17 415 t livrées à Paris et les 7 367 t des Hauts-de-Seine ne vont à aucun EPCI ; choix de conception, non validé |
+| Part d'un EPCI plafonnée à 1 | plafond à tout l'azote du département | la bio des EPCI sous secret statistique | la bio du département est celle de l'Agence Bio, plus grande que la somme des EPCI non masqués |
+| EPCI sous secret statistique | 50 couples EPCI-département sans surface bio : `missing_data`, y compris pour un EPCI à cheval dont un seul département est masqué (Métropole du Grand Paris, département 91) | le fichier de l'observatoire | EPCI de 1 ou 2 fermes bio |
+| Département sans livraison d'azote | un EPCI en Corse (2A, 2B) renvoie `missing_data` | une publication distinguant 2A et 2B | |
 
 ### Élevage durable (`elevage_durable`, région, département)
 

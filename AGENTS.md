@@ -26,7 +26,7 @@ Une PR passe les quatre premières.
 |---|---|
 | `src/levers/<levier>/` | tout un levier : requête, calcul pur, lecture des données, `estimate`, tests, `methodology.md` |
 | `src/estimator/` | `createEstimator(dataSource)` : valide la requête (seul endroit où l'inconnu entre), vérifie que le niveau est calculé, choisit le levier par son `id` |
-| `src/application/` | aides partagées : contexte d'estimation (`getCommunesOf`, `getRegionByCommune`), erreurs, index des territoires |
+| `src/application/` | aides partagées : contexte d'estimation (`getCommunesOf`, `getRegionByCommune`, `getDepartementByCommune`), erreurs, index des territoires |
 | `src/domain/` | noyau : `BigNumber`, unités brandées, territoires, registre `LEVERS` (21 leviers × 3 niveaux), port `DataSource` |
 | `src/infrastructure/csv/` | adaptateur CSV : manifeste, empreintes sha256, contrôles au chargement |
 | `src/dataset-builders/` | scripts TypeScript qui reconstruisent un jeu de `data/` depuis ses sources |

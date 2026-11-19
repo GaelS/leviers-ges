@@ -8,7 +8,6 @@ import type {
   DataSourceError,
   InvalidDataset,
 } from '../../../domain/data-source.ts'
-import type { ComputedLevels } from '../../../domain/lever-registry.ts'
 import type { Territory } from '../../../domain/territory.ts'
 import { quantity } from '../../../domain/units.ts'
 import type { NitrogenDelivered } from './nitrogen-delivered.ts'
@@ -58,7 +57,7 @@ function readNitrogenDelivered({
   territory,
 }: {
   dataSource: DataSource
-  territory: Territory<ComputedLevels<'fertilisation_azotee'>>
+  territory: Territory<'region' | 'departement'>
 }): Result<NitrogenDelivered, DataSourceError> {
   return match(territory.level)
     .with('region', () =>

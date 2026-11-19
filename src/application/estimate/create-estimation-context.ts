@@ -9,6 +9,8 @@ function createEstimationContext(dataSource: DataSource): EstimationContext {
     getCommunesOf: (territory) =>
       getTerritoryIndex().andThen((index) => index.communesOf(territory)),
     getRegionByCommune: (commune) => getTerritoryIndex().map((index) => index.regionOf(commune)),
+    getDepartementByCommune: (commune) =>
+      getTerritoryIndex().map((index) => index.departementOf(commune)),
   }
 }
 

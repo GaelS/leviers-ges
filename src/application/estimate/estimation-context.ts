@@ -5,12 +5,15 @@ import type { UnknownTerritory } from '../../domain/territory-index.ts'
 
 type RegionLookup = (commune: string) => Result<string | undefined, DataSourceError>
 
+type DepartementLookup = (commune: string) => Result<string | undefined, DataSourceError>
+
 type EstimationContext = {
   readonly dataSource: DataSource
   readonly getCommunesOf: (
     territory: Territory<Level>,
   ) => Result<readonly string[], DataSourceError | UnknownTerritory>
   readonly getRegionByCommune: RegionLookup
+  readonly getDepartementByCommune: DepartementLookup
 }
 
-export type { EstimationContext, RegionLookup }
+export type { DepartementLookup, EstimationContext, RegionLookup }

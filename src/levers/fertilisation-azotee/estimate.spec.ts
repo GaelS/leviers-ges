@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createEstimationContext } from '../../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../../application/estimate/estimate-result.ts'
 import type { DataSource, DataSourceError } from '../../domain/data-source.ts'
+import type { UnknownTerritory } from '../../domain/territory-index.ts'
 import type { ComputedLevels } from '../../domain/lever-registry.ts'
 import {
   createTemporaryCsvDataSource,
@@ -33,7 +34,9 @@ const FIXTURES: Readonly<Record<string, DatasetFixture>> = {
   },
 }
 
-type Estimator = (request: FertilisationAzoteeRequest) => Result<EstimateResult, DataSourceError>
+type Estimator = (
+  request: FertilisationAzoteeRequest,
+) => Result<EstimateResult, DataSourceError | UnknownTerritory>
 
 function toEstimator(dataSource: DataSource): Estimator {
   const context = createEstimationContext(dataSource)
@@ -117,6 +120,165 @@ describe('estimate, fertilisation_azotee', () => {
     expect(broken(request(level, code))._unsafeUnwrapErr()).toMatchObject({
       kind: 'invalid_dataset',
       reason: 'unreadable',
+    })
+  })
+
+  describe('à l’EPCI', () => {
+    const NITROGEN_DEPARTEMENTS = [
+      { code_departement: '01', nitrogen_delivered_tonnes_2021_2022: '600' },
+      { code_departement: '69', nitrogen_delivered_tonnes_2021_2022: '1000' },
+      { code_departement: '75', nitrogen_delivered_tonnes_2021_2022: '17415' },
+      { code_departement: '80', nitrogen_delivered_tonnes_2021_2022: '200' },
+    ]
+    const COMMUNES = ([
+      ['01001', '200000001', '01'],
+      ['01002', '200000001', '01'],
+      ['01003', '200000002', '01'],
+      ['69001', '200000002', '69'],
+      ['69002', '200000005', '69'],
+      ['75056', '200000003', '75'],
+      ['01004', '200000004', '01'],
+      ['01005', '200000007', '01'],
+      ['80001', '200000006', '80'],
+      ['2A001', '200000009', '2A'],
+    ] as const).map(([code_commune, code_epci, code_departement]) => ({
+      code_commune,
+      code_epci,
+      code_departement,
+      code_region: '84',
+    }))
+    const AGRICULTURAL_AREAS = ([
+      ['01001', '100'],
+      ['01002', '50'],
+      ['01003', '150'],
+      ['69001', '200'],
+      ['69002', '200'],
+      ['75056', '1'],
+      ['01004', '10'],
+      ['80001', '100'],
+      ['2A001', '10'],
+      ['99999', '1000'],
+    ] as const).map(([code_commune, agricultural_area_ha]) => ({ code_commune, agricultural_area_ha }))
+    const ORGANIC_EPCIS = ([
+      ['200000001', '01', '30'],
+      ['200000002', '01', '15'],
+      ['200000002', '69', '40'],
+      ['200000003', '75', '190'],
+      ['200000006', '80', '10'],
+      ['200000009', '2A', '1'],
+    ] as const).map(([code_epci, code_departement, organic_hectares]) => ({
+      epci_departement: `${code_epci}-${code_departement}`,
+      code_epci,
+      code_departement,
+      organic_hectares,
+    }))
+    const ORGANIC_DEPARTEMENTS = [
+      { code_departement: '01', organic_hectares: '60' },
+      { code_departement: '69', organic_hectares: '80' },
+      { code_departement: '75', organic_hectares: '190' },
+      { code_departement: '80', organic_hectares: '50' },
+    ]
+
+    function epciFixtures(
+      overrides: Readonly<Record<string, DatasetFixture>> = {},
+    ): Readonly<Record<string, DatasetFixture>> {
+      return {
+        ...FIXTURES,
+        'fertilisation-azotee/departements': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: NITROGEN_DEPARTEMENTS,
+        },
+        'territoires/communes': { keyColumn: 'code_commune', rows: COMMUNES },
+        'surface-agricole-utile/communes': { keyColumn: 'code_commune', rows: AGRICULTURAL_AREAS },
+        'fertilisation-azotee/organic-epci-departements': {
+          keyColumn: 'epci_departement',
+          rows: ORGANIC_EPCIS,
+        },
+        'fertilisation-azotee/organic-departements': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: ORGANIC_DEPARTEMENTS,
+        },
+        ...overrides,
+      }
+    }
+
+    const estimateEpci = toEstimator(createTemporaryCsvDataSource(epciFixtures()))
+
+    it.each([
+      ['200000001, 48 % de la SAU hors bio du département 01 : 288 t', '200000001', '165.11'],
+      ['200000002, à cheval sur 01 et 69 : 324 + 500 t', '200000002', '472.4'],
+      ['200000003, Paris : bio supérieure à la SAU, aucune part', '200000003', '0'],
+      ['200000006, plafonné à tout le département 80 : 200 t', '200000006', '114.66'],
+      ['200000007, sans aucune SAU : rien à ventiler', '200000007', '0'],
+    ])('évite pour l’EPCI %s tCO2e à 10 %%', (_label, code, expected) => {
+      expect(estimateEpci(request('epci', code))._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+    })
+
+    it('renvoie la campagne unique du département', () => {
+      expect(
+        estimateEpci(request('epci', '200000001'))._unsafeUnwrap().appliedAssumptions[
+          'nitrogenCampaigns'
+        ]?.value,
+      ).toBe('2021-2022 campaign only')
+    })
+
+    it('ignore une commune de SAU absente du référentiel : résultat inchangé à 165,11 tCO2e', () => {
+      const withUnknownCommune = estimateEpci(request('epci', '200000001'))._unsafeUnwrap()
+      expect(withUnknownCommune.reduction.toFixed()).toBe('165.11')
+    })
+
+    it.each([
+      ['un EPCI sans surface bio (secret statistique)', '200000004', 'fertilisation-azotee/organic-epci-departements', '200000004-01'],
+      ['un département sans livraison d’azote', '200000009', 'fertilisation-azotee/departements', '2A'],
+    ])('refuse %s', (_label, code, dataset, key) => {
+      expect(estimateEpci(request('epci', code))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset,
+        key,
+      })
+    })
+
+    it('refuse un département sans surface bio', () => {
+      const withoutDepartementOrganic = toEstimator(
+        createTemporaryCsvDataSource(
+          epciFixtures({
+            'fertilisation-azotee/organic-departements': {
+              keyColumn: 'code_departement',
+              level: 'departement',
+              rows: [{ code_departement: '69', organic_hectares: '80' }],
+            },
+          }),
+        ),
+      )
+      expect(withoutDepartementOrganic(request('epci', '200000001'))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset: 'fertilisation-azotee/organic-departements',
+        key: '01',
+      })
+    })
+
+    it('refuse un EPCI inconnu', () => {
+      expect(estimateEpci(request('epci', '999999999'))._unsafeUnwrapErr()).toEqual({
+        kind: 'unknown_territory',
+        level: 'epci',
+        code: '999999999',
+      })
+    })
+
+    it.each([
+      ['de SAU', 'surface-agricole-utile/communes', 'code_commune', [{ code_commune: '01001', agricultural_area_ha: 'beaucoup' }]],
+      ['de surface bio', 'fertilisation-azotee/organic-epci-departements', 'epci_departement', [{ epci_departement: '200000001-01', code_epci: '200000001', code_departement: '01', organic_hectares: 'beaucoup' }]],
+    ])('refuse une valeur %s qui n’est pas un nombre', (_label, dataset, keyColumn, rows) => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(epciFixtures({ [dataset]: { keyColumn, rows } })),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        dataset,
+        reason: 'unreadable',
+      })
     })
   })
 })
