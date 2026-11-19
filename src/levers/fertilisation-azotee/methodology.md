@@ -1,6 +1,6 @@
 # Fertilisation azotée
 
-Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas calculé : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département, sans que le résultat se vérifie (`not_computed`). Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `fertilisation_azotee`. Niveaux : région et département. L'EPCI n'est pas encore calculé (`not_computed`) : la livraison d'azote n'existe pas à cette maille et le tableur ne la ventile que depuis le département. Le CGDD (Brice) valide cette ventilation par les surfaces de culture hors agriculture biologique ; elle n'est pas encore implémentée, faute de surfaces versionnées : SAU du recensement agricole (déjà dans `data/surface-agricole-utile`) et SAU en agriculture biologique de l'Agence Bio (documentation fonctionnelle, p. 38). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45). Voir `docs/methodology/points-a-arbitrer.md`. Une hypothèse nommée de `docs/methodology/assumptions.md` s'applique (`nitrogenCampaigns`) ; elle est renvoyée dans `appliedAssumptions` avec le facteur d'émission et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
@@ -80,6 +80,6 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Corse départementale | 2A et 2B sans résultat ; la région 94 est calculée (215 et 136 t) |
 | Somme des départements et des régions | 1 746 534 t avec la Corse contre 1 746 521 t pour les 13 régions en 2021-2022 |
 | Incertitude du facteur | 400 % dans la Base Empreinte |
-| Pas de ventilation sous le département | l'EPCI n'est pas calculé |
+| Pas de ventilation sous le département | l'EPCI n'est pas encore calculé ; le CGDD valide la ventilation par les surfaces de culture hors bio, à implémenter |
 | Métropole seulement | pas de calcul pour les départements d'outre-mer |
 | Leviers du secteur | les leviers de l'agriculture s'additionnent sans interaction (feuille `SG Agriculture`) |

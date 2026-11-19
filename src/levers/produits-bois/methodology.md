@@ -1,6 +1,6 @@
 # Produits bois
 
-Identifiant : `produits_bois`. Niveaux : région, département. L'EPCI n'est pas calculé : la récolte de bois n'existe pas à cette maille, et la ventilation par la surface de forêt que suggère le tableur n'est pas vérifiable (`level_not_computed`). Aucune question ouverte ; les interprétations ci-dessous sont encodées dans les données et le code. Métropole seule : l'outre-mer est absent de la récolte et renvoie `missing_data`.
+Identifiant : `produits_bois`. Niveaux : région, département. L'EPCI n'est pas encore calculé (`level_not_computed`) : la récolte de bois n'existe pas à cette maille. Le CGDD (Brice, Laurent) valide la ventilation par la surface de forêt que suggère le tableur ; elle n'est pas encore implémentée, faute de surfaces de forêt versionnées par couple EPCI-département, à tirer du jeu ALDO communal (`data.ademe.fr/datasets/aldo-stocks-de-carbone`). Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation fonctionnelle, p. 71). Voir `docs/methodology/points-a-arbitrer.md`. Aucune question ouverte sur les niveaux calculés ; les interprétations ci-dessous sont encodées dans les données et le code. Métropole seule : l'outre-mer est absent de la récolte et renvoie `missing_data`.
 
 ## Formule
 

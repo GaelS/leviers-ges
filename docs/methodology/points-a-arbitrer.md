@@ -50,9 +50,9 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 | Levier | Niveaux à débloquer | Ce qui manque | Ce que le tableur dit |
 |---|---|---|---|
-| `fertilisation_azotee` | EPCI | des livraisons d'azote sous le département, ou la validation d'une ventilation par la surface de culture hors bio (rapport territoire/département, forme du tableur) | `LIMITEE` |
-| `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : celui d'Agreste se contredit sur les bovins (4,86 M de vaches laitières pour 3,48 M en France) et le secret retire 18 à 41 % des têtes | EPCI : OUI |
-| `produits_bois` | EPCI | une récolte de bois à l'EPCI, ou la validation de la ventilation par la surface de forêt (`S_forêt_EPCI / S_forêt_dép`) | `LIMITEE` |
+| `fertilisation_azotee` | EPCI | la ventilation par la surface de culture hors bio (rapport territoire/département, forme du tableur) est validée par le CGDD (Brice) ; reste à charger les surfaces : SAU du recensement agricole (déjà versionnée) et SAU en agriculture biologique de l'Agence Bio (documentation, p. 38), non versionnée. Un EPCI à cheval sur plusieurs départements se calcule département par département (documentation, p. 45) | `LIMITEE` |
+| `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 74 comparables, la somme des EPCI vaut deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | EPCI : OUI |
+| `produits_bois` | EPCI | la ventilation par la surface de forêt (`S_forêt_EPCI / S_forêt_dép`) est validée par le CGDD (Brice, Laurent) ; reste à charger les surfaces de forêt par couple EPCI-département, tirées du jeu ALDO communal, un EPCI à cheval sur plusieurs départements se calculant département par département (documentation, p. 71) | `LIMITEE` |
 | `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels à l'EPCI, ou une clé de répartition validée | EPCI : OUI |
 | `transport_marchandises_sobriete_logistique` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) ; le tableur déclare ces niveaux hors périmètre | hors périmètre |
 | `transport_marchandises_report_modal` | département, EPCI | les tonnes.kilomètres rapportées au département et à l'EPCI (les données sont régionales) | hors périmètre |

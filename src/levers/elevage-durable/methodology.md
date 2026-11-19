@@ -1,6 +1,6 @@
 # Élevage durable
 
-Identifiant : `elevage_durable`. Niveaux : région et département. **L'EPCI n'est pas calculé** : le fichier Agreste par EPCI se contredit sur les bovins (la somme des vaches laitières vaut 4 856 397 têtes pour 3 482 723 en France métropolitaine) et le secret statistique y retire 18 à 41 % des têtes selon l'animal ; le niveau est `not_computed` dans `src/domain/lever-registry.ts`, alors que la fiche d'analyse le jugeait faisable avec réserve. L'hypothèse nommée `methanisationFactors` de `docs/methodology/assumptions.md` s'applique ; les valeurs par défaut et les limites sont renvoyées dans `appliedAssumptions`. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`, comme Paris (absent du recensement agricole).
+Identifiant : `elevage_durable`. Niveaux : région et département. **L'EPCI n'est pas calculé** : le fichier Agreste par EPCI (`RA2020_2141_EPCI`, indicateur 040.01) se contredit sur les bovins : la somme des vaches laitières vaut 5 827 825 têtes pour 3 482 723 en France métropolitaine, et dans 43 départements sur 74 comparables la somme des EPCI vaut deux fois le total départemental ; le niveau est `not_computed` dans `src/domain/lever-registry.ts`, alors que la fiche d'analyse le jugeait faisable avec réserve. L'hypothèse nommée `methanisationFactors` de `docs/methodology/assumptions.md` s'applique ; les valeurs par défaut et les limites sont renvoyées dans `appliedAssumptions`. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`, comme Paris (absent du recensement agricole).
 
 ## Formule
 
@@ -81,7 +81,7 @@ Jeux `elevage-durable/regions` et `elevage-durable/departements`, construits par
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Pas de calcul à l'EPCI | fichier Agreste par EPCI contradictoire sur les bovins, secret ; décision du 2026-10-20 |
+| 1 | Pas de calcul à l'EPCI | fichier Agreste par EPCI contradictoire sur les bovins (somme des EPCI égale à deux fois le total départemental dans 43 départements sur 74) ; décision du 2026-10-20, constat refait le 2026-11-19 |
 | 2 | La formule du dessin, avec `(1 − b)` sur les déjections et le N2O | la prose du tableur est incohérente et ne donne pas zéro quand rien ne change ; formule confirmée par la documentation fonctionnelle (équation 3, p. 47) |
 | 3 | La proportion actuelle de méthanisation est 0 | `ElevageDurable!B15` |
 | 4 | Les proportions actuelles sont nationales | `DonneesTerritoires!H22` : « Nationale » ; renvoyé dans `appliedAssumptions.currentManureShares` |
