@@ -167,7 +167,7 @@ const result = estimate({
 | `residentiel_sobriete` | `householdsApplyingSobrietyFraction` | fraction | ménages qui appliquent la sobriété |
 | | `consumptionReductionFraction` | fraction | baisse de leur consommation (pas de valeur par défaut) |
 | `residentiel_renovation` | `renovatedParcFraction` | fraction | part du parc de logements rénovée (maisons et appartements d'avant 1971 ; la même pour tous) |
-| `residentiel_changement_systeme_chauffage` | `targetElectricityShareFraction`, `targetNaturalGasShareFraction`, `targetFuelOilShareFraction`, `targetWoodShareFraction`, `targetHeatNetworkShareFraction` | fraction | part cible de chaque vecteur dans l'énergie utile de chauffage ; les cinq font 100 %, sinon la requête est refusée ; le GPL n'est pas modifié |
+| `residentiel_changement_systeme_chauffage` | `targetElectricityShareFraction`, `targetNaturalGasShareFraction`, `targetFuelOilShareFraction`, `targetWoodShareFraction`, `targetHeatNetworkShareFraction` | fraction, facultatif | part cible de chaque vecteur dans l'énergie utile de chauffage et d'ECS ; une part non précisée garde sa proportion actuelle et partage ce que les autres laissent (sans aucune part, la cible est le mix actuel) ; les parts données ne dépassent pas 100 % et, les cinq données, font 100 % ; le GPL n'est pas modifié |
 | `reseaux_chaleur` | `emissionFactorReductionFraction` | fraction | baisse du facteur d'émission des réseaux ; au-delà de 1 la requête est refusée |
 
 ### Transport de personnes

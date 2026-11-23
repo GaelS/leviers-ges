@@ -17,7 +17,7 @@ v : électricité (PAC comprises), gaz naturel, fioul domestique, bois, chaleur 
 |---|---|---|
 | `C_v` | consommation résidentielle du vecteur, tous usages, lue comme dans `residentiel_sobriete` | MWh |
 | `part_chauffage_ECS_v` | part nationale du chauffage et de l'eau chaude sanitaire dans cette consommation (SDES 2024) ; la documentation (p. 51) range les deux usages sous les leviers Rénovation et Changement de système | fraction |
-| `s'_v` | part cible du vecteur dans l'énergie utile, saisie ; les cinq font 100 % | fraction |
+| `s'_v` | part cible du vecteur dans l'énergie utile, saisie ou, si elle n'est pas précisée, déduite (choix 6) ; les cinq font 100 % | fraction |
 | `η` | rendement global de l'installation (ADEME, p. 156) | fraction |
 | `FE_v` | facteur d'émission du vecteur ; la chaleur : moyenne pondérée des réseaux du territoire | kgCO2e/kWh |
 
@@ -33,7 +33,7 @@ La cellule « Formule » du tableur est vide (« Réduction GES = ») : la formu
 | `targetWoodShareFraction` | fraction | 0 à 1 |
 | `targetHeatNetworkShareFraction` | fraction | 0 à 1 |
 
-Les cinq sont obligatoires et font 100 % : sinon `invalid_request` sur `targetHeatNetworkShareFraction`. La documentation (p. 55) donne le mix actuel par défaut ; il n'est pas repris (choix 6).
+Les cinq sont facultatives. Une part non précisée garde sa proportion actuelle de l'énergie utile : elle partage avec les autres parts non précisées ce que les parts données laissent, jusqu'à 100 % (choix 6). Sans aucune part, la cible est le mix actuel et seul le gain de rendement des appareils rénovés compte. Les parts données ne dépassent pas 100 % ; les cinq données font 100 %, sinon `invalid_request`. Une seule part non précisée prend tout le reste. Plusieurs parts non précisées dont l'usage actuel est nul (par exemple le bois et un réseau de chaleur absent) ne peuvent pas se partager un reste : `invalid_request`.
 
 ## Constantes
 
@@ -62,7 +62,7 @@ Aucun jeu propre : la consommation vient de `src/application/residential-consump
 | 3 | Bois : consommation de base 0, part cible acceptée, FE 0, rendement 75 % | limite reconnue par la documentation (pp. 52-53) ; 75 % est la plus basse des deux valeurs rénovées (75 %, 85 %), choix de conception, non validé |
 | 4 | Pompes à chaleur confondues avec l'électricité, un seul rendement de 100 % à la cible | `Residentiel_ChgtSyst!B15` : « un seul coefficient utilisé » ; le tableau CSTB est inaccessible |
 | 5 | GPL ni source ni cible, sa consommation n'est pas modifiée | aucune valeur de rendement du GPL dans la p. 156 ; on ne calcule que ce qui est sourcé |
-| 6 | Les cinq parts cibles sont obligatoires, sans mix actuel par défaut | le mix actuel n'est pas exposé ; la documentation le donne par défaut |
+| 6 | Une part cible non précisée vaut sa part actuelle de l'énergie utile, rapportée à ce que les parts données laissent ; le mix actuel est estimé avec les parts nationales (choix 1), le bois à 0 | la documentation (p. 55) donne le mix actuel par défaut sans dire comment répartir le reste ; `Residentiel_ChgtSyst!B15` : la somme vaut 100 % ; interprétation nouvelle, renvoyée dans `appliedAssumptions.unspecifiedTargetShares` |
 | 7 | Territoire sans réseau : facteur de la chaleur nul | comme `residentiel_sobriete` (choix 15) ; un passage au réseau n'y coûte rien |
 | 8 | Énergie utile nulle : 0 tCO2e évité | choix de conception, non validé |
 | 9 | Année 2024, climat réel, PCI | SDES |
@@ -79,6 +79,9 @@ Aucun jeu propre : la consommation vient de `src/application/residential-consump
 | département 01, jeu de test, cible 50 % électricité, 10 % gaz, 0 % fioul, 10 % bois, 30 % réseau | 541,43 tCO2e |
 | région 84, jeu de test, même cible | 4 457,75 tCO2e |
 | département 35, données réelles, même cible | 244 191,78 tCO2e |
+| département 35, aucune part précisée (mix actuel) | 67 236,55 tCO2e |
+| département 35, fioul à 0 | 112 606,37 tCO2e |
+| département 35, fioul à 0 et bois à 10 % | 148 503,72 tCO2e |
 | somme des 13 régions | 19 155 808,29 tCO2e |
 | somme des 96 départements | 19 450 737,66 tCO2e |
 | somme des 1 232 EPCI | 20 774 364,19 tCO2e |
