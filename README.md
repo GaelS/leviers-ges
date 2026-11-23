@@ -43,13 +43,13 @@ const result = estimate({
 
 ```ts
 const result = estimate({
-  id: 'residentiel_sobriete',
+  id: 'transport_marchandises_efficacite',
   territory: { level: 'epci', code: '200046977' },
-  parameters: { householdsApplyingSobrietyFraction: '0.1', consumptionReductionFraction: '0.1' },
+  parameters: { ecodrivingApplicationFraction: '0.1', loadFactorIncrease: '0.1' },
 })
 ```
 
-`result.error` vaut `{ kind: 'level_not_computed', lever: 'residentiel_sobriete', level: 'epci' }`.
+`result.error` vaut `{ kind: 'level_not_computed', lever: 'transport_marchandises_efficacite', level: 'epci' }`.
 
 ### Une requête invalide
 
@@ -76,7 +76,8 @@ Le détail d'un levier (formule, constantes sourcées, données, limites, cas de
 |---|---|
 | `batiments_machines_agricoles`, `reseaux_chaleur`, `dechets_mode_de_traitement`, `dechets_sobriete`, `produits_bois`, `fertilisation_azotee` | région, département, EPCI |
 | `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | région, département, EPCI |
-| `elevage_durable`, `residentiel_sobriete` | région, département |
+| `elevage_durable` | région, département |
+| `residentiel_sobriete` | région, département, EPCI (hors outre-mer) |
 | `occupation_des_sols` | EPCI |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | région |
 | `haies`, `pratiques_stockantes` | sans territoire |

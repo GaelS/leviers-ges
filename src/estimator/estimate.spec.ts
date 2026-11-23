@@ -419,11 +419,9 @@ describe('estimate', () => {
       } as RequestInput
     }
 
-    it('refuse l’EPCI, non calculé, sans lire de données', () => {
-      expect(withResidentialEnergy(residentielSobrieteRequest({ level: 'epci' }))._unsafeUnwrapErr()).toEqual({
-        kind: 'level_not_computed',
-        lever: 'residentiel_sobriete',
-        level: 'epci',
+    it('aiguille l’EPCI vers son levier : un EPCI inconnu de la géographie est refusé', () => {
+      expect(withResidentialEnergy(residentielSobrieteRequest({ level: 'epci' }))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'unknown_territory',
       })
     })
 

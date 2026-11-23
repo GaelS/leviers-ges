@@ -26,6 +26,8 @@ const COMMUNES: readonly DataRow[] = [
   { code_commune: '01001', code_epci: '200000001', code_departement: '01', code_region: '84' },
   { code_commune: '01002', code_epci: '200000001', code_departement: '01', code_region: '84' },
   { code_commune: '69001', code_epci: '200000002', code_departement: '69', code_region: '84' },
+  { code_commune: '01003', code_epci: '200000003', code_departement: '01', code_region: '84' },
+  { code_commune: '69002', code_epci: '200000003', code_departement: '69', code_region: '84' },
   { code_commune: '75056', code_epci: '', code_departement: '75', code_region: '11' },
 ]
 
@@ -72,6 +74,63 @@ const DEPARTEMENTS: readonly DataRow[] = [
   },
 ]
 
+const EPCIS: readonly DataRow[] = [
+  { code_epci: '200000001', electricity_mwh: '2000', natural_gas_mwh: '500' },
+  { code_epci: '200000002', electricity_mwh: '1000', natural_gas_mwh: '100' },
+  { code_epci: '200000003', electricity_mwh: '1500', natural_gas_mwh: '300' },
+]
+
+const HOUSING_TYPES = ['house', 'private_apartment', 'social_apartment']
+
+const CONSTRUCTION_PERIODS = ['before_1971', '1971_to_2005', 'after_2005']
+
+function housingSurfaces({ fuelOil, lpg }: { fuelOil: string; lpg: string }): DataRow {
+  const columns = HOUSING_TYPES.flatMap((type) =>
+    CONSTRUCTION_PERIODS.flatMap((period): [string, string][] => [
+      [`housing_m2_${type}_fuel_oil_${period}`, '0'],
+      [`housing_m2_${type}_lpg_${period}`, '0'],
+    ]),
+  )
+  const zeros: Record<string, string> = Object.fromEntries(columns)
+  return {
+    ...zeros,
+    housing_m2_house_fuel_oil_before_1971: fuelOil,
+    housing_m2_social_apartment_lpg_after_2005: lpg,
+  }
+}
+
+function epciHousing({
+  epci,
+  departement,
+  fuelOil,
+  lpg,
+}: {
+  epci: string
+  departement: string
+  fuelOil: string
+  lpg: string
+}): DataRow {
+  return {
+    epci_departement: `${epci}-${departement}`,
+    code_epci: epci,
+    code_departement: departement,
+    ...housingSurfaces({ fuelOil, lpg }),
+  }
+}
+
+const EPCI_HOUSING: readonly DataRow[] = [
+  epciHousing({ epci: '200000001', departement: '01', fuelOil: '400', lpg: '200' }),
+  epciHousing({ epci: '200000002', departement: '69', fuelOil: '100', lpg: '50' }),
+  epciHousing({ epci: '200000003', departement: '01', fuelOil: '100', lpg: '100' }),
+  epciHousing({ epci: '200000003', departement: '69', fuelOil: '100', lpg: '25' }),
+]
+
+const DEPARTEMENT_HOUSING: readonly DataRow[] = [
+  { code_departement: '01', ...housingSurfaces({ fuelOil: '400', lpg: '200' }) },
+  { code_departement: '69', ...housingSurfaces({ fuelOil: '400', lpg: '100' }) },
+  { code_departement: '75', ...housingSurfaces({ fuelOil: '0', lpg: '0' }) },
+]
+
 function network(id: string, commune: string, deliveredMwh: string, factor: string): DataRow {
   return {
     network_id: id,
@@ -92,11 +151,17 @@ function toFixtures({
   regions = REGIONS,
   departements = DEPARTEMENTS,
   networks = NETWORKS,
+  epcis = EPCIS,
+  epciHousingRows = EPCI_HOUSING,
+  departementHousing = DEPARTEMENT_HOUSING,
 }: {
   communes?: readonly DataRow[]
   regions?: readonly DataRow[]
   departements?: readonly DataRow[]
   networks?: readonly DataRow[]
+  epcis?: readonly DataRow[]
+  epciHousingRows?: readonly DataRow[]
+  departementHousing?: readonly DataRow[]
 }): Fixtures {
   return {
     'territoires/communes': { keyColumn: 'code_commune', rows: communes },
@@ -107,6 +172,16 @@ function toFixtures({
       rows: departements,
     },
     'residentiel-sobriete/heat-networks': { keyColumn: 'network_id', rows: networks },
+    'residentiel-sobriete/epcis': { keyColumn: 'code_epci', level: 'epci', rows: epcis },
+    'residentiel-logements/logements-epci-departement': {
+      keyColumn: 'epci_departement',
+      rows: epciHousingRows,
+    },
+    'residentiel-logements/logements-departement': {
+      keyColumn: 'code_departement',
+      level: 'departement',
+      rows: departementHousing,
+    },
   }
 }
 
@@ -238,6 +313,145 @@ describe('estimate, residentiel_sobriete', () => {
     expect(broken(request('region', '84'))._unsafeUnwrapErr()).toMatchObject({
       kind: 'invalid_dataset',
       reason: 'unreadable',
+    })
+  })
+
+  describe('à l’EPCI', () => {
+    it('un EPCI qui couvre tout son département évite autant que lui, avec ses réseaux de chaleur', () => {
+      expect(estimate(request('epci', '200000001'))._unsafeUnwrap().reduction.toFixed()).toBe('1229.68')
+    })
+
+    it.each([
+      ['un EPCI à 25 % du fioul et 50 % du GPL de son département', '200000002', '231.47'],
+      ['un EPCI sur deux départements, 25 % du fioul de l’un et du GPL de l’autre', '200000003', '290.33'],
+    ])('apporte %s', (_label, code, expected) => {
+      expect(estimate(request('epci', code))._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+    })
+
+    it('refuse un EPCI absent des consommations', () => {
+      const without = toEstimator(createTemporaryCsvDataSource(toFixtures({ epcis: EPCIS.slice(1) })))
+      expect(without(request('epci', '200000001'))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset: 'residentiel-sobriete/epcis',
+        key: '200000001',
+      })
+    })
+
+    it('refuse un EPCI sans surface de logements', () => {
+      const without = toEstimator(
+        createTemporaryCsvDataSource(toFixtures({ epciHousingRows: EPCI_HOUSING.slice(1) })),
+      )
+      expect(without(request('epci', '200000001'))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset: 'residentiel-logements/logements-epci-departement',
+        key: '200000001',
+      })
+    })
+
+    it('refuse un département sans surface de logements', () => {
+      const without = toEstimator(
+        createTemporaryCsvDataSource(toFixtures({ departementHousing: DEPARTEMENT_HOUSING.slice(1) })),
+      )
+      expect(without(request('epci', '200000001'))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset: 'residentiel-logements/logements-departement',
+        key: '01',
+      })
+    })
+
+    it('refuse un département sans consommation', () => {
+      const without = toEstimator(
+        createTemporaryCsvDataSource(toFixtures({ departements: DEPARTEMENTS.slice(1) })),
+      )
+      expect(without(request('epci', '200000001'))._unsafeUnwrapErr()).toEqual({
+        kind: 'missing_data',
+        dataset: 'residentiel-sobriete/departements',
+        key: '01',
+      })
+    })
+
+    it('un département sans surface au fioul n’apporte pas de fioul', () => {
+      const estimateWithoutFuelSurface = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({
+            epciHousingRows: [epciHousing({ epci: '200000001', departement: '75', fuelOil: '0', lpg: '0' })],
+            networks: [network('Z', '75056', '1', '0')],
+          }),
+        ),
+      )
+      expect(estimateWithoutFuelSurface(request('epci', '200000001'))._unsafeUnwrap().reduction.toFixed()).toBe('170.55')
+    })
+
+    it('refuse un EPCI dont la surface dépasse celle de son département', () => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({
+            epciHousingRows: [epciHousing({ epci: '200000001', departement: '01', fuelOil: '401', lpg: '200' })],
+          }),
+        ),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        reason: 'control_total_mismatch',
+        detail: '01: fuel_oil surface 401 exceeds the department\'s 400',
+      })
+    })
+
+    it('refuse un EPCI qui a des m² dans un département qui n’en a aucun', () => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({
+            epciHousingRows: [epciHousing({ epci: '200000001', departement: '75', fuelOil: '10', lpg: '0' })],
+          }),
+        ),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        reason: 'control_total_mismatch',
+      })
+    })
+
+    it('refuse une surface de logements qui n’est pas un nombre', () => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({
+            departementHousing: [
+              { ...DEPARTEMENT_HOUSING[0], housing_m2_house_lpg_before_1971: 'beaucoup' },
+              ...DEPARTEMENT_HOUSING.slice(1),
+            ],
+          }),
+        ),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        reason: 'unreadable',
+        detail: 'housing_m2_house_lpg_before_1971=beaucoup is not a decimal number',
+      })
+    })
+
+    it('refuse une consommation d’EPCI qui n’est pas un nombre', () => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({ epcis: [{ ...EPCIS[0], natural_gas_mwh: 'beaucoup' }, ...EPCIS.slice(1)] }),
+        ),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        reason: 'unreadable',
+        detail: 'natural_gas_mwh=beaucoup is not a decimal number',
+      })
+    })
+
+    it('refuse une ligne d’EPCI sans département', () => {
+      const broken = toEstimator(
+        createTemporaryCsvDataSource(
+          toFixtures({
+            epciHousingRows: [{ ...EPCI_HOUSING[0], code_departement: '' }],
+          }),
+        ),
+      )
+      expect(broken(request('epci', '200000001'))._unsafeUnwrapErr()).toMatchObject({
+        kind: 'invalid_dataset',
+        reason: 'empty_key',
+      })
     })
   })
 })

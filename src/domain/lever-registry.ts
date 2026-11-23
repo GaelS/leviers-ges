@@ -32,7 +32,7 @@ const LEVERS = {
   residentiel_sobriete: {
     region: 'no_open_question',
     departement: 'no_open_question',
-    epci: 'not_computed',
+    epci: 'workaround',
   },
   transport_personnes_sobriete_deplacements: {
     region: 'workaround',
