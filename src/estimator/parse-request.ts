@@ -11,6 +11,7 @@ import { occupationDesSolsRequestSchema } from '../levers/occupation-des-sols/in
 import { pratiquesStockantesRequestSchema } from '../levers/pratiques-stockantes/index.ts'
 import { produitsBoisRequestSchema } from '../levers/produits-bois/index.ts'
 import { reseauxChaleurRequestSchema } from '../levers/reseaux-chaleur/index.ts'
+import { residentielChangementSystemeChauffageRequestSchema } from '../levers/residentiel-changement-systeme-chauffage/index.ts'
 import { residentielSobrieteRequestSchema } from '../levers/residentiel-sobriete/index.ts'
 import { transportMarchandisesElectrificationRequestSchema } from '../levers/transport-marchandises-electrification/index.ts'
 import { transportMarchandisesEfficaciteRequestSchema } from '../levers/transport-marchandises-efficacite/index.ts'
@@ -32,6 +33,7 @@ const requestSchema = z.discriminatedUnion('id', [
   pratiquesStockantesRequestSchema,
   produitsBoisRequestSchema,
   reseauxChaleurRequestSchema,
+  residentielChangementSystemeChauffageRequestSchema,
   residentielSobrieteRequestSchema,
   transportMarchandisesEfficaciteRequestSchema,
   transportMarchandisesElectrificationRequestSchema,

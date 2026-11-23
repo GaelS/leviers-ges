@@ -1,0 +1,99 @@
+# Résidentiel, changement du système de chauffage
+
+Identifiant : `residentiel_changement_systeme_chauffage`. Niveaux : région, département et EPCI, tous `workaround`. Le levier est une approximation : l'énergie de chauffage par territoire (CEREN, non ouvert) est remplacée par une part nationale du SDES (choix 1). Seuls les vecteurs dont le rendement est sourcé sont calculés : le GPL n'est ni source ni cible (choix 5). Métropole seule, comme `residentiel_sobriete`.
+
+## Formule
+
+```
+E_v  = C_v × part_chauffage_v                  énergie finale de chauffage actuelle
+U    = Σ_v E_v × η_ancien_v                    énergie utile, conservée
+E'_v = U × s'_v ÷ η_rénové_v                   énergie finale cible
+Émissions évitées (tCO2e/an) = Σ_v (E_v − E'_v) × FE_v
+
+v : électricité (PAC comprises), gaz naturel, fioul domestique, bois, chaleur commercialisée
+```
+
+| Terme | Sens | Unité |
+|---|---|---|
+| `C_v` | consommation résidentielle du vecteur, tous usages, lue comme dans `residentiel_sobriete` | MWh |
+| `part_chauffage_v` | part nationale du chauffage dans cette consommation (SDES 2024) | fraction |
+| `s'_v` | part cible du vecteur dans l'énergie utile, saisie ; les cinq font 100 % | fraction |
+| `η` | rendement global de l'installation (ADEME, p. 156) | fraction |
+| `FE_v` | facteur d'émission du vecteur ; la chaleur : moyenne pondérée des réseaux du territoire | kgCO2e/kWh |
+
+La cellule « Formule » du tableur est vide (« Réduction GES = ») : la formule est lue dans ses commentaires (`Residentiel_ChgtSyst!B13` : l'énergie livrée est « rapportée à une quantité d'énergie utile par multiplication par l'efficacité énergétique » ; `B15` : le levier ne modifie pas l'énergie utile totale, la part d'un système modifie celle des autres).
+
+## Entrées
+
+| Entrée | Unité | Bornes |
+|---|---|---|
+| `targetElectricityShareFraction` | fraction | 0 à 1 |
+| `targetNaturalGasShareFraction` | fraction | 0 à 1 |
+| `targetFuelOilShareFraction` | fraction | 0 à 1 |
+| `targetWoodShareFraction` | fraction | 0 à 1 |
+| `targetHeatNetworkShareFraction` | fraction | 0 à 1 |
+
+Les cinq sont obligatoires et font 100 % : sinon `invalid_request` sur `targetHeatNetworkShareFraction`. La documentation (p. 55) donne le mix actuel par défaut ; il n'est pas repris (choix 6).
+
+## Constantes
+
+| Constante | Valeur | Source |
+|---|---|---|
+| Part du chauffage, électricité | 30,3 % | SDES Conso_usage 2024, TWh PCI : (34,459 + 10,551) ÷ (136,459 + 11,970) |
+| Part du chauffage, gaz naturel | 79,9 % | 81,258 ÷ 101,763 |
+| Part du chauffage, fioul | 88,6 % | 25,893 ÷ 29,210 |
+| Part du chauffage, chaleur | 91,1 % | 13,401 ÷ 14,709 |
+| Part du chauffage, bois | 0 | documentation, pp. 52-53 (choix 3) |
+| Rendements actuels | gaz 75 %, fioul 75 %, bois 70 %, électricité 95 %, chaleur 1 | ADEME, Rénovation performante par étapes, p. 156 ; chaleur : `Residentiel_ChgtSyst` |
+| Rendements cibles | gaz 90 %, fioul 90 %, bois 75 %, électricité 100 %, chaleur 1 | idem |
+| FE électricité, gaz, fioul | comme `residentiel_sobriete` | `src/domain/emission-factors.ts` |
+| FE bois | 0 | documentation, p. 52 : émissions comptées au prélèvement |
+
+## Données
+
+Aucun jeu propre : la consommation vient de `src/application/residential-consumption/` (jeux de `residentiel_sobriete` et du parc `residentiel-logements` à l'EPCI), la chaleur et son facteur des réseaux du territoire.
+
+## Choix faits
+
+| # | Choix | Source ou statut |
+|---|---|---|
+| 1 | Énergie de chauffage = consommation du territoire × part nationale du chauffage par vecteur | interprétation nouvelle, remplace le CEREN non ouvert (`Residentiel_ChgtSyst!G28`) ; suppose le même usage partout |
+| 2 | Deux rendements par vecteur : ancien pour l'énergie actuelle, rénové pour la cible | interprétation nouvelle : le tableur n'en nomme qu'un (`B15`, « un seul coefficient ») et renvoie à la p. 156 qui donne les deux ; la documentation (p. 55) parle d'« appareils à meilleur rendement » |
+| 3 | Bois : consommation de base 0, part cible acceptée, FE 0, rendement 75 % | limite reconnue par la documentation (pp. 52-53) ; 75 % est la plus basse des deux valeurs rénovées (75 %, 85 %), choix de conception, non validé |
+| 4 | Pompes à chaleur confondues avec l'électricité, un seul rendement de 100 % à la cible | `Residentiel_ChgtSyst!B15` : « un seul coefficient utilisé » ; le tableau CSTB est inaccessible |
+| 5 | GPL ni source ni cible, sa consommation n'est pas modifiée | aucune valeur de rendement du GPL dans la p. 156 ; on ne calcule que ce qui est sourcé |
+| 6 | Les cinq parts cibles sont obligatoires, sans mix actuel par défaut | le mix actuel n'est pas exposé ; la documentation le donne par défaut |
+| 7 | Territoire sans réseau : facteur de la chaleur nul | comme `residentiel_sobriete` (choix 15) ; un passage au réseau n'y coûte rien |
+| 8 | Énergie utile nulle : 0 tCO2e évité | choix de conception, non validé |
+| 9 | Année 2024, climat réel, PCI | SDES |
+
+## Cas de test
+
+| Entrée | Résultat |
+|---|---|
+| 1 000 MWh de fioul passent au gaz | 89,21 tCO2e |
+| 1 000 MWh de fioul passent à l'électricité | 214,55 tCO2e |
+| 1 000 MWh de fioul passent au bois | 237,81 tCO2e |
+| 1 000 MWh de gaz restent au gaz (gain de rendement 75 % → 90 %) | 26,77 tCO2e |
+| 1 000 MWh de gaz passent au fioul | −17,88 tCO2e |
+| département 01, jeu de test, cible 50 % électricité, 10 % gaz, 0 % fioul, 10 % bois, 30 % réseau | 498,32 tCO2e |
+| région 84, jeu de test, même cible | 4 005,49 tCO2e |
+| département 35, données réelles, même cible | 223 883,82 tCO2e |
+| somme des 13 régions | 17 122 529,66 tCO2e |
+| somme des 96 départements | 17 363 584,1 tCO2e |
+| somme des 1 232 EPCI | 18 372 662,62 tCO2e |
+
+Les valeurs sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV et des constantes.
+
+## Limites
+
+| Limite | Effet |
+|---|---|
+| Part nationale du chauffage | un département qui chauffe moins ou plus que la moyenne nationale est mal estimé ; Ille-et-Vilaine : 2,35 TWh de chauffage sur 4,41 TWh |
+| Bois | absent des données du territoire : un passage au bois supprime des émissions sans en retirer d'énergie du bois existant |
+| GPL | 46,7 % de sa consommation sert au chauffage ; il n'est pas modifiable |
+| Territoire sans réseau de chaleur | facteur nul : un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût ; la somme des EPCI dépasse de 5,8 % celle des départements |
+| Pompes à chaleur | la part de chauffage de l'électricité inclut les PAC, la cible est lue à 100 % : le gain d'une PAC (COP) n'est pas compté |
+| Résultat négatif | une cible plus émettrice que l'actuel donne une réduction négative, sans plancher (gaz vers fioul : −17,88 tCO2e pour 1 000 MWh) |
+| Effets rebond | non pris en compte (documentation, 7.2.3.6) |
+| Outre-mer | 23 EPCI refusés (`missing_data`) faute de parc de logements |

@@ -22,28 +22,25 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 29 workaround et 17 not_computed', () => {
+  it('compte 17 no_open_question, 32 workaround et 14 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 29, notComputed: 17 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 32, notComputed: 14 })
   })
 
-  it('compte 19 leviers calculables sur au moins un niveau', () => {
+  it('compte 20 leviers calculables sur au moins un niveau', () => {
     const computable = levers.filter(([, byLevel]) => Object.values<Status>(byLevel).some(isComputed))
-    expect(computable).toHaveLength(19)
+    expect(computable).toHaveLength(20)
   })
 
-  it('les deux leviers exclus sont ceux dont les trois niveaux sont not_computed', () => {
+  it('le levier exclu est celui dont les trois niveaux sont not_computed', () => {
     const excluded = levers
       .filter(([, byLevel]) => !Object.values<Status>(byLevel).some(isComputed))
       .map(([lever]) => lever)
       .sort()
-    expect(excluded).toEqual([
-      'residentiel_changement_systeme_chauffage',
-      'residentiel_renovation',
-    ])
+    expect(excluded).toEqual(['residentiel_renovation'])
   })
 
   it('donne le statut d’un levier à un niveau', () => {

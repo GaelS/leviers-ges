@@ -367,6 +367,57 @@ describe('estimate', () => {
     })
   })
 
+  describe('residentiel_changement_systeme_chauffage', () => {
+    const withResidentialEnergy = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'residentiel-sobriete/regions': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [
+            {
+              code_region: '84',
+              electricity_gwh: '0',
+              natural_gas_gwh: '0',
+              fuel_oil_gwh: '1',
+              lpg_gwh: '0',
+              heat_gwh: '0',
+            },
+          ],
+        },
+        'residentiel-sobriete/heat-networks': {
+          keyColumn: 'network_id',
+          rows: [
+            {
+              network_id: 'A',
+              commune_code: '01001',
+              delivered_mwh: '100',
+              emission_factor_kg_per_kwh: '0.1',
+            },
+          ],
+        },
+      }),
+    )
+
+    it('aiguille la région vers son levier : 1 GWh de fioul passe au gaz', () => {
+      const result = withResidentialEnergy({
+        id: 'residentiel_changement_systeme_chauffage',
+        territory: { level: 'region', code: '84' },
+        parameters: {
+          targetElectricityShareFraction: '0',
+          targetNaturalGasShareFraction: '1',
+          targetFuelOilShareFraction: '0',
+          targetWoodShareFraction: '0',
+          targetHeatNetworkShareFraction: '0',
+        },
+      })
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('89.21')
+    })
+  })
+
   describe('residentiel_sobriete', () => {
     const withResidentialEnergy = createEstimator(
       createTemporaryCsvDataSource({

@@ -18,7 +18,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
 |   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❓ |
 |   | Résidentiel, rénovation (`residentiel_renovation`) | ❌ | ❌ | ❌ |
-|   | Résidentiel, changement du système de chauffage (`residentiel_changement_systeme_chauffage`) | ❌ | ❌ | ❌ |
+|   | Résidentiel, changement du système de chauffage (`residentiel_changement_systeme_chauffage`) | ❓ | ❓ | ❓ |
 | Transport de personnes | Sobriété des déplacements (`transport_personnes_sobriete_deplacements`) | ❓ | ❓ | ❓ |
 |   | Report modal (`transport_personnes_report_modal`) | ❓ | ❓ | ❓ |
 |   | Efficacité (`transport_personnes_efficacite`) | ✅ | ✅ | ✅ |
@@ -30,7 +30,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Déchets | Changement de mode de traitement (`dechets_mode_de_traitement`) | ❓ | ❓ | ❓ |
 |   | Sobriété (`dechets_sobriete`) | ❓ | ❓ | ❓ |
 
-Calculés : 18 leviers sur 21 en région, 14 en département, 14 en EPCI.
+Calculés : 19 leviers sur 21 en région, 15 en département, 15 en EPCI.
 
 Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `methodology.md` du levier est corrigé dans la même PR. Une nouvelle PR de levier ajoute ses lignes en partie 2, et en partie 1 pour chaque niveau qu'elle ne calcule pas. Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`.
 
@@ -40,12 +40,11 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retient : une donnée qu'on n'a pas, un choix à valider alors que la donnée existe, ou le périmètre du tableur. Mise à jour le 2026-11-19 sur la documentation fonctionnelle, le tableur et les réponses du CGDD.
 
-### 1.1 Bloqués par une donnée que nous n'avons pas (3 leviers, 7 niveaux)
+### 1.1 Bloqués par une donnée que nous n'avons pas (2 leviers, 4 niveaux)
 
 | Levier | Niveaux | Ce qui manque | Où en est la piste |
 |---|---|---|---|
 | `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département : le CEREN, « pas disponible en open source » (tableur, documentation p. 51) | le CGDD (Brice, Laurent) : pas d'avancées notables avec le CEREN ; documentation des données demandée (Q3, Q4) |
-| `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie : le CEREN ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | idem, relance commune avec la rénovation |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 72 dont le total est publié, la somme des EPCI vaut à peu près deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | le jeu « RGA2020 EPCI » de data.gouv.fr ne couvre que le Pays Basque : impasse ; le fichier communal Agreste `RA2020_2141_Cheptels_communes` (29 360 communes) a été vérifié : il ne donne que « Herbivores » (26,3 millions de têtes) et « Non herbivores » (299,7 millions), pas de type d'animal, donc pas de vaches laitières ; les lignes `DEPZ` du fichier EPCI portent le total départemental, tantôt sous `DEPZ`, tantôt sous un code EPCI (44 départements) ; classeur d'incohérences préparé pour Agreste ; le tableur donne l'EPCI « OUI » |
 
 ### 1.2 À décider ou à implémenter : la donnée existe (1 levier, 2 niveaux)
@@ -181,6 +180,20 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | EPCI : électricité et gaz | SDES 2024, somme des opérateurs de l'EPCI ; ligne secrète à 0 ; EPCI sans ligne de gaz à 0 | les valeurs sous secret | non chiffré ; la somme des 1 232 EPCI calculés dépasse de 0,015 % celle des 96 départements |
 | EPCI : outre-mer | 23 EPCI sans parc de logements : `missing_data` | le fichier Logements des DOM | le parc INSEE construit ne couvre que la métropole |
 | EPCI : surface chauffée du parc | m² estimés à partir des classes de superficie (milieux de classe), ponctuation de poids du recensement | surfaces déclarées | le bois est dans « autre » et n'a pas de colonne propre |
+
+### Résidentiel, changement du système de chauffage (`residentiel_changement_systeme_chauffage`, région, département, EPCI)
+
+| Point | Aujourd'hui | Ce qui l'affinerait | Écart |
+|---|---|---|---|
+| Énergie de chauffage par territoire | part nationale du chauffage par vecteur (SDES 2024) × consommation résidentielle du territoire : électricité 30,3 %, gaz 79,9 %, fioul 88,6 %, chaleur 91,1 % | le CEREN, énergie livrée au seul chauffage par département | interprétation nouvelle ; suppose le même usage du chauffage partout ; Ille-et-Vilaine : 2,35 TWh de chauffage sur 4,41 TWh |
+| Rendements : ancien et rénové | ancien (gaz 75 %, fioul 75 %, bois 70 %, électricité 95 %) pour l'énergie actuelle, rénové (90 %, 90 %, 75 %, 100 %) pour la cible ; chaleur à 1 | un seul coefficient par vecteur, comme le tableur (B15) | le tableur n'a qu'un rendement par vecteur et renvoie à la p. 156 qui en donne deux ; interprétation nouvelle ; le gain de rendement est dans le résultat |
+| Bois | consommation de base 0, part cible acceptée, facteur 0, rendement rénové 75 % (le plus bas de 75 % et 85 %) | la consommation de bois du CEREN | limite reconnue par la documentation (pp. 52-53) ; un passage au bois supprime les émissions du vecteur quitté |
+| GPL | non modifié, ni source ni cible | le rendement du GPL | pas de valeur dans la p. 156 du rapport ADEME ; le tableur a une ligne sans valeur ; le GPL pèse 46,7 % de sa consommation en chauffage |
+| Pompes à chaleur | confondues avec l'électricité, un rendement de 100 % pour la cible | le COP du CSTB | le tableur dit « un seul coefficient » pour l'électrique (B15) ; le lien CSTB est mort |
+| Parts cibles | cinq parts qui font 100 %, sans valeur par défaut | le mix actuel par défaut (documentation, p. 55) | le mix actuel n'est pas exposé ; la documentation le donne par défaut |
+| Facteur du réseau de chaleur | moyenne pondérée des réseaux du territoire ; 0 sans réseau | un facteur par défaut sans réseau | un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût : la somme des 1 232 EPCI (18,37 MtCO2e pour une cible donnée) dépasse de 5,8 % celle des départements |
+| Formule | lue dans les commentaires du tableur (`Residentiel_ChgtSyst!B13, B15`), la cellule « Formule » est vide | la cellule | énergie utile = consommation × rendement ; cible = énergie utile × part ÷ rendement ; réduction = Σ (consommation − cible) × FE |
+| Facteurs d'émission | ceux de `residentiel_sobriete` (électricité × 67,4 %, gaz et fioul OMINEA 2024) | | |
 
 ### Transport de personnes (`transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification`)
 
