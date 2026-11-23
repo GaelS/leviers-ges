@@ -23,12 +23,17 @@ describe('buildOccupationData, sources versionnées ALDO', () => {
     expect(csv).toBe(committed(file))
   })
 
+  const sources = readOccupationSources(dataDirectory)._unsafeUnwrap()
+  const territoryBuilds = {
+    departement: buildTerritoryOccupation({ ...sources, territoryKind: 'departement' })._unsafeUnwrap(),
+    region: buildTerritoryOccupation({ ...sources, territoryKind: 'region' })._unsafeUnwrap(),
+  }
+
   it.each([
     ['departement', 'departements', 96],
     ['region', 'regions', 13],
   ] as const)('reconstruit les jeux par %s à l’identique', (territoryKind, prefix, count) => {
-    const sources = readOccupationSources(dataDirectory)._unsafeUnwrap()
-    const territory = buildTerritoryOccupation({ ...sources, territoryKind })._unsafeUnwrap()
+    const territory = territoryBuilds[territoryKind]
     expect({
       surfaces: territory.surfacesCsv === committed(`${prefix}-surfaces.csv`),
       factors: territory.factorsCsv === committed(`${prefix}-facteurs.csv`),
