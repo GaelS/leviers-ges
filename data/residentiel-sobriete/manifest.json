@@ -169,6 +169,50 @@
           "checksum": "703410d795466cda9a8b21373c2586b0d467b0bf385503110b7f88b1cfb77e10"
         }
       ]
+    },
+    {
+      "file": "epcis.csv",
+      "source": "SDES, consommation résidentielle 2024 d'électricité et de gaz naturel par EPCI, en MWh, somme des opérateurs de chaque EPCI ; une ligne sous secret statistique compte pour 0. Un EPCI sans ligne de gaz (pas de réseau) a 0 de gaz. Le fioul et le GPL n'y figurent pas : ils ne sont publiés qu'au département. Construit par pnpm build:data:residentiel-sobriete",
+      "link": "https://www.statistiques.developpement-durable.gouv.fr/donnees-locales-de-consommation-denergie?rubrique=&dossier=189",
+      "vintage": "2024",
+      "retrievedOn": "2026-11-23",
+      "checksum": "d8e3b75ead4be7525948f37aca839ee320bf2dcea64304c6322f924240eafe5e",
+      "level": "epci",
+      "keyColumn": "code_epci",
+      "columns": [
+        {
+          "name": "code_epci",
+          "unit": "code SIREN de l'EPCI"
+        },
+        {
+          "name": "electricity_mwh",
+          "unit": "MWh d'électricité consommés par le résidentiel en 2024"
+        },
+        {
+          "name": "natural_gas_mwh",
+          "unit": "MWh de gaz naturel consommés par le résidentiel en 2024"
+        }
+      ],
+      "controlTotals": {
+        "electricity_mwh": "156127255.6265",
+        "natural_gas_mwh": "101745259.70506"
+      },
+      "sources": [
+        {
+          "file": "sources/sdes-electricite-epci-2024-residentiel.csv",
+          "source": "SDES, Données locales de consommation d'électricité, maille EPCI, année 2024 (DiDo, jeu 6102486fe436672220ec5da8), lignes du grand secteur résidentiel (CODE_GRAND_SECTEUR = R) : opérateur, code EPCI, consommation en MWh (« secret » conservé) et points de livraison",
+          "link": "https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=6102486fe436672220ec5da8",
+          "retrievedOn": "2026-11-23",
+          "checksum": "8de4c3b9957a4e7b305387324ed1dfee5b66dedfbc0f38698b4e121a9dc328d8"
+        },
+        {
+          "file": "sources/sdes-gaz-epci-2024-residentiel.csv",
+          "source": "SDES, Données locales de consommation de gaz naturel, maille EPCI, année 2024 (DiDo, jeu 6102486fe436672220ec5da8), lignes du grand secteur résidentiel (CODE_GRAND_SECTEUR = R) : opérateur, code EPCI, consommation en MWh (« secret » conservé) et points de livraison",
+          "link": "https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=6102486fe436672220ec5da8",
+          "retrievedOn": "2026-11-23",
+          "checksum": "9dbf23d009f5174e601be001b027d1de3aa8dac8a67f4e6c8eed0d8c68edc91f"
+        }
+      ]
     }
   ]
 }
