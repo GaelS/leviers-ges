@@ -8,9 +8,9 @@ import {
 import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 import { quantity } from '../../domain/units.ts'
 import type { Fraction, KgCo2ePerKwh, MegawattHours, TonnesCo2ePerYear } from '../../domain/units.ts'
+import { HEATING_AND_HOT_WATER_SHARE } from '../../domain/residential-heating-shares.ts'
 import {
   CURRENT_EFFICIENCY,
-  HEATING_AND_HOT_WATER_SHARE,
   TARGET_EFFICIENCY,
   type HeatingVector,
 } from './heating-reference.ts'
