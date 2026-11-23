@@ -899,8 +899,8 @@ describe('estimate', () => {
           rows: [
             {
               code_region: '84',
-              nitrogen_delivered_tonnes_2021_2022: '1000',
               nitrogen_delivered_tonnes_2022_2023: '1000',
+              nitrogen_delivered_tonnes_2023_2024: '1000',
             },
           ],
         },

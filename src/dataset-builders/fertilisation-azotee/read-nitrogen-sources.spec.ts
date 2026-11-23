@@ -17,17 +17,14 @@ function copyDataDirectory(): string {
 }
 
 describe('readNitrogenSources', () => {
-  it('lit les deux relevés versionnés dont les empreintes correspondent au manifeste', () => {
+  it('lit le relevé versionné dont l’empreinte correspond au manifeste', () => {
     const sources = readNitrogenSources(committedDataDirectory)._unsafeUnwrap()
-    expect({
-      regionsStartWith: sources.regionDeliveriesCsv.slice(0, 8),
-      departementsStartWith: sources.departementDeliveriesCsv.slice(0, 8),
-    }).toEqual({ regionsStartWith: 'campagne', departementsStartWith: 'campagne' })
+    expect(sources.deliveriesCsv.slice(0, 9)).toBe('zone,code')
   })
 
   it('refuse un relevé modifié depuis son extraction', () => {
     const directory = copyDataDirectory()
-    writeFileSync(join(directory, folder, 'sources', 'azote-livre-par-region.csv'), 'autre')
+    writeFileSync(join(directory, folder, 'sources', 'unifa-azote-2023-2024.csv'), 'autre')
     expect(readNitrogenSources(directory)._unsafeUnwrapErr()).toMatchObject({
       kind: 'invalid_dataset',
       dataset: 'fertilisation-azotee/regions',
@@ -37,7 +34,7 @@ describe('readNitrogenSources', () => {
 
   it('refuse un relevé absent du disque', () => {
     const directory = copyDataDirectory()
-    rmSync(join(directory, folder, 'sources', 'azote-livre-par-departement-2021-2022.csv'))
+    rmSync(join(directory, folder, 'sources', 'unifa-azote-2023-2024.csv'))
     expect(readNitrogenSources(directory)._unsafeUnwrapErr()).toMatchObject({
       dataset: 'fertilisation-azotee/regions',
       reason: 'unreadable',
@@ -49,13 +46,13 @@ describe('readNitrogenSources', () => {
     removeSourceFromManifest({
       directory,
       folder,
-      file: 'sources/azote-livre-par-departement-2021-2022.csv',
+      file: 'sources/unifa-azote-2023-2024.csv',
     })
     expect(readNitrogenSources(directory)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
       dataset: 'fertilisation-azotee/regions',
       reason: 'invalid_manifest',
-      detail: 'sources/azote-livre-par-departement-2021-2022.csv',
+      detail: 'sources/unifa-azote-2023-2024.csv',
     })
   })
 

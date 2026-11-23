@@ -11,7 +11,7 @@ function readCommitted(file: string): string {
   return readFileSync(join(dataDirectory, 'fertilisation-azotee', file), 'utf8')
 }
 
-describe('buildNitrogenDeliveries, sources versionnées UNIFA et France Fertilisants', () => {
+describe('buildNitrogenDeliveries, sources versionnées UNIFA', () => {
   const nitrogenDeliveries = readNitrogenSources(dataDirectory).andThen(buildNitrogenDeliveries)._unsafeUnwrap()
 
   it('reconstruit regions.csv à l’identique', () => {
@@ -22,17 +22,14 @@ describe('buildNitrogenDeliveries, sources versionnées UNIFA et France Fertilis
     expect(nitrogenDeliveries.departements.csv).toBe(readCommitted('departements.csv'))
   })
 
-  it('compte 13 régions et 94 départements, avec leurs totaux d’azote', () => {
+  it('compte 13 régions et 94 départements, avec leurs totaux d’azote des deux campagnes', () => {
+    const { regions, departements } = nitrogenDeliveries
     expect({
-      regions: nitrogenDeliveries.regions.regionCount,
-      regionTonnes: [nitrogenDeliveries.regions.firstCampaignTonnes, nitrogenDeliveries.regions.secondCampaignTonnes],
-      departements: nitrogenDeliveries.departements.departementCount,
-      departementTonnes: nitrogenDeliveries.departements.tonnes,
+      regions: [regions.count, regions.previousCampaignTonnes, regions.latestCampaignTonnes],
+      departements: [departements.count, departements.previousCampaignTonnes, departements.latestCampaignTonnes],
     }).toEqual({
-      regions: 13,
-      regionTonnes: ['1746521', '1718954'],
-      departements: 94,
-      departementTonnes: '1746319',
+      regions: [13, '1793164.84270293567', '1821401'],
+      departements: [94, '1792944.329776067402', '1821200'],
     })
   })
 

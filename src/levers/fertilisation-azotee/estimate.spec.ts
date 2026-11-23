@@ -22,15 +22,15 @@ const FIXTURES: Readonly<Record<string, DatasetFixture>> = {
     rows: [
       {
         code_region: '84',
-        nitrogen_delivered_tonnes_2021_2022: '1000',
-        nitrogen_delivered_tonnes_2022_2023: '3000',
+        nitrogen_delivered_tonnes_2022_2023: '1000',
+        nitrogen_delivered_tonnes_2023_2024: '3000',
       },
     ],
   },
   'fertilisation-azotee/departements': {
     keyColumn: 'code_departement',
     level: 'departement',
-    rows: [{ code_departement: '01', nitrogen_delivered_tonnes_2021_2022: '500' }],
+    rows: [{ code_departement: '01', nitrogen_delivered_tonnes_2022_2023: '400', nitrogen_delivered_tonnes_2023_2024: '600' }],
   },
 }
 
@@ -67,15 +67,15 @@ describe('estimate, fertilisation_azotee', () => {
     expect(estimate(request('departement', '01'))._unsafeUnwrap().reduction.toFixed()).toBe('286.65')
   })
 
-  it('renvoie la moyenne de deux campagnes pour une région, une campagne pour un département', () => {
+  it('renvoie la moyenne de deux campagnes pour une région comme pour un département', () => {
     const campaigns = (level: ComputedLevels<'fertilisation_azotee'>, code: string) =>
       estimate(request(level, code))._unsafeUnwrap().appliedAssumptions['nitrogenCampaigns']?.value
     expect({
       region: campaigns('region', '84'),
       departement: campaigns('departement', '01'),
     }).toEqual({
-      region: 'average of the 2021-2022 and 2022-2023 campaigns',
-      departement: '2021-2022 campaign only',
+      region: 'average of the 2022-2023 (revised) and 2023-2024 campaigns',
+      departement: 'average of the 2022-2023 (revised) and 2023-2024 campaigns',
     })
   })
 
@@ -110,8 +110,8 @@ describe('estimate, fertilisation_azotee', () => {
           rows: [
             {
               [key]: code,
-              nitrogen_delivered_tonnes_2021_2022: 'beaucoup',
-              nitrogen_delivered_tonnes_2022_2023: '1',
+              nitrogen_delivered_tonnes_2022_2023: 'beaucoup',
+              nitrogen_delivered_tonnes_2023_2024: '1',
             },
           ],
         },
@@ -125,10 +125,10 @@ describe('estimate, fertilisation_azotee', () => {
 
   describe('à l’EPCI', () => {
     const NITROGEN_DEPARTEMENTS = [
-      { code_departement: '01', nitrogen_delivered_tonnes_2021_2022: '600' },
-      { code_departement: '69', nitrogen_delivered_tonnes_2021_2022: '1000' },
-      { code_departement: '75', nitrogen_delivered_tonnes_2021_2022: '17415' },
-      { code_departement: '80', nitrogen_delivered_tonnes_2021_2022: '200' },
+      { code_departement: '01', nitrogen_delivered_tonnes_2022_2023: '500', nitrogen_delivered_tonnes_2023_2024: '700' },
+      { code_departement: '69', nitrogen_delivered_tonnes_2022_2023: '900', nitrogen_delivered_tonnes_2023_2024: '1100' },
+      { code_departement: '75', nitrogen_delivered_tonnes_2022_2023: '17315', nitrogen_delivered_tonnes_2023_2024: '17515' },
+      { code_departement: '80', nitrogen_delivered_tonnes_2022_2023: '150', nitrogen_delivered_tonnes_2023_2024: '250' },
     ]
     const COMMUNES = ([
       ['01001', '200000001', '01'],
@@ -216,12 +216,12 @@ describe('estimate, fertilisation_azotee', () => {
       expect(estimateEpci(request('epci', code))._unsafeUnwrap().reduction.toFixed()).toBe(expected)
     })
 
-    it('renvoie la campagne unique du département', () => {
+    it('renvoie la moyenne de deux campagnes à l’EPCI', () => {
       expect(
         estimateEpci(request('epci', '200000001'))._unsafeUnwrap().appliedAssumptions[
           'nitrogenCampaigns'
         ]?.value,
-      ).toBe('2021-2022 campaign only')
+      ).toBe('average of the 2022-2023 (revised) and 2023-2024 campaigns')
     })
 
     it('ignore une commune de SAU absente du référentiel : résultat inchangé à 165,11 tCO2e', () => {
