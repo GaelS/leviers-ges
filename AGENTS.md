@@ -58,6 +58,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
 | `residentiel_changement_systeme_chauffage` | fait (approximation SDES) | `src/levers/residentiel-changement-systeme-chauffage/methodology.md` |
+| `residentiel_renovation` | fait (approximation SDES) | `src/levers/residentiel-renovation/methodology.md` |
 | `residentiel_sobriete` | fait | `src/levers/residentiel-sobriete/methodology.md` |
 | `transport_marchandises_efficacite` | fait | `src/levers/transport-marchandises-efficacite/methodology.md` |
 | `transport_marchandises_electrification` | fait | `src/levers/transport-marchandises-electrification/methodology.md` |
@@ -67,8 +68,6 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `transport_personnes_electrification` | fait | `src/levers/transport-personnes-electrification/methodology.md` |
 | `transport_personnes_report_modal` | fait | `src/levers/transport-personnes-report-modal/methodology.md` |
 | `transport_personnes_sobriete_deplacements` | fait | `src/levers/transport-personnes-sobriete-deplacements/methodology.md` |
-
-`residentiel_renovation` n'est pas calculé (`not_computed` partout).
 
 Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une question ouverte devient une hypothèse nommée avec son contournement dans `docs/methodology/assumptions.md` ; une formule corrigée par rapport au tableur est dans `docs/methodology/formula-corrections.md`.
 

@@ -367,6 +367,69 @@ describe('estimate', () => {
     })
   })
 
+  describe('residentiel_renovation', () => {
+    const withHousing = createEstimator(
+      createTemporaryCsvDataSource({
+        'territoires/communes': {
+          keyColumn: 'code_commune',
+          rows: [{ code_commune: '01001', code_epci: '', code_departement: '01', code_region: '84' }],
+        },
+        'residentiel-sobriete/departements': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: [
+            {
+              code_departement: '01',
+              electricity_mwh: '0',
+              natural_gas_mwh: '1000',
+              fuel_oil_mwh: '0',
+              lpg_mwh: '0',
+            },
+          ],
+        },
+        'residentiel-sobriete/heat-networks': {
+          keyColumn: 'network_id',
+          rows: [
+            {
+              network_id: 'A',
+              commune_code: '01001',
+              delivered_mwh: '1',
+              emission_factor_kg_per_kwh: '0',
+            },
+          ],
+        },
+        'residentiel-logements/logements-departement': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: [
+            {
+              code_departement: '01',
+              ...Object.fromEntries(
+                ['electricity', 'natural_gas', 'fuel_oil', 'lpg', 'heat_network'].flatMap((fuel) =>
+                  ['house', 'private_apartment', 'social_apartment'].flatMap((type) =>
+                    ['before_1971', '1971_to_2005', 'after_2005'].map((period): [string, string] => [
+                      `housing_m2_${type}_${fuel}_${period}`,
+                      fuel === 'natural_gas' && type === 'house' && period === 'before_1971' ? '10' : '0',
+                    ]),
+                  ),
+                ),
+              ),
+            },
+          ],
+        },
+      }),
+    )
+
+    it('aiguille le département vers son levier : 1 000 MWh de gaz, 92,6 % de chauffage et d’ECS, tout éligible, 35 %', () => {
+      const result = withHousing({
+        id: 'residentiel_renovation',
+        territory: { level: 'departement', code: '01' },
+        parameters: { renovatedParcFraction: '1' },
+      })
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('65.2')
+    })
+  })
+
   describe('residentiel_changement_systeme_chauffage', () => {
     const withResidentialEnergy = createEstimator(
       createTemporaryCsvDataSource({
