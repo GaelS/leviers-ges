@@ -1,10 +1,7 @@
 import type BigNumber from 'bignumber.js'
 import { Result, err, ok } from 'neverthrow'
-import { requireColumn } from '../../application/require-column.ts'
 import { parseBigWithExponent, sum, toBig } from '../../domain/big-number.ts'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
-import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
-import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
 import { roundToLoaderPrecision } from '../round-to-loader-precision.ts'
 import { toCsvText } from '../to-csv-text.ts'
 import {
@@ -15,6 +12,7 @@ import {
   toHousingColumn,
   toHousingType,
 } from './housing-cells.ts'
+import { readTerritories } from './read-territories.ts'
 
 type HousingSurfaces = {
   readonly csv: string
@@ -25,7 +23,7 @@ type HousingSurfaces = {
   readonly squareMetres: string
 }
 
-type ColumnIndexes = Readonly<Record<(typeof INSEE_COLUMNS)[number], number>>
+type ColumnIndexes = Readonly<Record<'COMMUNE' | 'ACHL' | 'CMBL' | 'HLML' | 'IPONDL' | 'SURF' | 'TYPL', number>>
 
 type Weighted = {
   readonly commune: string
@@ -40,15 +38,12 @@ type CommuneSurfaces = {
   readonly cells: ReadonlyMap<string, BigNumber>
 }
 
-// Source : élément neutre de l'addition
+// Source : choix de conception de ce dépôt, sans source externe : valeur d'une somme vide, non validé
 const NO_SQUARE_METRES = toBig('0')
 
 const dataset = 'residentiel-logements/sources/insee-rp2022-logements-communes.csv'
 
-// Source : INSEE, fichier détail Logements RP2022 (FD_LOGEMT_2022.csv), dictionnaire des variables
-const INSEE_COLUMNS = ['COMMUNE', 'ACHL', 'CMBL', 'HLML', 'IPONDL', 'SURF', 'TYPL'] as const
-
-// Source : data/residentiel-logements/manifest.json, colonnes de la source communale
+// Source : data/residentiel-logements/manifest.json, colonnes de logements-departement.csv précédées de la commune, de l'EPCI et du département
 const COMMUNE_COLUMNS = ['commune', 'epci', 'departement', ...HOUSING_COLUMNS] as const
 
 // Source : choix de conception de ce dépôt : séparateur de la clé commune, colonne et classe de superficie, absent des codes INSEE
@@ -56,10 +51,18 @@ const KEY_SEPARATOR = '\t'
 
 function toColumnIndexes(header: string): Result<ColumnIndexes, InvalidDataset> {
   const names = header.split(';')
-  const indexes = INSEE_COLUMNS.map((column) => [column, names.indexOf(column)] as const)
-  const missing = indexes.find(([, index]) => index < 0)
+  const indexes: ColumnIndexes = {
+    COMMUNE: names.indexOf('COMMUNE'),
+    ACHL: names.indexOf('ACHL'),
+    CMBL: names.indexOf('CMBL'),
+    HLML: names.indexOf('HLML'),
+    IPONDL: names.indexOf('IPONDL'),
+    SURF: names.indexOf('SURF'),
+    TYPL: names.indexOf('TYPL'),
+  }
+  const missing = Object.entries(indexes).find(([, index]) => index < 0)
   return missing === undefined
-    ? ok(Object.fromEntries(indexes) as ColumnIndexes)
+    ? ok(indexes)
     : err(
         invalidDataset({
           dataset,
@@ -155,26 +158,6 @@ function toRoundedCells(cells: ReadonlyMap<string, BigNumber>): Result<readonly 
       }),
     ),
   )
-}
-
-function readTerritories(
-  communesCsv: string,
-): Result<ReadonlyMap<string, readonly [string, string]>, InvalidDataset> {
-  const territoriesDataset = 'territoires/communes.csv'
-  return parseCsvText({ text: communesCsv, delimiter: ',' })
-    .mapErr(toInvalidDataset(territoriesDataset))
-    .andThen((rows) =>
-      Result.combine(
-        rows.map((row) =>
-          Result.combine([
-            requireColumn({ dataset: territoriesDataset, row, column: 'code_commune' }),
-            requireColumn({ dataset: territoriesDataset, row, column: 'code_epci' }),
-            requireColumn({ dataset: territoriesDataset, row, column: 'code_departement' }),
-          ]).map(([commune, epci, departement]) => [commune, [epci, departement] as const] as const),
-        ),
-      ),
-    )
-    .map((entries) => new Map(entries))
 }
 
 function totalSquareMetres(communes: readonly CommuneSurfaces[]): string {

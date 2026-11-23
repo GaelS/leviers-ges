@@ -2,7 +2,7 @@
   "datasets": [
     {
       "file": "logements-epci-departement.csv",
-      "source": "Surface habitable estimée (m²) des résidences principales par couple EPCI-département, somme des communes du recensement 2022 par type de logement, combustible principal et période de construction. Un EPCI à cheval sur plusieurs départements a une ligne par département. Le bois n'a pas de modalité (CMBL) : il est dans « autre ». Construit par pnpm build:data:residentiel-logements",
+      "source": "Surface habitable estimée (m²) des résidences principales par couple EPCI-département, somme des communes du recensement 2022 par type de logement, combustible principal et période de construction. Un EPCI à cheval sur plusieurs départements a une ligne par département. Le bois n'a pas de modalité (CMBL) : il est dans « autre » (choix de conception, non validé). Superficie : milieu de chaque classe, 130 m² pour 120 m² ou plus (documentation fonctionnelle PlanET, p. 51). Les colonnes se lisent type de logement (maison, appartement privé, appartement HLM), combustible, période de construction. Construit par pnpm build:data:residentiel-logements",
       "link": "https://www.insee.fr/fr/statistiques/8647099",
       "vintage": "recensement 2022",
       "retrievedOn": "2026-11-23",
@@ -23,219 +23,219 @@
         },
         {
           "name": "housing_m2_house_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house other after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment other after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment other after 2005"
+          "unit": "m² habitables estimés"
         }
       ],
       "controlTotals": {
@@ -320,219 +320,219 @@
         },
         {
           "name": "housing_m2_house_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : house other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : house other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_house_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : house other after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : private apartment other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_private_apartment_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : private apartment other after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_heat_network_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment heat network after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_natural_gas_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment natural gas after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_fuel_oil_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment fuel oil after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_electricity_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment electricity after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_lpg_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment lpg after 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_before_1971",
-          "unit": "m² habitables estimés des résidences principales : social apartment other before 1971"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_1971_to_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment other 1971 to 2005"
+          "unit": "m² habitables estimés"
         },
         {
           "name": "housing_m2_social_apartment_other_after_2005",
-          "unit": "m² habitables estimés des résidences principales : social apartment other after 2005"
+          "unit": "m² habitables estimés"
         }
       ],
       "controlTotals": {

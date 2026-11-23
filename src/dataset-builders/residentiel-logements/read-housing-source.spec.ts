@@ -25,8 +25,8 @@ const zeros = HOUSING_COLUMNS.map(() => '0')
 
 describe('readHousingSourceText', () => {
   it('lit la source versionnée dont l’empreinte correspond au manifeste', () => {
-    expect(readHousingSourceText(committedDataDirectory)._unsafeUnwrap().slice(0, 18)).toBe(
-      'commune,epci,depar',
+    expect(readHousingSourceText(committedDataDirectory)._unsafeUnwrap().split('\n')[0]).toBe(
+      ['commune', 'epci', 'departement', ...HOUSING_COLUMNS].join(','),
     )
   })
 
@@ -87,7 +87,7 @@ describe('readHousingCommunes', () => {
       readHousingCommunes(housing(`01001,200000001,01,abc,${zeros.slice(1).join(',')}`))._unsafeUnwrapErr(),
     ).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'residentiel-logements/logements-departement',
+      dataset: 'residentiel-logements/sources/insee-rp2022-logements-communes.csv',
       reason: 'unreadable',
       detail: 'housing_m2_house_heat_network_before_1971=abc is not a decimal number',
     })

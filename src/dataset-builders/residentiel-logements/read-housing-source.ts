@@ -8,7 +8,7 @@ import { findDatasetEntry } from '../../infrastructure/csv/manifest.ts'
 import { parseCsvText } from '../../infrastructure/csv/parse-csv-text.ts'
 import { readManifestSourceText } from '../../infrastructure/csv/read-manifest-source.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
-import { HOUSING_COLUMNS, type HousingColumn } from './housing-cells.ts'
+import { HOUSING_COLUMNS, toHousingRecord, type HousingColumn } from './housing-cells.ts'
 
 type HousingCommune = {
   readonly epci: string
@@ -17,6 +17,8 @@ type HousingCommune = {
 }
 
 const housingDataset = 'residentiel-logements/logements-departement'
+
+const housingSourceDataset = 'residentiel-logements/sources/insee-rp2022-logements-communes.csv'
 
 const housingFolder = 'residentiel-logements'
 
@@ -46,10 +48,10 @@ function toSquareMetres({
   row: Readonly<Record<string, string>>
   column: string
 }): Result<BigNumber, InvalidDataset> {
-  const dataset = housingDataset
+  const dataset = housingSourceDataset
   return requireColumn({ dataset, row, column }).andThen((text) =>
     parseBig(text).match(
-      (value) => ok(value),
+      (squareMetres) => ok(squareMetres),
       () =>
         err(
           invalidDataset({
@@ -63,7 +65,7 @@ function toSquareMetres({
 }
 
 function readHousingCommunes(housingCsv: string): Result<readonly HousingCommune[], InvalidDataset> {
-  const dataset = housingDataset
+  const dataset = housingSourceDataset
   return parseCsvText({ text: housingCsv, delimiter: ',' })
     .mapErr(toInvalidDataset(dataset))
     .andThen((rows) =>
@@ -74,13 +76,13 @@ function readHousingCommunes(housingCsv: string): Result<readonly HousingCommune
             requireColumn({ dataset, row, column: 'departement' }),
             Result.combine(
               HOUSING_COLUMNS.map((column) =>
-                toSquareMetres({ row, column }).map((value) => [column, value] as const),
+                toSquareMetres({ row, column }).map((squareMetres) => [column, squareMetres] as const),
               ),
             ),
           ]).map(([epci, departement, cells]) => ({
             epci,
             departement,
-            squareMetres: Object.fromEntries(cells) as Record<HousingColumn, BigNumber>,
+            squareMetres: toHousingRecord(cells),
           })),
         ),
       ),

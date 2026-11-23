@@ -82,6 +82,6 @@ describe('buildHousingSurfaces', () => {
   it('refuse d’écrire un code EPCI qui exigerait un guillemet CSV', () => {
     expect(
       buildHousingSurfaces(housing(`01001,"20,1",01,${cells({ first: '1', last: '1' })}`))._unsafeUnwrapErr(),
-    ).toMatchObject({ dataset: 'residentiel-logements', reason: 'malformed_csv' })
+    ).toMatchObject({ dataset: 'residentiel-logements/logements-epci-departement.csv', reason: 'malformed_csv' })
   })
 })

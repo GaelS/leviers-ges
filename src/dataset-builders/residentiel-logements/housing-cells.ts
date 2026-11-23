@@ -98,12 +98,19 @@ const HOUSING_COLUMNS: readonly HousingColumn[] = HOUSING_TYPES.flatMap((type) =
   ),
 )
 
+function toHousingRecord<Value>(
+  entries: readonly (readonly [HousingColumn, Value])[],
+): Readonly<Record<HousingColumn, Value>> {
+  return Object.fromEntries(entries) as Record<HousingColumn, Value>
+}
+
 export {
   HEATING_VECTOR_BY_FUEL_CODE,
   HOUSING_COLUMNS,
   SURFACE_SQUARE_METRES_BY_CLASS,
   toConstructionPeriod,
   toHousingColumn,
+  toHousingRecord,
   toHousingType,
 }
 export type { HousingCell, HousingColumn }

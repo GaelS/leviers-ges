@@ -4,7 +4,7 @@ import { Result } from 'neverthrow'
 import { sum } from '../../domain/big-number.ts'
 import type { InvalidDataset } from '../../domain/data-source.ts'
 import { toCsvText } from '../to-csv-text.ts'
-import { HOUSING_COLUMNS, type HousingColumn } from './housing-cells.ts'
+import { HOUSING_COLUMNS, toHousingRecord, type HousingColumn } from './housing-cells.ts'
 import { readHousingCommunes, type HousingCommune } from './read-housing-source.ts'
 
 type HousingBuild = {
@@ -21,7 +21,9 @@ type HousingArea = {
   readonly squareMetres: Readonly<Record<HousingColumn, BigNumber>>
 }
 
-const outputDataset = 'residentiel-logements'
+const epciDepartementsDataset = 'residentiel-logements/logements-epci-departement.csv'
+
+const departementsDataset = 'residentiel-logements/logements-departement.csv'
 
 // Source : data/residentiel-logements/manifest.json, colonnes de logements-epci-departement.csv
 const EPCI_DEPARTEMENTS_COLUMNS = [
@@ -48,12 +50,12 @@ function sumByKeys({
     const squareMetres =
       previous === undefined
         ? commune.squareMetres
-        : (Object.fromEntries(
+        : toHousingRecord(
             HOUSING_COLUMNS.map((column) => [
               column,
               previous.squareMetres[column].plus(commune.squareMetres[column]),
             ]),
-          ) as Record<HousingColumn, BigNumber>)
+          )
     return accumulated.set(id, { keys, squareMetres })
   }, new Map<string, HousingArea>())
   return sortBy([...areas.values()], [({ keys }) => keys.join('-')])
@@ -66,7 +68,6 @@ function totalSquareMetres(areas: readonly HousingArea[]): string {
 }
 
 function toHousingBuild(communes: readonly HousingCommune[]): Result<HousingBuild, InvalidDataset> {
-  const dataset = outputDataset
   const epciDepartements = sumByKeys({
     communes: communes.filter(({ epci }) => epci !== ''),
     toKeys: ({ epci, departement }) => [epci, departement],
@@ -82,8 +83,8 @@ function toHousingBuild(communes: readonly HousingCommune[]): Result<HousingBuil
     ...HOUSING_COLUMNS.map((column) => squareMetres[column].toFixed()),
   ])
   return Result.combine([
-    toCsvText({ dataset, columns: EPCI_DEPARTEMENTS_COLUMNS, rows: epciDepartementRows }),
-    toCsvText({ dataset, columns: DEPARTEMENTS_COLUMNS, rows: departementRows }),
+    toCsvText({ dataset: epciDepartementsDataset, columns: EPCI_DEPARTEMENTS_COLUMNS, rows: epciDepartementRows }),
+    toCsvText({ dataset: departementsDataset, columns: DEPARTEMENTS_COLUMNS, rows: departementRows }),
   ]).map(([epciDepartementsCsv, departementsCsv]) => ({
     epciDepartementsCsv,
     departementsCsv,
