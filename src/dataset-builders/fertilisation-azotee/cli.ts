@@ -29,10 +29,10 @@ if (deliveriesBuild.isErr()) {
   writeFileSync(join(dataDirectory, 'fertilisation-azotee', 'departements.csv'), departements.csv)
   console.log(
     JSON.stringify({
-      regions: regions.regionCount,
-      departements: departements.departementCount,
-      regionTonnes: [regions.firstCampaignTonnes, regions.secondCampaignTonnes],
-      departementTonnes: departements.tonnes,
+      regions: regions.count,
+      departements: departements.count,
+      regionTonnes: [regions.previousCampaignTonnes, regions.latestCampaignTonnes],
+      departementTonnes: [departements.previousCampaignTonnes, departements.latestCampaignTonnes],
       ...organicSummary,
     }),
   )

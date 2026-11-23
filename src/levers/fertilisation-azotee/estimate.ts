@@ -28,10 +28,7 @@ function readDelivered({
       territory: { ...territory, level: territory.level },
       getCommunesOf,
       getDepartementByCommune,
-    }).map((parts) => ({
-      tonnes: calculateEpciDeliveredNitrogen(parts),
-      campaigns: 'single-campaign',
-    }))
+    }).map((parts) => ({ tonnes: calculateEpciDeliveredNitrogen(parts) }))
   }
   return readNitrogenDelivered({ dataSource, territory: { ...territory, level: territory.level } })
 }
@@ -46,7 +43,7 @@ function estimate(
         nitrogenReductionFraction: parameters.nitrogenReductionFraction,
         deliveredNitrogen: delivered.tonnes,
       }),
-      toAppliedAssumptions(delivered),
+      toAppliedAssumptions(),
     ),
   )
 }

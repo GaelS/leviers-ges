@@ -15,6 +15,7 @@ import type { Territory } from '../../../domain/territory.ts'
 import type { UnknownTerritory } from '../../../domain/territory-index.ts'
 import { quantity, type Hectares, type Tonnes } from '../../../domain/units.ts'
 import type { EpciNitrogenPart } from './epci-nitrogen-part.ts'
+import { readCampaignAverage } from './read-campaign-average.ts'
 
 const agriculturalAreaDataset = 'surface-agricole-utile/communes'
 const nitrogenDataset = 'fertilisation-azotee/departements'
@@ -97,11 +98,7 @@ function readTonnes({
   departement: string
 }): Result<Tonnes, DataSourceError> {
   return findRow({ dataset, rows, column: 'code_departement', key: departement }).andThen((row) =>
-    requireQuantityColumn<'Tonnes'>({
-      dataset,
-      row,
-      column: 'nitrogen_delivered_tonnes_2021_2022',
-    }),
+    readCampaignAverage({ dataset, row }),
   )
 }
 

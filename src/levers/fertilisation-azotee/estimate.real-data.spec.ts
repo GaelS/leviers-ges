@@ -28,19 +28,19 @@ function estimation(target: { level: Level; code: string }) {
   return estimate(toRequest(target), context)
 }
 
-describe('estimate fertilisation_azotee, UNIFA et France Fertilisants', () => {
+describe('estimate fertilisation_azotee, UNIFA', () => {
   it.each([
-    ['region', '84', '44008.8'],
-    ['region', '53', '76221.09'],
-    ['region', '11', '34740.83'],
-    ['region', '94', '100.61'],
-    ['departement', '28', '33489.89'],
-    ['departement', '75', '9984.02'],
-    ['departement', '35', '18671.23'],
-    ['epci', '200000172', '20.47'],
-    ['epci', '200046977', '310.47'],
-    ['epci', '243500139', '1567.33'],
-    ['epci', '200006682', '817.69'],
+    ['region', '84', '46511.85'],
+    ['region', '53', '65301.21'],
+    ['region', '11', '42648.97'],
+    ['region', '94', '94.32'],
+    ['departement', '28', '48595.76'],
+    ['departement', '75', '12511.93'],
+    ['departement', '35', '18390.36'],
+    ['epci', '200000172', '27.78'],
+    ['epci', '200046977', '232.61'],
+    ['epci', '243500139', '1543.76'],
+    ['epci', '200006682', '849.87'],
   ] as const)(
     'à 10 %% de réduction, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {

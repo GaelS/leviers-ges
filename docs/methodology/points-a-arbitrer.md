@@ -86,12 +86,12 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
-| Une seule campagne au département | 2021-2022 | le rapport départemental 2022-2023 (non publié) | Nouvelle-Aquitaine 229 342 t puis 200 843 t ; Provence-Alpes-Côte d'Azur 12 873 t puis 23 455 t |
-| Livré pris pour épandu | livraisons au département du distributeur | des épandages | Paris reçoit 17 415 t d'azote pour 1 ha de SAU |
+| Campagne 2022-2023 déduite | azote 2023-2024 ÷ (1 + évolution publiée, arrondie à 0,1 %), pour les régions et les départements | le tableau 2022-2023 révisé, non publié | la valeur déduite diffère de la publiée de 2022-2023 (Île-de-France 63 044 t contre 57 386 t) ; une moyenne de deux campagnes seulement ; Nouvelle-Aquitaine 211 529 t puis 220 836 t, Provence-Alpes-Côte d'Azur 23 761 t puis 21 219 t |
+| Livré pris pour épandu | livraisons au département du distributeur | des épandages | Paris reçoit 21 824 t d'azote pour 1 ha de SAU |
 | Facteur d'émission national | 5,733 kgCO2e/kg pour tous | un facteur par territoire | incertitude de 400 % |
 | Corse départementale | 2A et 2B sans résultat | une publication distinguant 2A et 2B | la Corse est publiée sous le code 20 |
 | Ventilation à l'EPCI | azote du département × (SAU − SAU bio de l'EPCI) ÷ (SAU − SAU bio du département), validée par le CGDD (Brice), département par département pour un EPCI à cheval (documentation, p. 45) | l'azote épandu par EPCI | proxy ; SAU du recensement 2020 contre bio 2024 |
-| Département plus bio que cultivé | Paris et Hauts-de-Seine (bio 2024 de 190 et 275 ha contre 1 et 5 ha de SAU 2020) : l'EPCI n'en reçoit aucune part | une SAU à jour | les 17 415 t livrées à Paris et les 7 367 t des Hauts-de-Seine ne vont à aucun EPCI ; choix de conception, non validé |
+| Département plus bio que cultivé | Paris et Hauts-de-Seine (bio 2024 de 190 et 275 ha contre 1 et 5 ha de SAU 2020) : l'EPCI n'en reçoit aucune part | une SAU à jour | les 21 824 t livrées à Paris et les 10 658 t des Hauts-de-Seine ne vont à aucun EPCI ; choix de conception, non validé |
 | Part d'un EPCI plafonnée à 1 | plafond à tout l'azote du département | la bio des EPCI sous secret statistique | la bio du département est celle de l'Agence Bio, plus grande que la somme des EPCI non masqués |
 | EPCI sous secret statistique | 50 couples EPCI-département sans surface bio : `missing_data`, y compris pour un EPCI à cheval dont un seul département est masqué (Métropole du Grand Paris, département 91) | le fichier de l'observatoire | EPCI de 1 ou 2 fermes bio |
 | Département sans livraison d'azote | un EPCI en Corse (2A, 2B) renvoie `missing_data` | une publication distinguant 2A et 2B | |
