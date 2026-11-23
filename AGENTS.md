@@ -18,6 +18,7 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm build:data:elevage-durable` | reconstruit `data/elevage-durable/` (effectifs d'animaux par région et département) depuis ses sources |
 | `pnpm build:data:transport-marchandises` | reconstruit `data/transport-marchandises/` (tonnes.kilomètres et parc de poids lourds par région) depuis ses sources |
 | `pnpm build:data:occupation-des-sols` | reconstruit `data/occupation-des-sols/` (surfaces des types de sol et facteurs de conversion par EPCI) depuis ses sources |
+| `pnpm build:data:residentiel-logements` | reconstruit `data/residentiel-logements/` (m² des résidences principales par EPCI-département et département, selon le type, le combustible et la période de construction) depuis la source communale versionnée ; `… extract <zip INSEE RP2022>` régénère cette source |
 
 Une PR passe les quatre premières.
 

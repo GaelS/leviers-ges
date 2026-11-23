@@ -17,6 +17,7 @@
     "build:data:occupation-des-sols": "node src/dataset-builders/occupation-des-sols/cli.ts",
     "build:data:produits-bois": "node src/dataset-builders/produits-bois/cli.ts",
     "build:data:reseaux-chaleur": "node src/dataset-builders/reseaux-chaleur/cli.ts",
+    "build:data:residentiel-logements": "node src/dataset-builders/residentiel-logements/cli.ts",
     "build:data:residentiel-sobriete": "node src/dataset-builders/residentiel-sobriete/cli.ts",
     "build:data:surface-agricole-utile": "node src/dataset-builders/surface-agricole-utile/cli.ts",
     "build:data:transport-personnes": "node src/dataset-builders/transport-personnes/cli.ts",
