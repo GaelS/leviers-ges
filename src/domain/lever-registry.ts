@@ -25,9 +25,9 @@ const LEVERS = {
   },
   residentiel_renovation: { region: 'not_computed', departement: 'not_computed', epci: 'not_computed' },
   residentiel_changement_systeme_chauffage: {
-    region: 'not_computed',
-    departement: 'not_computed',
-    epci: 'not_computed',
+    region: 'workaround',
+    departement: 'workaround',
+    epci: 'workaround',
   },
   residentiel_sobriete: {
     region: 'no_open_question',

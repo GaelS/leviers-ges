@@ -17,17 +17,16 @@ Une question ouverte devient une hypothèse nommée, avec sa valeur de contourne
 | `applicationSurfaceBounds` | Quelle borne pour la surface d'application d'une pratique stockante ? | aucune : chaque surface est prise telle que saisie, à partir de 0 ha (documentation fonctionnelle, p. 78 : pas de borne documentée) | pratiques stockantes |
 | `includeInternationalFlows` | Les flux avec l'étranger comptent-ils dans les tonnes-kilomètres rapportées à la région ? Confirmée dans son principe le 2026-11-19 par la documentation fonctionnelle (p. 63) : moitié des tonnes.km chargées et moitié des déchargées. La documentation affecte en plus les importations à 100 % à la région de destination : règle non vérifiée dans le jeu SDES, voir `points-a-arbitrer.md` | avec l'étranger : trafic interne + 50 % du trafic chargé ou déchargé dans la région (SDES, jeu `reg_type_flux`, 2024) ; de +18 % (Corse) à +62 % (Hauts-de-France) | transport de marchandises : les quatre leviers |
 | `occupationDesSolsReferenceAreas` | Comment répartir l'afforestation et les zones humides entre les types de prairie, quel type ALDO est le « sol artificialisé enherbé », et que vaut un terme sans surface de référence ? Le tableur dit seulement « au prorata des surfaces existantes » | trois types de prairie ALDO au prorata de leurs surfaces ; enherbé = « sols artificiels arbustifs » ; terme sans surface de référence : 0 | `occupation_des_sols` |
+| `nationalHeatingShares` | Quelle énergie de chauffage par vecteur et par territoire, le CEREN n'étant pas ouvert ? | part nationale du chauffage dans la consommation résidentielle de chaque vecteur (SDES, Conso_usage, 2024, à climat réel, PCI) : électricité 30,3 %, gaz naturel 79,9 %, fioul 88,6 %, chaleur 91,1 %, bois 0 ; GPL non modifié | `residentiel_changement_systeme_chauffage` |
 
 ## Questions sans contournement, hors périmètre
 
-Ces quatre questions bloquent le calcul. Les leviers concernés n'ont aucune variante de `Request` et leurs trois niveaux sont `not_computed`.
+Ces trois questions bloquent le calcul. Les leviers concernés n'ont aucune variante de `Request` et leurs trois niveaux sont `not_computed`.
 
 | Levier | Ce qui manque | Pourquoi aucun contournement |
 |---|---|---|
 | Changement d'occupation des sols | l'unité du facteur de conversion : par an (tCO2e/ha/an, comme le tableur) ou variation totale (tCO2e/ha, comme ALDO) | le résultat varie jusqu'à 20 fois et change d'unité |
 | Résidentiel, rénovation | la consommation par m² des logements avant rénovation, par type de logement, chauffage et période de construction, par département (le tableur la renvoie au CEREN, « Pas disponible en open source ») | le fichier national gratuit n'a pas le chauffage principal |
-| Résidentiel, changement du système de chauffage | l'énergie livrée au seul chauffage, par département et par énergie | les données ouvertes du SDES couvrent tous les usages |
-| Résidentiel, changement du système de chauffage | les rendements du GPL et des pompes à chaleur | la page citée ne donne pas le rendement du GPL ; le tableau CSTB-ADEME des pompes à chaleur est inaccessible (lien mort) |
 
 Pratiques stockantes est aussi `not_computed` aux trois niveaux, pour une autre raison : son périmètre de validité est « LIMITEE » à chaque maille, sans commentaire ni surface applicable.
 
