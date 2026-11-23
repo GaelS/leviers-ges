@@ -5,7 +5,7 @@ Identifiant : `residentiel_changement_systeme_chauffage`. Niveaux : région, dé
 ## Formule
 
 ```
-E_v  = C_v × part_chauffage_v                  énergie finale de chauffage actuelle
+E_v  = C_v × part_chauffage_ECS_v              énergie finale actuelle de chauffage et d'ECS
 U    = Σ_v E_v × η_ancien_v                    énergie utile, conservée
 E'_v = U × s'_v ÷ η_rénové_v                   énergie finale cible
 Émissions évitées (tCO2e/an) = Σ_v (E_v − E'_v) × FE_v
@@ -16,7 +16,7 @@ v : électricité (PAC comprises), gaz naturel, fioul domestique, bois, chaleur 
 | Terme | Sens | Unité |
 |---|---|---|
 | `C_v` | consommation résidentielle du vecteur, tous usages, lue comme dans `residentiel_sobriete` | MWh |
-| `part_chauffage_v` | part nationale du chauffage dans cette consommation (SDES 2024) | fraction |
+| `part_chauffage_ECS_v` | part nationale du chauffage et de l'eau chaude sanitaire dans cette consommation (SDES 2024) ; la documentation (p. 51) range les deux usages sous les leviers Rénovation et Changement de système | fraction |
 | `s'_v` | part cible du vecteur dans l'énergie utile, saisie ; les cinq font 100 % | fraction |
 | `η` | rendement global de l'installation (ADEME, p. 156) | fraction |
 | `FE_v` | facteur d'émission du vecteur ; la chaleur : moyenne pondérée des réseaux du territoire | kgCO2e/kWh |
@@ -39,11 +39,11 @@ Les cinq sont obligatoires et font 100 % : sinon `invalid_request` sur `targetHe
 
 | Constante | Valeur | Source |
 |---|---|---|
-| Part du chauffage, électricité | 30,3 % | SDES Conso_usage 2024, TWh PCI : (34,459 + 10,551) ÷ (136,459 + 11,970) |
-| Part du chauffage, gaz naturel | 79,9 % | 81,258 ÷ 101,763 |
-| Part du chauffage, fioul | 88,6 % | 25,893 ÷ 29,210 |
-| Part du chauffage, chaleur | 91,1 % | 13,401 ÷ 14,709 |
-| Part du chauffage, bois | 0 | documentation, pp. 52-53 (choix 3) |
+| Part du chauffage et de l'ECS, électricité | 46,7 % | SDES Conso_usage 2024, TWh PCI : (34,459 + 10,551 + 22,921 + 1,419) ÷ (136,459 + 11,970) |
+| Part du chauffage et de l'ECS, gaz naturel | 92,6 % | (81,258 + 12,973) ÷ 101,763 |
+| Part du chauffage et de l'ECS, fioul | 100 % | (25,893 + 3,317) ÷ 29,210 |
+| Part du chauffage et de l'ECS, chaleur | 100 % | (13,401 + 1,308) ÷ 14,709 |
+| Part du chauffage et de l'ECS, bois | 0 | documentation, pp. 52-53 (choix 3) |
 | Rendements actuels | gaz 75 %, fioul 75 %, bois 70 %, électricité 95 %, chaleur 1 | ADEME, Rénovation performante par étapes, p. 156 ; chaleur : `Residentiel_ChgtSyst` |
 | Rendements cibles | gaz 90 %, fioul 90 %, bois 75 %, électricité 100 %, chaleur 1 | idem |
 | FE électricité, gaz, fioul | comme `residentiel_sobriete` | `src/domain/emission-factors.ts` |
@@ -57,7 +57,7 @@ Aucun jeu propre : la consommation vient de `src/application/residential-consump
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Énergie de chauffage = consommation du territoire × part nationale du chauffage par vecteur | interprétation nouvelle, remplace le CEREN non ouvert (`Residentiel_ChgtSyst!G28`) ; suppose le même usage partout |
+| 1 | Énergie de chauffage et d'ECS = consommation du territoire × part nationale du chauffage et de l'ECS par vecteur | interprétation nouvelle, remplace le CEREN non ouvert (`Residentiel_ChgtSyst!G28`) ; suppose le même usage partout ; chauffage et ECS : documentation, p. 51, et `Données_Parc_habitation!A6` (consommations « Renov ») ; la climatisation n'est pas comptée |
 | 2 | Deux rendements par vecteur : ancien pour l'énergie actuelle, rénové pour la cible | interprétation nouvelle : le tableur n'en nomme qu'un (`B15`, « un seul coefficient ») et renvoie à la p. 156 qui donne les deux ; la documentation (p. 55) parle d'« appareils à meilleur rendement » |
 | 3 | Bois : consommation de base 0, part cible acceptée, FE 0, rendement 75 % | limite reconnue par la documentation (pp. 52-53) ; 75 % est la plus basse des deux valeurs rénovées (75 %, 85 %), choix de conception, non validé |
 | 4 | Pompes à chaleur confondues avec l'électricité, un seul rendement de 100 % à la cible | `Residentiel_ChgtSyst!B15` : « un seul coefficient utilisé » ; le tableau CSTB est inaccessible |
@@ -71,17 +71,17 @@ Aucun jeu propre : la consommation vient de `src/application/residential-consump
 
 | Entrée | Résultat |
 |---|---|
-| 1 000 MWh de fioul passent au gaz | 89,21 tCO2e |
-| 1 000 MWh de fioul passent à l'électricité | 214,55 tCO2e |
-| 1 000 MWh de fioul passent au bois | 237,81 tCO2e |
-| 1 000 MWh de gaz restent au gaz (gain de rendement 75 % → 90 %) | 26,77 tCO2e |
-| 1 000 MWh de gaz passent au fioul | −17,88 tCO2e |
-| département 01, jeu de test, cible 50 % électricité, 10 % gaz, 0 % fioul, 10 % bois, 30 % réseau | 498,32 tCO2e |
-| région 84, jeu de test, même cible | 4 005,49 tCO2e |
-| département 35, données réelles, même cible | 223 883,82 tCO2e |
-| somme des 13 régions | 17 122 529,66 tCO2e |
-| somme des 96 départements | 17 363 584,1 tCO2e |
-| somme des 1 232 EPCI | 18 372 662,62 tCO2e |
+| 1 000 MWh de fioul passent au gaz | 100,63 tCO2e |
+| 1 000 MWh de fioul passent à l'électricité | 242,04 tCO2e |
+| 1 000 MWh de fioul passent au bois | 268,27 tCO2e |
+| 1 000 MWh de gaz restent au gaz (gain de rendement 75 % → 90 %) | 31,05 tCO2e |
+| 1 000 MWh de gaz passent au fioul | −20,73 tCO2e |
+| département 01, jeu de test, cible 50 % électricité, 10 % gaz, 0 % fioul, 10 % bois, 30 % réseau | 541,43 tCO2e |
+| région 84, jeu de test, même cible | 4 457,75 tCO2e |
+| département 35, données réelles, même cible | 244 191,78 tCO2e |
+| somme des 13 régions | 19 155 808,29 tCO2e |
+| somme des 96 départements | 19 450 737,66 tCO2e |
+| somme des 1 232 EPCI | 20 774 364,19 tCO2e |
 
 Les valeurs sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV et des constantes.
 
@@ -89,11 +89,11 @@ Les valeurs sont recalculées hors du dépôt (Python, `Decimal`) à partir des 
 
 | Limite | Effet |
 |---|---|
-| Part nationale du chauffage | un département qui chauffe moins ou plus que la moyenne nationale est mal estimé ; Ille-et-Vilaine : 2,35 TWh de chauffage sur 4,41 TWh |
+| Part nationale du chauffage | un département qui chauffe moins ou plus que la moyenne nationale est mal estimé ; Ille-et-Vilaine : 2,93 TWh de chauffage et d'ECS (électricité, gaz, fioul) sur 4,41 TWh tous usages |
 | Bois | absent des données du territoire : un passage au bois supprime des émissions sans en retirer d'énergie du bois existant |
-| GPL | 46,7 % de sa consommation sert au chauffage ; il n'est pas modifiable |
-| Territoire sans réseau de chaleur | facteur nul : un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût ; la somme des EPCI dépasse de 5,8 % celle des départements |
+| GPL | 53,2 % de sa consommation sert au chauffage et à l'ECS ; il n'est pas modifiable |
+| Territoire sans réseau de chaleur | facteur nul : un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût ; la somme des EPCI dépasse de 6,8 % celle des départements |
 | Pompes à chaleur | la part de chauffage de l'électricité inclut les PAC, la cible est lue à 100 % : le gain d'une PAC (COP) n'est pas compté |
-| Résultat négatif | une cible plus émettrice que l'actuel donne une réduction négative, sans plancher (gaz vers fioul : −17,88 tCO2e pour 1 000 MWh) |
+| Résultat négatif | une cible plus émettrice que l'actuel donne une réduction négative, sans plancher (gaz vers fioul : −20,73 tCO2e pour 1 000 MWh) |
 | Effets rebond | non pris en compte (documentation, 7.2.3.6) |
 | Outre-mer | 23 EPCI refusés (`missing_data`) faute de parc de logements |

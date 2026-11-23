@@ -414,7 +414,7 @@ describe('estimate', () => {
           targetHeatNetworkShareFraction: '0',
         },
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('89.21')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('100.63')
     })
   })
 

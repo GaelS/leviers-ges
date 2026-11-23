@@ -10,7 +10,7 @@ import { quantity } from '../../domain/units.ts'
 import type { Fraction, KgCo2ePerKwh, MegawattHours, TonnesCo2ePerYear } from '../../domain/units.ts'
 import {
   CURRENT_EFFICIENCY,
-  HEATING_SHARE,
+  HEATING_AND_HOT_WATER_SHARE,
   TARGET_EFFICIENCY,
   type HeatingVector,
 } from './heating-reference.ts'
@@ -28,7 +28,7 @@ const NO_AVOIDED_EMISSIONS: TonnesCo2ePerYear = quantity<'TonnesCo2ePerYear'>('0
 
 function currentFinalEnergy(consumption: ResidentialConsumption): Readonly<Record<HeatingVector, MegawattHours>> {
   const final = (vector: Exclude<HeatingVector, 'wood'>, total: MegawattHours): MegawattHours =>
-    quantity<'MegawattHours'>(total.times(HEATING_SHARE[vector]).toFixed())
+    quantity<'MegawattHours'>(total.times(HEATING_AND_HOT_WATER_SHARE[vector]).toFixed())
   return {
     electricity: final('electricity', consumption.electricity),
     naturalGas: final('naturalGas', consumption.naturalGas),
