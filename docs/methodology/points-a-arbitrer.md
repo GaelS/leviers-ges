@@ -38,7 +38,7 @@ Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `metho
 
 ## 1. Niveaux non calculés : où ils en sont
 
-Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retient : une donnée qu'on n'a pas, un choix à valider alors que la donnée existe, ou le périmètre du tableur. Mise à jour le 2026-11-19 sur la documentation fonctionnelle, le tableur et les réponses du CGDD.
+Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retient : une donnée qu'on n'a pas, un choix à valider alors que la donnée existe, ou le périmètre du tableur. Mise à jour le 2026-11-23 sur la documentation fonctionnelle, le tableur et les réponses du CGDD.
 
 ### 1.1 Bloqués par une donnée que nous n'avons pas (2 leviers, 4 niveaux)
 

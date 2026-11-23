@@ -21,11 +21,10 @@ Une question ouverte devient une hypothèse nommée, avec sa valeur de contourne
 
 ## Questions sans contournement, hors périmètre
 
-Ces trois questions bloquent le calcul. Les leviers concernés n'ont aucune variante de `Request` et leurs trois niveaux sont `not_computed`.
+Cette question bloque le calcul. Le levier concerné n'a aucune variante de `Request` et ses trois niveaux sont `not_computed`.
 
 | Levier | Ce qui manque | Pourquoi aucun contournement |
 |---|---|---|
-| Changement d'occupation des sols | l'unité du facteur de conversion : par an (tCO2e/ha/an, comme le tableur) ou variation totale (tCO2e/ha, comme ALDO) | le résultat varie jusqu'à 20 fois et change d'unité |
 | Résidentiel, rénovation | la consommation par m² des logements avant rénovation, par type de logement, chauffage et période de construction, par département (le tableur la renvoie au CEREN, « Pas disponible en open source ») | le fichier national gratuit n'a pas le chauffage principal |
 
 Pratiques stockantes est aussi `not_computed` aux trois niveaux, pour une autre raison : son périmètre de validité est « LIMITEE » à chaque maille, sans commentaire ni surface applicable.
