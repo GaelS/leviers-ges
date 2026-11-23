@@ -27,6 +27,15 @@ const ELECTRICITY_APPLIED_EMISSION_FACTOR: KgCo2ePerKwh = quantity<'KgCo2ePerKwh
 // Pour le résidentiel (SNAP 020202) OMINEA donne 55,8796, arrondi à 55,88 (choix de conception, non validé). PlanET V1, DonneesReference
 const NATURAL_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('55.88')
 
+// Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 204 (fioul domestique), SNAP 020202 (chauffage résidentiel), 2024 :
+// 74,5229 kg CO2/GJ PCI, arrondi à 74,52 (choix de conception, non validé)
+const FUEL_OIL_EMISSION_FACTOR: KgCo2ePerGigajoule = quantity<'KgCo2ePerGigajoule'>('74.52')
+
+// Source : OMINEA, base BDD_OMINEA_A_EF, NAPFUE 303 (GPL), SNAP 020202 (chauffage résidentiel), 2024 :
+// 63,1 kg CO2/GJ PCI
+const LIQUEFIED_PETROLEUM_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule =
+  quantity<'KgCo2ePerGigajoule'>('63.1')
+
 // Source : PlanET V1, DonneesReference!D16 « convertir GJ en kWh » : 1 kWh = 3,6 MJ = 0,0036 GJ
 const GIGAJOULES_PER_KILOWATT_HOUR: BigNumber = toBig('0.0036')
 
@@ -48,5 +57,7 @@ export {
   ELECTRIC_CAR_EMISSION_FACTOR,
   ELECTRICITY_APPLIED_EMISSION_FACTOR,
   ELECTRICITY_EMISSION_FACTOR_SHARE,
+  FUEL_OIL_EMISSION_FACTOR,
+  LIQUEFIED_PETROLEUM_GAS_EMISSION_FACTOR,
   NATURAL_GAS_EMISSION_FACTOR,
 }
