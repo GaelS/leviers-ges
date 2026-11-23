@@ -17,7 +17,7 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm build:data:fertilisation-azotee` | reconstruit `data/fertilisation-azotee/` (azote livré par région et par département) depuis ses sources |
 | `pnpm build:data:elevage-durable` | reconstruit `data/elevage-durable/` (effectifs d'animaux par région et département) depuis ses sources |
 | `pnpm build:data:transport-marchandises` | reconstruit `data/transport-marchandises/` (tonnes.kilomètres et parc de poids lourds par région) depuis ses sources |
-| `pnpm build:data:occupation-des-sols` | reconstruit `data/occupation-des-sols/` (surfaces des types de sol et facteurs de conversion par EPCI) depuis ses sources |
+| `pnpm build:data:occupation-des-sols` | reconstruit `data/occupation-des-sols/` (surfaces des types de sol et facteurs de conversion par EPCI, département et région) depuis ses sources |
 | `pnpm build:data:residentiel-logements` | reconstruit `data/residentiel-logements/` (m² des résidences principales par EPCI-département et département, selon le type, le combustible et la période de construction) depuis la source communale versionnée ; `… extract <zip INSEE RP2022>` régénère cette source |
 
 Une PR passe les quatre premières.
@@ -50,7 +50,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `elevage_durable` | fait | `src/levers/elevage-durable/methodology.md` |
 | `fertilisation_azotee` | fait | `src/levers/fertilisation-azotee/methodology.md` |
 | `haies` | fait | `src/levers/haies/methodology.md` |
-| `occupation_des_sols` | fait (EPCI) | `src/levers/occupation-des-sols/methodology.md` |
+| `occupation_des_sols` | fait | `src/levers/occupation-des-sols/methodology.md` |
 | `pratiques_stockantes` | fait | `src/levers/pratiques-stockantes/methodology.md` |
 | `produits_bois` | fait | `src/levers/produits-bois/methodology.md` |
 | `reseaux_chaleur` | fait | `src/levers/reseaux-chaleur/methodology.md` |
@@ -65,7 +65,7 @@ Chacun a son `src/levers/<id>/methodology.md` : sa formule, ses entrées, ses co
 | `transport_personnes_report_modal` | fait | `src/levers/transport-personnes-report-modal/methodology.md` |
 | `transport_personnes_sobriete_deplacements` | fait | `src/levers/transport-personnes-sobriete-deplacements/methodology.md` |
 
-`residentiel_renovation` n'est pas calculé (`not_computed` partout). `occupation_des_sols` ne l'est qu'à l'EPCI.
+`residentiel_renovation` n'est pas calculé (`not_computed` partout).
 
 Les fiches d'analyse (une par levier, figées) vivent hors de ce dépôt. Une question ouverte devient une hypothèse nommée avec son contournement dans `docs/methodology/assumptions.md` ; une formule corrigée par rapport au tableur est dans `docs/methodology/formula-corrections.md`.
 

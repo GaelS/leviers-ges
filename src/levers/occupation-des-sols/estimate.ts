@@ -28,7 +28,7 @@ function estimate(
         areas,
         factors,
       }),
-      toAppliedAssumptions(),
+      toAppliedAssumptions(territory.level),
     ),
   )
 }

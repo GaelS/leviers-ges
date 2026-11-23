@@ -8,6 +8,7 @@ import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
 type OccupationSources = {
   readonly surfacesCsv: string
   readonly factorsCsv: string
+  readonly factorSetsCsv: string
 }
 
 const surfacesDataset = 'occupation-des-sols/epcis-surfaces'
@@ -15,6 +16,8 @@ const factorsDataset = 'occupation-des-sols/epcis-facteurs'
 const occupationFolder = 'occupation-des-sols'
 const surfacesFile = 'sources/aldo-stocks-carbone-communes-surfaces.csv'
 const factorsFile = 'sources/aldo-flux2-epci-facteurs.csv'
+const factorSetsFile = 'sources/aldo-flux2-communes-jeux-de-facteurs.csv'
+const departementFactorsDataset = 'occupation-des-sols/departements-facteurs'
 
 function readSource({
   dataDirectory,
@@ -53,7 +56,13 @@ function readOccupationSources(dataDirectory: string): Result<OccupationSources,
       file: 'epcis-facteurs.csv',
       sourceFile: factorsFile,
     }),
-  ]).map(([surfacesCsv, factorsCsv]) => ({ surfacesCsv, factorsCsv }))
+    readSource({
+      dataDirectory,
+      dataset: departementFactorsDataset,
+      file: 'departements-facteurs.csv',
+      sourceFile: factorSetsFile,
+    }),
+  ]).map(([surfacesCsv, factorsCsv, factorSetsCsv]) => ({ surfacesCsv, factorsCsv, factorSetsCsv }))
 }
 
 export { factorsDataset, readOccupationSources, surfacesDataset }

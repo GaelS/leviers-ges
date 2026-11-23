@@ -128,7 +128,7 @@ function requireEpcis(surfaces: readonly EpciValues[]): Result<readonly EpciValu
 function buildOccupationData({
   surfacesCsv,
   factorsCsv,
-}: OccupationSources): Result<OccupationBuild, InvalidDataset> {
+}: Pick<OccupationSources, 'surfacesCsv' | 'factorsCsv'>): Result<OccupationBuild, InvalidDataset> {
   const dataset = outputDataset
   return Result.combine([readSurfaces(surfacesCsv).map(sumByEpci).andThen(requireEpcis), readFactors(factorsCsv)]).andThen(
     ([surfaces, factors]) =>
@@ -152,5 +152,5 @@ function buildOccupationData({
   )
 }
 
-export { buildOccupationData }
+export { buildOccupationData, readRows, readValue, sumColumns }
 export type { OccupationBuild }

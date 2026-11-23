@@ -1,7 +1,22 @@
-import type { AppliedAssumptions } from '../../application/estimate/estimate-result.ts'
+import type {
+  AppliedAssumption,
+  AppliedAssumptions,
+} from '../../application/estimate/estimate-result.ts'
+import type { Level } from '../../domain/territory.ts'
 
-function toAppliedAssumptions(): AppliedAssumptions {
+// Source : choix de conception de ce dépôt, non validé : la documentation fonctionnelle (p. 74) parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger, et ALDO ne publie pas de facteurs par zone
+const TERRITORY_FACTORS_ASSUMPTION: AppliedAssumption = {
+  value:
+    'conversion factors are the mean of the communes factors, weighted by the area of the starting land type (each grassland type, cropland, sealed artificial land)',
+  source:
+    'Functional documentation (p. 74): the pedoclimatic zone of the territory is taken into account, a single majority zone; ALDO Flux 2 publishes factors by EPCI and by commune only',
+  limit:
+    'Design choice, not validated: ALDO factors vary within a pedoclimatic zone and the larger the territory the coarser a single value is (documentation, p. 75); a territory without the starting land type takes the plain mean of its communes',
+}
+
+function toAppliedAssumptions(level: Level): AppliedAssumptions {
   return {
+    ...(level === 'epci' ? {} : { territoryFactors: TERRITORY_FACTORS_ASSUMPTION }),
     grasslandTypes: {
       value: 'wooded, herbaceous and shrub grassland, weighted by their area',
       source:

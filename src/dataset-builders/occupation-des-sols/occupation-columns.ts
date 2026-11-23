@@ -1,9 +1,27 @@
 type SurfaceColumn = { readonly output: string; readonly source: string }
 
-type FactorColumn = { readonly output: string; readonly sources: readonly string[] }
+type SurfaceOutput =
+  | 'cropland_ha'
+  | 'wooded_grassland_ha'
+  | 'herbaceous_grassland_ha'
+  | 'shrub_grassland_ha'
+  | 'wetland_ha'
+  | 'artificial_shrub_ha'
+  | 'artificial_impervious_ha'
+  | 'artificial_wooded_ha'
+  | 'forest_mixed_ha'
+  | 'forest_broadleaf_ha'
+  | 'forest_conifer_ha'
+  | 'forest_poplar_ha'
+
+type FactorColumn = {
+  readonly output: string
+  readonly sources: readonly string[]
+  readonly weight: SurfaceOutput
+}
 
 // Source : ALDO, jeu « stocks de carbone - communes » (data.ademe.fr/datasets/aldo-stocks-de-carbone) ; PlanET V1, onglet FC_COS : surfaces des types de sol de l'équation 27 ; « sols artificialisé enherbé » est lu comme « sols artificiels arbustifs » d'ALDO (choix de conception, non validé)
-const SURFACE_COLUMNS: readonly SurfaceColumn[] = [
+const SURFACE_COLUMNS: readonly (SurfaceColumn & { readonly output: SurfaceOutput })[] = [
   { output: 'cropland_ha', source: 'cultures_surface_ha' },
   { output: 'wooded_grassland_ha', source: 'prairies zones arborées_surface_ha' },
   { output: 'herbaceous_grassland_ha', source: 'prairies zones herbacées_surface_ha' },
@@ -56,27 +74,32 @@ const FACTOR_COLUMNS: readonly FactorColumn[] = [
       sources: ['sol', 'litiere'].map((reservoir) =>
         fluxColumn({ from: grassland.label, to: forest.label, reservoir }),
       ),
+      weight: `${grassland.output}_ha` as const,
     })),
   ),
   {
     output: 'cropland_to_wetland',
     sources: [fluxColumn({ from: 'cultures', to: 'zones humides', reservoir: 'sol' })],
+    weight: 'cropland_ha',
   },
   {
     output: 'wooded_grassland_to_wetland',
     sources: ['sol', 'biomasse'].map((reservoir) =>
       fluxColumn({ from: 'prairies zones arborées', to: 'zones humides', reservoir }),
     ),
+    weight: 'wooded_grassland_ha',
   },
   {
     output: 'herbaceous_grassland_to_wetland',
     sources: [fluxColumn({ from: 'prairies zones herbacées', to: 'zones humides', reservoir: 'sol' })],
+    weight: 'herbaceous_grassland_ha',
   },
   {
     output: 'shrub_grassland_to_wetland',
     sources: ['sol', 'biomasse'].map((reservoir) =>
       fluxColumn({ from: 'prairies zones arbustives', to: 'zones humides', reservoir }),
     ),
+    weight: 'shrub_grassland_ha',
   },
   {
     output: 'impervious_to_artificial_shrub',
@@ -87,6 +110,7 @@ const FACTOR_COLUMNS: readonly FactorColumn[] = [
         reservoir,
       }),
     ),
+    weight: 'artificial_impervious_ha',
   },
   {
     output: 'impervious_to_artificial_wooded',
@@ -97,8 +121,9 @@ const FACTOR_COLUMNS: readonly FactorColumn[] = [
         reservoir,
       }),
     ),
+    weight: 'artificial_impervious_ha',
   },
 ]
 
 export { FACTOR_COLUMNS, SURFACE_COLUMNS }
-export type { FactorColumn, SurfaceColumn }
+export type { FactorColumn, SurfaceColumn, SurfaceOutput }

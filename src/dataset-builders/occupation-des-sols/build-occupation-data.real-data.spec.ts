@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { sum, toBig } from '../../domain/big-number.ts'
 import { createCsvDataSource } from '../../infrastructure/csv/csv-data-source.ts'
 import { buildOccupationData } from './build-occupation-data.ts'
+import { buildTerritoryOccupation } from './build-territory-occupation.ts'
 import { readOccupationSources } from './read-occupation-sources.ts'
 
 const dataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
@@ -22,6 +23,24 @@ describe('buildOccupationData, sources versionnées ALDO', () => {
     expect(csv).toBe(committed(file))
   })
 
+  const sources = readOccupationSources(dataDirectory)._unsafeUnwrap()
+  const territoryBuilds = {
+    departement: buildTerritoryOccupation({ ...sources, territoryKind: 'departement' })._unsafeUnwrap(),
+    region: buildTerritoryOccupation({ ...sources, territoryKind: 'region' })._unsafeUnwrap(),
+  }
+
+  it.each([
+    ['departement', 'departements', 96],
+    ['region', 'regions', 13],
+  ] as const)('reconstruit les jeux par %s à l’identique', (territoryKind, prefix, count) => {
+    const territory = territoryBuilds[territoryKind]
+    expect({
+      surfaces: territory.surfacesCsv === committed(`${prefix}-surfaces.csv`),
+      factors: territory.factorsCsv === committed(`${prefix}-facteurs.csv`),
+      count: territory.territoryCount,
+    }).toEqual({ surfaces: true, factors: true, count })
+  })
+
   it('compte 1 241 EPCI', () => {
     expect(build.epciCount).toBe(1241)
   })
@@ -33,11 +52,16 @@ describe('buildOccupationData, sources versionnées ALDO', () => {
     expect(sum(forests.map((hectares) => toBig(hectares ?? ''))).toFixed()).toBe('18497382')
   })
 
-  it('le chargeur accepte les deux jeux, totaux de contrôle compris', () => {
+  it('le chargeur accepte les six jeux, totaux de contrôle compris', () => {
     const dataSource = createCsvDataSource(dataDirectory)
+    const count = (dataset: string) => dataSource.rows(dataset)._unsafeUnwrap().length
     expect({
-      surfaces: dataSource.rows('occupation-des-sols/epcis-surfaces')._unsafeUnwrap().length,
-      factors: dataSource.rows('occupation-des-sols/epcis-facteurs')._unsafeUnwrap().length,
-    }).toEqual({ surfaces: 1241, factors: 1241 })
+      epcis: [count('occupation-des-sols/epcis-surfaces'), count('occupation-des-sols/epcis-facteurs')],
+      departements: [
+        count('occupation-des-sols/departements-surfaces'),
+        count('occupation-des-sols/departements-facteurs'),
+      ],
+      regions: [count('occupation-des-sols/regions-surfaces'), count('occupation-des-sols/regions-facteurs')],
+    }).toEqual({ epcis: [1241, 1241], departements: [96, 96], regions: [13, 13] })
   })
 })

@@ -1,6 +1,6 @@
 # Changement d'occupation des sols
 
-Identifiant : `occupation_des_sols`. Niveau : EPCI. Région et département ne sont pas calculés (`level_not_computed`) : les facteurs d'ALDO Flux 2 n'existent qu'à l'EPCI et la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger (voir `docs/methodology/points-a-arbitrer.md`). Trois interprétations s'appliquent ; elles sont renvoyées dans `appliedAssumptions` avec leurs sources et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
+Identifiant : `occupation_des_sols`. Niveaux : EPCI, département et région (`workaround`). Les facteurs d'ALDO Flux 2 sont publiés à l'EPCI et à la commune ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment l'obtenir et ALDO ne publie pas de facteurs par zone : pour le département et la région, le facteur est la moyenne des facteurs des communes pondérée par la surface du type de sol de départ (choix 7, voir `docs/methodology/points-a-arbitrer.md`). Trois interprétations s'appliquent à l'EPCI, une de plus au département et à la région ; elles sont renvoyées dans `appliedAssumptions` avec leurs sources et leurs limites. Métropole seule : l'outre-mer est absent des données et renvoie `missing_data`.
 
 ## Formule
 
@@ -22,8 +22,8 @@ Lue dans l'équation 27 de la documentation fonctionnelle (p. 74), qui est celle
 | `t` | type de forêt : mixte, feuillue, conifère, peupleraie | |
 | `s` | cultures et chacun des trois types de prairie | |
 | `u` | sols artificiels arbustifs (lus comme « enherbés ») et arborés et buissonnants | |
-| `S(·)` | surface du type de sol dans l'EPCI (ALDO, stocks de carbone) | ha |
-| `FC` | facteur de conversion de l'EPCI (ALDO, Flux 2), réservoirs sol, biomasse et litière additionnés ; positif = stockage | tCO2e par ha (par an pour les deux premiers termes) |
+| `S(·)` | surface du type de sol dans le territoire (ALDO, stocks de carbone) | ha |
+| `FC` | facteur de conversion du territoire (ALDO, Flux 2), réservoirs sol, biomasse et litière additionnés ; positif = stockage | tCO2e par ha (par an pour les deux premiers termes) |
 
 Les parts sont des rapports de surfaces, comme le dit le tableur (`COS!B15` : « au prorata des surfaces existantes »). Le facteur de l'afforestation pour un type de forêt est la moyenne des facteurs prairie → ce type, pondérée par la surface de chaque type de prairie.
 
@@ -48,8 +48,10 @@ Aucune constante du code : les surfaces et les facteurs sont des données.
 |---|---|---|
 | `occupation-des-sols/epcis-surfaces` | surfaces des types de sol, en ha, somme des communes ALDO « stocks de carbone » | EPCI |
 | `occupation-des-sols/epcis-facteurs` | 18 facteurs de conversion, ALDO Flux 2 : 12 de prairies vers forêt, 4 vers zones humides (cultures et trois prairies), 2 de sols artificiels imperméabilisés vers arbustifs et arborés | EPCI |
+| `occupation-des-sols/departements-surfaces`, `…/regions-surfaces` | mêmes surfaces, somme de toutes les communes ALDO du territoire (dont 4 communes sans EPCI) | département, région |
+| `occupation-des-sols/departements-facteurs`, `…/regions-facteurs` | mêmes 18 facteurs, moyenne des facteurs des communes pondérée par la surface du type de départ ; moyenne simple si cette surface est nulle | département, région |
 
-Construits par `pnpm build:data:occupation-des-sols` depuis les exports ALDO versionnés dans `data/occupation-des-sols/sources/`. Les surfaces donnent 19 427 350,5 ha de cultures et 18 497 382 ha de forêt sur 1 241 EPCI, comme les surfaces de forêt de `produits_bois`. Les codes commune de Corse des exports ALDO sont tronqués : l'agrégation se fait par la colonne `epci` du jeu. Les EPCI sont ceux du millésime ALDO : 18 EPCI de métropole du référentiel `territoires` n'y figurent pas et renvoient `missing_data`.
+Construits par `pnpm build:data:occupation-des-sols` depuis les exports ALDO versionnés dans `data/occupation-des-sols/sources/` : surfaces des communes (avec leur département, leur région et le numéro de leur jeu de facteurs), facteurs des EPCI, et les 48 jeux de valeurs distincts des facteurs des 35 066 communes (J01 à J48, numérotés dans l'ordre croissant (texte) du code de la première commune qui les porte). Les surfaces donnent 19 427 350,5 ha de cultures et 18 497 382 ha de forêt sur 1 241 EPCI, comme les surfaces de forêt de `produits_bois`. Les codes commune de Corse des exports ALDO sont tronqués : l'agrégation se fait par la colonne `epci` du jeu. Les EPCI sont ceux du millésime ALDO : 18 EPCI de métropole du référentiel `territoires` n'y figurent pas et renvoient `missing_data`.
 
 ## Choix faits
 
@@ -61,6 +63,7 @@ Construits par `pnpm build:data:occupation-des-sols` depuis les exports ALDO ver
 | 4 | Un terme dont la surface de référence est nulle vaut 0, quel que soit le rythme demandé | choix de conception, non validé ; hypothèse nommée `occupationDesSolsReferenceAreas` ; renvoyé dans `appliedAssumptions.zeroReferenceArea` |
 | 5 | Le signe des facteurs est conservé : un facteur négatif déstocke | seuls les mouvements positifs en stockage sont comptés « au niveau du levier » (documentation, p. 73), ce qui désigne les trois stratégies, non un plancher sur les facteurs ; aucune borne dans le tableur |
 | 6 | Les réservoirs sol, biomasse et litière (forêt) s'additionnent ; une colonne absente d'ALDO (biomasse des cultures et des prairies herbacées vers zones humides) n'a pas de flux | `FC_COS` : « les différents réservoirs à additionner » |
+| 7 | Département et région : facteur = moyenne des facteurs des communes, pondérée par la surface du type de sol de départ (chaque type de prairie, cultures, sols imperméabilisés) ; moyenne simple des communes si cette surface est nulle (Paris) | interprétation nouvelle de « la zone pédoclimatique majoritaire du territoire » (documentation, p. 74) : les facteurs d'ALDO varient à l'intérieur d'une zone ; renvoyé dans `appliedAssumptions.territoryFactors` |
 
 ## Cas de test chiffrés
 
@@ -77,7 +80,12 @@ Construits par `pnpm build:data:occupation-des-sols` depuis les exports ALDO ver
 | EPCI 200054781, mêmes entrées | 41 305,94 tCO2e |
 | EPCI 200067049, mêmes entrées | 33 157,58 tCO2e |
 | EPCI absent du millésime ALDO (200083392) | `missing_data` |
-| région ou département | `level_not_computed` |
+| département 28, mêmes entrées | 37 126,21 tCO2e |
+| département 2A, mêmes entrées | 31 154,41 tCO2e |
+| département 75 (sans prairie, forêt ni culture) | 0 tCO2e |
+| région 53, mêmes entrées | 29 969,19 tCO2e |
+| région 84, mêmes entrées | 23 634,61 tCO2e |
+| région 94, mêmes entrées | 29 562,35 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -85,10 +93,10 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 
 | Limite | Effet |
 |---|---|
-| EPCI seulement | les facteurs d'ALDO Flux 2 n'existent qu'à l'EPCI ; la région et le département demanderaient une agrégation que ni la documentation ni le tableur ne décrivent |
+| Facteurs de la région et du département | moyenne pondérée des communes, non la valeur d'une zone majoritaire ; à l'EPCI les facteurs sont ceux d'ALDO, qu'on ne sait pas reconstruire depuis ceux des communes : un territoire et ses EPCI n'ont pas des facteurs cohérents entre eux |
 | Unité des facteurs | ALDO annonce « tC/ha/an » dans sa présentation et nomme ses colonnes `tCO2e_ha-1` ; le CGDD a tranché pour un flux annuel (question 2) : zones humides de 101 à 324 tCO2e/ha/an selon l'EPCI, lues comme un flux annuel |
 | Premier ordre de grandeur | « une version simplifiée de ce que propose l'outil ALDO » (documentation, p. 73) : trois stratégies seulement, le déstockage à date est laissé au scénario global |
 | Répartition au prorata | les surfaces à afforester ou à transformer sont choisies au prorata des surfaces existantes, comme l'indique le tableur ; la collectivité peut les répartir autrement |
-| Zone pédoclimatique | prise en compte par les facteurs de l'EPCI, qui mélangent celles de ses communes |
+| Zone pédoclimatique | prise en compte par les facteurs de l'EPCI, qui mélangent celles de ses communes ; plus le territoire est grand, plus c'est grossier (documentation, p. 75) |
 | Millésime | surfaces issues de Corine Land Cover, mises à jour à fréquence variable |
 | Pas de borne de surface | un rythme et un horizon qui dépassent les surfaces disponibles sont acceptés |

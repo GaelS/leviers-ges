@@ -78,7 +78,7 @@ Le détail d'un levier (formule, constantes sourcées, données, limites, cas de
 | `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | région, département, EPCI |
 | `elevage_durable` | région, département |
 | `residentiel_sobriete`, `residentiel_changement_systeme_chauffage` | région, département, EPCI (hors outre-mer) |
-| `occupation_des_sols` | EPCI |
+| `occupation_des_sols` | région, département, EPCI |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | région |
 | `haies`, `pratiques_stockantes` | sans territoire |
 
