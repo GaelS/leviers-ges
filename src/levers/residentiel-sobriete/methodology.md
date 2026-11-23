@@ -1,6 +1,6 @@
 # Résidentiel, sobriété des bâtiments
 
-Identifiant : `residentiel_sobriete`. Niveaux : région et département ; l'EPCI est `not_computed` (le fioul et le GPL résidentiels n'existent pas à cette maille). Aucune question ouverte côté ADEME ; les interprétations ci-dessous sont encodées dans les données et le code, et chacune est listée dans « Choix faits ». Métropole seule : l'outre-mer est absent des données énergétiques et renvoie `missing_data`.
+Identifiant : `residentiel_sobriete`. Niveaux : région et département (`no_open_question`), EPCI (`workaround`, choix 18 à 22 : le fioul et le GPL n'existent pas à cette maille et sont répartis depuis le département). Les interprétations ci-dessous sont encodées dans les données et le code, et chacune est listée dans « Choix faits ». Métropole seule : l'outre-mer est absent des données énergétiques et du parc de logements et renvoie `missing_data`.
 
 ## Formule
 
@@ -48,13 +48,17 @@ Les FE en kg/GJ deviennent des kg/kWh par `FE × 0,0036` : gaz 0,201168, fioul 0
 |---|---|---|
 | `residentiel-sobriete/regions` | électricité, gaz (PCI), fioul, GPL et chaleur, en GWh, SDES 2024 | région |
 | `residentiel-sobriete/departements` | électricité et gaz IRIS, fioul et GPL répartis, en MWh | département |
+| `residentiel-sobriete/epcis` | électricité et gaz résidentiels 2024 de l'EPCI, en MWh | EPCI |
 | `residentiel-sobriete/heat-networks` | livraisons au résidentiel (`CONSOR`) et contenu CO2 SDES de chaque réseau | réseau |
+| `residentiel-logements/logements-epci-departement`, `residentiel-logements/logements-departement` | m² des résidences principales (INSEE RP2022) par type, combustible et période ; seules les colonnes fioul et GPL (9 chacune) sont lues | EPCI-département, département |
 
-| Vecteur | Région | Département |
-|---|---|---|
-| Électricité, gaz | ligne de la région (bilan SDES) | ligne du département (IRIS SDES) |
-| Fioul, GPL | produits pétroliers de la région répartis par la part nationale du CEREN | fioul et GPL de la région répartis au prorata des ventes de FOD et de GPL du département |
-| Chaleur | ligne de la région (bilan SDES) | somme des livraisons des réseaux dont la commune est dans le département |
+| Vecteur | Région | Département | EPCI |
+|---|---|---|---|
+| Électricité, gaz | ligne de la région (bilan SDES) | ligne du département (IRIS SDES) | ligne de l'EPCI (SDES, somme des opérateurs) |
+| Fioul, GPL | produits pétroliers de la région répartis par la part nationale du CEREN | fioul et GPL de la région répartis au prorata des ventes de FOD et de GPL du département | pour chaque département de l'EPCI : consommation du département × m² de l'EPCI chauffés à ce combustible ÷ m² du département chauffés à ce combustible ; somme sur les départements |
+| Chaleur | ligne de la région (bilan SDES) | somme des livraisons des réseaux dont la commune est dans le département | somme des livraisons des réseaux dont la commune est dans l'EPCI |
+
+Les m² chauffés au fioul sont la somme des 9 colonnes `housing_m2_<type>_fuel_oil_<période>` (CMBL = 3), ceux du GPL celle des 9 colonnes `lpg` (CMBL = 5, « gaz en bouteilles ou en citerne »). Un département sans m² pour le combustible n'apporte rien (part de 0) ; un EPCI dont les m² dépassent ceux de son département est refusé (`control_total_mismatch`).
 
 Le facteur de la chaleur est la moyenne des contenus CO2 des réseaux du territoire, pondérée par les livraisons au résidentiel (`Residentiel_Sobriete!C33`).
 
@@ -81,6 +85,12 @@ Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six s
 | 15 | Territoire sans réseau : facteur de chaleur nul | choix de conception, non validé, comme `batiments_machines_agricoles` |
 | 16 | Année 2024 pour toutes les données | le tableur ne fixe pas l'année des facteurs OMINEA |
 | 17 | Facteurs OMINEA du gaz et du fioul arrondis à deux décimales (55,88 et 74,52 au lieu de 55,8796 et 74,5229) | choix de conception, non validé ; le GPL (63,1) n'est pas arrondi |
+| 18 | EPCI : fioul et GPL du département répartis par la part des m² de l'EPCI chauffés à ce combustible (RP2022) | interprétation nouvelle : la documentation (p. 51) désigne le Fichier Logements sans fixer la règle ; suppose la même consommation par m² dans tout le département |
+| 19 | EPCI sur plusieurs départements : somme des contributions de chaque département | comme `produits_bois` |
+| 20 | `CMBL` = 5 (« gaz en bouteilles ou en citerne ») lu comme GPL | choix de conception, non validé |
+| 21 | EPCI : électricité et gaz du SDES 2024, ligne secrète à 0, EPCI sans ligne de gaz à 0 | comme le choix 4 ; EPCI sans consommation dans le jeu : `missing_data` |
+| 22 | EPCI d'outre-mer (23) : `missing_data`, le parc INSEE construit ne couvre que la métropole | choix de conception, non validé |
+| 23 | EPCI : m² du parc estimés d'après les classes de superficie du recensement (milieu de classe) et la pondération `IPONDL`, bois dans « autre » | méthode du jeu `residentiel-logements` (documentation fonctionnelle PlanET, pp. 51-52) ; choix de conception, non validé |
 
 ## Cas de test
 
@@ -103,6 +113,10 @@ Construction des jeux : `pnpm build:data:residentiel-sobriete`, depuis les six s
 | région 84, 50 % des foyers et 10 % de baisse | 234 337,55 tCO2e |
 | somme des 13 régions, 100 % | 36 785 947,91 tCO2e |
 | somme des 96 départements, 100 % | 37 133 226,16 tCO2e |
+| EPCI couvrant tout le département 01, jeu de test | 1 229,68 tCO2e |
+| EPCI à 25 % du fioul et 50 % du GPL de son département, jeu de test | 231,47 tCO2e |
+| EPCI sur deux départements, jeu de test | 290,33 tCO2e |
+| somme des 1 232 EPCI métropolitains, 100 % | 37 138 667,36 tCO2e (somme des valeurs arrondies) |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
@@ -125,7 +139,9 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Chaleur à la commune du réseau | la chaleur n'est pas attribuée à la commune des clients ; un département servi par un réseau implanté dans un autre n'en reçoit pas la chaleur |
 | Chaleur : bilan et réseaux | la chaleur d'une région vient du bilan (14,7 TWh en métropole) et son facteur des réseaux hors secret (13,7 TWh) |
 | Départements sans réseau | 4 départements n'ont aucun réseau hors secret : leur chaleur et son facteur valent 0 |
-| Outre-mer | absent des données énergétiques |
+| Outre-mer | absent des données énergétiques ; 23 EPCI d'outre-mer sont refusés faute de parc de logements |
+| EPCI : consommation par m² uniforme | le fioul et le GPL d'un EPCI valent sa part des m² du département : un EPCI plus chauffé au fioul par m² que son département est sous-estimé |
+| EPCI et départements | la somme des 1 232 EPCI dépasse de 0,015 % celle des 96 départements (37,139 contre 37,133 MtCO2e) |
 | Jeux IRIS agrégés hors dépôt | `sdes-electricite-iris-…-par-departement.csv` et `sdes-gaz-iris-…-par-departement.csv` sont des extraits déjà sommés par département ; le jeu IRIS résidentiel complet n'est pas versionné |
 
 ## Errata à remonter à l'ADEME

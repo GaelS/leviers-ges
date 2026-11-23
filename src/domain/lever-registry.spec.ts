@@ -22,12 +22,12 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 28 workaround et 18 not_computed', () => {
+  it('compte 17 no_open_question, 29 workaround et 17 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 28, notComputed: 18 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 29, notComputed: 17 })
   })
 
   it('compte 19 leviers calculables sur au moins un niveau', () => {

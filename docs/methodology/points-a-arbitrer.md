@@ -16,7 +16,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 |   | Pratiques stockantes (`pratiques_stockantes`) | ❓ | ❓ | ❓ |
 |   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❓ |
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
-|   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❌ |
+|   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❓ |
 |   | Résidentiel, rénovation (`residentiel_renovation`) | ❌ | ❌ | ❌ |
 |   | Résidentiel, changement du système de chauffage (`residentiel_changement_systeme_chauffage`) | ❌ | ❌ | ❌ |
 | Transport de personnes | Sobriété des déplacements (`transport_personnes_sobriete_deplacements`) | ❓ | ❓ | ❓ |
@@ -30,7 +30,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Déchets | Changement de mode de traitement (`dechets_mode_de_traitement`) | ❓ | ❓ | ❓ |
 |   | Sobriété (`dechets_sobriete`) | ❓ | ❓ | ❓ |
 
-Calculés : 18 leviers sur 21 en région, 14 en département, 13 en EPCI.
+Calculés : 18 leviers sur 21 en région, 14 en département, 14 en EPCI.
 
 Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `methodology.md` du levier est corrigé dans la même PR. Une nouvelle PR de levier ajoute ses lignes en partie 2, et en partie 1 pour chaque niveau qu'elle ne calcule pas. Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`.
 
@@ -48,11 +48,10 @@ Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retie
 | `residentiel_changement_systeme_chauffage` | région, département, EPCI | l'énergie livrée au seul chauffage, par département et par énergie : le CEREN ; les rendements du GPL et des pompes à chaleur (lien CSTB-ADEME mort) | idem, relance commune avec la rénovation |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 72 dont le total est publié, la somme des EPCI vaut à peu près deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | le jeu « RGA2020 EPCI » de data.gouv.fr ne couvre que le Pays Basque : impasse ; le fichier communal Agreste `RA2020_2141_Cheptels_communes` (29 360 communes) a été vérifié : il ne donne que « Herbivores » (26,3 millions de têtes) et « Non herbivores » (299,7 millions), pas de type d'animal, donc pas de vaches laitières ; les lignes `DEPZ` du fichier EPCI portent le total départemental, tantôt sous `DEPZ`, tantôt sous un code EPCI (44 départements) ; classeur d'incohérences préparé pour Agreste ; le tableur donne l'EPCI « OUI » |
 
-### 1.2 À décider ou à implémenter : la donnée existe (2 leviers, 3 niveaux)
+### 1.2 À décider ou à implémenter : la donnée existe (1 levier, 2 niveaux)
 
 | Levier | Niveaux | Pourquoi ce n'est pas calculé | Ce qui reste à faire |
 |---|---|---|---|
-| `residentiel_sobriete` | EPCI | le fioul et le GPL résidentiels ne sont pas publiés à l'EPCI ; le tableur (`Residentiel_Sobriete!A25`) et la documentation (p. 51) désignent le Fichier Logements du recensement INSEE à la commune, ouvert, dont la variable `CMBL` distingue le fioul du gaz en bouteille ou en citerne | construire le jeu (millésime 2018) et répartir la consommation du département par combustible au prorata de la surface des logements chauffés à ce combustible : choix de conception à faire valider (Q9, Laurent « pas de réponse de tête ») |
 | `occupation_des_sols` | région, département | les facteurs d'ALDO Flux 2 sont publiés à l'EPCI et à la commune (35 066 communes, jeu « flux 2 - unitaire - communes ») ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger ; les valeurs EPCI d'ALDO ne sont pas la moyenne simple de leurs communes (écart médian de 0 à 1,2 tCO2e/ha selon la conversion) | question au CGDD sur la règle d'agrégation, ou choix de conception documenté ; le tableur donne région et département « OUI » |
 
 ### 1.3 Hors périmètre selon le tableur (4 leviers, 8 niveaux)
@@ -165,7 +164,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Imputation à la commune d'implantation | commune du réseau | la commune des clients | un département servi par un réseau implanté ailleurs n'en reçoit pas la chaleur |
 | Millésime | 2024 | 2025 est publié | non chiffré |
 
-### Résidentiel, sobriété (`residentiel_sobriete`, région, département)
+### Résidentiel, sobriété (`residentiel_sobriete`, région, département, EPCI)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
@@ -177,6 +176,11 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 | Secret statistique | lignes secrètes à 0 | les valeurs | électricité 2,6 %, gaz 5,3 % des lignes, 14 % des réseaux |
 | Formule appliquée à la consommation initiale | consommation initiale | la consommation restante après les deux autres leviers résidentiels | non chiffré |
 | Départements et régions | sources différentes | une source commune | la somme des 96 départements dépasse celle des 13 régions de 0,9 % |
+| EPCI : clé de répartition du fioul et du GPL | m² de logements chauffés au fioul (`CMBL` = 3) ou au GPL (`CMBL` = 5), RP2022 : la part de l'EPCI dans ceux du département, pour chaque département où il a des communes | une consommation par EPCI, ou une consommation par m² propre à l'EPCI | suppose la même consommation par m² dans tout le département ; interprétation nouvelle, la documentation (p. 51) désigne le Fichier Logements sans fixer la règle de répartition |
+| EPCI : `CMBL` = 5 lu comme GPL | « gaz en bouteilles ou en citerne » | une modalité propre au GPL | le propane en citerne et le butane en bouteille sont tous deux du GPL ; non chiffré |
+| EPCI : électricité et gaz | SDES 2024, somme des opérateurs de l'EPCI ; ligne secrète à 0 ; EPCI sans ligne de gaz à 0 | les valeurs sous secret | non chiffré ; la somme des 1 232 EPCI calculés dépasse de 0,015 % celle des 96 départements |
+| EPCI : outre-mer | 23 EPCI sans parc de logements : `missing_data` | le fichier Logements des DOM | le parc INSEE construit ne couvre que la métropole |
+| EPCI : surface chauffée du parc | m² estimés à partir des classes de superficie (milieux de classe), ponctuation de poids du recensement | surfaces déclarées | le bois est dans « autre » et n'a pas de colonne propre |
 
 ### Transport de personnes (`transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification`)
 

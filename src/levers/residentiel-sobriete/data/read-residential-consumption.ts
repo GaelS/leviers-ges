@@ -12,6 +12,7 @@ import type { HeatNetwork } from '../../../domain/heat-network.ts'
 import type { ComputedLevels } from '../../../domain/lever-registry.ts'
 import type { Territory } from '../../../domain/territory.ts'
 import { gigawattHoursToMegawattHours, quantity } from '../../../domain/units.ts'
+import { readEpciConsumption } from './read-epci-consumption.ts'
 import type { ResidentialConsumption } from './residential-consumption.ts'
 
 const regionsDataset = 'residentiel-sobriete/regions'
@@ -69,15 +70,16 @@ function readResidentialConsumption({
   territory: Territory<ComputedLevels<'residentiel_sobriete'>>
   networks: readonly HeatNetwork[]
 }): Result<ResidentialConsumption, DataSourceError> {
-  return match(territory.level)
-    .with('region', () =>
+  return match(territory)
+    .with({ level: 'region' }, () =>
       dataSource.row(regionsDataset, territory).andThen(toRegionalConsumption),
     )
-    .with('departement', () =>
+    .with({ level: 'departement' }, () =>
       dataSource
         .row(departementsDataset, territory)
         .andThen((row) => toDepartmentConsumption({ row, networks })),
     )
+    .with({ level: 'epci' }, (epci) => readEpciConsumption({ dataSource, territory: epci, networks }))
     .exhaustive()
 }
 
