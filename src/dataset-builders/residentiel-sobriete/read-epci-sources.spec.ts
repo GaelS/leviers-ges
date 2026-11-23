@@ -63,6 +63,7 @@ describe('readEpciSources', () => {
   it('refuse un dossier sans manifeste', () => {
     const directory = copyDataFolders({ from: committedDataDirectory, folders: [] })
     expect(readEpciSources(directory)._unsafeUnwrapErr()).toMatchObject({
+      dataset: 'residentiel-sobriete/epcis.csv',
       reason: 'unknown_dataset',
     })
   })

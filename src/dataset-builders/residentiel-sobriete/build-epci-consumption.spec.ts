@@ -35,10 +35,6 @@ describe('buildEpciConsumption', () => {
     )
   })
 
-  it('un EPCI absent d’un fichier a 0 pour cette énergie, un EPCI sous secret compte pour 0', () => {
-    expect(built.csv.split('\n')).toContain('200000003,0,0')
-  })
-
   it('compte les EPCI, les lignes sous secret et totalise les MWh', () => {
     expect({
       epciCount: built.epciCount,

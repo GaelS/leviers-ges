@@ -8,19 +8,19 @@ import { readEpciSources } from './read-epci-sources.ts'
 const dataDirectory = join(import.meta.dirname, '..', '..', '..', 'data')
 
 describe('buildEpciConsumption, extraits versionnés SDES 2024', () => {
-  const build = readEpciSources(dataDirectory).andThen(buildEpciConsumption)._unsafeUnwrap()
+  const epciConsumption = readEpciSources(dataDirectory).andThen(buildEpciConsumption)._unsafeUnwrap()
 
   it('reconstruit epcis.csv à l’identique', () => {
-    expect(build.csv).toBe(
+    expect(epciConsumption.csv).toBe(
       readFileSync(join(dataDirectory, 'residentiel-sobriete', 'epcis.csv'), 'utf8'),
     )
   })
 
   it('compte 1 255 EPCI, 156 127 255,6265 MWh d’électricité et 101 745 259,70506 MWh de gaz', () => {
     expect({
-      epcis: build.epciCount,
-      electricity: build.electricityMwh,
-      gas: build.naturalGasMwh,
+      epcis: epciConsumption.epciCount,
+      electricity: epciConsumption.electricityMwh,
+      gas: epciConsumption.naturalGasMwh,
     }).toEqual({
       epcis: 1255,
       electricity: '156127255.6265',
@@ -30,8 +30,8 @@ describe('buildEpciConsumption, extraits versionnés SDES 2024', () => {
 
   it('compte 58 lignes d’électricité et 17 lignes de gaz sous secret', () => {
     expect({
-      electricity: build.secretElectricityLineCount,
-      gas: build.secretGasLineCount,
+      electricity: epciConsumption.secretElectricityLineCount,
+      gas: epciConsumption.secretGasLineCount,
     }).toEqual({ electricity: 58, gas: 17 })
   })
 

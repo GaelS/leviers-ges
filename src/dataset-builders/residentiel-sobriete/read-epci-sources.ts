@@ -13,7 +13,7 @@ const epciElectricityFile = 'sources/sdes-electricite-epci-2024-residentiel.csv'
 const epciGasFile = 'sources/sdes-gaz-epci-2024-residentiel.csv'
 
 function readEpciSources(dataDirectory: string): Result<EpciConsumptionSources, InvalidDataset> {
-  const dataset = `${datasetFolder}/epcis`
+  const dataset = `${datasetFolder}/epcis.csv`
   return findDatasetEntry({
     rootDirectory: dataDirectory,
     folder: datasetFolder,
