@@ -7,7 +7,7 @@ import {
 import type { DataSourceError } from '../../domain/data-source.ts'
 import type { UnknownTerritory } from '../../domain/territory-index.ts'
 import { calculateResidentielSobrieteReduction } from './calculate-residentiel-sobriete-reduction.ts'
-import { getResidentialInputs } from './data/get-residential-inputs.ts'
+import { getResidentialInputs } from '../../application/residential-consumption/get-residential-inputs.ts'
 import type { ResidentielSobrieteRequest } from './residentiel-sobriete-request.ts'
 
 function estimate(

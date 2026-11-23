@@ -1,12 +1,11 @@
 import type { Result } from 'neverthrow'
-import { readHeatNetworks } from '../../../application/heat-networks/read-heat-networks.ts'
-import { weightHeatEmissionFactor } from '../../../application/heat-networks/weight-heat-emission-factor.ts'
-import type { DataSource, DataSourceError } from '../../../domain/data-source.ts'
-import type { ComputedLevels } from '../../../domain/lever-registry.ts'
-import type { Territory } from '../../../domain/territory.ts'
-import type { KgCo2ePerKwh } from '../../../domain/units.ts'
+import { readHeatNetworks } from '../heat-networks/read-heat-networks.ts'
+import { weightHeatEmissionFactor } from '../heat-networks/weight-heat-emission-factor.ts'
+import type { DataSource, DataSourceError } from '../../domain/data-source.ts'
+import type { Level, Territory } from '../../domain/territory.ts'
+import type { KgCo2ePerKwh } from '../../domain/units.ts'
 import { readResidentialConsumption } from './read-residential-consumption.ts'
-import type { ResidentialConsumption } from './residential-consumption.ts'
+import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 
 const residentialHeatNetworksDataset = 'residentiel-sobriete/heat-networks'
 
@@ -21,7 +20,7 @@ function getResidentialInputs({
   communes,
 }: {
   dataSource: DataSource
-  territory: Territory<ComputedLevels<'residentiel_sobriete'>>
+  territory: Territory<Level>
   communes: readonly string[]
 }): Result<ResidentialInputs, DataSourceError> {
   return readHeatNetworks({ dataSource, dataset: residentialHeatNetworksDataset, communes }).andThen(

@@ -1,4 +1,4 @@
-import type { MegawattHours } from '../../../domain/units.ts'
+import type { MegawattHours } from './units.ts'
 
 type ResidentialConsumption = {
   readonly electricity: MegawattHours

@@ -1,5 +1,5 @@
-import { sum, toBig } from '../../../domain/big-number.ts'
-import { quantity, type MegawattHours, type SquareMetres } from '../../../domain/units.ts'
+import { sum, toBig } from '../../domain/big-number.ts'
+import { quantity, type MegawattHours, type SquareMetres } from '../../domain/units.ts'
 
 type SurfaceContribution = {
   readonly epciSurface: SquareMetres

@@ -2,8 +2,8 @@ import { Result, err, ok } from 'neverthrow'
 import {
   requireNonEmptyColumn,
   requireQuantityColumn,
-} from '../../../application/require-column.ts'
-import { sum } from '../../../domain/big-number.ts'
+} from '../require-column.ts'
+import { sum } from '../../domain/big-number.ts'
 import {
   invalidDataset,
   missingData,
@@ -11,12 +11,12 @@ import {
   type DataSource,
   type DataSourceError,
   type InvalidDataset,
-} from '../../../domain/data-source.ts'
-import type { HeatNetwork } from '../../../domain/heat-network.ts'
-import type { Territory } from '../../../domain/territory.ts'
-import { quantity, type MegawattHours, type SquareMetres } from '../../../domain/units.ts'
+} from '../../domain/data-source.ts'
+import type { HeatNetwork } from '../../domain/heat-network.ts'
+import type { Territory } from '../../domain/territory.ts'
+import { quantity, type MegawattHours, type SquareMetres } from '../../domain/units.ts'
 import { apportionBySurface, type SurfaceContribution } from './calculate-surface-apportionment.ts'
-import type { ResidentialConsumption } from './residential-consumption.ts'
+import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 
 type Vector = 'fuel_oil' | 'lpg'
 

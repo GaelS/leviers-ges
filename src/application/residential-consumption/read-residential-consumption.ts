@@ -1,19 +1,18 @@
 import { Result } from 'neverthrow'
 import { match } from 'ts-pattern'
-import { requireQuantityColumn } from '../../../application/require-column.ts'
+import { requireQuantityColumn } from '../require-column.ts'
 import type {
   DataRow,
   DataSource,
   DataSourceError,
   InvalidDataset,
-} from '../../../domain/data-source.ts'
-import { sum } from '../../../domain/big-number.ts'
-import type { HeatNetwork } from '../../../domain/heat-network.ts'
-import type { ComputedLevels } from '../../../domain/lever-registry.ts'
-import type { Territory } from '../../../domain/territory.ts'
-import { gigawattHoursToMegawattHours, quantity } from '../../../domain/units.ts'
+} from '../../domain/data-source.ts'
+import { sum } from '../../domain/big-number.ts'
+import type { HeatNetwork } from '../../domain/heat-network.ts'
+import type { Level, Territory } from '../../domain/territory.ts'
+import { gigawattHoursToMegawattHours, quantity } from '../../domain/units.ts'
 import { readEpciConsumption } from './read-epci-consumption.ts'
-import type { ResidentialConsumption } from './residential-consumption.ts'
+import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 
 const regionsDataset = 'residentiel-sobriete/regions'
 
@@ -67,7 +66,7 @@ function readResidentialConsumption({
   networks,
 }: {
   dataSource: DataSource
-  territory: Territory<ComputedLevels<'residentiel_sobriete'>>
+  territory: Territory<Level>
   networks: readonly HeatNetwork[]
 }): Result<ResidentialConsumption, DataSourceError> {
   return match(territory)
