@@ -18,6 +18,9 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm build:data:elevage-durable` | reconstruit `data/elevage-durable/` (effectifs d'animaux par région et département) depuis ses sources |
 | `pnpm build:data:transport-marchandises` | reconstruit `data/transport-marchandises/` (tonnes.kilomètres et parc de poids lourds par région) depuis ses sources |
 | `pnpm build:data:occupation-des-sols` | reconstruit `data/occupation-des-sols/` (surfaces des types de sol et facteurs de conversion par EPCI, département et région) depuis ses sources |
+| `pnpm build:data:batiments-machines-agricoles` | reconstruit `data/batiments-machines-agricoles/` (consommations d'énergie de l'agriculture par région, département et EPCI) depuis ses sources |
+| `pnpm build:data:produits-bois` | reconstruit `data/produits-bois/` (récolte de bois par région et département, surfaces de forêt par EPCI-département) depuis ses sources |
+| `pnpm build:data:residentiel-sobriete` | reconstruit `data/residentiel-sobriete/` (consommation résidentielle d'énergie par région, département et EPCI, réseaux de chaleur) depuis ses sources |
 | `pnpm build:data:residentiel-logements` | reconstruit `data/residentiel-logements/` (m² des résidences principales par EPCI-département et département, selon le type, le combustible et la période de construction) depuis la source communale versionnée ; `… extract <zip INSEE RP2022>` régénère cette source |
 
 Une PR passe les quatre premières.
@@ -28,7 +31,7 @@ Une PR passe les quatre premières.
 |---|---|
 | `src/levers/<levier>/` | tout un levier : requête, calcul pur, lecture des données, `estimate`, tests, `methodology.md` |
 | `src/estimator/` | `createEstimator(dataSource)` : valide la requête (seul endroit où l'inconnu entre), vérifie que le niveau est calculé, choisit le levier par son `id` |
-| `src/application/` | aides partagées : contexte d'estimation (`getCommunesOf`, `getRegionByCommune`, `getDepartementByCommune`), erreurs, index des territoires |
+| `src/application/` | aides partagées : contexte d'estimation (`getCommunesOf`, `getRegionByCommune`, `getDepartementByCommune`), erreurs, index des territoires, lecture de la consommation résidentielle (`residential-consumption/`, partagée par `residentiel_sobriete` et `residentiel_changement_systeme_chauffage`) |
 | `src/domain/` | noyau : `BigNumber`, unités brandées, territoires, registre `LEVERS` (21 leviers × 3 niveaux), port `DataSource` |
 | `src/infrastructure/csv/` | adaptateur CSV : manifeste, empreintes sha256, contrôles au chargement |
 | `src/dataset-builders/` | scripts TypeScript qui reconstruisent un jeu de `data/` depuis ses sources |
