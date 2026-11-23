@@ -14,7 +14,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 |   | Haies (`haies`) | ✅ | ✅ | ✅ |
 |   | Produits bois (`produits_bois`) | ✅ | ✅ | ✅ |
 |   | Pratiques stockantes (`pratiques_stockantes`) | ❓ | ❓ | ❓ |
-|   | Changement d'occupation des sols (`occupation_des_sols`) | ❌ | ❌ | ❓ |
+|   | Changement d'occupation des sols (`occupation_des_sols`) | ❓ | ❓ | ❓ |
 | Énergie et résidentiel | Réseaux de chaleur (`reseaux_chaleur`) | ✅ | ✅ | ✅ |
 |   | Résidentiel, sobriété (`residentiel_sobriete`) | ✅ | ✅ | ❓ |
 |   | Résidentiel, rénovation (`residentiel_renovation`) | ❌ | ❌ | ❌ |
@@ -30,7 +30,7 @@ Le tableur fait foi : toute interprétation nouvelle se signale. Ce document dit
 | Déchets | Changement de mode de traitement (`dechets_mode_de_traitement`) | ❓ | ❓ | ❓ |
 |   | Sobriété (`dechets_sobriete`) | ❓ | ❓ | ❓ |
 
-Calculés : 19 leviers sur 21 en région, 15 en département, 15 en EPCI.
+Calculés : 20 leviers sur 21 en région, 16 en département, 15 en EPCI.
 
 Quand un point est tranché, sa ligne est retirée ou mise à jour, et le `methodology.md` du levier est corrigé dans la même PR. Une nouvelle PR de levier ajoute ses lignes en partie 2, et en partie 1 pour chaque niveau qu'elle ne calcule pas. Les formules corrigées par rapport au tableur sont dans `formula-corrections.md`.
 
@@ -47,11 +47,9 @@ Chaque niveau non calculé figure dans une seule rubrique, selon ce qui le retie
 | `residentiel_renovation` | région, département, EPCI | la consommation par m² avant rénovation, par type de logement, chauffage et période de construction, par département : le CEREN, « pas disponible en open source » (tableur, documentation p. 51) | le CGDD (Brice, Laurent) : pas d'avancées notables avec le CEREN ; documentation des données demandée (Q3, Q4) |
 | `elevage_durable` | EPCI | un fichier d'effectifs par EPCI cohérent : dans celui d'Agreste (`RA2020_2141_EPCI`, indicateur 040.01), la somme des vaches laitières vaut 5 827 825, soit 1,7 fois les 3 482 723 de la France métropolitaine ; dans 43 départements sur 72 dont le total est publié, la somme des EPCI vaut à peu près deux fois le total départemental (Ain : 81 476 pour 40 738, avec une ligne égale au total du département) | le jeu « RGA2020 EPCI » de data.gouv.fr ne couvre que le Pays Basque : impasse ; le fichier communal Agreste `RA2020_2141_Cheptels_communes` (29 360 communes) a été vérifié : il ne donne que « Herbivores » (26,3 millions de têtes) et « Non herbivores » (299,7 millions), pas de type d'animal, donc pas de vaches laitières ; les lignes `DEPZ` du fichier EPCI portent le total départemental, tantôt sous `DEPZ`, tantôt sous un code EPCI (44 départements) ; classeur d'incohérences préparé pour Agreste ; le tableur donne l'EPCI « OUI » |
 
-### 1.2 À décider ou à implémenter : la donnée existe (1 levier, 2 niveaux)
+### 1.2 À décider ou à implémenter : la donnée existe (0 levier)
 
-| Levier | Niveaux | Pourquoi ce n'est pas calculé | Ce qui reste à faire |
-|---|---|---|---|
-| `occupation_des_sols` | région, département | les facteurs d'ALDO Flux 2 sont publiés à l'EPCI et à la commune (35 066 communes, jeu « flux 2 - unitaire - communes ») ; la documentation parle de la « zone pédoclimatique majoritaire du territoire » sans dire comment agréger ; les valeurs EPCI d'ALDO ne sont pas la moyenne simple de leurs communes (écart médian de 0 à 1,2 tCO2e/ha selon la conversion) | question au CGDD sur la règle d'agrégation, ou choix de conception documenté ; le tableur donne région et département « OUI » |
+Aucun niveau n'est dans ce cas aujourd'hui.
 
 ### 1.3 Hors périmètre selon le tableur (4 leviers, 8 niveaux)
 
@@ -117,10 +115,12 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|---|
 | Rabais régionaux de la méthode | non appliqués, comme le tableur | rabais de 5 à 50 % et 10 % de non-permanence | stockage surestimé hors Grand-Ouest ; la documentation retient la valeur basse de la fourchette du Label Bas Carbone, 1,17 à 7,14 tCO2e/km/an (pp. 76, 78 : facteur moyen national à maintenir, fourchette en évolution possible) ; le webinaire du 25/01/2021 (`haies/methodology.md`) donne la même valeur basse |
 
-### Changement d'occupation des sols (`occupation_des_sols`, EPCI)
+### Changement d'occupation des sols (`occupation_des_sols`, région, département, EPCI)
 
 | Point | Aujourd'hui | Ce qui l'affinerait | Écart |
 |---|---|---|---|
+| Facteurs de la région et du département | moyenne des facteurs des communes ALDO Flux 2, pondérée par la surface du type de sol de départ ; moyenne simple si cette surface est nulle | la « zone pédoclimatique majoritaire du territoire » (documentation, p. 74), qu'ALDO ne publie pas : ses facteurs varient à l'intérieur d'une zone ; 48 jeux de valeurs distincts sur 35 066 communes | interprétation nouvelle ; à l'EPCI, les facteurs sont ceux d'ALDO, qu'on n'a pas su reconstruire depuis ceux des communes (ni moyenne simple, ni pondérée par la population ou la surface) : l'écart entre niveaux n'est pas chiffré |
+| Surfaces de la région et du département | somme de toutes les communes ALDO, dont 4 sans EPCI ; 19 427 625 ha de cultures contre 19 427 351 ha pour la somme des EPCI | | 275 ha de cultures de plus que les EPCI |
 | Désimperméabilisation sans horizon | facteur en tCO2e/ha, non multiplié par l'horizon, comme le dessin de l'équation 27 et la réponse du CGDD (Q2) | confirmer que ALDO Flux 2 donne un flux annuel pour les deux premiers termes et une variation ponctuelle pour le troisième | le même fichier sert aux trois termes ; non chiffré |
 | Prairie | les trois types ALDO (arborée, herbacée, arbustive) au prorata de leur surface, la documentation n'en nommant qu'un | le type visé par l'afforestation et les zones humides | choix de conception, non validé ; tableur, B15 : « au prorata des surfaces existantes » |
 | Sol artificialisé enherbé | « sols artificiels arbustifs » d'ALDO | une colonne ALDO « enherbés » | choix de conception, non validé |

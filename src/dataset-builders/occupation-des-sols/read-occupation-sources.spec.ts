@@ -12,18 +12,24 @@ const committedDataDirectory = join(import.meta.dirname, '..', '..', '..', 'data
 const folder = 'occupation-des-sols'
 const surfacesFile = 'sources/aldo-stocks-carbone-communes-surfaces.csv'
 const factorsFile = 'sources/aldo-flux2-epci-facteurs.csv'
+const factorSetsFile = 'sources/aldo-flux2-communes-jeux-de-facteurs.csv'
 
 function copyDataDirectory(): string {
   return copyDataFolders({ from: committedDataDirectory, folders: [folder] })
 }
 
 describe('readOccupationSources', () => {
-  it('lit les deux sources versionnées dont les empreintes correspondent au manifeste', () => {
+  it('lit les trois sources versionnées dont les empreintes correspondent au manifeste', () => {
     const sources = readOccupationSources(committedDataDirectory)._unsafeUnwrap()
     expect({
       surfaces: sources.surfacesCsv.split('\n')[0]?.slice(0, 20),
       factors: sources.factorsCsv.split('\n')[0]?.slice(0, 20),
-    }).toEqual({ surfaces: 'insee,epci,departeme', factors: 'insee,prairies zones' })
+      factorSets: sources.factorSetsCsv.split('\n')[0]?.slice(0, 20),
+    }).toEqual({
+      surfaces: 'insee,epci,departeme',
+      factors: 'insee,prairies zones',
+      factorSets: 'jeu,prairies zones a',
+    })
   })
 
   it('refuse une source de surfaces modifiée depuis son relevé', () => {
@@ -41,6 +47,15 @@ describe('readOccupationSources', () => {
     expect(readOccupationSources(directory)._unsafeUnwrapErr()).toMatchObject({
       dataset: 'occupation-des-sols/epcis-facteurs',
       reason: 'unreadable',
+    })
+  })
+
+  it('refuse une source des jeux de facteurs modifiée depuis son relevé', () => {
+    const directory = copyDataDirectory()
+    writeFileSync(join(directory, folder, factorSetsFile), 'autre')
+    expect(readOccupationSources(directory)._unsafeUnwrapErr()).toMatchObject({
+      dataset: 'occupation-des-sols/departements-facteurs',
+      reason: 'checksum_mismatch',
     })
   })
 

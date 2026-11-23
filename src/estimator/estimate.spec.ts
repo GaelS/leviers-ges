@@ -973,6 +973,26 @@ describe('estimate', () => {
       createTemporaryCsvDataSource({
         'occupation-des-sols/epcis-surfaces': { keyColumn: 'code_epci', level: 'epci', rows: [AREAS] },
         'occupation-des-sols/epcis-facteurs': { keyColumn: 'code_epci', level: 'epci', rows: [FACTORS] },
+        'occupation-des-sols/departements-surfaces': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: [{ ...AREAS, code_departement: '01' }],
+        },
+        'occupation-des-sols/departements-facteurs': {
+          keyColumn: 'code_departement',
+          level: 'departement',
+          rows: [{ ...FACTORS, code_departement: '01' }],
+        },
+        'occupation-des-sols/regions-surfaces': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [{ ...AREAS, code_region: '84' }],
+        },
+        'occupation-des-sols/regions-facteurs': {
+          keyColumn: 'code_region',
+          level: 'region',
+          rows: [{ ...FACTORS, code_region: '84' }],
+        },
       }),
     )
 
@@ -1002,12 +1022,14 @@ describe('estimate', () => {
       )
     })
 
-    it.each(['region', 'departement'])('refuse le niveau %s, non calculé', (level) => {
-      expect(withOccupation(occupationDesSolsRequest({ level }))._unsafeUnwrapErr()).toEqual({
-        kind: 'level_not_computed',
-        lever: 'occupation_des_sols',
-        level,
-      })
+    it.each([
+      ['region', '84'],
+      ['departement', '01'],
+    ])('aiguille le niveau %s vers son levier : mêmes facteurs, 510 tCO2e', (level, code) => {
+      const input = { ...occupationDesSolsRequest({ level }), territory: { level, code } } as RequestInput
+      const result = withOccupation(input)._unsafeUnwrap()
+      expect(result.reduction.toFixed()).toBe('510')
+      expect(Object.keys(result.appliedAssumptions)).toContain('territoryFactors')
     })
 
     it.each([

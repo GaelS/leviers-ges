@@ -22,12 +22,12 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 32 workaround et 14 not_computed', () => {
+  it('compte 17 no_open_question, 34 workaround et 12 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 32, notComputed: 14 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 34, notComputed: 12 })
   })
 
   it('compte 20 leviers calculables sur au moins un niveau', () => {
@@ -53,7 +53,7 @@ describe('lever-registry', () => {
     expectTypeOf<ComputedLevels<'haies'>>().toEqualTypeOf<Level>()
     expectTypeOf<ComputedLevels<'elevage_durable'>>().toEqualTypeOf<'region' | 'departement'>()
     expectTypeOf<ComputedLevels<'transport_marchandises_report_modal'>>().toEqualTypeOf<'region'>()
-    expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<'epci'>()
+    expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<Level>()
     expectTypeOf<ComputedLevels<'residentiel_renovation'>>().toEqualTypeOf<never>()
   })
 })
