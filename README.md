@@ -2,7 +2,7 @@
 
 Les formules du tableur ADEME PlanET V1 (21 leviers de décarbonation) sous forme de fonctions TypeScript. Une requête par levier, en retour les tonnes de CO2e évitées par an pour une région, un département ou un EPCI.
 
-20 leviers sont calculés. Le dernier (`residentiel_renovation`) ne l'est à aucun niveau.
+Les 21 leviers sont calculés à un niveau au moins.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
@@ -77,7 +77,7 @@ Le détail d'un levier (formule, constantes sourcées, données, limites, cas de
 | `batiments_machines_agricoles`, `reseaux_chaleur`, `dechets_mode_de_traitement`, `dechets_sobriete`, `produits_bois`, `fertilisation_azotee` | région, département, EPCI |
 | `transport_personnes_sobriete_deplacements`, `transport_personnes_report_modal`, `transport_personnes_efficacite`, `transport_personnes_electrification` | région, département, EPCI |
 | `elevage_durable` | région, département |
-| `residentiel_sobriete`, `residentiel_changement_systeme_chauffage` | région, département, EPCI (hors outre-mer) |
+| `residentiel_sobriete`, `residentiel_changement_systeme_chauffage`, `residentiel_renovation` | région, département, EPCI (hors outre-mer) |
 | `occupation_des_sols` | région, département, EPCI |
 | `transport_marchandises_sobriete_logistique`, `transport_marchandises_report_modal`, `transport_marchandises_efficacite`, `transport_marchandises_electrification` | région |
 | `haies`, `pratiques_stockantes` | sans territoire |
@@ -166,6 +166,7 @@ const result = estimate({
 |---|---|---|---|
 | `residentiel_sobriete` | `householdsApplyingSobrietyFraction` | fraction | ménages qui appliquent la sobriété |
 | | `consumptionReductionFraction` | fraction | baisse de leur consommation (pas de valeur par défaut) |
+| `residentiel_renovation` | `renovatedParcFraction` | fraction | part du parc de logements rénovée (maisons et appartements d'avant 1971 ; la même pour tous) |
 | `residentiel_changement_systeme_chauffage` | `targetElectricityShareFraction`, `targetNaturalGasShareFraction`, `targetFuelOilShareFraction`, `targetWoodShareFraction`, `targetHeatNetworkShareFraction` | fraction | part cible de chaque vecteur dans l'énergie utile de chauffage ; les cinq font 100 %, sinon la requête est refusée ; le GPL n'est pas modifié |
 | `reseaux_chaleur` | `emissionFactorReductionFraction` | fraction | baisse du facteur d'émission des réseaux ; au-delà de 1 la requête est refusée |
 

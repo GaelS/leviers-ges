@@ -22,25 +22,22 @@ describe('lever-registry', () => {
     })
   })
 
-  it('compte 17 no_open_question, 34 workaround et 12 not_computed', () => {
+  it('compte 17 no_open_question, 37 workaround et 9 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),
       workaround: countOf('workaround'),
       notComputed: countOf('not_computed'),
-    }).toEqual({ noOpenQuestion: 17, workaround: 34, notComputed: 12 })
+    }).toEqual({ noOpenQuestion: 17, workaround: 37, notComputed: 9 })
   })
 
-  it('compte 20 leviers calculables sur au moins un niveau', () => {
+  it('compte 21 leviers calculables sur au moins un niveau', () => {
     const computable = levers.filter(([, byLevel]) => Object.values<Status>(byLevel).some(isComputed))
-    expect(computable).toHaveLength(20)
+    expect(computable).toHaveLength(21)
   })
 
-  it('le levier exclu est celui dont les trois niveaux sont not_computed', () => {
-    const excluded = levers
-      .filter(([, byLevel]) => !Object.values<Status>(byLevel).some(isComputed))
-      .map(([lever]) => lever)
-      .sort()
-    expect(excluded).toEqual(['residentiel_renovation'])
+  it('aucun levier n’est exclu : chacun est calculé à un niveau au moins', () => {
+    const excluded = levers.filter(([, byLevel]) => !Object.values<Status>(byLevel).some(isComputed))
+    expect(excluded).toEqual([])
   })
 
   it('donne le statut d’un levier à un niveau', () => {
@@ -54,6 +51,5 @@ describe('lever-registry', () => {
     expectTypeOf<ComputedLevels<'elevage_durable'>>().toEqualTypeOf<'region' | 'departement'>()
     expectTypeOf<ComputedLevels<'transport_marchandises_report_modal'>>().toEqualTypeOf<'region'>()
     expectTypeOf<ComputedLevels<'occupation_des_sols'>>().toEqualTypeOf<Level>()
-    expectTypeOf<ComputedLevels<'residentiel_renovation'>>().toEqualTypeOf<never>()
   })
 })

@@ -46,6 +46,10 @@ import {
   type ResidentielChangementSystemeChauffageRequestInput,
 } from '../levers/residentiel-changement-systeme-chauffage/index.ts'
 import {
+  estimate as estimateResidentielRenovation,
+  type ResidentielRenovationRequestInput,
+} from '../levers/residentiel-renovation/index.ts'
+import {
   estimate as estimateResidentielSobriete,
   type ResidentielSobrieteRequestInput,
 } from '../levers/residentiel-sobriete/index.ts'
@@ -96,6 +100,7 @@ type RequestInput =
   | ProduitsBoisRequestInput
   | ReseauxChaleurRequestInput
   | ResidentielChangementSystemeChauffageRequestInput
+  | ResidentielRenovationRequestInput
   | ResidentielSobrieteRequestInput
   | TransportMarchandisesEfficaciteRequestInput
   | TransportMarchandisesElectrificationRequestInput
@@ -173,6 +178,11 @@ function createEstimator(dataSource: DataSource): Estimator {
               (computedLevelRequest) =>
                 estimateResidentielChangementSystemeChauffage(computedLevelRequest, context),
             ),
+        )
+        .with({ id: 'residentiel_renovation' }, (residentielRenovationRequest) =>
+          estimateOnComputedLevel(residentielRenovationRequest, (computedLevelRequest) =>
+            estimateResidentielRenovation(computedLevelRequest, context),
+          ),
         )
         .with({ id: 'residentiel_sobriete' }, (residentielSobrieteRequest) =>
           estimateOnComputedLevel(residentielSobrieteRequest, (computedLevelRequest) =>
