@@ -4,7 +4,7 @@ import {
   calculateResidentielSobrieteReduction,
   type SobrietyFractions,
 } from './calculate-residentiel-sobriete-reduction.ts'
-import type { ResidentialConsumption } from './data/residential-consumption.ts'
+import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 
 type VectorsInMwh = Partial<Record<keyof ResidentialConsumption, string>>
 

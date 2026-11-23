@@ -12,7 +12,7 @@ import type {
   MegawattHours,
   TonnesCo2ePerYear,
 } from '../../domain/units.ts'
-import type { ResidentialConsumption } from './data/residential-consumption.ts'
+import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 
 type SobrietyFractions = {
   readonly households: Fraction
