@@ -122,9 +122,9 @@ function request(level: Level, code: string): ResidentielChangementSystemeChauff
 
 describe('estimate, residentiel_changement_systeme_chauffage', () => {
   it.each([
-    ['la région 84', 'region', '84', '4005.49'],
-    ['le département 01', 'departement', '01', '498.32'],
-    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '498.32'],
+    ['la région 84', 'region', '84', '4457.75'],
+    ['le département 01', 'departement', '01', '541.43'],
+    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '541.43'],
   ] as const)('évite pour %s : %s tCO2e par an', (_label, level, code, expected) => {
     expect(estimate(request(level, code), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })

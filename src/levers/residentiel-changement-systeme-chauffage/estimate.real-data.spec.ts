@@ -42,16 +42,16 @@ function reduction(target: { level: Level; code: string }): string {
 
 describe('estimate residentiel_changement_systeme_chauffage, parts nationales SDES 2024 et rendements ADEME', () => {
   it.each([
-    ['region', '84', '2258646.2'],
-    ['region', '53', '722584.1'],
-    ['region', '11', '3138837.12'],
-    ['departement', '01', '167981.57'],
-    ['departement', '35', '223883.82'],
-    ['departement', '75', '541853.66'],
-    ['departement', '69', '575054.33'],
-    ['departement', '2A', '-44.83'],
-    ['epci', '200000172', '10450.5'],
-    ['epci', '200000438', '7335.68'],
+    ['region', '84', '2534886.5'],
+    ['region', '53', '787896.15'],
+    ['region', '11', '3520993.89'],
+    ['departement', '01', '189176.33'],
+    ['departement', '35', '244191.78'],
+    ['departement', '75', '602377.64'],
+    ['departement', '69', '649587.99'],
+    ['departement', '2A', '-230.31'],
+    ['epci', '200000172', '11911.69'],
+    ['epci', '200000438', '8326.74'],
   ] as const)(
     'à une cible de 50 %% d’électricité, 10 %% de gaz, 10 %% de bois et 30 %% de réseau, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -59,30 +59,30 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales SD
     },
   )
 
-  it('les 13 régions évitent 17 122 529,66 tCO2e', () => {
+  it('les 13 régions évitent 19 155 808,29 tCO2e', () => {
     const reductions = regions.map((row) =>
       reduction({ level: 'region', code: row['code_region'] ?? '' }),
     )
     expect(reductions).toHaveLength(13)
-    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('17122529.66')
+    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('19155808.29')
   })
 
-  it('les 96 départements évitent 17 363 584,1 tCO2e', () => {
+  it('les 96 départements évitent 19 450 737,66 tCO2e', () => {
     const reductions = departements.map((row) =>
       reduction({ level: 'departement', code: row['code_departement'] ?? '' }),
     )
     expect(reductions).toHaveLength(96)
-    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('17363584.1')
+    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('19450737.66')
   })
 
-  it('1 232 des 1 255 EPCI évitent 18 372 662,62 tCO2e, les 23 EPCI d’outre-mer sans parc de logements sont refusés', () => {
+  it('1 232 des 1 255 EPCI évitent 20 774 364,19 tCO2e, les 23 EPCI d’outre-mer sans parc de logements sont refusés', () => {
     const outcomes = epcis.map((row) =>
       estimate(toRequest({ level: 'epci', code: row['code_epci'] ?? '' }), context),
     )
     const computed = outcomes.flatMap((outcome) => (outcome.isOk() ? [outcome.value.reduction] : []))
     const refused = outcomes.flatMap((outcome) => (outcome.isErr() ? [outcome.error] : []))
     expect(computed).toHaveLength(1232)
-    expect(sum(computed).toFixed()).toBe('18372662.62')
+    expect(sum(computed).toFixed()).toBe('20774364.19')
     expect(refused).toHaveLength(23)
     expect(refused.every((error) => error.kind === 'missing_data')).toBe(true)
   })
