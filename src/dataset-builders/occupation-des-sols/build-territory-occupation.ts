@@ -19,12 +19,21 @@ type TerritoryBuild = {
   readonly surfaceTotals: Readonly<Record<string, string>>
 }
 
-type Term = { readonly weight: BigNumber; readonly value: BigNumber }
+type Term = {
+  readonly weight: BigNumber
+  readonly communeCount: BigNumber
+  readonly value: BigNumber
+}
 
 type Commune = {
   readonly territory: string
   readonly factorSet: string
   readonly surfaces: readonly BigNumber[]
+}
+
+type FactorSetGroup = {
+  readonly factorSet: string
+  readonly communeCount: BigNumber
   readonly surfaceByOutput: Readonly<Record<SurfaceOutput, BigNumber>>
 }
 
@@ -64,17 +73,7 @@ function readCommunes({
           Result.combine(
             SURFACE_COLUMNS.map(({ source }) => readValue({ dataset, row, column: source })),
           ),
-        ]).map(([territory, factorSet, surfaces]) => ({
-          territory,
-          factorSet,
-          surfaces,
-          surfaceByOutput: toSurfaceRecord(
-            zip(
-              SURFACE_COLUMNS.map(({ output }) => output),
-              surfaces,
-            ),
-          ),
-        })),
+        ]).map(([territory, factorSet, surfaces]) => ({ territory, factorSet, surfaces })),
       ),
     ),
   )
@@ -98,25 +97,39 @@ function readFactorSets(csv: string): Result<ReadonlyMap<string, readonly BigNum
   )
 }
 
+function toFactorSetGroups(communes: readonly Commune[]): readonly FactorSetGroup[] {
+  return [...Map.groupBy(communes, ({ factorSet }) => factorSet)].map(([factorSet, group]) => ({
+    factorSet,
+    communeCount: sum(group.map(() => EQUAL_WEIGHT)),
+    surfaceByOutput: toSurfaceRecord(
+      zip(
+        SURFACE_COLUMNS.map(({ output }) => output),
+        sumColumns(group.map(({ surfaces }) => surfaces)),
+      ),
+    ),
+  }))
+}
+
 function toTerms({
-  commune,
+  group,
   factorSets,
 }: {
-  commune: Commune
+  group: FactorSetGroup
   factorSets: ReadonlyMap<string, readonly BigNumber[]>
 }): Result<readonly Term[], InvalidDataset> {
-  const values = factorSets.get(commune.factorSet)
+  const values = factorSets.get(group.factorSet)
   return values === undefined
     ? err(
         invalidDataset({
           dataset: factorSetsDataset,
           reason: 'missing_key_column',
-          detail: commune.factorSet,
+          detail: group.factorSet,
         }),
       )
     : ok(
         zip(FACTOR_COLUMNS, values).map(([{ weight }, value]) => ({
-          weight: commune.surfaceByOutput[weight],
+          weight: group.surfaceByOutput[weight],
+          communeCount: group.communeCount,
           value,
         })),
       )
@@ -130,7 +143,7 @@ function weightedMean({
   terms: readonly Term[]
 }): Result<string, InvalidDataset> {
   const totalWeight = sum(terms.map(({ weight }) => weight))
-  const weights = terms.map(({ weight }) => (totalWeight.isZero() ? EQUAL_WEIGHT : weight))
+  const weights = terms.map(({ weight, communeCount }) => (totalWeight.isZero() ? communeCount : weight))
   const weightedSum = sum(zip(weights, terms).map(([weight, { value }]) => weight.times(value)))
   return roundToLoaderPrecision({
     dataset: outputDataset,
@@ -163,7 +176,7 @@ function buildTerritoryOccupation({
     ])
     return Result.combine(
       territories.map(([territory, group]) =>
-        Result.combine(group.map((commune) => toTerms({ commune, factorSets }))).andThen((termsByCommune) =>
+        Result.combine(toFactorSetGroups(group).map((setGroup) => toTerms({ group: setGroup, factorSets }))).andThen((termsByCommune) =>
           Result.combine(
             zip(FACTOR_COLUMNS, unzip(termsByCommune.map((terms) => [...terms]))).map(([{ output }, terms]) =>
               weightedMean({ column: output, terms }),
