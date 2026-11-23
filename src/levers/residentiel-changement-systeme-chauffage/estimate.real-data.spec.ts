@@ -59,6 +59,20 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales SD
     },
   )
 
+  it.each([
+    ['sans part précisée, le mix actuel', {}, '67236.55'],
+    ['le fioul à 0', { targetFuelOilShareFraction: '0' }, '112606.37'],
+    ['le fioul à 0 et le bois à 10 %', { targetFuelOilShareFraction: '0', targetWoodShareFraction: '0.1' }, '148503.72'],
+  ])('Ille-et-Vilaine, %s : %s tCO2e', (_label, parameters, expected) => {
+    const parsed = residentielChangementSystemeChauffageRequestSchema.parse({
+      id: 'residentiel_changement_systeme_chauffage',
+      territory: { level: 'departement', code: '35' },
+      parameters,
+    })
+    const request = { ...parsed, territory: { ...parsed.territory, level: 'departement' as const } }
+    expect(estimate(request, context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+  })
+
   it('les 13 régions évitent 19 155 808,29 tCO2e', () => {
     const reductions = regions.map((row) =>
       reduction({ level: 'region', code: row['code_region'] ?? '' }),

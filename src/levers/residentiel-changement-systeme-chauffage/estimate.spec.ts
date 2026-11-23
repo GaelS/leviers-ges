@@ -111,6 +111,19 @@ const dataSource = createTemporaryCsvDataSource({
 
 const context = createEstimationContext(dataSource)
 
+function requestWith(
+  level: Level,
+  code: string,
+  parameters: Readonly<Record<string, string>>,
+): ResidentielChangementSystemeChauffageRequest {
+  const parsed = residentielChangementSystemeChauffageRequestSchema.parse({
+    id: 'residentiel_changement_systeme_chauffage',
+    territory: { level, code },
+    parameters,
+  })
+  return { ...parsed, territory: { ...parsed.territory, level } }
+}
+
 function request(level: Level, code: string): ResidentielChangementSystemeChauffageRequest {
   const parsed = residentielChangementSystemeChauffageRequestSchema.parse({
     id: 'residentiel_changement_systeme_chauffage',
@@ -127,6 +140,39 @@ describe('estimate, residentiel_changement_systeme_chauffage', () => {
     ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '541.43'],
   ] as const)('évite pour %s : %s tCO2e par an', (_label, level, code, expected) => {
     expect(estimate(request(level, code), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+  })
+
+  it.each([
+    ['sans part précisée, le mix actuel : seul le gain de rendement des appareils rénovés', {}, '61.87'],
+    ['le fioul à 0, les autres parts proportionnelles au mix actuel', { targetFuelOilShareFraction: '0' }, '169.57'],
+    [
+      'le fioul à 0 et le bois à 10 %',
+      { targetFuelOilShareFraction: '0', targetWoodShareFraction: '0.1' },
+      '262.03',
+    ],
+  ])('départ 01 : %s', (_label, parameters, expected) => {
+    const result = estimate(requestWith('departement', '01', parameters), context)._unsafeUnwrap()
+    expect({
+      reduction: result.reduction.toFixed(),
+      assumptions: Object.keys(result.appliedAssumptions),
+    }).toEqual({ reduction: expected, assumptions: ['nationalHeatingShares', 'unspecifiedTargetShares'] })
+  })
+
+  it('n’émet pas l’hypothèse des parts non précisées quand les cinq parts sont données', () => {
+    const { appliedAssumptions } = estimate(request('departement', '01'), context)._unsafeUnwrap()
+    expect(Object.keys(appliedAssumptions)).toEqual(['nationalHeatingShares'])
+  })
+
+  it('une seule part non précisée prend tout le reste : le bois à 20 %, 346,83 tCO2e', () => {
+    const parameters = {
+      targetElectricityShareFraction: '0.3',
+      targetNaturalGasShareFraction: '0.3',
+      targetFuelOilShareFraction: '0.1',
+      targetHeatNetworkShareFraction: '0.1',
+    }
+    expect(
+      estimate(requestWith('departement', '01', parameters), context)._unsafeUnwrap().reduction.toFixed(),
+    ).toBe('346.83')
   })
 
   it('déclare la part nationale du chauffage comme hypothèse appliquée', () => {
@@ -162,11 +208,24 @@ describe('residentielChangementSystemeChauffageRequestSchema', () => {
     expect(parse(TARGET).success).toBe(true)
   })
 
-  it('refuse des parts qui ne font pas 100 %', () => {
-    const result = parse({ ...TARGET, targetWoodShareFraction: '0.2' })
+  it('refuse cinq parts qui ne font pas 100 %', () => {
+    const result = parse({ ...TARGET, targetWoodShareFraction: '0' })
     expect(result.error?.issues[0]).toMatchObject({
       path: ['parameters', 'targetHeatNetworkShareFraction'],
       message: 'the five target shares must add up to 100%',
+    })
+  })
+
+  it('accepte des parts partielles dont la somme ne dépasse pas 100 %', () => {
+    expect(parse({ targetFuelOilShareFraction: '0' }).success).toBe(true)
+    expect(parse({}).success).toBe(true)
+  })
+
+  it('refuse des parts partielles dont la somme dépasse 100 %', () => {
+    const result = parse({ targetFuelOilShareFraction: '0.6', targetWoodShareFraction: '0.5' })
+    expect(result.error?.issues[0]).toMatchObject({
+      path: ['parameters'],
+      message: 'the target shares given must add up to at most 100%',
     })
   })
 

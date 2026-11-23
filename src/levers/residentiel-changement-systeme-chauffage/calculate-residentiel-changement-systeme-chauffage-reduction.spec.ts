@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { ResidentialConsumption } from '../../domain/residential-consumption.ts'
 import { quantity } from '../../domain/units.ts'
 import {
+  calculateCurrentUsefulShares,
   calculateResidentielChangementSystemeChauffageReduction,
   type TargetShares,
 } from './calculate-residentiel-changement-systeme-chauffage-reduction.ts'
@@ -108,5 +109,27 @@ describe('calculateResidentielChangementSystemeChauffageReduction', () => {
 
   it('évite 0 tCO2e sans énergie de chauffage plutôt que de diviser par zéro', () => {
     expect(reduction({ vectors: {}, shares: ALL_TO_ELECTRICITY })).toBe('0')
+  })
+})
+
+describe('calculateCurrentUsefulShares', () => {
+  it('répartit l’énergie utile actuelle : 1 000 MWh de fioul et de gaz, rendements de 75 %, parts de 100 % et 92,6 %', () => {
+    const { usefulEnergy, shares } = calculateCurrentUsefulShares(
+      consumptionOf({ fuelOil: '1000', naturalGas: '1000' }),
+    )
+    expect({
+      useful: usefulEnergy.decimalPlaces(2).toFixed(),
+      fuelOil: shares.fuelOil.decimalPlaces(4).toFixed(),
+      naturalGas: shares.naturalGas.decimalPlaces(4).toFixed(),
+      wood: shares.wood.toFixed(),
+    }).toEqual({ useful: '1444.49', fuelOil: '0.5192', naturalGas: '0.4808', wood: '0' })
+  })
+
+  it('sans énergie de chauffage, aucun vecteur n’a de part', () => {
+    const { usefulEnergy, shares } = calculateCurrentUsefulShares(consumptionOf({}))
+    expect({ useful: usefulEnergy.toFixed(), electricity: shares.electricity.toFixed() }).toEqual({
+      useful: '0',
+      electricity: '0',
+    })
   })
 })
