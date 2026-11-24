@@ -270,6 +270,7 @@ Pour chaque levier : le point, ce que nous faisons aujourd'hui, ce qui l'affiner
 |---|---|---|
 | Cumul des leviers d'un même secteur (feuilles `SG …`, `Scénario global …`) | chaque levier seul sur les valeurs initiales | l'enchaînement du tableur (« 1 − % »), demandé par le CGDD (Brice, Laurent) : les calculs unitaires restent des ordres de grandeur |
 | Statut `status` du résultat pour `haies` et `pratiques_stockantes` (sans territoire) | lu au niveau `region` du registre, les trois niveaux ayant le même statut (test du registre) ; choix de conception, non validé | un statut propre au levier dans le registre |
+| Limites du résultat (`limits`) | les lignes du tableau « Limites » de chaque `methodology.md`, identiques à tous les niveaux et sans le chiffrage propre au territoire demandé ; choix de conception, non validé | des limites par niveau, le périmètre et le millésime des données |
 | Outre-mer | absent de la plupart des jeux | des jeux couvrant les DOM |
 | Valeurs sans source dans le classeur | 55,88, 78, 5,733, 0,187, 0,0467, 8,1, 0,007278 | une vérification contre leurs sources externes (Base Empreinte, OMINEA, SDES) |
 | Valeurs négatives dans les CSV | aucune borne | un contrôle commun |

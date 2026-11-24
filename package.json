@@ -9,6 +9,7 @@
   "packageManager": "pnpm@10.24.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "build:limits": "node src/dataset-builders/lever-limits/cli.ts",
     "build:data:batiments-machines-agricoles": "node src/dataset-builders/batiments-machines-agricoles/cli.ts",
     "build:data:dechets": "node src/dataset-builders/dechets/cli.ts",
     "build:data:elevage-durable": "node src/dataset-builders/elevage-durable/cli.ts",

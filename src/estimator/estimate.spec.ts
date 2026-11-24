@@ -113,6 +113,16 @@ describe('estimate', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().appliedAssumptions).toEqual({})
     })
 
+    it('annonce la limite des rabais régionaux absents', () => {
+      expect(estimate(haiesRequest('1'))._unsafeUnwrap().limits).toEqual([
+        {
+          limit: 'Rabais régionaux absents',
+          effect:
+            'hors Grand-Ouest, le stockage est surestimé (rabais de 5 à 50 %, plus 10 % de risque de non-permanence)',
+        },
+      ])
+    })
+
     it('annonce le statut du levier : sans question ouverte', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().status).toBe('no_open_question')
     })

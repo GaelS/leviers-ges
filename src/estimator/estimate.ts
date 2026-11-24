@@ -5,6 +5,7 @@ import { createEstimationContext } from '../application/estimate/create-estimati
 import type { EstimateResult } from '../application/estimate/estimate-result.ts'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
 import type { DataSource } from '../domain/data-source.ts'
+import { LEVER_LIMITS, type LeverLimit } from '../domain/lever-limits.ts'
 import type { ComputedStatus } from '../domain/lever-registry.ts'
 import type { Level } from '../domain/territory.ts'
 import {
@@ -116,7 +117,10 @@ type RequestInput =
 
 type Lever = RequestInput['id']
 
-type StatusedEstimateResult = EstimateResult & { readonly status: ComputedStatus }
+type StatusedEstimateResult = EstimateResult & {
+  readonly status: ComputedStatus
+  readonly limits: readonly LeverLimit[]
+}
 
 type EstimateByLever = Record<Lever, StatusedEstimateResult>
 
@@ -141,6 +145,7 @@ function createEstimator(dataSource: DataSource): Estimator {
         computedStatusOf({ lever: request.id, level: levelOf(request) }).map((status) => ({
           ...leverEstimate,
           status,
+          limits: LEVER_LIMITS[request.id],
         })),
       ),
     )
