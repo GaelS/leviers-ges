@@ -1,7 +1,6 @@
 {
-  "name": "leviers-ges",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@gaels/leviers-ges",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,7 +20,7 @@
   },
   "packageManager": "pnpm@10.24.0",
   "scripts": {
-    "prepare": "tsc -p tsconfig.build.json",
+    "prepack": "tsc -p tsconfig.build.json",
     "build": "tsc -p tsconfig.build.json",
     "build:limits": "node src/dataset-builders/lever-limits/cli.ts",
     "build:data:batiments-machines-agricoles": "node src/dataset-builders/batiments-machines-agricoles/cli.ts",
@@ -58,5 +57,13 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GaelS/leviers-ges.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   }
 }

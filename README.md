@@ -6,7 +6,29 @@ Les 21 leviers sont calculés à un niveau au moins.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
+## Installation
+
+Le paquet est publié sur GitHub Packages (accès restreint) sous `@gaels/leviers-ges`. Le consommateur déclare le registre du scope et un token de lecture (`read:packages`) :
+
+```ini
+# .npmrc
+@gaels:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+```sh
+pnpm add @gaels/leviers-ges
+```
+
 ## Utilisation
+
+```ts
+import { createDefaultEstimator } from '@gaels/leviers-ges'
+
+const estimate = createDefaultEstimator()
+```
+
+`createDefaultEstimator` lit les jeux de données livrés avec le paquet et accepte une requête de type inconnu : elle est validée avant tout calcul. Pour une autre source de données :
 
 ```ts
 import { createCsvDataSource, createEstimator } from './src/index.ts'
@@ -224,3 +246,9 @@ const result = estimate({
 
 - `AGENTS.md` : l'architecture, les règles de code et comment ajouter un levier.
 - `docs/methodology/` : conventions de calcul, hypothèses nommées, corrections de formule, `points-a-arbitrer.md` (état de chaque levier par niveau, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs).
+
+## Publier une version
+
+1. Monter `version` dans `package.json` (semver) et merger sur `main`.
+2. Poser le tag correspondant sur `main` et le pousser : `git tag v0.2.0 && git push origin v0.2.0`.
+3. Le workflow `publish` vérifie que le tag égale la version, rejoue typecheck, lint et tests, puis publie. `dist/` est compilé à la publication (`prepack`) et n'est jamais versionné.

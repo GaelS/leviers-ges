@@ -1,0 +1,38 @@
+name: publish
+
+# Publie une version sur GitHub Packages quand on pousse un tag vX.Y.Z.
+# Le tag doit correspondre à la version de package.json.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+      - name: Le tag correspond à la version du paquet
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "Le tag ${GITHUB_REF_NAME} ne correspond pas à la version ${version} de package.json" >&2
+            exit 1
+          fi
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test:coverage
+      # `prepack` compile dist/ ; il n'est jamais versionné.
+      - run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
