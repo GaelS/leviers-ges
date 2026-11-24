@@ -1,19 +1,14 @@
 import { join } from 'node:path'
-import { Result, ResultAsync } from 'neverthrow'
-import { readSheet } from 'read-excel-file/node'
-import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
+import { Result } from 'neverthrow'
+import type { InvalidDataset } from '../../domain/data-source.ts'
 import { findDatasetEntry, type DatasetEntry } from '../../infrastructure/csv/manifest.ts'
-import {
-  readManifestSourceBytes,
-  readManifestSourceText,
-} from '../../infrastructure/csv/read-manifest-source.ts'
+import { readManifestSourceText } from '../../infrastructure/csv/read-manifest-source.ts'
 import { toInvalidDataset } from '../../infrastructure/csv/violation.ts'
-import type { SheetRows } from '../sheet-rows.ts'
 import type { ResidentialEnergySources } from './build-residential-energy.ts'
+import { CEREN_NATIONAL_FUEL_CONSUMPTION_2024 } from './ceren-national-fuel-consumption.ts'
 
 const datasetFolder = 'residentiel-sobriete'
 const regionalBilanFile = 'sources/sdes-bilan-energie-residentiel-2024.csv'
-const cerenFile = 'sources/ceren-donnees-energie-residentiel-1990-2024.xlsx'
 const irisElectricityFile = 'sources/sdes-electricite-iris-2024-residentiel-par-departement.csv'
 const irisGasFile = 'sources/sdes-gaz-iris-2024-residentiel-par-departement.csv'
 const oilSalesFile = 'sources/sdes-ventes-produits-petroliers-departement.csv'
@@ -52,33 +47,13 @@ function readText({
   })
 }
 
-function readCerenSheet({
-  dataDirectory,
-  entry,
-}: {
-  dataDirectory: string
-  entry: DatasetEntry
-}): ResultAsync<SheetRows, InvalidDataset> {
-  const dataset = toDatasetName(cerenFile)
-  return readManifestSourceBytes({
-    folderPath: join(dataDirectory, datasetFolder),
-    entry,
-    file: cerenFile,
-    dataset,
-  }).asyncAndThen((bytes) =>
-    ResultAsync.fromPromise(readSheet(bytes, { parseNumber: (text: string) => text }), (error) =>
-      invalidDataset({ dataset, reason: 'unreadable', detail: `${cerenFile}: ${String(error)}` }),
-    ),
-  )
-}
-
 function readResidentialEnergySources(
   dataDirectory: string,
-): ResultAsync<ResidentialEnergySources, InvalidDataset> {
+): Result<ResidentialEnergySources, InvalidDataset> {
   const regionsEntry = findEntry({ dataDirectory, file: 'regions.csv' })
   const departementsEntry = findEntry({ dataDirectory, file: 'departements.csv' })
   const heatNetworksEntry = findEntry({ dataDirectory, file: 'heat-networks.csv' })
-  return Result.combine([regionsEntry, departementsEntry, heatNetworksEntry]).asyncAndThen(
+  return Result.combine([regionsEntry, departementsEntry, heatNetworksEntry]).andThen(
     ([regions, departements, heatNetworks]) => {
       const regionalBilanText = readText({
         dataDirectory,
@@ -99,16 +74,14 @@ function readResidentialEnergySources(
         irisGasText,
         oilSalesText,
         heatText,
-      ]).asyncAndThen(([regionalBilanCsv, irisElectricityCsv, irisGasCsv, oilSalesCsv, heatCsv]) =>
-        readCerenSheet({ dataDirectory, entry: regions }).map((cerenRows) => ({
-          regionalBilanCsv,
-          cerenRows,
-          irisElectricityCsv,
-          irisGasCsv,
-          oilSalesCsv,
-          heatCsv,
-        })),
-      )
+      ]).map(([regionalBilanCsv, irisElectricityCsv, irisGasCsv, oilSalesCsv, heatCsv]) => ({
+        regionalBilanCsv,
+        cerenFuelConsumption: CEREN_NATIONAL_FUEL_CONSUMPTION_2024,
+        irisElectricityCsv,
+        irisGasCsv,
+        oilSalesCsv,
+        heatCsv,
+      }))
     },
   )
 }

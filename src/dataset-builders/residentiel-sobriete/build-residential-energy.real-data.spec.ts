@@ -19,8 +19,8 @@ function totalOf(rows: readonly Readonly<Record<string, string>>[], column: stri
 }
 
 describe('énergie du résidentiel, bilan régional, extraits locaux, ventes et réseaux de chaleur SDES 2024, CEREN 2024', () => {
-  it('reconstruit regions, departements et heat-networks à l’identique', async () => {
-    const sources = await readResidentialEnergySources(dataDirectory)
+  it('reconstruit regions, departements et heat-networks à l’identique', () => {
+    const sources = readResidentialEnergySources(dataDirectory)
     const build = sources.andThen(buildResidentialEnergy)._unsafeUnwrap()
     expect({
       regions: build.regionsCsv === readCommitted('regions.csv'),

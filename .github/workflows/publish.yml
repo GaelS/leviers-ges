@@ -1,0 +1,51 @@
+name: publish
+
+# Publie sur npm quand on pousse un tag vX.Y.Z, par « trusted publishing » :
+# GitHub Actions s'authentifie auprès de npm par OIDC, sans secret stocké.
+# Prérequis (une fois, sur npmjs.com) : Settings du paquet → Trusted Publisher
+# → GitHub Actions, repo GaelS/leviers-ges, workflow publish.yml.
+# Le tag doit correspondre à la version de package.json.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # pnpm est installé à la version de `packageManager` plutôt que par une
+      # action tierce : ce job peut publier.
+      - name: Installer pnpm
+        run: npm install -g "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - name: Le tag correspond à la version du paquet
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "Le tag ${GITHUB_REF_NAME} ne correspond pas à la version ${version} de package.json" >&2
+            exit 1
+          fi
+      - name: npm supporte le trusted publishing (>= 11.5.1)
+        run: |
+          node -e "
+            const [a, b, c] = process.argv[1].split('.').map(Number);
+            const ok = a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1)));
+            if (!ok) { console.error('npm ' + process.argv[1] + ' < 11.5.1 : pas de trusted publishing'); process.exit(1); }
+          " "$(npm -v)"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test:coverage
+      # `prepack` compile dist/ ; il n'est jamais versionné.
+      - run: npm publish

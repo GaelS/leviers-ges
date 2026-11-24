@@ -6,7 +6,21 @@ Les 21 leviers sont calculés à un niveau au moins.
 
 Le paquet n'est pas publié (`private: true`). Node ≥ 24 et pnpm.
 
+## Installation
+
+```sh
+pnpm add leviers-ges
+```
+
 ## Utilisation
+
+```ts
+import { createDefaultEstimator } from 'leviers-ges'
+
+const estimate = createDefaultEstimator()
+```
+
+`createDefaultEstimator` lit les jeux de données livrés avec le paquet et accepte une requête de type inconnu : elle est validée avant tout calcul. Pour une autre source de données :
 
 ```ts
 import { createCsvDataSource, createEstimator } from './src/index.ts'
@@ -224,3 +238,15 @@ const result = estimate({
 
 - `AGENTS.md` : l'architecture, les règles de code et comment ajouter un levier.
 - `docs/methodology/` : conventions de calcul, hypothèses nommées, corrections de formule, `points-a-arbitrer.md` (état de chaque levier par niveau, ce qui débloquerait les niveaux non calculés et ce qui affinerait les calculs).
+
+## Publier une version
+
+1. Monter `version` dans `package.json` (semver) et merger sur `main`.
+2. Poser le tag correspondant sur `main` et le pousser : `git tag v0.2.0 && git push origin v0.2.0`.
+3. Le workflow `publish` vérifie que le tag égale la version, rejoue typecheck, lint et tests, puis publie sur npm par trusted publishing (OIDC, avec provenance). `dist/` est compilé à la publication (`prepack`) et n'est jamais versionné.
+
+Première publication : un Trusted Publisher se déclare sur npmjs.com, dans les paramètres d'un paquet existant (GitHub Actions, repo `GaelS/leviers-ges`, workflow `publish.yml`). À ma connaissance le paquet doit exister avant (à vérifier sur npm) : la `0.1.0` se publie alors une fois à la main (`npm login` puis `npm publish`), puis tout passe par les tags.
+
+## Licence
+
+Le code est sous licence MIT (voir `LICENSE`). Les jeux de `data/` sont des extraits de sources tierces et gardent la licence de leur producteur : voir `data/LICENSES.md` (vérifié sur les pages des producteurs le 2026-11-24 ; un jeu reste bloquant (France Chaleur Urbaine) et plusieurs sont à clarifier avant toute publication).

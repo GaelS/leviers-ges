@@ -2,7 +2,7 @@
   "datasets": [
     {
       "file": "regions.csv",
-      "source": "SDES, Données régionales de production et de consommation finale de l'énergie, secteur résidentiel, année 2024, 13 régions de France métropolitaine. Électricité (CR5), gaz naturel en PCI (CR4 = CR3 × 0,9), chaleur commercialisée (CR8) et produits pétroliers (CR2). Les produits pétroliers sont répartis en fioul domestique et GPL selon la part nationale du CEREN 2024 (résidences principales, à climat normal : fioul 32 TWh, GPL 8 TWh, soit 80 % et 20 %), pour toutes les régions : choix de conception, non validé, le CEREN par région n'étant pas disponible en open source. Construit par pnpm build:data:residentiel-sobriete",
+      "source": "SDES, Données régionales de production et de consommation finale de l'énergie, secteur résidentiel, année 2024, 13 régions de France métropolitaine. Électricité (CR5), gaz naturel en PCI (CR4 = CR3 × 0,9), chaleur commercialisée (CR8) et produits pétroliers (CR2). Les produits pétroliers sont répartis en fioul domestique et GPL selon la part nationale du CEREN 2024 (résidences principales, à climat normal : fioul 32 TWh, GPL 8 TWh, soit 80 % et 20 %), reprise comme constante du code (src/dataset-builders/residentiel-sobriete/ceren-national-fuel-consumption.ts) : le classeur du CEREN n'est pas redistribué, pour toutes les régions : choix de conception, non validé, le CEREN par région n'étant pas disponible en open source. Construit par pnpm build:data:residentiel-sobriete",
       "link": "https://www.statistiques.developpement-durable.gouv.fr/donnees-regionales-de-production-et-de-consommation-finale-de-lenergie",
       "vintage": "année 2024, classeurs mis à jour le 2026-07-07",
       "retrievedOn": "2026-10-08",
@@ -49,12 +49,6 @@
           "link": "https://www.statistiques.developpement-durable.gouv.fr/donnees-regionales-de-production-et-de-consommation-finale-de-lenergie",
           "retrievedOn": "2026-10-08",
           "checksum": "8b54589d5f594ca2a8e165dfc8b7b9b34d54837b4c1a6619adc81c416a0bd82b"
-        },
-        {
-          "file": "sources/ceren-donnees-energie-residentiel-1990-2024.xlsx",
-          "source": "CEREN, Données sur l'énergie dans le résidentiel en France métropolitaine, mise à jour du 20 décembre 2024 : tableau « Répartition en 2024 des consommations des résidences principales par usage », à climat normal, en TWh ; lien de téléchargement non conservé",
-          "retrievedOn": "2026-10-08",
-          "checksum": "9c9bf08b979b99137c31f9441701262c1610ea9d1c5221cd8ec8069dc52878de"
         }
       ]
     },
@@ -122,12 +116,6 @@
           "link": "https://www.statistiques.developpement-durable.gouv.fr/donnees-regionales-de-production-et-de-consommation-finale-de-lenergie",
           "retrievedOn": "2026-10-08",
           "checksum": "8b54589d5f594ca2a8e165dfc8b7b9b34d54837b4c1a6619adc81c416a0bd82b"
-        },
-        {
-          "file": "sources/ceren-donnees-energie-residentiel-1990-2024.xlsx",
-          "source": "CEREN, Données sur l'énergie dans le résidentiel en France métropolitaine, mise à jour du 20 décembre 2024 : tableau « Répartition en 2024 des consommations des résidences principales par usage », à climat normal, en TWh ; lien de téléchargement non conservé",
-          "retrievedOn": "2026-10-08",
-          "checksum": "9c9bf08b979b99137c31f9441701262c1610ea9d1c5221cd8ec8069dc52878de"
         }
       ]
     },
