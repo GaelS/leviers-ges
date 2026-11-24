@@ -1,6 +1,7 @@
 import { Result } from 'neverthrow'
 import type { RegionLookup } from '../../../application/estimate/estimation-context.ts'
 import type { DataRow, DataSource, DataSourceError } from '../../../domain/data-source.ts'
+import { memoizeOkByReferences } from '../../../application/memoize-ok-by-references.ts'
 import { requireNonEmptyColumn, requireQuantityColumn } from '../../../application/require-column.ts'
 import type { LocatedArea } from './calculate-regional-area-shares.ts'
 
@@ -28,6 +29,17 @@ function toLocatableArea({
   )
 }
 
+const locateAreas = memoizeOkByReferences(
+  (
+    dataSource: DataSource,
+    getRegionByCommune: RegionLookup,
+  ): Result<readonly LocatedArea[], DataSourceError> =>
+    dataSource
+      .rows(areasDataset)
+      .andThen((rows) => Result.combine(rows.map((row) => toLocatableArea({ row, getRegionByCommune }))))
+      .map((areas) => areas.filter(hasRegion)),
+)
+
 function readLocatedAreas({
   dataSource,
   getRegionByCommune,
@@ -35,10 +47,7 @@ function readLocatedAreas({
   dataSource: DataSource
   getRegionByCommune: RegionLookup
 }): Result<readonly LocatedArea[], DataSourceError> {
-  return dataSource
-    .rows(areasDataset)
-    .andThen((rows) => Result.combine(rows.map((row) => toLocatableArea({ row, getRegionByCommune }))))
-    .map((areas) => areas.filter(hasRegion))
+  return locateAreas(dataSource, getRegionByCommune)
 }
 
 export { readLocatedAreas }
