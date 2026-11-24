@@ -16,9 +16,9 @@ function toEcodrivingPotentialAssumption(): AppliedAssumptions {
     ecodrivingPotential: {
       value: ECODRIVING_POTENTIAL.toFixed(),
       source:
-        'Functional documentation (June 2026), 7.3.4.3, p. 61: the potential is the same for road public transport and cars, 10% by default (IPSOS survey); the spreadsheet gives ~15% (DonneesReference!D29), the documentation prevails; confirmed by the team on 2026-11-19',
+        'Documentation fonctionnelle (juin 2026), 7.3.4.3, p. 61 : le potentiel est le même pour les transports en commun routiers et les voitures, 10 % par défaut (enquête IPSOS) ; le tableur donne environ 15 % (DonneesReference!D29), la documentation prévaut ; confirmé par l’équipe le 19/11/2026',
       limit:
-        'One average potential for cars and for buses alike: the result is proportional to it. The documentation reports a maximum of 23% of fuel for a compact petrol car and about half of the eco-driving gestures already applied',
+        'Un potentiel moyen unique pour les voitures et pour les bus : le résultat lui est proportionnel. La documentation indique un maximum de 23 % de carburant pour une citadine essence et environ la moitié des gestes d’écoconduite déjà appliqués',
     },
   }
 }

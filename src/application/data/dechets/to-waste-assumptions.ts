@@ -16,11 +16,11 @@ function tonnesWithoutEmissionFactor(wasteTypes: readonly WasteTypeTreatment[]):
 function toWasteScopeAssumption(): AppliedAssumptions {
   return {
     wasteScope: {
-      value: 'treatment sites located in the territory',
+      value: 'sites de traitement situés dans le territoire',
       source:
-        'DonneesTerritoires!L21: all treatment sites of the territory are consolidated; IREP 2022 register (Géorisques), non-hazardous waste of chapter 20, sites attached to the territory by their commune',
+        'DonneesTerritoires!L21 : tous les sites de traitement du territoire sont consolidés ; registre IREP 2022 (Géorisques), déchets non dangereux du chapitre 20, sites rattachés au territoire par leur commune',
       limit:
-        'The tonnes are those treated in the territory, not those produced by it: a territory without a treatment site has a null result whatever the percentages, and a region with large sites for its neighbours is overestimated. One vintage (2022)',
+        'Les tonnes sont celles traitées dans le territoire, non celles qu’il produit : un territoire sans site de traitement a un résultat nul quels que soient les pourcentages, et une région dotée de grands sites pour ses voisines est surestimée. Un seul millésime (2022)',
     },
   }
 }
@@ -32,9 +32,9 @@ function toUncoveredWasteAssumption(wasteTypes: readonly WasteTypeTreatment[]): 
     wasteTonnesWithoutEmissionFactor: {
       value: uncoveredTonnes.toFixed(),
       source:
-        'FE_déchets: the Base Empreinte has no emission factor for some waste codes (mostly 20 02 02, soil and stones, which has no storage factor)',
+        'FE_déchets : la Base Empreinte n’a pas de facteur d’émission pour certains codes de déchets (surtout 20 02 02, terres et pierres, qui n’a pas de facteur de stockage)',
       limit:
-        'These tonnes, stored or incinerated, are ignored by the formula: their emissions are neither counted nor avoided',
+        'Ces tonnes, stockées ou incinérées, sont ignorées par la formule : leurs émissions ne sont ni comptées ni évitées',
     },
   }
 }

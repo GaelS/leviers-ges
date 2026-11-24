@@ -22,10 +22,10 @@ function toElectrificationCapAssumption({
     additionalElectrifiedFleetFraction: {
       value: electrifiedShare.decimalPlaces(DISPLAYED_DECIMAL_PLACES).toFixed(),
       source:
-        "SDES, Parc de véhicules routiers (RSVERO) at 1 January 2024: the thermal share of the region's heavy vehicles is the room left for electrification (ParametreDeterminants!D41: percentage points of additional electrification)",
+        'SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024 : la part thermique des poids lourds de la région est la marge restante pour l’électrification (ParametreDeterminants!D41 : points de pourcentage d’électrification supplémentaire)',
       limit: thermalShare.isZero()
-        ? 'Every heavy vehicle of the region is already zero-emission: nothing can be electrified'
-        : 'The requestedElectrifiedShare share exceeds the share of thermal heavy vehicles of the region: only thermal heavy vehicles can be electrified, the requestedElectrifiedShare share is capped',
+        ? 'Tous les poids lourds de la région sont déjà à zéro émission : rien ne peut être électrifié'
+        : 'La part d’électrification demandée dépasse la part de poids lourds thermiques de la région : seuls les poids lourds thermiques peuvent être électrifiés, la part demandée est plafonnée',
     },
   }
 }

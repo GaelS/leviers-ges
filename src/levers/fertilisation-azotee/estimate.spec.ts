@@ -74,8 +74,8 @@ describe('estimate, fertilisation_azotee', () => {
       region: campaigns('region', '84'),
       departement: campaigns('departement', '01'),
     }).toEqual({
-      region: 'average of the 2022-2023 (revised) and 2023-2024 campaigns',
-      departement: 'average of the 2022-2023 (revised) and 2023-2024 campaigns',
+      region: 'moyenne des campagnes 2022-2023 (révisée) et 2023-2024',
+      departement: 'moyenne des campagnes 2022-2023 (révisée) et 2023-2024',
     })
   })
 
@@ -83,7 +83,7 @@ describe('estimate, fertilisation_azotee', () => {
     const factor = estimate(request('region', '84'))._unsafeUnwrap().appliedAssumptions[
       'nitrogenSpreadingEmissionFactor'
     ]
-    expect(factor).toMatchObject({ value: '5.733', limit: expect.stringContaining('400%') as string })
+    expect(factor).toMatchObject({ value: '5.733', limit: expect.stringContaining('400 %') as string })
   })
 
   it.each([
@@ -221,7 +221,7 @@ describe('estimate, fertilisation_azotee', () => {
         estimateEpci(request('epci', '200000001'))._unsafeUnwrap().appliedAssumptions[
           'nitrogenCampaigns'
         ]?.value,
-      ).toBe('average of the 2022-2023 (revised) and 2023-2024 campaigns')
+      ).toBe('moyenne des campagnes 2022-2023 (révisée) et 2023-2024')
     })
 
     it('ignore une commune de SAU absente du référentiel : résultat inchangé à 165,11 tCO2e', () => {

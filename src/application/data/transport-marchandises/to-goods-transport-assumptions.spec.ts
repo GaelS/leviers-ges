@@ -32,12 +32,12 @@ describe('toGoodsTransportAssumptions', () => {
       electric: assumptions['electricHeavyVehicleEmissionFactor']?.value,
       flows: assumptions['includeInternationalFlows']?.limit,
     }).toEqual({
-      tripType: 'default trip type of the spreadsheet, road and city, diesel heavy vehicles of the region',
+      tripType: 'type de trajet par défaut du tableur, route et ville, poids lourds diesel de la région',
       factor: '0.1',
       loading: '8.1',
       unclassified: '0.09',
       electric: '0.0467',
-      flows: expect.stringContaining('239.97') as string,
+      flows: expect.stringContaining('239,97') as string,
     })
   })
 })

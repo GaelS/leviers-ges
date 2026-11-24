@@ -90,8 +90,8 @@ describe('toAppliedAssumptions, électrification', () => {
       railShare: REQUESTED,
     })
     expect(assumptions['busElectrificationFraction']?.value).toBe('0')
-    expect(assumptions['busElectrificationFraction']?.limit).toContain('no thermal buses and coaches')
-    expect(assumptions['carElectrificationFraction']?.limit).toContain('no thermal cars')
+    expect(assumptions['busElectrificationFraction']?.limit).toContain('pas de bus et cars thermiques')
+    expect(assumptions['carElectrificationFraction']?.limit).toContain('pas de voitures thermiques')
   })
 
   it('dit pour chaque hypothèse sa source et sa limite', () => {

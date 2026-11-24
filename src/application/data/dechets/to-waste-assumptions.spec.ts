@@ -15,8 +15,8 @@ describe('toWasteAssumptions', () => {
   it('renvoie le périmètre des sites, même quand tous les déchets ont un facteur', () => {
     const assumptions = toWasteAssumptions([RESIDUAL_WASTE])
     expect(Object.keys(assumptions)).toEqual(['wasteScope'])
-    expect(assumptions['wasteScope']?.value).toBe('treatment sites located in the territory')
-    expect(assumptions['wasteScope']?.limit).toContain('a territory without a treatment site')
+    expect(assumptions['wasteScope']?.value).toBe('sites de traitement situés dans le territoire')
+    expect(assumptions['wasteScope']?.limit).toContain('un territoire sans site de traitement')
   })
 
   it('renvoie le périmètre des sites pour un territoire sans déchet', () => {

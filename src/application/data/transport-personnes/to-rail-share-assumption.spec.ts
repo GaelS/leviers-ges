@@ -10,7 +10,7 @@ describe('toRailShareAssumption', () => {
     })
     expect(Object.keys(assumptions)).toEqual(['railShare'])
     expect(assumptions['railShare']?.value).toBe('0.24')
-    expect(assumptions['railShare']?.limit).toContain('large metro or tram network')
+    expect(assumptions['railShare']?.limit).toContain('grand réseau de métro ou de tramway')
   })
 
   it('n’annonce rien quand la part est celle de la requête', () => {

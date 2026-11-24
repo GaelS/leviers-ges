@@ -126,7 +126,7 @@ describe('estimate, elevage_durable', () => {
     ]
     expect({ value: defaulted?.value, limit: defaulted?.limit }).toEqual({
       value: '0',
-      limit: expect.stringContaining('Applied to: dairyCows.') as string,
+      limit: expect.stringContaining('Appliquée à : dairyCows.') as string,
     })
     expect(
       assumptionsOf(request('region', '84', { sheep: SHEEP }))['entericEmissionReductionFraction'],
@@ -140,7 +140,7 @@ describe('estimate, elevage_durable', () => {
     }
     expect(
       assumptionsOf(request('region', '84', { dairyCows: digestion }))['methanisationFactors'],
-    ).toMatchObject({ source: 'OMINEA 2026 of the CITEPA, cattle and pigs' })
+    ).toMatchObject({ source: 'OMINEA 2026 du CITEPA, bovins et porcins' })
     expect(assumptionsOf(request('region', '84', { sheep: SHEEP }))['methanisationFactors']).toBeUndefined()
   })
 

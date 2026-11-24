@@ -4,17 +4,17 @@ import { NITROGEN_SPREADING_EMISSION_FACTOR } from './calculate-fertilisation-az
 function toAppliedAssumptions(): AppliedAssumptions {
   return {
     nitrogenCampaigns: {
-      value: 'average of the 2022-2023 (revised) and 2023-2024 campaigns',
+      value: 'moyenne des campagnes 2022-2023 (révisée) et 2023-2024',
       source:
-        'DonneesTerritoires!D8: take the average over two years; UNIFA, deliveries of the 2023-2024 campaign by region and by département, the 2022-2023 campaign being revised by the published evolution',
+        'DonneesTerritoires!D8 : prendre la moyenne sur deux ans ; UNIFA, livraisons de la campagne 2023-2024 par région et par département, la campagne 2022-2023 étant révisée par l’évolution publiée',
       limit:
-        'Deliveries are counted where the distributor is, not where the nitrogen is spread, a limit the spreadsheet assumes (ChgtPratiques!B13). Two campaigns only; the 2022-2023 value is derived from a published evolution rounded to 0.1 %',
+        'Les livraisons sont comptées là où se trouve le distributeur, non là où l’azote est épandu, limite que le tableur assume (ChgtPratiques!B13). Deux campagnes seulement ; la valeur 2022-2023 est déduite d’une évolution publiée arrondie à 0,1 %',
     },
     nitrogenSpreadingEmissionFactor: {
       value: NITROGEN_SPREADING_EMISSION_FACTOR.toFixed(),
-      source: 'Base Empreinte, element 24270, mineral nitrogen fertiliser spread, kgCO2e per kg of nitrogen',
+      source: 'Base Empreinte, élément 24270, engrais azoté minéral épandu, kgCO2e par kg d’azote',
       limit:
-        'Uncertainty of 400% in the Base Empreinte; one national value for continental France, applied to every territory including Corsica',
+        'Incertitude de 400 % dans la Base Empreinte ; une valeur nationale pour la France continentale, appliquée à tous les territoires, Corse comprise',
     },
   }
 }

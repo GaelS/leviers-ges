@@ -132,7 +132,7 @@ describe('estimate, dechets_sobriete', () => {
     expect({
       scope: appliedAssumptions['wasteScope']?.value,
       uncovered: appliedAssumptions['wasteTonnesWithoutEmissionFactor']?.value,
-    }).toEqual({ scope: 'treatment sites located in the territory', uncovered: '1000' })
+    }).toEqual({ scope: 'sites de traitement situés dans le territoire', uncovered: '1000' })
   })
 
   it('ne renvoie pas de tonnes sans facteur quand tous les déchets en ont', () => {

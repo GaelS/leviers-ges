@@ -148,7 +148,7 @@ describe('estimate, transport_personnes_efficacite', () => {
       defaulted: defaulted['railShare']?.value,
       requested: requested['railShare'],
     }).toEqual({ defaulted: '0.24', requested: undefined })
-    expect(defaulted['railShare']?.limit).toContain('large metro or tram network')
+    expect(defaulted['railShare']?.limit).toContain('grand réseau de métro ou de tramway')
   })
 
   it('renvoie le facteur du bus retenu et le potentiel d’écoconduite', () => {

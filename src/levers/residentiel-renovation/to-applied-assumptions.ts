@@ -4,18 +4,18 @@ function toAppliedAssumptions(): AppliedAssumptions {
   return {
     nationalHeatingShares: {
       value:
-        'energy of heating and hot water = territory consumption × national share (electricity 46.7%, natural gas 92.6%, fuel oil 100%, LPG 53.2%, heat 100%, 2024); the same consumption per square metre for every home using a given energy',
+        'énergie du chauffage et de l’eau chaude = consommation du territoire × part nationale (électricité 46,7 %, gaz naturel 92,6 %, fioul 100 %, GPL 53,2 %, chaleur 100 %, 2024) ; la même consommation par mètre carré pour tous les logements utilisant une énergie donnée',
       source:
-        'Functional documentation (p. 51): heating and hot water are the consumptions of the renovation lever; SDES, Consommation énergétique du secteur résidentiel (Conso_usage), 2024',
+        'Documentation fonctionnelle (p. 51) : le chauffage et l’eau chaude sont les consommations du levier de rénovation ; SDES, Consommation énergétique du secteur résidentiel (Conso_usage), 2024',
       limit:
-        'The CEREN consumption per square metre by type, energy, period and département is not open: every territory is assumed to consume like France, and houses and flats, old and recent homes alike. Wood is absent from the territory data',
+        'La consommation CEREN par mètre carré selon le type, l’énergie, la période et le département n’est pas ouverte : chaque territoire est supposé consommer comme la France, et les maisons comme les appartements, les logements anciens comme récents. Le bois est absent des données du territoire',
     },
     flatsAfter1971Excluded: {
-      value: 'flats built after 1971 are not renovated in this estimate',
+      value: 'les appartements construits après 1971 ne sont pas rénovés dans cette estimation',
       source:
-        'Functional documentation (pp. 53-54) and PlanET V1, Residentiel_Rénovation!B13: BBC rénovation level, 110 kWh of primary energy per m² per year, for flats built after 1971; 35% reduction for the other homes',
+        'Documentation fonctionnelle (pp. 53-54) et PlanET V1, Residentiel_Rénovation!B13 : niveau BBC rénovation, 110 kWh d’énergie primaire par m² et par an, pour les appartements construits après 1971 ; réduction de 35 % pour les autres logements',
       limit:
-        'The BBC level cannot be compared with average national consumptions in final energy without primary energy factors: the gain of recent flats is not counted, the total is underestimated',
+        'Le niveau BBC ne peut pas être comparé aux consommations nationales moyennes en énergie finale sans facteurs d’énergie primaire : le gain des appartements récents n’est pas compté, le total est sous-estimé',
     },
   }
 }
