@@ -3,7 +3,7 @@ import type {
   DepartementLookup,
   EstimationContext,
 } from '../../../application/estimate/estimation-context.ts'
-import { requireNonEmptyColumn, requireQuantityColumn } from '../../../application/require-column.ts'
+import { requireQuantityColumn } from '../../../application/require-column.ts'
 import { sum } from '../../../domain/big-number.ts'
 import {
   missingData,
@@ -15,41 +15,17 @@ import type { Territory } from '../../../domain/territory.ts'
 import type { UnknownTerritory } from '../../../domain/territory-index.ts'
 import { quantity, type Hectares, type Tonnes } from '../../../domain/units.ts'
 import type { EpciNitrogenPart } from './epci-nitrogen-part.ts'
+import { readLocatedAreas, type LocatedArea } from './read-located-areas.ts'
 import { readCampaignAverage } from './read-campaign-average.ts'
 
-const agriculturalAreaDataset = 'surface-agricole-utile/communes'
 const nitrogenDataset = 'fertilisation-azotee/departements'
 const epciOrganicDataset = 'fertilisation-azotee/organic-epci-departements'
 const departementOrganicDataset = 'fertilisation-azotee/organic-departements'
-
-type LocatedArea = {
-  readonly commune: string
-  readonly departement: string
-  readonly hectares: Hectares
-}
 
 type DepartementAreas = {
   readonly departement: string
   readonly departementArea: Hectares
   readonly epciArea: Hectares
-}
-
-function toLocatedArea({
-  row,
-  getDepartementByCommune,
-}: {
-  row: DataRow
-  getDepartementByCommune: DepartementLookup
-}): Result<readonly LocatedArea[], DataSourceError> {
-  const dataset = agriculturalAreaDataset
-  return Result.combine([
-    requireNonEmptyColumn({ dataset, row, column: 'code_commune' }),
-    requireQuantityColumn<'Hectares'>({ dataset, row, column: 'agricultural_area_ha' }),
-  ]).andThen(([commune, hectares]) =>
-    getDepartementByCommune(commune).map((departement) =>
-      departement === undefined ? [] : [{ commune, departement, hectares }],
-    ),
-  )
 }
 
 function sumHectares(areas: readonly LocatedArea[]): Hectares {
@@ -167,12 +143,7 @@ function readEpciNitrogenParts({
 }): Result<readonly EpciNitrogenPart[], DataSourceError | UnknownTerritory> {
   return getCommunesOf(territory).andThen((epciCommunes) =>
     Result.combine([
-      dataSource
-        .rows(agriculturalAreaDataset)
-        .andThen((rows) =>
-          Result.combine(rows.map((row) => toLocatedArea({ row, getDepartementByCommune }))),
-        )
-        .map((located) => located.flat()),
+      readLocatedAreas({ dataSource, getDepartementByCommune }),
       dataSource.rows(nitrogenDataset),
       dataSource.rows(epciOrganicDataset),
       dataSource.rows(departementOrganicDataset),
