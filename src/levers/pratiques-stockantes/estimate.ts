@@ -16,11 +16,11 @@ function estimate({ parameters }: PratiquesStockantesRequest): EstimateResult {
     }),
     {
       applicationSurfaceBounds: {
-        value: 'none: each surface is taken as entered, from 0 hectares upwards',
+        value: 'aucune : chaque surface est prise telle que saisie, à partir de 0 hectare',
         source:
-          'PlanET functional documentation (June 2026), p. 78: no documented bound for the application surface of a stocking practice',
+          'Documentation fonctionnelle PlanET (juin 2026), p. 78 : aucune borne documentée pour la surface d’application d’une pratique stockante',
         limit:
-          'The maximum application surface of each practice depends on the practice (grassland, orchards, vineyards or crops) and is not defined: an entry above the surface available in the territory is not refused',
+          'La surface d’application maximale de chaque pratique dépend de la pratique (prairies, vergers, vignes ou cultures) et n’est pas définie : une saisie supérieure à la surface disponible dans le territoire n’est pas refusée',
       },
     },
   )

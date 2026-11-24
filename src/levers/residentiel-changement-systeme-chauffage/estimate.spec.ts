@@ -178,7 +178,7 @@ describe('estimate, residentiel_changement_systeme_chauffage', () => {
   it('déclare la part nationale du chauffage comme hypothèse appliquée', () => {
     const { appliedAssumptions } = estimate(request('departement', '01'), context)._unsafeUnwrap()
     expect(Object.keys(appliedAssumptions)).toEqual(['nationalHeatingShares'])
-    expect(appliedAssumptions['nationalHeatingShares']?.limit).toContain('LPG consumption is left unchanged')
+    expect(appliedAssumptions['nationalHeatingShares']?.limit).toContain('La consommation de GPL est laissée inchangée')
   })
 
   it('refuse un département absent des données', () => {

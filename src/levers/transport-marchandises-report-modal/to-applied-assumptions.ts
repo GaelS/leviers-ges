@@ -12,21 +12,21 @@ function toModalShiftAssumptions(): AppliedAssumptions {
     railFreightEmissionFactor: {
       value: RAIL_FREIGHT_EMISSION_FACTOR.toFixed(),
       source:
-        'Base Empreinte, element 47691 (average train, average load, continental France): combustion 0.004715 plus upstream 0.002563, manufacturing left out (DonneesReference!D42)',
-      limit: 'One factor for every region, traction and load; the share of upstream counted is not given by the spreadsheet',
+        'Base Empreinte, élément 47691 (train moyen, charge moyenne, France continentale) : combustion 0,004715 plus amont 0,002563, fabrication exclue (DonneesReference!D42)',
+      limit: 'Un seul facteur pour toutes les régions, tractions et charges ; la part d’amont comptée n’est pas donnée par le tableur',
     },
     waterwayFreightEmissionFactor: {
       value: WATERWAY_FREIGHT_EMISSION_FACTOR.toFixed(),
       source:
-        'FE_fluvial!D25: mean of six Base Empreinte factors by vessel class, combustion only, weighted by the number of vessels of the VNF active fleet 2016',
+        'FE_fluvial!D25 : moyenne de six facteurs de la Base Empreinte par classe de bateau, combustion seule, pondérée par le nombre de bateaux de la flotte active VNF 2016',
       limit:
-        'Combustion only, where the rail factor adds upstream; 344 non-motorised barges (32%) take the factors of motorised vessels',
+        'Combustion seule, là où le facteur ferroviaire ajoute l’amont ; 344 barges non motorisées (32 %) prennent les facteurs des bateaux motorisés',
     },
     modalShiftCoefficients: {
-      value: 'rail 0.8064 road and 1.0164 rail, waterway 0.8176 road and 0.9576 waterway',
-      source: 'TrsptMarch_ReportModal, drawn formula and B13: analysis of the CEE REMOVE programme',
+      value: 'fer 0,8064 route et 1,0164 fer, voie d’eau 0,8176 route et 0,9576 voie d’eau',
+      source: 'TrsptMarch_ReportModal, formule dessinée et B13 : analyse du programme CEE REMOVE',
       limit:
-        'The four coefficients are not found in the REMOVE guides, FAQ and manuals read. The drawn formula pairs the rail share with the waterway factor and the reverse: the pairing follows the Scénario global (formula-corrections.md, number 3)',
+        'Les quatre coefficients ne figurent pas dans les guides, la FAQ et les manuels REMOVE lus. La formule dessinée associe la part ferroviaire au facteur de la voie d’eau et inversement : l’association suit le Scénario global (formula-corrections.md, numéro 3)',
     },
   }
 }
@@ -38,9 +38,9 @@ function toCyclologisticAssumption(
   return {
     cyclologisticTonneKilometres: {
       value: DEFAULT_CYCLOLOGISTIC_TONNE_KILOMETRES.toFixed(),
-      source: 'ParametreDeterminants: no default value in the spreadsheet',
+      source: 'ParametreDeterminants : aucune valeur par défaut dans le tableur',
       limit:
-        'Cyclologistics removes its tonne-km from the base of the shifts and credits no avoided emission: raising it lowers the reduction. The spreadsheet gives no cap: above the tonne-km of the region the base is negative',
+        'La cyclologistique retire ses tonnes.km de la base des reports et ne crédite aucune émission évitée : l’augmenter diminue la réduction. Le tableur ne donne aucun plafond : au-delà des tonnes.km de la région, la base est négative',
     },
   }
 }

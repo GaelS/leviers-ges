@@ -14,9 +14,9 @@ function toBusEmissionFactorAssumption(transportInputs: TransportInputs): Applie
     busEmissionFactor: {
       value: busEmissionFactorPerPassengerKm.toFixed(),
       source:
-        "OMINEA 2024 (CITEPA), Euro VI buses and coaches, in kgCO2e per passenger-km, weighted by the territory's fleet. Design choice, not validated: the low value is retained",
+        'OMINEA 2024 (CITEPA), bus et cars Euro VI, en kgCO2e par passager.km, pondérés par le parc du territoire. Choix de conception, non validé : la valeur basse est retenue',
       limit:
-        'Base Empreinte gives 0.0874 kgCO2e per passenger-km for a diesel bus, 8.6% above the OMINEA 0.0805',
+        'La Base Empreinte donne 0,0874 kgCO2e par passager.km pour un bus diesel, soit 8,6 % de plus que l’OMINEA 0,0805',
     },
   }
 }
@@ -28,7 +28,7 @@ function toCarFleetUnclassifiedAssumption(transportInputs: TransportInputs): App
       value: transportInputs.carFleetUnclassifiedShare.toFixed(),
       source: FLEET_SOURCE,
       limit:
-        'Cars with another fuel than petrol, diesel, gas or electricity have no emission factor and are left out of the fleet average',
+        'Les voitures roulant avec un autre carburant que l’essence, le diesel, le gaz ou l’électricité n’ont pas de facteur d’émission et sont exclues de la moyenne du parc',
     },
   }
 }
@@ -40,7 +40,7 @@ function toBusFleetUnclassifiedAssumption(transportInputs: TransportInputs): App
       value: transportInputs.busFleetUnclassifiedShare.toFixed(),
       source: FLEET_SOURCE,
       limit:
-        'Buses and coaches running on petrol or another fuel have no emission factor and are left out of the fleet average',
+        'Les bus et cars roulant à l’essence ou avec un autre carburant n’ont pas de facteur d’émission et sont exclus de la moyenne du parc',
     },
   }
 }
@@ -55,7 +55,7 @@ function toNationalCarAssumption(transportInputs: TransportInputs): AppliedAssum
       value: carEmissionFactorPerPassengerKm.toFixed(),
       source: `${FLEET_SOURCE}, France métropolitaine`,
       limit:
-        'The territory has no classified car in the fleet: the national fleet average applies, in kgCO2e per passenger-km',
+        'Le territoire n’a aucune voiture classée dans le parc : la moyenne nationale du parc s’applique, en kgCO2e par passager.km',
     },
   }
 }
@@ -70,7 +70,7 @@ function toNationalBusAssumption(transportInputs: TransportInputs): AppliedAssum
       value: busEmissionFactorPerPassengerKm.toFixed(),
       source: `${FLEET_SOURCE}, France métropolitaine`,
       limit:
-        'The territory has no classified bus or coach in the fleet: the national fleet average applies, in kgCO2e per passenger-km',
+        'Le territoire n’a aucun bus ni car classé dans le parc : la moyenne nationale du parc s’applique, en kgCO2e par passager.km',
     },
   }
 }

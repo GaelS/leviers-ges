@@ -132,7 +132,7 @@ describe('estimate, transport_personnes_electrification', () => {
       car: capped['carElectrificationFraction']?.value,
       bus: capped['busElectrificationFraction'],
     }).toEqual({ car: '0.9', bus: undefined })
-    expect(capped['carElectrificationFraction']?.limit).toContain('capped')
+    expect(capped['carElectrificationFraction']?.limit).toContain('plafonnée')
   })
 
   it('renvoie la part ferrée par défaut avec sa limite, mais pas celle de la requête', () => {

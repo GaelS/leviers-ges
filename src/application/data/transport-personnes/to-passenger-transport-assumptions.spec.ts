@@ -37,7 +37,7 @@ describe('toPassengerTransportAssumptions', () => {
     })
     expect(Object.keys(assumptions)).toEqual(['busEmissionFactor', 'railEmissionFactor'])
     expect(assumptions['railEmissionFactor']?.value).toBe('0.0229')
-    expect(assumptions['railEmissionFactor']?.source).toContain('TER average 2022')
+    expect(assumptions['railEmissionFactor']?.source).toContain('TER moyen 2022')
   })
 
   it('cite le train de Corse pour un territoire corse', () => {
@@ -47,7 +47,7 @@ describe('toPassengerTransportAssumptions', () => {
       railEmissionFactor: CORSICAN,
     })
     expect(assumptions['railEmissionFactor']?.value).toBe('0.187')
-    expect(assumptions['railEmissionFactor']?.source).toContain('Corsican')
+    expect(assumptions['railEmissionFactor']?.source).toContain('train de voyageurs corse')
   })
 
   it('annonce la part ferrée par défaut, les parts exclues et les moyennes nationales', () => {

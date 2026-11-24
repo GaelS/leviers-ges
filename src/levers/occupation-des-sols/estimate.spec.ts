@@ -106,7 +106,7 @@ describe('estimate, occupation_des_sols', () => {
       'desealingWithoutHorizon',
     ])
     expect(appliedAssumptions['desealingWithoutHorizon']?.value).toBe(
-      'the desealing term is not multiplied by the time horizon',
+      'le terme de désimperméabilisation n’est pas multiplié par l’horizon de temps',
     )
   })
 

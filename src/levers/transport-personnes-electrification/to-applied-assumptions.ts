@@ -19,9 +19,9 @@ function toElectricCarEmissionFactorAssumption(): AppliedAssumptions {
     electricCarEmissionFactor: {
       value: ELECTRIC_CAR_EMISSION_FACTOR.toFixed(),
       source:
-        'Fiche d’analyse 11, OMINEA v23.1 trial calculation, in kgCO2e per vehicle-km: upstream electricity only, no tailpipe emission',
+        'Fiche d’analyse 11, calcul d’essai OMINEA v23.1, en kgCO2e par véhicule.km : électricité amont uniquement, aucune émission à l’échappement',
       limit:
-        'Every electrified car is counted at the same factor, whatever the electricity mix of the territory',
+        'Toute voiture électrifiée est comptée au même facteur, quel que soit le mix électrique du territoire',
     },
   }
 }
@@ -31,17 +31,17 @@ function toElectricBusEmissionFactorAssumption(): AppliedAssumptions {
     electricBusEmissionFactor: {
       value: ELECTRIC_BUS_EMISSION_FACTOR.toFixed(),
       source:
-        'Base Empreinte, 0.0095 kgCO2e per passenger-km, times the 10 passengers of the occupancy rate, in kgCO2e per vehicle-km: upstream electricity only, no tailpipe emission',
+        'Base Empreinte, 0,0095 kgCO2e par passager.km, multiplié par les 10 passagers du taux d’occupation, en kgCO2e par véhicule.km : électricité amont uniquement, aucune émission à l’échappement',
       limit:
-        'Every electrified bus or coach is counted at the same factor, whatever the electricity mix of the territory',
+        'Tout bus ou car électrifié est compté au même facteur, quel que soit le mix électrique du territoire',
     },
   }
 }
 
 function toCapLimit({ thermalShare, mode }: { thermalShare: Fraction; mode: string }): string {
   return thermalShare.isZero()
-    ? `The territory has no thermal ${mode} in the fleet data, either because none is registered there or because all are electric: nothing can be electrified`
-    : `The requested share exceeds the share of thermal ${mode} in the fleet: only thermal ${mode} can be electrified, the requested share is capped`
+    ? `Le territoire n’a pas de ${mode} thermiques dans les données du parc, faute d’immatriculation ou parce que le parc est entièrement électrique : rien ne peut être électrifié`
+    : `La part demandée dépasse la part de ${mode} thermiques du parc : seule la part thermique peut être électrifiée, la part demandée est plafonnée`
 }
 
 function toCarElectrificationCapAssumption({
@@ -56,8 +56,8 @@ function toCarElectrificationCapAssumption({
   return {
     carElectrificationFraction: {
       value: electrifiedShare.toFixed(),
-      source: `${FLEET_SOURCE}, share of cars running on petrol, diesel or gas`,
-      limit: toCapLimit({ thermalShare: thermalFleet.carThermalFleetShare, mode: 'cars' }),
+      source: `${FLEET_SOURCE}, part des voitures roulant à l’essence, au diesel ou au gaz`,
+      limit: toCapLimit({ thermalShare: thermalFleet.carThermalFleetShare, mode: 'voitures' }),
     },
   }
 }
@@ -74,10 +74,10 @@ function toBusElectrificationCapAssumption({
   return {
     busElectrificationFraction: {
       value: electrifiedShare.toFixed(),
-      source: `${FLEET_SOURCE}, share of buses and coaches running on diesel or gas`,
+      source: `${FLEET_SOURCE}, part des bus et cars roulant au diesel ou au gaz`,
       limit: toCapLimit({
         thermalShare: thermalFleet.busThermalFleetShare,
-        mode: 'buses and coaches',
+        mode: 'bus et cars',
       }),
     },
   }

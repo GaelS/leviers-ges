@@ -80,7 +80,7 @@ describe('estimate, transport_marchandises_report_modal', () => {
     }).toEqual({
       rail: '0.007278',
       waterway: '0.0206283',
-      coefficients: 'rail 0.8064 road and 1.0164 rail, waterway 0.8176 road and 0.9576 waterway',
+      coefficients: 'fer 0,8064 route et 1,0164 fer, voie d’eau 0,8176 route et 0,9576 voie d’eau',
       cyclologistic: '0',
     })
   })

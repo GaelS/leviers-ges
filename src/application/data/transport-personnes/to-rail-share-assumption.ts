@@ -7,9 +7,9 @@ function toRailShareAssumption(railShare: RailShare): AppliedAssumptions {
     railShare: {
       value: railShare.fraction.toFixed(),
       source:
-        'SDES, Bilan annuel des transports 2024: rail share of public transport passenger-km, 82% in Île-de-France and 24% elsewhere',
+        'SDES, Bilan annuel des transports 2024 : part du ferroviaire dans les passagers.km des transports en commun, 82 % en Île-de-France et 24 % ailleurs',
       limit:
-        'One value per region group: a territory with a large metro or tram network outside Île-de-France (Lyon, Marseille, Lille) has a higher rail share, so its road public transport is overestimated. A territory straddling Île-de-France and another region, or with a commune of unknown region, takes 24%',
+        'Une valeur par groupe de régions : un territoire doté d’un grand réseau de métro ou de tramway hors Île-de-France (Lyon, Marseille, Lille) a une part ferroviaire plus élevée, donc ses transports en commun routiers sont surestimés. Un territoire à cheval sur l’Île-de-France et une autre région, ou avec une commune de région inconnue, prend 24 %',
     },
   }
 }

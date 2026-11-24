@@ -8,11 +8,11 @@ const DISPLAYED_DECIMAL_PLACES = 6
 function toFlowsAssumption(): AppliedAssumptions {
   return {
     includeInternationalFlows: {
-      value: 'internal flows plus 50% of the flows loaded or unloaded in the region, abroad included',
+      value: 'flux internes plus 50 % des flux chargés ou déchargés dans la région, étranger compris',
       source:
-        'DonneesTerritoires!D17; SDES, Le TRM des pavillons européens en 2024, sheet reg_type_flux',
+        'DonneesTerritoires!D17 ; SDES, Le TRM des pavillons européens en 2024, feuille reg_type_flux',
       limit:
-        'Without the international flows the 13 regions drop from 239.97 to 171.71 billion tonne-km; with them a region has from 18% (Corsica) to 62% (Hauts-de-France) more tonne-km',
+        'Sans les flux internationaux, les 13 régions passent de 239,97 à 171,71 milliards de tonnes.km ; avec eux, une région a de 18 % (Corse) à 62 % (Hauts-de-France) de tonnes.km en plus',
     },
   }
 }
@@ -20,35 +20,35 @@ function toFlowsAssumption(): AppliedAssumptions {
 function toEmissionFactorAssumptions({ inputs, emissionFactors }: GoodsTransport): AppliedAssumptions {
   return {
     heavyVehicleTripType: {
-      value: 'default trip type of the spreadsheet, road and city, diesel heavy vehicles of the region',
+      value: 'type de trajet par défaut du tableur, route et ville, poids lourds diesel de la région',
       source:
-        "OMINEA 2024 (CITEPA), CO2 of diesel heavy vehicles, default trip type of FE_transports (A22, A31): 50% SNAP 070302PL and 50% 070303PL, Euro standard chosen by Crit'Air (FE_transports), weighted by the region's fleet, divided by the loading rate",
+        "OMINEA 2024 (CITEPA), CO2 des poids lourds diesel, type de trajet par défaut de FE_transports (A22, A31) : 50 % SNAP 070302PL et 50 % 070303PL, norme Euro choisie selon Crit'Air (FE_transports), pondérée par le parc de la région, divisée par le taux de chargement",
       limit:
-        'The spreadsheet does not say which trip type applies to goods transport: its default is applied. Long distance (070301PL and 070302PL) is 24.5% lower. CO2 only: CH4 and N2O would add about 1.7%. The fleet is the one registered in the region, not the one that drives there',
+        'Le tableur ne dit pas quel type de trajet s’applique au transport de marchandises : sa valeur par défaut est appliquée. La longue distance (070301PL et 070302PL) est 24,5 % plus basse. CO2 seul : CH4 et N2O ajouteraient environ 1,7 %. Le parc est celui immatriculé dans la région, non celui qui y circule',
     },
     heavyVehicleThermalEmissionFactor: {
       value: emissionFactors.thermal.decimalPlaces(DISPLAYED_DECIMAL_PLACES).toFixed(),
       source:
-        "OMINEA 2024 (CITEPA) diesel CO2 per vehicle-km of the region's fleet, divided by the loading rate, in kgCO2e per tonne-km",
-      limit: 'Applied to the share of the fleet that is not zero-emission; the rest takes the electric factor',
+        'OMINEA 2024 (CITEPA), CO2 diesel par véhicule.km du parc de la région, divisé par le taux de chargement, en kgCO2e par tonne.km',
+      limit: 'Appliqué à la part du parc qui n’est pas à zéro émission ; le reste prend le facteur électrique',
     },
     heavyVehicleLoadFactor: {
       value: HEAVY_VEHICLE_LOADING_RATE.toFixed(),
       source:
-        'SGPE, Panorama des leviers, 2024-02-16, p. 37: average filling rate of heavy vehicles from 8.1 t to 8.7 t (DonneesReference!D43 asks for the SNBC 3 value without giving it)',
-      limit: '8.1 t is the 2019 value, 8.7 t the 2030 target',
+        'SGPE, Panorama des leviers, 16/02/2024, p. 37 : taux de remplissage moyen des poids lourds de 8,1 t à 8,7 t (DonneesReference!D43 demande la valeur de la SNBC 3 sans la donner)',
+      limit: '8,1 t est la valeur 2019, 8,7 t l’objectif 2030',
     },
     dieselUnclassifiedShare: {
       value: inputs.dieselUnclassifiedShare.toFixed(),
-      source: 'SDES, Parc de véhicules routiers (RSVERO) at 1 January 2024, heavy vehicles of the region',
+      source: 'SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024, poids lourds de la région',
       limit:
-        "This share of the region's diesel heavy vehicles has no Crit'Air 1 to 5 vignette and is left out of the diesel average",
+        "Cette part des poids lourds diesel de la région n'a pas de vignette Crit'Air 1 à 5 et est exclue de la moyenne diesel",
     },
     electricHeavyVehicleEmissionFactor: {
       value: ELECTRIC_HEAVY_VEHICLE_EMISSION_FACTOR.toFixed(),
-      source: 'Base Empreinte, element 28030 (rigid 3.5 to 7.5 t, electric), upstream only',
+      source: 'Base Empreinte, élément 28030 (porteur de 3,5 à 7,5 t, électrique), amont uniquement',
       limit:
-        'One electric factor for every heavy vehicle, including those over 7.5 t; hydrogen is treated as electric; validity April 2021, uncertainty 70%',
+        'Un seul facteur électrique pour tous les poids lourds, y compris ceux de plus de 7,5 t ; l’hydrogène est traité comme l’électrique ; validité avril 2021, incertitude 70 %',
     },
   }
 }

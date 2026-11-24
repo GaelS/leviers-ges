@@ -15,9 +15,9 @@ function toUnchangedAnimalsAssumption(animals: RequestedAnimals): AppliedAssumpt
   return {
     unchangedAnimals: {
       value: unchanged.join(', '),
-      source: 'ElevageDurable: the formula sums over the animal types the request changes',
+      source: 'ElevageDurable : la formule somme sur les types d’animaux que la requête modifie',
       limit:
-        'These animal types are absent from the request: their headcount, enteric emissions and manure management are left as they are, so they contribute nothing to the reduction',
+        'Ces types d’animaux sont absents de la requête : leur effectif, leurs émissions entériques et leur gestion des effluents sont laissés tels quels, ils ne contribuent donc en rien à la réduction',
     },
   }
 }
@@ -31,8 +31,8 @@ function toDefaultedEntericAssumption(animals: RequestedAnimals): AppliedAssumpt
   return {
     entericEmissionReductionFraction: {
       value: DEFAULT_ENTERIC_EMISSION_REDUCTION.toFixed(),
-      source: 'ParametreDeterminants!I9: default of the reduction of the enteric fermentation emission factor',
-      limit: `Applied to: ${defaulted.join(', ')}. The spreadsheet announces a bound on this reduction (ParametreDeterminants!D9) without giving it`,
+      source: 'ParametreDeterminants!I9 : valeur par défaut de la réduction du facteur d’émission de la fermentation entérique',
+      limit: `Appliquée à : ${defaulted.join(', ')}. Le tableur annonce une borne sur cette réduction (ParametreDeterminants!D9) sans la donner`,
     },
   }
 }
@@ -45,10 +45,10 @@ function toDigestionAssumption(animals: RequestedAnimals): AppliedAssumptions {
   if (!isDigestionRequested) return {}
   return {
     methanisationFactors: {
-      value: `methane conversion factor ${DIGESTION_METHANE_CONVERSION_FACTOR.toFixed()}, ${DIGESTION_NITROUS_OXIDE_FACTOR.toFixed()} kg N-N2O per kg of nitrogen excreted`,
-      source: 'OMINEA 2026 of the CITEPA, cattle and pigs',
+      value: `facteur de conversion du méthane ${DIGESTION_METHANE_CONVERSION_FACTOR.toFixed()}, ${DIGESTION_NITROUS_OXIDE_FACTOR.toFixed()} kg N-N2O par kg d’azote excrété`,
+      source: 'OMINEA 2026 du CITEPA, bovins et porcins',
       limit:
-        'The documents the spreadsheet cites give no factor for anaerobic digestion. Not available for the other animal types: a request that digests their manure is refused',
+        'Les documents que cite le tableur ne donnent aucun facteur pour la méthanisation. Non disponible pour les autres types d’animaux : une requête qui méthanise leurs effluents est refusée',
     },
   }
 }
@@ -56,25 +56,25 @@ function toDigestionAssumption(animals: RequestedAnimals): AppliedAssumptions {
 function toStaticAssumptions(): AppliedAssumptions {
   return {
     currentManureShares: {
-      value: 'national shares of liquid manure, solid manure and pasture, anaerobic digestion at 0',
+      value: 'parts nationales de lisier, de fumier et de pâturage, méthanisation à 0',
       source:
-        'ElevageDurable!B15 and OMINEA 2013 of the CITEPA (2010 values, 1990-2011 for cattle), Base Carbone, Agriculture - cheptels',
+        'ElevageDurable!B15 et OMINEA 2013 du CITEPA (valeurs 2010, 1990-2011 pour les bovins), Base Carbone, Agriculture - cheptels',
       limit:
-        'One national distribution for every territory: no pedoclimatic effect, and a territory that already digests part of its manure is not represented',
+        'Une répartition nationale unique pour tous les territoires : aucun effet pédoclimatique, et un territoire qui méthanise déjà une partie de ses effluents n’est pas représenté',
     },
     animalParameters: {
-      value: 'OMINEA 2013 factors, Base Carbone, Agriculture - cheptels',
+      value: 'facteurs OMINEA 2013, Base Carbone, Agriculture - cheptels',
       source:
-        'DonneesReference!D9 to D15: enteric factors, volatile solids, maximum methane capacity, conversion factors, nitrogen excretion (2011)',
+        'DonneesReference!D9 à D15 : facteurs entériques, matières volatiles, capacité maximale de méthane, facteurs de conversion, excrétion d’azote (2011)',
       limit:
-        'Thirteen years old: OMINEA 2026 gives 121.9 to 152.5 kg of CH4 per dairy cow (121 here) and 118.7 kg of nitrogen excreted (115.6 here). Volatile solids of cattle are the middle of the published range',
+        'Vieux de treize ans : OMINEA 2026 donne 121,9 à 152,5 kg de CH4 par vache laitière (121 ici) et 118,7 kg d’azote excrété (115,6 ici). Les matières volatiles des bovins sont le milieu de la fourchette publiée',
     },
     livestockHeadcounts: {
-      value: 'agricultural census 2020, headcounts at the location of the holding',
+      value: 'recensement agricole 2020, effectifs au lieu du siège de l’exploitation',
       source:
-        'Agreste, recensement agricole 2020, cheptels; cartostat for dairy cows (estimated by cartostat where Agreste is under statistical secret)',
+        'Agreste, recensement agricole 2020, cheptels ; cartostat pour les vaches laitières (estimées par cartostat là où Agreste est sous secret statistique)',
       limit:
-        'A holding on two départements is counted where its seat is. A category under statistical secret counts as zero, including when its parent is published (poultry, sows, equids)',
+        'Une exploitation sur deux départements est comptée là où se trouve son siège. Une catégorie sous secret statistique compte pour zéro, y compris lorsque sa catégorie parente est publiée (volailles, truies, équidés)',
     },
   }
 }

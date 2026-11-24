@@ -67,7 +67,7 @@ describe('estimate, transport_marchandises_electrification', () => {
     }).toEqual({
       reduction: '3.33',
       share: '0.1',
-      limit: expect.stringContaining('capped') as string,
+      limit: expect.stringContaining('plafonnée') as string,
     })
   })
 
@@ -76,7 +76,7 @@ describe('estimate, transport_marchandises_electrification', () => {
     expect({
       reduction: result.reduction.toFixed(),
       limit: result.appliedAssumptions['additionalElectrifiedFleetFraction']?.limit,
-    }).toEqual({ reduction: '0', limit: expect.stringContaining('nothing can be electrified') as string })
+    }).toEqual({ reduction: '0', limit: expect.stringContaining('rien ne peut être électrifié') as string })
   })
 
   it('ne renvoie pas de plafond quand la part demandée tient dans le parc thermique', () => {
