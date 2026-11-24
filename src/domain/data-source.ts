@@ -36,7 +36,15 @@ type InvalidDataset = {
 
 type DataSourceError = MissingData | InvalidDataset
 
+type DatasetProvenance = {
+  readonly dataset: string
+  readonly source: string
+  readonly vintage: string
+  readonly retrievedOn: string
+}
+
 interface DataSource {
+  provenance(dataset: string): Result<DatasetProvenance, DataSourceError>
   constant(dataset: string, name: string): Result<string, DataSourceError>
   row(dataset: string, territory: Territory<Level>): Result<DataRow, DataSourceError>
   rows(dataset: string): Result<readonly DataRow[], DataSourceError>
@@ -55,4 +63,4 @@ function invalidDataset({
 }
 
 export { invalidDataset, missingData }
-export type { DataRow, DataSource, DataSourceError, InvalidDataset, InvalidDatasetReason, MissingData }
+export type { DataRow, DataSource, DatasetProvenance, DataSourceError, InvalidDataset, InvalidDatasetReason, MissingData }

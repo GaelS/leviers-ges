@@ -90,6 +90,16 @@ describe('createCsvDataSource', () => {
       ])
     })
 
+    it('rend la provenance du jeu : source, millésime et date de récupération du manifeste', () => {
+      const source = createCsvDataSource(createRoot({ csv: VALUES_CSV }))
+      expect(source.provenance('demo/values')._unsafeUnwrap()).toEqual({
+        dataset: 'demo/values',
+        source: 'Source de test',
+        vintage: '2024',
+        retrievedOn: '2026-10-07',
+      })
+    })
+
     it('renvoie l’erreur du jeu quand on lit toutes ses lignes', () => {
       const source = createCsvDataSource(createRoot({ csv: VALUES_CSV }))
       expect(source.rows('demo/absent')._unsafeUnwrapErr()).toMatchObject({

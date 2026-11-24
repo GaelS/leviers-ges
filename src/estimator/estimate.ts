@@ -1,10 +1,11 @@
-import { ok, type Result } from 'neverthrow'
+import { Result, ok } from 'neverthrow'
 import { match } from 'ts-pattern'
 import { computedStatusOf } from '../application/estimate/ensure-level-computed.ts'
+import { recordDatasetReads } from '../application/estimate/record-dataset-reads.ts'
 import { createEstimationContext } from '../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../application/estimate/estimate-result.ts'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
-import type { DataSource } from '../domain/data-source.ts'
+import type { DataSource, DatasetProvenance } from '../domain/data-source.ts'
 import { LEVER_LIMITS, type LeverLimit } from '../domain/lever-limits.ts'
 import type { ComputedStatus } from '../domain/lever-registry.ts'
 import type { Level } from '../domain/territory.ts'
@@ -120,6 +121,7 @@ type Lever = RequestInput['id']
 type StatusedEstimateResult = EstimateResult & {
   readonly status: ComputedStatus
   readonly limits: readonly LeverLimit[]
+  readonly datasets: readonly DatasetProvenance[]
 }
 
 type EstimateByLever = Record<Lever, StatusedEstimateResult>
@@ -131,24 +133,37 @@ type Estimator = <E extends RequestInput>(input: E) => Result<Estimate<E['id']>,
 // Source : choix de conception, non validé : haies et pratiques_stockantes n'ont pas de territoire, leurs trois niveaux ont le même statut dans le registre (src/domain/lever-registry.ts)
 const LEVEL_OF_TERRITORY_LESS_LEVERS: Level = 'region'
 
+// Source : choix de conception, non validé : le référentiel des communes sert à tous les leviers et n'entre pas dans la provenance des données d'un résultat
+const TERRITORY_DATASET_PREFIX = 'territoires/'
+
 function levelOf(request: ParsedRequest): Level {
   return 'territory' in request ? request.territory.level : LEVEL_OF_TERRITORY_LESS_LEVERS
 }
 
 function createEstimator(dataSource: DataSource): Estimator {
-  const context = createEstimationContext(dataSource)
+  const recorder = recordDatasetReads(dataSource)
+  const context = createEstimationContext(recorder.dataSource)
 
   function estimate<E extends RequestInput>(input: E): Result<Estimate<E['id']>, EstimationError>
   function estimate(input: RequestInput): Result<Estimate, EstimationError> {
-    return parseRequest(input).andThen((request) =>
-      estimateLever(request).andThen((leverEstimate) =>
-        computedStatusOf({ lever: request.id, level: levelOf(request) }).map((status) => ({
-          ...leverEstimate,
-          status,
-          limits: LEVER_LIMITS[request.id],
-        })),
-      ),
-    )
+    return parseRequest(input).andThen((request) => {
+      recorder.takeReadDatasets()
+      return estimateLever(request).andThen((leverEstimate) =>
+        computedStatusOf({ lever: request.id, level: levelOf(request) }).andThen((status) =>
+          Result.combine(
+            recorder
+              .takeReadDatasets()
+              .filter((dataset) => !dataset.startsWith(TERRITORY_DATASET_PREFIX))
+              .map((dataset) => dataSource.provenance(dataset)),
+          ).map((datasets) => ({
+            ...leverEstimate,
+            status,
+            limits: LEVER_LIMITS[request.id],
+            datasets,
+          })),
+        ),
+      )
+    })
   }
 
   function estimateLever(request: ParsedRequest): Result<EstimateResult, EstimationError> {
