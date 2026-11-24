@@ -4,7 +4,7 @@ import { toBig } from '../../domain/big-number.ts'
 import { invalidDataset, type InvalidDataset } from '../../domain/data-source.ts'
 import { gigawattHoursToMegawattHours, quantity } from '../../domain/units.ts'
 import type { RegionalPetroleumMwh } from './apportion-oil-sales.ts'
-import { cerenDataset } from './read-ceren-fuel-consumption.ts'
+import { cerenDataset, type CerenFuelConsumption } from './ceren-national-fuel-consumption.ts'
 import type { RegionalBilan } from './read-regional-bilan.ts'
 
 type FuelShares = {
@@ -28,10 +28,7 @@ function toEmptyFuelSharesError(detail: string): InvalidDataset {
 function calculateFuelShares({
   fuelOilTwh,
   liquefiedPetroleumGasTwh,
-}: {
-  fuelOilTwh: string
-  liquefiedPetroleumGasTwh: string
-}): Result<FuelShares, InvalidDataset> {
+}: CerenFuelConsumption): Result<FuelShares, InvalidDataset> {
   const fuelOilConsumptionTwh = toBig(fuelOilTwh)
   const liquefiedPetroleumGasConsumptionTwh = toBig(liquefiedPetroleumGasTwh)
   const petroleumTwh = fuelOilConsumptionTwh.plus(liquefiedPetroleumGasConsumptionTwh)

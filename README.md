@@ -249,4 +249,4 @@ Première publication : un Trusted Publisher se déclare sur npmjs.com, dans les
 
 ## Licence
 
-Le code est sous licence MIT (voir `LICENSE`). Les jeux de `data/` sont des extraits de sources tierces et gardent la licence de leur producteur : voir `data/LICENSES.md` (vérifié sur les pages des producteurs le 2026-11-24 ; plusieurs jeux restent à clarifier ou bloquants avant toute publication).
+Le code est sous licence MIT (voir `LICENSE`). Les jeux de `data/` sont des extraits de sources tierces et gardent la licence de leur producteur : voir `data/LICENSES.md` (vérifié sur les pages des producteurs le 2026-11-24 ; un jeu reste bloquant (France Chaleur Urbaine) et plusieurs sont à clarifier avant toute publication).

@@ -9,11 +9,7 @@ const BILAN_HEADER =
 const SALES_HEADER = 'DEPARTEMENT_CODE;REGION_CODE;ANNEE;FOD;GPL'
 const IRIS_HEADER = 'code_departement,conso_mwh_hors_secret'
 const HEAT_HEADER = 'ID;COMMUNE_CODE;CONSOR;CONTENU_EN_CO2'
-const CEREN_ROWS = [
-  ['Énergie', 'Usage', undefined, '2024'],
-  ['Total Fioul', undefined, undefined, '32'],
-  ['Total GPL', undefined, undefined, '8'],
-]
+const CEREN_FUEL_CONSUMPTION = { fuelOilTwh: '32', liquefiedPetroleumGasTwh: '8' }
 
 const SALES_LINES = ['01;84;2024;1;3', '07;84;2024;3;1', '75;11;2024;5;5', '75;11;2023;999;999'].join(
   '\n',
@@ -26,7 +22,7 @@ const SOURCES: ResidentialEnergySources = {
     'f.xlsx,11,Île-de-France,0,1000,0,200,300,0,40',
     'f.xlsx,84,Auvergne-Rhône-Alpes,0,400,0,100,500,0,10',
   ].join('\n'),
-  cerenRows: CEREN_ROWS,
+  cerenFuelConsumption: CEREN_FUEL_CONSUMPTION,
   irisElectricityCsv: [IRIS_HEADER, '01,10', '07,20', '75,30', '971,99'].join('\n'),
   irisGasCsv: [IRIS_HEADER, '01,1', '75,3'].join('\n'),
   oilSalesCsv: [SALES_HEADER, SALES_LINES].join('\n'),
@@ -108,10 +104,10 @@ describe('buildResidentialEnergy', () => {
   })
 
   it('refuse un CEREN dont le fioul et le GPL somment 0', () => {
-    const cerenRows = [CEREN_ROWS[0] ?? [], ['Total Fioul', undefined, undefined, '0'], ['Total GPL', undefined, undefined, '0']]
-    expect(buildResidentialEnergy({ ...SOURCES, cerenRows })._unsafeUnwrapErr()).toEqual({
+    const cerenFuelConsumption = { fuelOilTwh: '0', liquefiedPetroleumGasTwh: '0' }
+    expect(buildResidentialEnergy({ ...SOURCES, cerenFuelConsumption })._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_dataset',
-      dataset: 'residentiel-sobriete/sources/ceren-donnees-energie-residentiel-1990-2024.xlsx',
+      dataset: 'residentiel-sobriete/ceren-national-fuel-consumption',
       reason: 'empty_dataset',
       detail: 'CEREN fuel oil and LPG consumption sum to 0',
     })
