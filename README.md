@@ -37,7 +37,7 @@ const result = estimate({
 })
 ```
 
-`result.value.reduction.toFixed()` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite. `result.value.status` vaut `no_open_question` (aucune question ouverte à ce niveau) ou `workaround` (niveau calculé par un contournement documenté dans `methodology.md`). `result.value.limits` liste les limites du levier (`limit`, `effect`), reprises du tableau « Limites » de son `methodology.md`.
+`result.value.reduction.toFixed()` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite. `result.value.status` vaut `no_open_question` (aucune question ouverte à ce niveau) ou `workaround` (niveau calculé par un contournement documenté dans `methodology.md`). `result.value.limits` liste les limites du levier (`limit`, `effect`), reprises du tableau « Limites » de son `methodology.md`. `result.value.datasets` liste les jeux de `data/` lus par le calcul, chacun avec sa source (périmètre compris), son millésime et sa date de récupération, tels que le manifeste les donne.
 
 ### Un niveau non calculé
 

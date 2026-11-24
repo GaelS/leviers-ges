@@ -123,6 +123,10 @@ describe('estimate', () => {
       ])
     })
 
+    it('n’annonce aucun jeu de données : le calcul n’en lit pas', () => {
+      expect(estimate(haiesRequest('1'))._unsafeUnwrap().datasets).toEqual([])
+    })
+
     it('annonce le statut du levier : sans question ouverte', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().status).toBe('no_open_question')
     })
@@ -175,6 +179,26 @@ describe('estimate', () => {
     it('aiguille la requête vers son levier avec la source de données', () => {
       const result = withNetworks(reseauxChaleurRequest({}))
       expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5')
+    })
+
+    it('annonce les jeux lus, sans le référentiel des communes', () => {
+      const result = withNetworks(reseauxChaleurRequest({}))
+      expect(result._unsafeUnwrap().datasets).toEqual([
+        {
+          dataset: 'reseaux-chaleur/networks',
+          source: 'Jeu de test',
+          vintage: '2024',
+          retrievedOn: '2026-10-08',
+        },
+      ])
+    })
+
+    it('annonce les mêmes jeux à la deuxième requête, malgré le référentiel en cache', () => {
+      withNetworks(reseauxChaleurRequest({}))
+      const second = withNetworks(reseauxChaleurRequest({}))
+      expect(second._unsafeUnwrap().datasets.map(({ dataset }) => dataset)).toEqual([
+        'reseaux-chaleur/networks',
+      ])
     })
 
     it('accepte une fraction en nombre', () => {

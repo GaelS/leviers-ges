@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import { err, ok, type Result } from 'neverthrow'
-import type { DataRow, InvalidDataset } from '../../domain/data-source.ts'
+import type { DataRow, DatasetProvenance, InvalidDataset } from '../../domain/data-source.ts'
 import { findDatasetEntry } from './manifest.ts'
 import { parseCsvText } from './parse-csv-text.ts'
 import { readVerifiedText } from './read-verified-file.ts'
@@ -17,6 +17,7 @@ import { toInvalidDataset, violation, type Violation } from './violation.ts'
 type Dataset = {
   readonly level: Level | undefined
   readonly rows: ReadonlyMap<string, DataRow>
+  readonly provenance: DatasetProvenance
 }
 
 const datasetNamePattern = /^([a-z0-9-]+)\/([a-z0-9-]+)$/
@@ -55,7 +56,18 @@ function loadDataset({
         .andThen(checkCells)
         .andThen((rows) => checkControlTotals(rows, entry.controlTotals ?? {}))
         .andThen((rows) => indexByKey(rows, entry.keyColumn))
-        .map((rows): Dataset => ({ level: entry.level, rows })),
+        .map(
+          (rows): Dataset => ({
+            level: entry.level,
+            rows,
+            provenance: {
+              dataset: name,
+              source: entry.source,
+              vintage: entry.vintage,
+              retrievedOn: entry.retrievedOn,
+            },
+          }),
+        ),
     )
     .mapErr(toInvalidDataset(name))
 }

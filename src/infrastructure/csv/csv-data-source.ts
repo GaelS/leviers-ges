@@ -39,6 +39,7 @@ function createCsvDataSource(rootDirectory: string): DataSource {
   }
 
   return {
+    provenance: (name) => dataset(name).map(({ provenance }) => provenance),
     constant: (name, constantName) =>
       dataset(name)
         .andThen(({ rows }) => findRow({ name, rows, key: constantName }))
