@@ -34,3 +34,7 @@ Linéarité : réduire a + b km donne la somme des réductions de a km et de b k
 ## Limites
 
 Le facteur est celui de la méthode sans ses rabais régionaux (5 à 50 %, plus 10 % de risque de non-permanence) : hors Grand-Ouest, le stockage est surestimé. Le tableur n'en applique aucun, le code non plus.
+
+| Limite | Effet |
+|---|---|
+| Rabais régionaux absents | hors Grand-Ouest, le stockage est surestimé (rabais de 5 à 50 %, plus 10 % de risque de non-permanence) |

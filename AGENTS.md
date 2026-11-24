@@ -12,6 +12,7 @@ Node ≥ 24, pnpm, TypeScript strict, `bignumber.js` pour tout calcul, aucune ba
 | `pnpm lint` | ESLint, dont les règles de calcul scientifique et de couches |
 | `pnpm test:coverage` | vitest, seuil de 100 % sur `src/` |
 | `pnpm build` | `dist/` (sans les constructeurs de données) |
+| `pnpm build:limits` | régénère `src/domain/lever-limits.ts` depuis les tableaux « Limites » des `methodology.md` (un test échoue si le fichier est périmé) |
 | `pnpm build:data:reseaux-chaleur` | reconstruit `data/reseaux-chaleur/networks.csv` depuis ses sources |
 | `pnpm build:data:dechets` | reconstruit `data/dechets/` (flux de traitement et facteurs d'émission) depuis ses sources |
 | `pnpm build:data:fertilisation-azotee` | reconstruit `data/fertilisation-azotee/` (azote livré par région et par département) depuis ses sources |
