@@ -1,9 +1,12 @@
 import { ok, type Result } from 'neverthrow'
 import { match } from 'ts-pattern'
+import { computedStatusOf } from '../application/estimate/ensure-level-computed.ts'
 import { createEstimationContext } from '../application/estimate/create-estimation-context.ts'
 import type { EstimateResult } from '../application/estimate/estimate-result.ts'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
 import type { DataSource } from '../domain/data-source.ts'
+import type { ComputedStatus } from '../domain/lever-registry.ts'
+import type { Level } from '../domain/territory.ts'
 import {
   estimate as estimateBatimentsMachinesAgricoles,
   type BatimentsMachinesAgricolesRequestInput,
@@ -86,7 +89,7 @@ import {
   type TransportPersonnesSobrieteDeplacementsRequestInput,
 } from '../levers/transport-personnes-sobriete-deplacements/index.ts'
 import { estimateOnComputedLevel } from './estimate-on-computed-level.ts'
-import { parseRequest } from './parse-request.ts'
+import { parseRequest, type ParsedRequest } from './parse-request.ts'
 
 type RequestInput =
   | BatimentsMachinesAgricolesRequestInput
@@ -113,11 +116,20 @@ type RequestInput =
 
 type Lever = RequestInput['id']
 
-type EstimateByLever = Record<Lever, EstimateResult>
+type StatusedEstimateResult = EstimateResult & { readonly status: ComputedStatus }
+
+type EstimateByLever = Record<Lever, StatusedEstimateResult>
 
 type Estimate<L extends Lever = Lever> = EstimateByLever[L]
 
 type Estimator = <E extends RequestInput>(input: E) => Result<Estimate<E['id']>, EstimationError>
+
+// Source : choix de conception, non validé : haies et pratiques_stockantes n'ont pas de territoire, leurs trois niveaux ont le même statut dans le registre (src/domain/lever-registry.ts)
+const LEVEL_OF_TERRITORY_LESS_LEVERS: Level = 'region'
+
+function levelOf(request: ParsedRequest): Level {
+  return 'territory' in request ? request.territory.level : LEVEL_OF_TERRITORY_LESS_LEVERS
+}
 
 function createEstimator(dataSource: DataSource): Estimator {
   const context = createEstimationContext(dataSource)
@@ -125,7 +137,17 @@ function createEstimator(dataSource: DataSource): Estimator {
   function estimate<E extends RequestInput>(input: E): Result<Estimate<E['id']>, EstimationError>
   function estimate(input: RequestInput): Result<Estimate, EstimationError> {
     return parseRequest(input).andThen((request) =>
-      match(request)
+      estimateLever(request).andThen((leverEstimate) =>
+        computedStatusOf({ lever: request.id, level: levelOf(request) }).map((status) => ({
+          ...leverEstimate,
+          status,
+        })),
+      ),
+    )
+  }
+
+  function estimateLever(request: ParsedRequest): Result<EstimateResult, EstimationError> {
+    return match(request)
         .with({ id: 'batiments_machines_agricoles' }, (batimentsMachinesAgricolesRequest) =>
           estimateOnComputedLevel(batimentsMachinesAgricolesRequest, (computedLevelRequest) =>
             estimateBatimentsMachinesAgricoles(computedLevelRequest, context),
@@ -247,8 +269,7 @@ function createEstimator(dataSource: DataSource): Estimator {
                 estimateTransportPersonnesSobrieteDeplacements(computedLevelRequest, context),
             ),
         )
-        .exhaustive(),
-    )
+        .exhaustive()
   }
 
   return estimate

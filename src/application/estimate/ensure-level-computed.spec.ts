@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import { ensureLevelComputed } from './ensure-level-computed.ts'
+import { computedStatusOf, ensureLevelComputed } from './ensure-level-computed.ts'
 
 describe('ensureLevelComputed', () => {
   it.each(['region', 'departement', 'epci'] as const)(
@@ -30,5 +30,22 @@ describe('ensureLevelComputed', () => {
   it('le niveau rendu exclut les niveaux non calculés du levier', () => {
     const computed = ensureLevelComputed({ lever: 'elevage_durable', level: 'region' })
     expectTypeOf(computed._unsafeUnwrap()).toEqualTypeOf<'region' | 'departement'>()
+  })
+})
+
+describe('computedStatusOf', () => {
+  it.each([
+    ['reseaux_chaleur', 'epci', 'no_open_question'],
+    ['residentiel_renovation', 'departement', 'workaround'],
+  ] as const)('%s au niveau %s : %s', (lever, level, status) => {
+    expect(computedStatusOf({ lever, level })._unsafeUnwrap()).toBe(status)
+  })
+
+  it('refuse un niveau non calculé', () => {
+    expect(computedStatusOf({ lever: 'elevage_durable', level: 'epci' })._unsafeUnwrapErr()).toEqual({
+      kind: 'level_not_computed',
+      lever: 'elevage_durable',
+      level: 'epci',
+    })
   })
 })

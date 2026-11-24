@@ -22,6 +22,13 @@ describe('lever-registry', () => {
     })
   })
 
+  it.each(['haies', 'pratiques_stockantes'] as const)(
+    '%s, sans territoire, a le même statut aux trois niveaux',
+    (lever) => {
+      expect(new Set(Object.values(LEVERS[lever]))).toHaveProperty('size', 1)
+    },
+  )
+
   it('compte 17 no_open_question, 37 workaround et 9 not_computed', () => {
     expect({
       noOpenQuestion: countOf('no_open_question'),

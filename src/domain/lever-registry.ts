@@ -3,6 +3,8 @@ import type { Level } from './territory.ts'
 
 type Status = 'no_open_question' | 'workaround' | 'not_computed'
 
+type ComputedStatus = Exclude<Status, 'not_computed'>
+
 type LevelStatuses = Readonly<Record<Level, Status>>
 
 // Source : compound-knowledge-db, docs/plans/2026-09-21-001-feat-leviers-ges/onglets/00-questions-implementation.md,
@@ -106,4 +108,4 @@ function isComputedLevel<L extends LeverId>(lever: L, level: Level): level is Co
 }
 
 export { getStatus, isComputed, isComputedLevel, LEVERS }
-export type { ComputedLevels, LeverId, Status }
+export type { ComputedLevels, ComputedStatus, LeverId, Status }
