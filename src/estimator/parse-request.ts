@@ -72,3 +72,4 @@ function parseRequest(input: unknown): Result<ParsedRequest, InvalidRequest> {
 }
 
 export { parseRequest, requestSchema }
+export type { ParsedRequest }

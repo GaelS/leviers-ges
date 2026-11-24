@@ -37,7 +37,7 @@ const result = estimate({
 })
 ```
 
-`result.value.reduction.toFixed()` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite.
+`result.value.reduction.toFixed()` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite. `result.value.status` vaut `no_open_question` (aucune question ouverte à ce niveau) ou `workaround` (niveau calculé par un contournement documenté dans `methodology.md`).
 
 ### Un niveau non calculé
 

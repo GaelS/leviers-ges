@@ -113,6 +113,10 @@ describe('estimate', () => {
       expect(estimate(haiesRequest('1'))._unsafeUnwrap().appliedAssumptions).toEqual({})
     })
 
+    it('annonce le statut du levier : sans question ouverte', () => {
+      expect(estimate(haiesRequest('1'))._unsafeUnwrap().status).toBe('no_open_question')
+    })
+
     it('refuse un territoire, que son résultat n’utilise pas', () => {
       const result = estimate({
         id: 'haies',
@@ -367,6 +371,12 @@ describe('estimate', () => {
     })
   })
 
+  describe('statut du niveau', () => {
+    it('annonce un contournement pour pratiques_stockantes, sans territoire', () => {
+      expect(estimate(pratiquesStockantesRequest())._unsafeUnwrap().status).toBe('workaround')
+    })
+  })
+
   describe('residentiel_renovation', () => {
     const withHousing = createEstimator(
       createTemporaryCsvDataSource({
@@ -427,6 +437,15 @@ describe('estimate', () => {
         parameters: { renovatedParcFraction: '1' },
       })
       expect(result._unsafeUnwrap().reduction.toFixed()).toBe('65.2')
+    })
+
+    it('annonce le contournement du niveau', () => {
+      const renovation = withHousing({
+        id: 'residentiel_renovation',
+        territory: { level: 'departement', code: '01' },
+        parameters: { renovatedParcFraction: '1' },
+      })
+      expect(renovation._unsafeUnwrap().status).toBe('workaround')
     })
   })
 
