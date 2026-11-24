@@ -1,5 +1,5 @@
 {
-  "name": "@gaels/leviers-ges",
+  "name": "leviers-ges",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -63,7 +63,7 @@
     "url": "git+https://github.com/GaelS/leviers-ges.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
+    "access": "public",
+    "provenance": true
   }
 }
