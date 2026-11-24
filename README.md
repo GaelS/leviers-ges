@@ -246,3 +246,7 @@ const result = estimate({
 3. Le workflow `publish` vérifie que le tag égale la version, rejoue typecheck, lint et tests, puis publie sur npm par trusted publishing (OIDC, avec provenance). `dist/` est compilé à la publication (`prepack`) et n'est jamais versionné.
 
 Première publication : un Trusted Publisher se déclare sur npmjs.com, dans les paramètres d'un paquet existant (GitHub Actions, repo `GaelS/leviers-ges`, workflow `publish.yml`). À ma connaissance le paquet doit exister avant (à vérifier sur npm) : la `0.1.0` se publie alors une fois à la main (`npm login` puis `npm publish`), puis tout passe par les tags.
+
+## Licence
+
+Le code est sous licence MIT (voir `LICENSE`). Les jeux de `data/` sont des extraits de sources tierces et gardent la licence de leur producteur : voir `data/LICENSES.md`, dont l'inventaire reste à vérifier avant toute publication.
