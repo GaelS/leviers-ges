@@ -1,3 +1,5 @@
+export { createDefaultEstimator } from './create-default-estimator.ts'
+export type { EstimateUntrustedRequest } from './create-default-estimator.ts'
 export { createEstimator } from './estimator/estimate.ts'
 export type { Estimate, Estimator, Lever, RequestInput } from './estimator/estimate.ts'
 export type {
