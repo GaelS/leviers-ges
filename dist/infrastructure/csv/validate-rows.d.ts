@@ -1,0 +1,10 @@
+import { Result } from 'neverthrow';
+import type { DataRow } from '../../domain/data-source.ts';
+import type { DatasetEntry } from './manifest.ts';
+import { type Violation } from './violation.ts';
+declare function checkNotEmpty(rows: readonly DataRow[]): Result<readonly DataRow[], Violation>;
+declare function checkColumns(rows: readonly DataRow[], entry: Pick<DatasetEntry, 'columns' | 'keyColumn' | 'controlTotals'>): Result<readonly DataRow[], Violation>;
+declare function checkCells(rows: readonly DataRow[]): Result<readonly DataRow[], Violation>;
+declare function checkControlTotals(rows: readonly DataRow[], controlTotals: Readonly<Record<string, string>>): Result<readonly DataRow[], Violation>;
+declare function indexByKey(rows: readonly DataRow[], keyColumn: string): Result<ReadonlyMap<string, DataRow>, Violation>;
+export { checkCells, checkColumns, checkControlTotals, checkNotEmpty, indexByKey };

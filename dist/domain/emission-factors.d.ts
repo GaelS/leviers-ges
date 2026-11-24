@@ -1,0 +1,10 @@
+import type { Fraction, KgCo2ePerGigajoule, KgCo2ePerKwh, KgCo2ePerVehicleKilometre } from './units.ts';
+declare const ELECTRICITY_EMISSION_FACTOR_SHARE: Fraction;
+declare const ELECTRICITY_APPLIED_EMISSION_FACTOR: KgCo2ePerKwh;
+declare const NATURAL_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule;
+declare const FUEL_OIL_EMISSION_FACTOR: KgCo2ePerGigajoule;
+declare const LIQUEFIED_PETROLEUM_GAS_EMISSION_FACTOR: KgCo2ePerGigajoule;
+declare const ELECTRIC_CAR_EMISSION_FACTOR: KgCo2ePerVehicleKilometre;
+declare const ELECTRIC_BUS_EMISSION_FACTOR: KgCo2ePerVehicleKilometre;
+declare function convertToKgPerKwh(emissionFactor: KgCo2ePerGigajoule): KgCo2ePerKwh;
+export { convertToKgPerKwh, ELECTRIC_BUS_EMISSION_FACTOR, ELECTRIC_CAR_EMISSION_FACTOR, ELECTRICITY_APPLIED_EMISSION_FACTOR, ELECTRICITY_EMISSION_FACTOR_SHARE, FUEL_OIL_EMISSION_FACTOR, LIQUEFIED_PETROLEUM_GAS_EMISSION_FACTOR, NATURAL_GAS_EMISSION_FACTOR, };
