@@ -111,3 +111,5 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Un seul millésime | 2022 ; 2023 et 2024 sont publiés |
 | Même fraction pour tous les types | pas de taux par type de déchet |
 | 20 01 36 | 0,4 t d'équipements électriques sans facteur, ignorées |
+| Déchets dangereux | fichier IREP « non dangereux » seul : les codes à `*` du chapitre 20 ne sont jamais comptés |
+| Exhaustivité d'IREP | les sites qui ne déclarent pas manquent (documentation, 7.8.5) ; les facteurs incluent la collecte (7.6.1.2) |

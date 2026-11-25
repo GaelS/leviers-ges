@@ -35,7 +35,7 @@ Aucune valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H26:I27
 
 | Constante | Valeur | Source |
 |---|---|---|
-| Potentiel de baisse par écoconduite | 10 % | documentation fonctionnelle, 7.3.9 (p. 66) : celui du transport de personnes, 10 % par défaut (7.3.4.3, p. 61) ; la p. 66 écrit aussi « 15 % », contradiction tranchée par l'équipe le 2026-11-19 ; le tableur donne « ~15% » (`DonneesReference!D29`), la documentation l'emporte |
+| Potentiel de baisse par écoconduite | 10 % | décision de l'équipe du 2026-11-19 : celui du transport de personnes, 10 % par défaut (documentation, 7.3.4.3, p. 61) ; la documentation (7.3.9.4, p. 66) et le tableur (`DonneesReference!D29`, « ~15% ») donnent 15 % pour le fret, la documentation 7.8.4 dit le pourcentage non sourcé : écart avec la documentation, à reconfirmer |
 | Taux de chargement, facteur électrique, facteurs diesel | | voir `transport_marchandises_sobriete_logistique` |
 
 ## Choix faits
@@ -73,3 +73,5 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Un seul potentiel pour tous les poids lourds | le guide EVE distingue des gains par type d'activité (travaux publics et trajets urbains plus élevés) |
 | Hausse du chargement sans plafond | 200 % de chargement en plus donnent une baisse de plus de 66 % avant écoconduite |
 | Limites des données | celles de `transport_marchandises_sobriete_logistique` |
+| Écoconduite à 10 % | la documentation (p. 66) et le tableur donnent 15 % pour le fret : +10 % de résultat en région 84 à 50 % d'application et +20 % de chargement |
+| Chargement sans plafond | avec le taux moyen de 60 % de la documentation (p. 65), plus de +66,7 % de chargement dépasse 100 % de remplissage |

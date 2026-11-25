@@ -66,3 +66,5 @@ Le facteur moyen pondéré par les livraisons est de 0,0842 kgCO2e/kWh sur les 8
 | Deux sources de contenu CO2 | pour 259 réseaux de chaleur sur 821 l'écart dépasse 0,001 kgCO2e/kWh entre le SDES et France Chaleur Urbaine (29,9 % de l'énergie) ; France Chaleur Urbaine est retenue |
 | Réseaux non recensés | l'identification des réseaux n'est pas exhaustive (réseaux privés) |
 | Un seul millésime | 2024 ; 2025 est publié au SDES |
+| Taux unique | un taux pour tous les réseaux ; la documentation (7.5.1.2) permet de viser certains réseaux |
+| Livraisons tous secteurs | `CONSOTOT` couvre tous les secteurs, le froid compris (1,5 %) ; la documentation dit que PlanET ne couvre ni le tertiaire ni l'industrie : risque de double compte, à confirmer avec le CGDD |

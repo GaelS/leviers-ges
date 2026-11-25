@@ -71,7 +71,7 @@ Les 50 couples EPCI-département sous secret statistique (1 ou 2 exploitations) 
 | 6 | À l'EPCI, la masse est la somme des parts de chaque département, la part étant la SAU hors bio de l'EPCI dans le département sur celle du département | `ChgtPratiques!B13` ; documentation, p. 45 ; renvoyé dans `appliedAssumptions.nitrogenCampaigns` (moyenne de deux campagnes) |
 | 7 | La part d'un EPCI est plafonnée à 1, et vaut 0 quand la SAU hors bio du département n'est pas positive (Paris, Hauts-de-Seine) | choix de conception, non validé |
 | 8 | Un EPCI sous secret statistique (1 ou 2 fermes bio), ou dont un département n'a pas de livraison (Corse), renvoie `missing_data` ; un EPCI sans SAU renvoie 0 | choix de conception, non validé |
-| 9 | La réduction est bornée de 0 à 1 | par construction ; une note antérieure citait une borne de 25 % (surplus national d'azote, bilan ClimAgri), absente du tableur actuel |
+| 9 | La réduction est bornée de 0 à 1 | par construction ; la documentation (7.1.1.2, p. 45) propose 25 % en fourchette haute (surplus d'azote de l'ordre de 25 % du besoin, au-delà passage en bio), le tableur n'a pas de borne |
 
 ## Cas de test chiffrés
 
