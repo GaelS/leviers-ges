@@ -84,3 +84,5 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Résultat négatif possible | si le mode reporté émet plus que la route évitée, ou si la cyclologistique dépasse les t.km ; aucune alerte renvoyée |
 | Un seul facteur ferroviaire et fluvial | pour toutes les régions |
 | Limites des données | celles de `transport_marchandises_sobriete_logistique` |
+| Cyclologistique | retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 371 tCO2e) ; sens à confirmer |
+| Facteur ferroviaire | amont entier ; la documentation (p. 65) demande amont × 67,4 % : +0,8 % en région 84 à 10 % ferroviaire |

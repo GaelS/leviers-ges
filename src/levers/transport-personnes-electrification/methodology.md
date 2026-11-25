@@ -102,3 +102,4 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Périmètre des trajets | seuls les trajets domicile-travail de moins de 100 km comptent, alors que la part saisie porte sur le parc entier |
 | Taux de remplissage des voitures | 1,4 est la valeur « courte distance » de la Base Carbone (ENTD 2008), rapprochée du domicile-travail, valeur validée par l'équipe le 2026-11-19 ; partagé avec l'efficacité |
 | Deux-roues motorisés | sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58) |
+| Coefficient de 67,4 % | non appliqué au facteur de l'électricité, que l'encadré transverse de la documentation y applique : le gain monte de 2,8 % (voiture) à 4,5 % (bus) |

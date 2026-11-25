@@ -23,7 +23,7 @@ Lue dans l'équation 27 de la documentation fonctionnelle (p. 74), qui est celle
 | `s` | cultures et chacun des trois types de prairie | |
 | `u` | sols artificiels arbustifs (lus comme « enherbés ») et arborés et buissonnants | |
 | `S(·)` | surface du type de sol dans le territoire (ALDO, stocks de carbone) | ha |
-| `FC` | facteur de conversion du territoire (ALDO, Flux 2), réservoirs sol, biomasse et litière additionnés ; positif = stockage | tCO2e par ha (par an pour les deux premiers termes) |
+| `FC` | facteur de conversion du territoire (ALDO, Flux 2), réservoirs sol, biomasse et litière additionnés (prairie vers forêt : sol et litière seulement) ; positif = stockage | tCO2e par ha (par an pour les deux premiers termes) |
 
 Les parts sont des rapports de surfaces, comme le dit le tableur (`COS!B15` : « au prorata des surfaces existantes »). Le facteur de l'afforestation pour un type de forêt est la moyenne des facteurs prairie → ce type, pondérée par la surface de chaque type de prairie.
 
@@ -62,7 +62,7 @@ Construits par `pnpm build:data:occupation-des-sols` depuis les exports ALDO ver
 | 3 | Le troisième terme n'est pas multiplié par l'horizon | équation 27 ; réponse du CGDD, question 2 ; renvoyé dans `appliedAssumptions.desealingWithoutHorizon` |
 | 4 | Un terme dont la surface de référence est nulle vaut 0, quel que soit le rythme demandé | choix de conception, non validé ; hypothèse nommée `occupationDesSolsReferenceAreas` ; renvoyé dans `appliedAssumptions.zeroReferenceArea` |
 | 5 | Le signe des facteurs est conservé : un facteur négatif déstocke | seuls les mouvements positifs en stockage sont comptés « au niveau du levier » (documentation, p. 73), ce qui désigne les trois stratégies, non un plancher sur les facteurs ; aucune borne dans le tableur |
-| 6 | Les réservoirs sol, biomasse et litière (forêt) s'additionnent ; une colonne absente d'ALDO (biomasse des cultures et des prairies herbacées vers zones humides) n'a pas de flux | `FC_COS` : « les différents réservoirs à additionner » |
+| 6 | Les réservoirs sol, biomasse et litière s'additionnent (prairie vers forêt : sol et litière seulement, la biomasse forestière est absente du jeu versionné) ; une colonne absente d'ALDO (biomasse des cultures et des prairies herbacées vers zones humides) n'a pas de flux | `FC_COS` : « les différents réservoirs à additionner » |
 | 7 | Département et région : facteur = moyenne des facteurs des communes, pondérée par la surface du type de sol de départ (chaque type de prairie, cultures, sols imperméabilisés) ; moyenne simple des communes si cette surface est nulle (Paris) | interprétation nouvelle de « la zone pédoclimatique majoritaire du territoire » (documentation, p. 74) : les facteurs d'ALDO varient à l'intérieur d'une zone ; renvoyé dans `appliedAssumptions.territoryFactors` |
 
 ## Cas de test chiffrés
@@ -100,3 +100,6 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Zone pédoclimatique | prise en compte par les facteurs de l'EPCI, qui mélangent celles de ses communes ; plus le territoire est grand, plus c'est grossier (documentation, p. 75) |
 | Millésime | surfaces issues de Corine Land Cover, mises à jour à fréquence variable |
 | Pas de borne de surface | un rythme et un horizon qui dépassent les surfaces disponibles sont acceptés |
+| Biomasse forestière | absente du facteur prairie vers forêt, que la documentation (p. 75) compte : l'afforestation est sous-estimée d'un facteur inconnu |
+| Horizon de 20 ans | aucune alerte au-delà ; la documentation (p. 75) dit le facteur non représentatif au-delà |
+| Désimperméabilisation sans horizon | la documentation (p. 75) écrit que les flux annuels sont multipliés par la période du plan : sur 20 ans, ce terme passerait de 280 à 5 595 tCO2e dans l'exemple 200046977 |

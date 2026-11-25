@@ -105,3 +105,5 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Part du ferré par défaut | une valeur par groupe de régions, voir le levier d'efficacité |
 | Distance des trajets reportés | les modes actifs ne couvrent pas les mêmes distances que la voiture : la fraction porte sur les passagers.km, pas sur les trajets |
 | Facteur des voitures | facteur du parc, pas celui du trajet |
+| Base du report vers les modes actifs | passagers.km en transport en commun ; la documentation (7.3.3.2) dit que les pourcentages sont une part des km.passager en voiture : région 84, 20 % : 20 712 t contre environ 178 130 t |
+| Facteur du ferré | combustion nulle ; la documentation (7.3.8.4) écrit « amont × 67,4 % et combustion » : 8,3 % du total en Île-de-France |

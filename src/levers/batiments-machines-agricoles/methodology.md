@@ -103,3 +103,5 @@ Le facteur de la chaleur est la moyenne des facteurs des réseaux du territoire,
 | Communes de la géographie sans ligne de SAU | 1 384 (dont 94 d'outre-mer) : lues comme une SAU nulle, cohérent avec les totaux régionaux (manifeste de `surface-agricole-utile`) |
 | Facteur du gazole pour tous les produits pétroliers | appliqué aussi à l'essence ; OMINEA donne 72,48 pour l'essence des engins agricoles, soit 2,7 % de moins, et pas de facteur 2024 pour le fioul domestique de ces engins |
 | Élevage | la fiche élevage (02) n'est pas vérifiée contre le dessin du classeur |
+| Réduction d'électricité négative | refusée (0 à 1), alors que la documentation (7.1.3.2, p. 49) l'admet pour un passage à l'électrique |
+| Corse | calculée avec les facteurs continentaux, alors que la documentation (3.4) ne la couvre pas en V1 ; électricité corse : 1,9 % du résultat |

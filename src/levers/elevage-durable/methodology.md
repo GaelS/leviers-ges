@@ -91,7 +91,7 @@ Jeux `elevage-durable/regions` et `elevage-durable/departements`, construits par
 | 8 | Méthanisation : facteurs de l'OMINEA 2026 pour les bovins et les porcins, indisponible pour les autres | hypothèse nommée `methanisationFactors` ; renvoyé dans `appliedAssumptions.methanisationFactors` |
 | 9 | Un animal absent de la requête ne change pas et ne contribue pas ; une baisse entérique omise vaut 0 | `ParametreDeterminants!I9` pour la baisse entérique ; renvoyés dans `appliedAssumptions` |
 | 10 | Les lapines et les ruches ne sont pas comptées | aucun facteur dans le tableur (422 790 lapines reproductrices en France) |
-| 11 | Les onze types d'animaux sont ceux de la documentation Base Carbone ; la table de correspondance avec les catégories du recensement est la nôtre | `DonneesTerritoires!D23` laisse à « décliner » ; choix de conception, non validé |
+| 11 | Les onze types d'animaux sont ceux de la documentation Base Carbone, dont trois de volailles ; la documentation PlanET (7.1.2.3, p. 48) en liste dix, « volailles » en un bloc et « autres animaux d'élevage » ; la table de correspondance avec les catégories du recensement est la nôtre | `DonneesTerritoires!D23` laisse à « décliner » ; choix de conception, non validé |
 | 12 | Une catégorie sous secret compte pour zéro ; Paris, absent d'Agreste, renvoie `missing_data` | voir le manifeste du jeu ; renvoyé dans `appliedAssumptions.livestockHeadcounts` |
 
 ## Cas de test chiffrés

@@ -67,3 +67,5 @@ Celles du levier `dechets_mode_de_traitement` : sites et non déchets du territo
 |---|---|
 | Réduction à la source | la sobriété retire des tonnes au mode de traitement actuel du territoire ; elle ne dit pas où vont les déchets évités |
 | Deux leviers cumulés | `Scénario global Déchets` calcule les tonnes après sobriété (« Tonne initial × % réduction des déchets ») puis les répartit selon les parts d'après le changement de mode ; chaque levier se calcule ici seul sur les tonnes initiales. Avec un seul pourcentage `r`, la somme des deux leviers diffère du cumul de `r` × (résultat du changement de mode) : elle le surestime quand le changement de mode évite des émissions, le sous-estime quand il en ajoute (plastique). Le cumul du tableur n'a qu'un « % réduction des déchets » : il ne coïncide avec les deux pourcentages de cette feuille que si `r_s = r_i` |
+| Déchets dangereux | fichier IREP « non dangereux » seul : les codes à `*` du chapitre 20 ne sont jamais comptés |
+| Exhaustivité d'IREP | les sites qui ne déclarent pas manquent (documentation, 7.8.5) ; les facteurs incluent la collecte (7.6.1.2) |

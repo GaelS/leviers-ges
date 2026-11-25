@@ -127,6 +127,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Élevage",
       "effect": "la fiche élevage (02) n'est pas vérifiée contre le dessin du classeur"
+    },
+    {
+      "limit": "Réduction d'électricité négative",
+      "effect": "refusée (0 à 1), alors que la documentation (7.1.3.2, p. 49) l'admet pour un passage à l'électrique"
+    },
+    {
+      "limit": "Corse",
+      "effect": "calculée avec les facteurs continentaux, alors que la documentation (3.4) ne la couvre pas en V1 ; électricité corse : 1,9 % du résultat"
     }
   ],
   "haies": [
@@ -181,6 +189,18 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Pas de borne de surface",
       "effect": "un rythme et un horizon qui dépassent les surfaces disponibles sont acceptés"
+    },
+    {
+      "limit": "Biomasse forestière",
+      "effect": "absente du facteur prairie vers forêt, que la documentation (p. 75) compte : l'afforestation est sous-estimée d'un facteur inconnu"
+    },
+    {
+      "limit": "Horizon de 20 ans",
+      "effect": "aucune alerte au-delà ; la documentation (p. 75) dit le facteur non représentatif au-delà"
+    },
+    {
+      "limit": "Désimperméabilisation sans horizon",
+      "effect": "la documentation (p. 75) écrit que les flux annuels sont multipliés par la période du plan : sur 20 ans, ce terme passerait de 280 à 5 595 tCO2e dans l'exemple 200046977"
     }
   ],
   "produits_bois": [
@@ -405,6 +425,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Facteur des voitures",
       "effect": "facteur du parc, pas celui du trajet"
+    },
+    {
+      "limit": "Base du report vers les modes actifs",
+      "effect": "passagers.km en transport en commun ; la documentation (7.3.3.2) dit que les pourcentages sont une part des km.passager en voiture : région 84, 20 % : 20 712 t contre environ 178 130 t"
+    },
+    {
+      "limit": "Facteur du ferré",
+      "effect": "combustion nulle ; la documentation (7.3.8.4) écrit « amont × 67,4 % et combustion » : 8,3 % du total en Île-de-France"
     }
   ],
   "transport_personnes_efficacite": [
@@ -477,6 +505,10 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Deux-roues motorisés",
       "effect": "sans terme ; hors périmètre selon la documentation fonctionnelle (p. 58)"
+    },
+    {
+      "limit": "Coefficient de 67,4 %",
+      "effect": "non appliqué au facteur de l'électricité, que l'encadré transverse de la documentation y applique : le gain monte de 2,8 % (voiture) à 4,5 % (bus)"
     }
   ],
   "transport_marchandises_sobriete_logistique": [
@@ -541,6 +573,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Limites des données",
       "effect": "celles de `transport_marchandises_sobriete_logistique`"
+    },
+    {
+      "limit": "Cyclologistique",
+      "effect": "retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 371 tCO2e) ; sens à confirmer"
+    },
+    {
+      "limit": "Facteur ferroviaire",
+      "effect": "amont entier ; la documentation (p. 65) demande amont × 67,4 % : +0,8 % en région 84 à 10 % ferroviaire"
     }
   ],
   "transport_marchandises_efficacite": [
@@ -559,6 +599,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Limites des données",
       "effect": "celles de `transport_marchandises_sobriete_logistique`"
+    },
+    {
+      "limit": "Écoconduite à 10 %",
+      "effect": "la documentation (p. 66) et le tableur donnent 15 % pour le fret : +10 % de résultat en région 84 à 50 % d'application et +20 % de chargement"
+    },
+    {
+      "limit": "Chargement sans plafond",
+      "effect": "avec le taux moyen de 60 % de la documentation (p. 65), plus de +66,7 % de chargement dépasse 100 % de remplissage"
     }
   ],
   "transport_marchandises_electrification": [
@@ -619,6 +667,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "20 01 36",
       "effect": "0,4 t d'équipements électriques sans facteur, ignorées"
+    },
+    {
+      "limit": "Déchets dangereux",
+      "effect": "fichier IREP « non dangereux » seul : les codes à `*` du chapitre 20 ne sont jamais comptés"
+    },
+    {
+      "limit": "Exhaustivité d'IREP",
+      "effect": "les sites qui ne déclarent pas manquent (documentation, 7.8.5) ; les facteurs incluent la collecte (7.6.1.2)"
     }
   ],
   "dechets_sobriete": [
@@ -629,6 +685,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Deux leviers cumulés",
       "effect": "`Scénario global Déchets` calcule les tonnes après sobriété (« Tonne initial × % réduction des déchets ») puis les répartit selon les parts d'après le changement de mode ; chaque levier se calcule ici seul sur les tonnes initiales. Avec un seul pourcentage `r`, la somme des deux leviers diffère du cumul de `r` × (résultat du changement de mode) : elle le surestime quand le changement de mode évite des émissions, le sous-estime quand il en ajoute (plastique). Le cumul du tableur n'a qu'un « % réduction des déchets » : il ne coïncide avec les deux pourcentages de cette feuille que si `r_s = r_i`"
+    },
+    {
+      "limit": "Déchets dangereux",
+      "effect": "fichier IREP « non dangereux » seul : les codes à `*` du chapitre 20 ne sont jamais comptés"
+    },
+    {
+      "limit": "Exhaustivité d'IREP",
+      "effect": "les sites qui ne déclarent pas manquent (documentation, 7.8.5) ; les facteurs incluent la collecte (7.6.1.2)"
     }
   ],
   "reseaux_chaleur": [
@@ -651,6 +715,14 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     {
       "limit": "Un seul millésime",
       "effect": "2024 ; 2025 est publié au SDES"
+    },
+    {
+      "limit": "Taux unique",
+      "effect": "un taux pour tous les réseaux ; la documentation (7.5.1.2) permet de viser certains réseaux"
+    },
+    {
+      "limit": "Livraisons tous secteurs",
+      "effect": "`CONSOTOT` couvre tous les secteurs, le froid compris (1,5 %) ; la documentation dit que PlanET ne couvre ni le tertiaire ni l'industrie : risque de double compte, à confirmer avec le CGDD"
     }
   ]
 }
