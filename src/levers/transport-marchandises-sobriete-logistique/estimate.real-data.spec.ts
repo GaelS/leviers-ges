@@ -23,12 +23,12 @@ function toRequest(code: string): TransportMarchandisesSobrieteLogistiqueRequest
 
 describe('estimate transport_marchandises_sobriete_logistique, SDES 2024 et OMINEA 2024', () => {
   it.each([
-    ['84', '329473.45'],
-    ['53', '140566.92'],
-    ['11', '219653.81'],
-    ['94', '2456.58'],
-    ['32', '310503.13'],
-    ['27', '146053.14'],
+    ['84', '386488.05'],
+    ['53', '154149.65'],
+    ['11', '268230.81'],
+    ['94', '2649.78'],
+    ['32', '373523.75'],
+    ['27', '167615.44'],
   ])('à 10 %% de réduction, la région %s évite %s tCO2e', (code, expected) => {
     expect(estimate(toRequest(code), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })

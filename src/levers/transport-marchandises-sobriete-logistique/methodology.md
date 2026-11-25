@@ -14,7 +14,7 @@ FE_thermique = FE diesel par véhicule.km ÷ taux de chargement
 | Terme | Sens | Unité |
 |---|---|---|
 | `% de réduction` | « Pourcentage réduction du transport routier de marchandises » (`% Réduction TRM`), saisi | fraction des t.km |
-| `t.km` | « Tonne.km de TM rapportées à la région » : interne + 50 % des quatre flux entrants et sortants, avec l'étranger | tonnes.kilomètres par an |
+| `t.km` | « Tonne.km de TM rapportées à la région » : interne + 50 % des flux nationaux entrants et sortants et des exportations + 100 % des importations (documentation, 7.3.6.1, p. 63) | tonnes.kilomètres par an |
 | `FE_TRM` | « FE TRM » de la région, moyenne pondérée par le parc de poids lourds | kgCO2e par t.km |
 | `FE diesel` | CO2 des poids lourds diesel, OMINEA 2024, type de trajet par défaut du tableur (route et ville), pondéré par le parc Crit'Air de la région | kg par véhicule.km |
 | taux de chargement | 8,1 t | tonnes par véhicule |
@@ -47,7 +47,7 @@ Jeu `transport-marchandises/regions`, construit par `pnpm build:data:transport-m
 
 | # | Choix | Source ou statut |
 |---|---|---|
-| 1 | Les t.km comptent l'étranger : interne + 50 % du trafic chargé ou déchargé dans la région | hypothèse nommée `includeInternationalFlows` ; `DonneesTerritoires!D17` ; renvoyé dans `appliedAssumptions.includeInternationalFlows` |
+| 1 | Les t.km comptent l'étranger : interne + 50 % du trafic chargé ou déchargé dans la région, importations (`International entrant`) à 100 % | hypothèse nommée `includeInternationalFlows` ; documentation (7.3.6.1, p. 63 : moitié des t.km chargées, moitié des déchargées, importations à 100 % à la région de destination) ; le tableur (`DonneesTerritoires!D17`) ignore la règle des importations ; `International entrant` lu comme les importations, non vérifié dans la notice SDES ; renvoyé dans `appliedAssumptions.includeInternationalFlows` |
 | 2 | Facteur thermique des poids lourds diesel au type de trajet par défaut du tableur (route et ville), parc de la région | hypothèse nommée `heavyVehicleTripType`, résolue par le tableur ; `FE_transports!A22` et `A31` ; renvoyé dans `appliedAssumptions.heavyVehicleTripType` |
 | 3 | Taux de chargement de 8,1 t | hypothèse nommée `heavyVehicleLoadFactor` ; renvoyé dans `appliedAssumptions.heavyVehicleLoadFactor` |
 | 4 | Le facteur thermique est le CO2 seul, divisé par le taux de chargement | CH4 et N2O ajouteraient environ 1,7 % ; la division suit l'unité (le tableur dessine une multiplication pour l'électrification, voir la fiche de ce levier) |
@@ -65,12 +65,12 @@ Jeu `transport-marchandises/regions`, construit par `pnpm build:data:transport-m
 | un quart de poids lourds électriques, thermique à 0,1 | 0,086675 kgCO2e/t.km |
 | région 84, jeu de test (30 milliards de t.km, aucun électrique), 10 % | 300 000 tCO2e |
 | région 11, jeu de test (20 milliards de t.km, un quart électrique), 10 % | 173 350 tCO2e |
-| région 84, données réelles, 10 % | 329 473,45 tCO2e |
-| région 53 (Bretagne), 10 % | 140 566,92 tCO2e |
-| région 11 (Île-de-France), 10 % | 219 653,81 tCO2e |
-| région 94 (Corse), 10 % | 2 456,58 tCO2e |
-| région 32 (Hauts-de-France), 10 % | 310 503,13 tCO2e |
-| région 27 (Bourgogne-Franche-Comté), 10 % | 146 053,14 tCO2e |
+| région 84, données réelles, 10 % | 386 488,05 tCO2e |
+| région 53 (Bretagne), 10 % | 154 149,65 tCO2e |
+| région 11 (Île-de-France), 10 % | 268 230,81 tCO2e |
+| région 94 (Corse), 10 % | 2 649,78 tCO2e |
+| région 32 (Hauts-de-France), 10 % | 373 523,75 tCO2e |
+| région 27 (Bourgogne-Franche-Comté), 10 % | 167 615,44 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

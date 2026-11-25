@@ -18,11 +18,11 @@ describe('buildGoodsTransport, sources versionnées SDES et OMINEA 2024', () => 
     )
   })
 
-  it('compte 13 régions, 239,965514 milliards de t.km, 614 131 poids lourds dont 907 zéro émission', () => {
+  it('compte 13 régions, 277,638505 milliards de t.km, 614 131 poids lourds dont 907 zéro émission', () => {
     expect({ regions: goodsTransport.regionCount, totals: goodsTransport.totals }).toEqual({
       regions: 13,
       totals: {
-        billion_tonne_kilometres: '239.965514',
+        billion_tonne_kilometres: '277.638505',
         heavy_vehicle_fleet: '614131',
         zero_emission_heavy_vehicle_fleet: '907',
       },

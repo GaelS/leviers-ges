@@ -57,11 +57,11 @@ Aucune valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H26:I27
 | idem, 20 % de chargement en plus seul | 13,333333 tCO2e (16,67 %) |
 | idem, 100 % d'écoconduite seule | 8 tCO2e (10 %) |
 | région 84, jeu de test, 50 % et 20 % | 16,67 tCO2e |
-| région 84, données réelles, 50 % et 20 % | 686 403,03 tCO2e |
-| région 53 (Bretagne) | 292 847,76 tCO2e |
-| région 11 (Île-de-France) | 457 612,11 tCO2e |
-| région 94 (Corse) | 5 117,88 tCO2e |
-| région 32 (Hauts-de-France) | 646 881,53 tCO2e |
+| région 84, données réelles, 50 % et 20 % | 805 183,45 tCO2e |
+| région 53 (Bretagne) | 321 145,1 tCO2e |
+| région 11 (Île-de-France) | 558 814,19 tCO2e |
+| région 94 (Corse) | 5 520,38 tCO2e |
+| région 32 (Hauts-de-France) | 778 174,48 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 

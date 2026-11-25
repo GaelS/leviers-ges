@@ -8,11 +8,12 @@ const DISPLAYED_DECIMAL_PLACES = 6
 function toFlowsAssumption(): AppliedAssumptions {
   return {
     includeInternationalFlows: {
-      value: 'flux internes plus 50 % des flux chargés ou déchargés dans la région, étranger compris',
+      value:
+        'flux internes plus 50 % des flux chargés ou déchargés dans la région, étranger compris, et 100 % des importations',
       source:
-        'DonneesTerritoires!D17 ; SDES, Le TRM des pavillons européens en 2024, feuille reg_type_flux',
+        'Documentation fonctionnelle PlanET, 7.3.6.1, p. 63 ; DonneesTerritoires!D17 ; SDES, Le TRM des pavillons européens en 2024, feuille reg_type_flux',
       limit:
-        'Sans les flux internationaux, les 13 régions passent de 239,97 à 171,71 milliards de tonnes.km ; avec eux, une région a de 18 % (Corse) à 62 % (Hauts-de-France) de tonnes.km en plus',
+        'Sans les flux internationaux, les 13 régions passent de 277,64 à 171,71 milliards de tonnes.km ; avec eux, une région a de 28 % (Corse) à 95 % (Hauts-de-France) de tonnes.km en plus. Les exportations comptent 50 %, les importations 100 % : `International entrant` lu comme les importations, non vérifié dans la notice SDES',
     },
   }
 }

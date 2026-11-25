@@ -63,11 +63,11 @@ La somme des deux reports ne dépasse pas 100 % : le tableur n'en pose pas, la r
 | idem, 400 000 t.km de cyclologistique, tout vers le ferroviaire | 34,77832897392 tCO2e |
 | route à 0,005, tout vers le ferroviaire | −2,5161183768 tCO2e |
 | région 84, jeu de test, 10 % et 5 % | 8,08 tCO2e |
-| région 84, données réelles, 10 % et 5 % | 349 026,87 tCO2e |
-| région 53 (Bretagne) | 148 969,67 tCO2e |
-| région 11 (Île-de-France) | 232 640,89 tCO2e |
-| région 94 (Corse) | 2 598,45 tCO2e |
-| région 32 (Hauts-de-France) | 329 251,63 tCO2e |
+| région 84, données réelles, 10 % et 5 % | 409 425,15 tCO2e |
+| région 53 (Bretagne) | 163 364,33 tCO2e |
+| région 11 (Île-de-France) | 284 090,01 tCO2e |
+| région 94 (Corse) | 2 802,81 tCO2e |
+| région 32 (Hauts-de-France) | 396 077,5 tCO2e |
 | région 84, un milliard de t.km de cyclologistique | 335 292,59 tCO2e |
 | région 94, un milliard de t.km de cyclologistique (plus que ses 0,235 milliard) | −8 370,9 tCO2e |
 
@@ -84,4 +84,4 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Résultat négatif possible | si le mode reporté émet plus que la route évitée, ou si la cyclologistique dépasse les t.km ; aucune alerte renvoyée |
 | Un seul facteur ferroviaire et fluvial | pour toutes les régions |
 | Limites des données | celles de `transport_marchandises_sobriete_logistique` |
-| Cyclologistique | retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 436 tCO2e) ; sens à confirmer |
+| Cyclologistique | retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 231 tCO2e) ; sens à confirmer |

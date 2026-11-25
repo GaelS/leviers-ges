@@ -2,11 +2,11 @@
   "datasets": [
     {
       "file": "regions.csv",
-      "source": "SDES, « Le TRM des pavillons européens en 2024 » (feuille reg_type_flux) : tonnes.kilomètres rapportées à la région, avec l'international (trafic interne plus 50 % du trafic chargé ou déchargé dans la région, y compris vers l'étranger), 13 régions de France métropolitaine ; SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024, poids lourds par région, carburant et vignette Crit'Air ; OMINEA 2024 du CITEPA, CO2 des poids lourds diesel, type de trajet par défaut du tableur, domicile-travail et courtes distances : 50 % de « route » (SNAP 070302PL) et 50 % de « ville » (SNAP 070303PL), norme Euro choisie par vignette. Parc immatriculé dans la région, pas circulant ; le biodiesel (2 485 poids lourds au niveau national) est compté dans le parc mais pas dans la moyenne diesel (le tableur ne regroupe que Diesel, Diesel HNR et Diesel HR) ; les 6,7 milliards de t.km à région « non précisé » et celles des DOM ne vont dans aucune des 13 régions. Construit par pnpm build:data:transport-marchandises",
+      "source": "SDES, « Le TRM des pavillons européens en 2024 » (feuille reg_type_flux) : tonnes.kilomètres rapportées à la région, avec l'international (trafic interne plus 50 % du trafic chargé ou déchargé dans la région, y compris vers l'étranger, plus 100 % des importations), 13 régions de France métropolitaine ; SDES, Parc de véhicules routiers (RSVERO) au 1er janvier 2024, poids lourds par région, carburant et vignette Crit'Air ; OMINEA 2024 du CITEPA, CO2 des poids lourds diesel, type de trajet par défaut du tableur, domicile-travail et courtes distances : 50 % de « route » (SNAP 070302PL) et 50 % de « ville » (SNAP 070303PL), norme Euro choisie par vignette. Parc immatriculé dans la région, pas circulant ; le biodiesel (2 485 poids lourds au niveau national) est compté dans le parc mais pas dans la moyenne diesel (le tableur ne regroupe que Diesel, Diesel HNR et Diesel HR) ; les 6,7 milliards de t.km à région « non précisé » et celles des DOM ne vont dans aucune des 13 régions. Construit par pnpm build:data:transport-marchandises",
       "link": "https://www.statistiques.developpement-durable.gouv.fr/",
       "vintage": "tonnes.kilomètres 2024, parc au 1er janvier 2024, OMINEA 2024",
       "retrievedOn": "2026-10-20",
-      "checksum": "5ee182e661b948e58416bbc31c2570a517d3080b7b2322309ac7b46f77e3d800",
+      "checksum": "22c48a7e4c36a7219c5dcf4f799bb258ee2fc4135a7990eedb95ed5707eacfce",
       "level": "region",
       "keyColumn": "code_region",
       "columns": [
@@ -16,7 +16,7 @@
         },
         {
           "name": "billion_tonne_kilometres",
-          "unit": "milliards de tonnes.kilomètres par an, avec l'international"
+          "unit": "milliards de tonnes.kilomètres par an, avec l'international (importations à 100 %)"
         },
         {
           "name": "heavy_vehicle_fleet",
@@ -36,16 +36,16 @@
         }
       ],
       "controlTotals": {
-        "billion_tonne_kilometres": "239.965514",
+        "billion_tonne_kilometres": "277.638505",
         "heavy_vehicle_fleet": "614131",
         "zero_emission_heavy_vehicle_fleet": "907"
       },
       "sources": [
         {
           "file": "sources/sdes-trm-tkm-par-region-et-type-de-flux-2024.csv",
-          "source": "SDES, Le TRM des pavillons européens en 2024, feuille reg_type_flux : flux par région en milliards de tonnes.kilomètres ; tkm_rapportees_avec_international = interne + 50 % × (national entrant + national sortant + international entrant + international sortant), DonneesTerritoires!D17 (hypothèse nommée includeInternationalFlows)",
+          "source": "SDES, Le TRM des pavillons européens en 2024, feuille reg_type_flux : flux par région en milliards de tonnes.kilomètres ; tkm_rapportees_avec_international = interne + 50 % × (national entrant + national sortant + international sortant) + 100 % × international entrant, documentation fonctionnelle PlanET (juin 2026), 7.3.6.1, p. 63 : moitié des tonnes.km chargées, moitié des déchargées, importations à 100 % à la région de destination (DonneesTerritoires!D17 : sans la règle des importations ; hypothèse nommée includeInternationalFlows)",
           "retrievedOn": "2026-10-07",
-          "checksum": "55682c6d53a82cac6e132c8ea9d48e1b1429008a894dcdc67c2bbc6f0f4eef12"
+          "checksum": "a2e1020da7265bd0c4c6c033e562cab06bc55d6aa13ea9189bf901bfc57518dd"
         },
         {
           "file": "sources/sdes-trm-pavillons-europeens-2024.xlsx",
