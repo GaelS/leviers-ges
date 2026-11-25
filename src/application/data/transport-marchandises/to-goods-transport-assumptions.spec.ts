@@ -37,7 +37,7 @@ describe('toGoodsTransportAssumptions', () => {
       loading: '8.1',
       unclassified: '0.09',
       electric: '0.0467',
-      flows: expect.stringContaining('239,97') as string,
+      flows: expect.stringContaining('277,64') as string,
     })
   })
 })

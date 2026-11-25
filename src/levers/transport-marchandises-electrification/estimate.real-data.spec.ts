@@ -29,11 +29,11 @@ function toRequest({
 
 describe('estimate transport_marchandises_electrification, SDES 2024 et OMINEA 2024', () => {
   it.each([
-    ['84', '367463.36'],
-    ['53', '157007.31'],
-    ['11', '245566.49'],
-    ['94', '2719.15'],
-    ['32', '348386.68'],
+    ['84', '431052.02'],
+    ['53', '172178.63'],
+    ['11', '299874.14'],
+    ['94', '2932.99'],
+    ['32', '419096.25'],
   ])('à 20 %% de poids lourds électrifiés en plus, la région %s évite %s tCO2e', (code, expected) => {
     expect(
       estimate(toRequest({ code, share: '0.2' }), context)._unsafeUnwrap().reduction.toFixed(),
@@ -41,11 +41,11 @@ describe('estimate transport_marchandises_electrification, SDES 2024 et OMINEA 2
   })
 
   it.each([
-    ['84', '1834753.82'],
-    ['53', '784500.12'],
-    ['11', '1221807.92'],
-    ['94', '13568.51'],
-    ['32', '1738237.39'],
+    ['84', '2152253.63'],
+    ['53', '860304.93'],
+    ['11', '1492013.87'],
+    ['94', '14635.6'],
+    ['32', '2091035.09'],
   ])(
     'avec 100 %% demandés, plafonnés au parc thermique, la région %s évite %s tCO2e',
     (code, expected) => {

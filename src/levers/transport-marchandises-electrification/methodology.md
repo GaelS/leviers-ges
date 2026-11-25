@@ -57,12 +57,12 @@ Taux de chargement (8,1 t), facteur électrique (0,0467 kgCO2e/t.km), facteur di
 | région 84, jeu de test, 20 % | 6,66 tCO2e |
 | région tout zéro émission, 20 % demandés (rien à électrifier) | 0 tCO2e |
 | région à 90 % de zéro émission, 20 % demandés (plafonnés à 10 %) | 3,33 tCO2e |
-| région 84, données réelles, 20 % | 367 463,36 tCO2e |
-| région 53 (Bretagne) | 157 007,31 tCO2e |
-| région 11 (Île-de-France) | 245 566,49 tCO2e |
-| région 94 (Corse) | 2 719,15 tCO2e |
-| région 32 (Hauts-de-France) | 348 386,68 tCO2e |
-| région 84, 100 % demandés, plafonnés à 99,86 % | 1 834 753,82 tCO2e |
+| région 84, données réelles, 20 % | 431 052,02 tCO2e |
+| région 53 (Bretagne) | 172 178,63 tCO2e |
+| région 11 (Île-de-France) | 299 874,14 tCO2e |
+| région 94 (Corse) | 2 932,99 tCO2e |
+| région 32 (Hauts-de-France) | 419 096,25 tCO2e |
+| région 84, 100 % demandés, plafonnés à 99,86 % | 2 152 253,63 tCO2e |
 
 Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `Decimal`) à partir des CSV.
 
