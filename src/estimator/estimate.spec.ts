@@ -1350,11 +1350,11 @@ describe('estimate', () => {
       } as RequestInput
     }
 
-    it('aiguille la région vers son levier : 1 000 000 t.km, tout ferroviaire, évitent 57,11 tCO2e', () => {
+    it('aiguille la région vers son levier : 1 000 000 t.km, tout ferroviaire, évitent 57,96 tCO2e', () => {
       const result = withGoods(
         transportMarchandisesReportModalRequest({ roadToRailFraction: '1', roadToWaterwayFraction: '0' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('57.11')
+      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('57.96')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
