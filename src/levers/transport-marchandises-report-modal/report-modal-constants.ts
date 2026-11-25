@@ -1,3 +1,4 @@
+import { ELECTRICITY_EMISSION_FACTOR_SHARE } from '../../domain/emission-factors.ts'
 import { quantity } from '../../domain/units.ts'
 import type { Fraction, KgCo2ePerTonneKilometre, TonneKilometres } from '../../domain/units.ts'
 
@@ -14,10 +15,26 @@ const WATERWAY_SHIFT_AVOIDED_ROAD_RATIO: Fraction = quantity<'Fraction'>('0.8176
 const WATERWAY_SHIFT_ADDED_WATERWAY_RATIO: Fraction = quantity<'Fraction'>('0.9576')
 
 // Source : Base Empreinte de l'ADEME, élément 47691 « Train, motorisation moyenne, chargement moyen », France continentale : combustion 0,004715 + amont 0,002563 = 0,007278, fabrication (0,002991) exclue ; DonneesReference!D42 « avec prise en compte d'une part de l'amont »
-const RAIL_FREIGHT_EMISSION_FACTOR: KgCo2ePerTonneKilometre =
-  quantity<'KgCo2ePerTonneKilometre'>('0.007278')
+// Source : Base Empreinte, élément 47691 (« Train, motorisation moyenne, chargement moyen », France continentale) : combustion 0,004715 kgCO2e/t.km
+const RAIL_FREIGHT_COMBUSTION_EMISSION_FACTOR: KgCo2ePerTonneKilometre =
+  quantity<'KgCo2ePerTonneKilometre'>('0.004715')
 
-// Source : tableur PlanET V1, FE_fluvial!D25 : moyenne des six facteurs par classe de bateau, poste Combustion seul (Base Empreinte), pondérée par le nombre de bateaux de la flotte active VNF 2016 : 0,0206283 kgCO2e par t.km
+// Source : Base Empreinte, élément 47691 (même ligne) : amont 0,002563 kgCO2e/t.km, fabrication exclue (PlanET V1, DonneesReference!D42 : « avec prise en compte d'une part de l'amont »)
+const RAIL_FREIGHT_UPSTREAM_EMISSION_FACTOR: KgCo2ePerTonneKilometre =
+  quantity<'KgCo2ePerTonneKilometre'>('0.002563')
+
+// Source : documentation fonctionnelle PlanET (juin 2026), 7.3.8.4, p. 65 : l'amont est compté à 67,4 % : 0,002563 × 67,4 % = 0,001727462 kgCO2e/t.km
+const RAIL_FREIGHT_APPLIED_UPSTREAM_EMISSION_FACTOR: KgCo2ePerTonneKilometre =
+  quantity<'KgCo2ePerTonneKilometre'>(
+    RAIL_FREIGHT_UPSTREAM_EMISSION_FACTOR.times(ELECTRICITY_EMISSION_FACTOR_SHARE).toFixed(),
+  )
+
+// Source : documentation fonctionnelle PlanET (juin 2026), 7.3.8.4, p. 65 : facteur du ferroviaire « Amont × 67,4 % et combustion » : 0,004715 + 0,001727462 = 0,006442462 kgCO2e/t.km
+const RAIL_FREIGHT_EMISSION_FACTOR: KgCo2ePerTonneKilometre = quantity<'KgCo2ePerTonneKilometre'>(
+  RAIL_FREIGHT_COMBUSTION_EMISSION_FACTOR.plus(RAIL_FREIGHT_APPLIED_UPSTREAM_EMISSION_FACTOR).toFixed(),
+)
+
+// Source : PlanET V1, FE_fluvial!D25 : moyenne de six facteurs de la Base Empreinte par classe de bateau, combustion seule, pondérée par le nombre de bateaux de la flotte active VNF 2016
 const WATERWAY_FREIGHT_EMISSION_FACTOR: KgCo2ePerTonneKilometre =
   quantity<'KgCo2ePerTonneKilometre'>('0.0206283')
 

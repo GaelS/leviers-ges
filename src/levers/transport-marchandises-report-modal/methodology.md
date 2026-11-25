@@ -15,7 +15,7 @@ Identifiant : `transport_marchandises_report_modal`. Niveau : région seulement.
 | `r_flu` | « Pourcentage de report modal de la route vers le fluvial (marchandises) », saisi | fraction des t.km routières |
 | `t.km cyclologistique` | « Tonnes.km de TRM passées de la route à des modes actifs », saisies, 0 par défaut | tonnes.kilomètres |
 | `FE_TRM` | facteur mixte des poids lourds de la région (sobriété logistique) | kgCO2e par t.km |
-| `FE_TFM` | facteur du train de marchandises | 0,007278 kgCO2e par t.km |
+| `FE_TFM` | facteur du train de marchandises | 0,006442462 kgCO2e par t.km |
 | `FE_TFlM` | facteur du transport fluvial | 0,0206283 kgCO2e par t.km |
 | 0,8064 ; 1,0164 | route évitée et ferroviaire créé par t.km reportée vers le ferroviaire | sans unité |
 | 0,8176 ; 0,9576 | route évitée et fluvial créé par t.km reportée vers le fluvial | sans unité |
@@ -39,7 +39,7 @@ La somme des deux reports ne dépasse pas 100 % : le tableur n'en pose pas, la r
 | Constante | Valeur | Source |
 |---|---|---|
 | 0,8064 ; 1,0164 ; 0,8176 ; 0,9576 | | `TrsptMarch_ReportModal` (formes et `B13`) : « issus de l'analyse du programme CEE REMOVE » ; expliqués par la documentation fonctionnelle (pp. 64-65) : allongement de distance de 21 % (ferroviaire) et 14 % (fluvial), part routière de 16 %, part de l'autre mode de 84 % ; analyse interne ADEME non publiée |
-| `FE_TFM` | 0,007278 kgCO2e/t.km | Base Empreinte, élément 47691 « Train, motorisation moyenne, chargement moyen », France continentale : combustion 0,004715 + amont 0,002563 (somme exacte 0,0072778944, arrondie à 0,007278 : au plus 0,34 tCO2e d'écart sur la région 84) ; fabrication 0,002991 exclue ; `DonneesReference!D42` « avec prise en compte d'une part de l'amont » |
+| `FE_TFM` | 0,006442462 kgCO2e/t.km | documentation fonctionnelle (7.3.8.4, p. 65) : « amont × 67,4 % et combustion » ; Base Empreinte, élément 47691 « Train, motorisation moyenne, chargement moyen », France continentale : combustion 0,004715 + amont 0,002563 × 67,4 % ; fabrication 0,002991 exclue ; `DonneesReference!D42` « avec prise en compte d'une part de l'amont » ; l'ancienne valeur, amont entier, était 0,007278 |
 | `FE_TFlM` | 0,0206283 kgCO2e/t.km | `FE_fluvial!D25` : moyenne des six facteurs par classe de bateau, poste Combustion seul, pondérée par le nombre de bateaux de la flotte active VNF 2016 |
 
 ## Choix faits
@@ -57,17 +57,17 @@ La somme des deux reports ne dépasse pas 100 % : le tableur n'en pose pas, la r
 
 | Entrée | Résultat |
 |---|---|
-| 1 000 000 t.km, route à 0,08, tout vers le ferroviaire | 57,1146408 tCO2e |
+| 1 000 000 t.km, route à 0,08, tout vers le ferroviaire | 57,9638816232 tCO2e |
 | idem, tout vers le fluvial | 45,65433992 tCO2e |
-| idem, 10 % vers le ferroviaire et 5 % vers le fluvial | 7,994181076 tCO2e |
-| idem, 400 000 t.km de cyclologistique, tout vers le ferroviaire | 34,26878448 tCO2e |
-| route à 0,005, tout vers le ferroviaire | −3,3653592 tCO2e |
-| région 84, jeu de test, 10 % et 5 % | 7,99 tCO2e |
-| région 84, données réelles, 10 % et 5 % | 346 371,89 tCO2e |
-| région 53 (Bretagne) | 147 840,07 tCO2e |
-| région 11 (Île-de-France) | 230 868,34 tCO2e |
-| région 94 (Corse) | 2 578,45 tCO2e |
-| région 32 (Hauts-de-France) | 326 766,11 tCO2e |
+| idem, 10 % vers le ferroviaire et 5 % vers le fluvial | 8,07910515832 tCO2e |
+| idem, 400 000 t.km de cyclologistique, tout vers le ferroviaire | 34,77832897392 tCO2e |
+| route à 0,005, tout vers le ferroviaire | −2,5161183768 tCO2e |
+| région 84, jeu de test, 10 % et 5 % | 8,08 tCO2e |
+| région 84, données réelles, 10 % et 5 % | 349 026,87 tCO2e |
+| région 53 (Bretagne) | 148 969,67 tCO2e |
+| région 11 (Île-de-France) | 232 640,89 tCO2e |
+| région 94 (Corse) | 2 598,45 tCO2e |
+| région 32 (Hauts-de-France) | 329 251,63 tCO2e |
 | région 84, un milliard de t.km de cyclologistique | 335 292,59 tCO2e |
 | région 94, un milliard de t.km de cyclologistique (plus que ses 0,235 milliard) | −8 370,9 tCO2e |
 
@@ -84,5 +84,4 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 | Résultat négatif possible | si le mode reporté émet plus que la route évitée, ou si la cyclologistique dépasse les t.km ; aucune alerte renvoyée |
 | Un seul facteur ferroviaire et fluvial | pour toutes les régions |
 | Limites des données | celles de `transport_marchandises_sobriete_logistique` |
-| Cyclologistique | retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 371 tCO2e) ; sens à confirmer |
-| Facteur ferroviaire | amont entier ; la documentation (p. 65) demande amont × 67,4 % : +0,8 % en région 84 à 10 % ferroviaire |
+| Cyclologistique | retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 436 tCO2e) ; sens à confirmer |

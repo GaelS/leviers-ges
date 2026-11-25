@@ -57,17 +57,17 @@ function request(
 const estimate = toEstimator(createTemporaryCsvDataSource(FIXTURES))
 
 describe('estimate, transport_marchandises_report_modal', () => {
-  it('évite 7,99 tCO2e (7,994181076 avant arrondi) pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 10 % de ferroviaire et 5 % de fluvial', () => {
-    expect(estimate(request('84'))._unsafeUnwrap().reduction.toFixed()).toBe('7.99')
+  it('évite 8,08 tCO2e (8,07910515832 avant arrondi) pour 1 000 000 t.km à 0,08 kgCO2e/t.km, 10 % de ferroviaire et 5 % de fluvial', () => {
+    expect(estimate(request('84'))._unsafeUnwrap().reduction.toFixed()).toBe('8.08')
   })
 
-  it('retire la cyclologistique de la base : 400 000 t.km en moins donnent 4,80 tCO2e', () => {
+  it('retire la cyclologistique de la base : 400 000 t.km en moins donnent 4,85 tCO2e', () => {
     const withCyclologistics = request('84', {
       roadToRailFraction: '0.1',
       roadToWaterwayFraction: '0.05',
       cyclologisticTonneKilometres: '400000',
     })
-    expect(estimate(withCyclologistics)._unsafeUnwrap().reduction.toFixed()).toBe('4.8')
+    expect(estimate(withCyclologistics)._unsafeUnwrap().reduction.toFixed()).toBe('4.85')
   })
 
   it('renvoie les facteurs ferroviaire et fluvial, les coefficients et la cyclologistique par défaut', () => {
@@ -78,7 +78,7 @@ describe('estimate, transport_marchandises_report_modal', () => {
       coefficients: appliedAssumptions['modalShiftCoefficients']?.value,
       cyclologistic: appliedAssumptions['cyclologisticTonneKilometres']?.value,
     }).toEqual({
-      rail: '0.007278',
+      rail: '0.006442462',
       waterway: '0.0206283',
       coefficients: 'fer 0,8064 route et 1,0164 fer, voie d’eau 0,8176 route et 0,9576 voie d’eau',
       cyclologistic: '0',

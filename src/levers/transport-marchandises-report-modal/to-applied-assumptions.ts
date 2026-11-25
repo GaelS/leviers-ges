@@ -12,8 +12,8 @@ function toModalShiftAssumptions(): AppliedAssumptions {
     railFreightEmissionFactor: {
       value: RAIL_FREIGHT_EMISSION_FACTOR.toFixed(),
       source:
-        'Base Empreinte, élément 47691 (train moyen, charge moyenne, France continentale) : combustion 0,004715 plus amont 0,002563, fabrication exclue (DonneesReference!D42)',
-      limit: 'Un seul facteur pour toutes les régions, tractions et charges ; la part d’amont comptée n’est pas donnée par le tableur',
+        'Documentation fonctionnelle PlanET (7.3.8.4, p. 65) : amont × 67,4 % et combustion. Base Empreinte, élément 47691 (train moyen, charge moyenne, France continentale) : combustion 0,004715 plus amont 0,002563 × 67,4 %, fabrication exclue',
+      limit: 'Un seul facteur pour toutes les régions, tractions et charges ; le tableur ne donne pas la part d’amont comptée (DonneesReference!D42)',
     },
     waterwayFreightEmissionFactor: {
       value: WATERWAY_FREIGHT_EMISSION_FACTOR.toFixed(),

@@ -576,11 +576,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     },
     {
       "limit": "Cyclologistique",
-      "effect": "retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 371 tCO2e) ; sens à confirmer"
-    },
-    {
-      "limit": "Facteur ferroviaire",
-      "effect": "amont entier ; la documentation (p. 65) demande amont × 67,4 % : +0,8 % en région 84 à 10 % ferroviaire"
+      "effect": "retirée de la base sans crédit d'émissions évitées : plus on en saisit, moins on évite (Corse, 1 Gt.km : −8 436 tCO2e) ; sens à confirmer"
     }
   ],
   "transport_marchandises_efficacite": [
