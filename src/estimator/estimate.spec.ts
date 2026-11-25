@@ -2,7 +2,6 @@ import type { Result } from 'neverthrow'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import type { z } from 'zod'
 import type { EstimationError } from '../application/estimate/estimation-error.ts'
-import type { TonnesCo2ePerYear } from '../domain/units.ts'
 import { dataSourceFromDatasets } from '../testing/data-source-from-datasets.ts'
 import { createTemporaryCsvDataSource } from '../testing/temporary-csv-data-source.ts'
 import { createEstimator, type Estimate, type RequestInput } from './estimate.ts'
@@ -53,7 +52,7 @@ describe('estimate', () => {
       ],
     ])('%j hectares donnent %s tCO2e par an', (parameters, expected) => {
       const estimation = estimate(pratiquesStockantesRequest(parameters))._unsafeUnwrap()
-      expect(estimation.reduction.toFixed()).toBe(expected)
+      expect(estimation.reduction).toBe(expected)
     })
 
     it('annonce l’absence de borne sur les surfaces', () => {
@@ -101,12 +100,12 @@ describe('estimate', () => {
       [5e-7, '0'],
     ])('%j km créés par an donnent %s tCO2e par an', (kilometres, expected) => {
       const estimation = estimate(haiesRequest(kilometres))._unsafeUnwrap()
-      expect(estimation.reduction.toFixed()).toBe(expected)
+      expect(estimation.reduction).toBe(expected)
     })
 
     it('admet des kilomètres négatifs : un arrachage net donne une réduction négative', () => {
       const estimation = estimate(haiesRequest('-10'))._unsafeUnwrap()
-      expect(estimation.reduction.toFixed()).toBe('-11.7')
+      expect(estimation.reduction).toBe('-11.7')
     })
 
     it('n’annonce aucune hypothèse appliquée', () => {
@@ -178,7 +177,7 @@ describe('estimate', () => {
 
     it('aiguille la requête vers son levier avec la source de données', () => {
       const result = withNetworks(reseauxChaleurRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5')
+      expect(result._unsafeUnwrap().reduction).toBe('5')
     })
 
     it('annonce les jeux lus, sans le référentiel des communes', () => {
@@ -203,12 +202,12 @@ describe('estimate', () => {
 
     it('accepte une fraction en nombre', () => {
       const result = withNetworks(reseauxChaleurRequest({ fraction: 0.5 }))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5')
+      expect(result._unsafeUnwrap().reduction).toBe('5')
     })
 
     it('accepte un code de territoire entouré d’espaces', () => {
       const result = withNetworks(reseauxChaleurRequest({ code: ' 84 ', fraction: '1' }))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('10')
+      expect(result._unsafeUnwrap().reduction).toBe('10')
     })
 
     it.each(['-0.1', '1.01', '100'])('refuse la fraction %s hors de 0 à 1', (fraction) => {
@@ -284,7 +283,7 @@ describe('estimate', () => {
           heatReductionFraction: '0',
         },
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('268.27')
+      expect(result._unsafeUnwrap().reduction).toBe('268.27')
     })
 
     function batimentsMachinesAgricolesRequest(parameters: object): RequestInput {
@@ -308,7 +307,7 @@ describe('estimate', () => {
         petroleumProductsReductionFraction: 0.5,
         heatReductionFraction: '0',
       })
-      expect(withEnergy(request)._unsafeUnwrap().reduction.toFixed()).toBe('134.14')
+      expect(withEnergy(request)._unsafeUnwrap().reduction).toBe('134.14')
     })
 
     it('refuse une réduction d’électricité supérieure à 1', () => {
@@ -402,7 +401,7 @@ describe('estimate', () => {
     })
 
     it('aiguille la région vers son levier : 40 % des grumes et 20 % du bois d’industrie à +12 %', () => {
-      expect(withWood(produitsBoisRequest({}))._unsafeUnwrap().reduction.toFixed()).toBe('352')
+      expect(withWood(produitsBoisRequest({}))._unsafeUnwrap().reduction).toBe('352')
     })
 
     it.each([
@@ -411,7 +410,7 @@ describe('estimate', () => {
       ['-0.3', '-880'],
     ])('accepte la hausse %j, sans borne : %s tCO2e', (increase, expected) => {
       const result = withWood(produitsBoisRequest({ increase }))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe(expected)
+      expect(result._unsafeUnwrap().reduction).toBe(expected)
     })
 
     it('refuse une hausse qui n’est pas un nombre', () => {
@@ -487,7 +486,7 @@ describe('estimate', () => {
         territory: { level: 'departement', code: '01' },
         parameters: { renovatedParcFraction: '1' },
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('65.2')
+      expect(result._unsafeUnwrap().reduction).toBe('65.2')
     })
 
     it('annonce le contournement du niveau', () => {
@@ -547,7 +546,7 @@ describe('estimate', () => {
           targetHeatNetworkShareFraction: '0',
         },
       })
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('100.63')
+      expect(result._unsafeUnwrap().reduction).toBe('100.63')
     })
   })
 
@@ -611,12 +610,12 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 10 GWh d’électricité à 0,0349806 kgCO2e/kWh', () => {
       const result = withResidentialEnergy(residentielSobrieteRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('349.81')
+      expect(result._unsafeUnwrap().reduction).toBe('349.81')
     })
 
     it('accepte la baisse en nombre', () => {
       const result = withResidentialEnergy(residentielSobrieteRequest({ consumptionReduction: 0.5 }))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('174.9')
+      expect(result._unsafeUnwrap().reduction).toBe('174.9')
     })
 
     it.each(['-0.1', '1.01'])('refuse la baisse %s hors de 0 à 1', (consumptionReduction) => {
@@ -677,13 +676,13 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 000 passagers.km par semaine avec 100 % d’écoconduite', () => {
       const result = withTransport(transportPersonnesEfficaciteRequest({}))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('433.88')
+      expect(result._unsafeUnwrap().reduction).toBe('433.88')
     })
 
     it('accepte une hausse de passagers supérieure à 100 %, mais pas négative', () => {
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: 2 }))._unsafeUnwrap()
-          .reduction.toFixed(),
+          .reduction,
       ).toBe('3037.15')
       expect(
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: '-0.1' }))._unsafeUnwrapErr(),
@@ -735,7 +734,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 passagers.km par semaine électrifiés évitent 3,84 tCO2e', () => {
       const result = withTransport(transportPersonnesElectrificationRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('3.84')
+      expect(result._unsafeUnwrap().reduction).toBe('3.84')
     })
 
     it('refuse une part électrifiée hors de 0 à 1', () => {
@@ -801,7 +800,7 @@ describe('estimate', () => {
       const result = withTransport(
         transportPersonnesReportModalRequest({ toPublicTransport: '0', toActiveModes: '1' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.34')
+      expect(result._unsafeUnwrap().reduction).toBe('4.34')
     })
 
     it.each(['abc', ''])('refuse le report %j qui n’est pas un nombre, sans lever', (toPublicTransport) => {
@@ -874,7 +873,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 passagers.km par semaine en voiture, tous supprimés, évitent 4,34 tCO2e', () => {
       const result = withTransport(transportPersonnesSobrieteDeplacementsRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('4.34')
+      expect(result._unsafeUnwrap().reduction).toBe('4.34')
     })
 
     it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
@@ -941,7 +940,7 @@ describe('estimate', () => {
       const result = withDechets(
         dechetsModeDeTraitementRequest({ storageToIncineration: '1', storageToMaterialRecovery: '0' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('30')
+      expect(result._unsafeUnwrap().reduction).toBe('30')
     })
 
     it.each(['abc', '1.5'])('refuse la part %j', (storageToIncineration) => {
@@ -1012,7 +1011,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 100 t stockées, toutes supprimées, évitent 40 tCO2e', () => {
       const result = withDechetsSobriete(dechetsSobrieteRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('40')
+      expect(result._unsafeUnwrap().reduction).toBe('40')
     })
 
     it.each(['abc', '1.5'])('refuse la réduction %j', (reduction) => {
@@ -1050,7 +1049,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 t d’azote, toutes supprimées, évitent 5 733 tCO2e', () => {
       const result = withNitrogen(fertilisationAzoteeRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5733')
+      expect(result._unsafeUnwrap().reduction).toBe('5733')
     })
 
     it('aiguille l’EPCI vers son levier, qui lit les communes et les surfaces', () => {
@@ -1150,7 +1149,7 @@ describe('estimate', () => {
     }
 
     it('aiguille l’EPCI vers son levier : facteurs de 10 partout, (2 × 10 + 3 × 10) × 10 + 1 × 10 = 510 tCO2e', () => {
-      expect(withOccupation(occupationDesSolsRequest({}))._unsafeUnwrap().reduction.toFixed()).toBe(
+      expect(withOccupation(occupationDesSolsRequest({}))._unsafeUnwrap().reduction).toBe(
         '510',
       )
     })
@@ -1161,7 +1160,7 @@ describe('estimate', () => {
     ])('aiguille le niveau %s vers son levier : mêmes facteurs, 510 tCO2e', (level, code) => {
       const input = { ...occupationDesSolsRequest({ level }), territory: { level, code } } as RequestInput
       const result = withOccupation(input)._unsafeUnwrap()
-      expect(result.reduction.toFixed()).toBe('510')
+      expect(result.reduction).toBe('510')
       expect(Object.keys(result.appliedAssumptions)).toContain('territoryFactors')
     })
 
@@ -1213,7 +1212,7 @@ describe('estimate', () => {
           horizonYears: '0.5',
         },
       })
-      expect(withOccupation(zeroRates)._unsafeUnwrap().reduction.toFixed()).toBe('10')
+      expect(withOccupation(zeroRates)._unsafeUnwrap().reduction).toBe('10')
     })
   })
 
@@ -1260,7 +1259,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 1 000 vaches laitières supprimées évitent 5 008,45 tCO2e', () => {
       const result = withLivestock(elevageDurableRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('5008.45')
+      expect(result._unsafeUnwrap().reduction).toBe('5008.45')
     })
 
     it('refuse un EPCI, niveau non calculé', () => {
@@ -1312,7 +1311,7 @@ describe('estimate', () => {
 
     it('aiguille la région vers son levier : 30 milliards de t.km à 0,1 kgCO2e/t.km, tout supprimé, évitent 3 000 000 tCO2e', () => {
       const result = withGoods(transportMarchandisesSobrieteLogistiqueRequest('1'))
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('3000000')
+      expect(result._unsafeUnwrap().reduction).toBe('3000000')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
@@ -1371,7 +1370,7 @@ describe('estimate', () => {
       const result = withGoods(
         transportMarchandisesReportModalRequest({ roadToRailFraction: '1', roadToWaterwayFraction: '0' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('57.96')
+      expect(result._unsafeUnwrap().reduction).toBe('57.96')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
@@ -1455,7 +1454,7 @@ describe('estimate', () => {
           loadFactorIncrease: '0',
         }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('8')
+      expect(result._unsafeUnwrap().reduction).toBe('8')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
@@ -1519,7 +1518,7 @@ describe('estimate', () => {
       const result = withGoods(
         transportMarchandisesElectrificationRequest({ additionalElectrifiedFleetFraction: '1' }),
       )
-      expect(result._unsafeUnwrap().reduction.toFixed()).toBe('33.3')
+      expect(result._unsafeUnwrap().reduction).toBe('33.3')
     })
 
     it.each(['departement', 'epci'])('refuse le niveau %s, non calculé', (level) => {
@@ -1616,7 +1615,7 @@ describe('estimate', () => {
     it('la réduction est en tonnes de CO2e par an, typée par levier', () => {
       const result = estimate(haiesRequest('1'))
       expectTypeOf(result).toEqualTypeOf<Result<Estimate<'haies'>, EstimationError>>()
-      expectTypeOf<Estimate<'haies'>['reduction']>().toEqualTypeOf<TonnesCo2ePerYear>()
+      expectTypeOf<Estimate<'haies'>['reduction']>().toEqualTypeOf<string>()
     })
 
     it('les paramètres d’un autre levier ne compilent pas pour haies', () => {

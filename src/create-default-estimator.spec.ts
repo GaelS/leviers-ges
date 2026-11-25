@@ -7,7 +7,19 @@ describe('createDefaultEstimator', () => {
   it('calcule sur les données livrées avec le paquet', () => {
     const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: '100' } })
 
-    expect(result._unsafeUnwrap().reduction.toFixed()).toBe('117')
+    expect(result._unsafeUnwrap().reduction).toBe('117')
+  })
+
+  it.each([
+    ['10', '11.7'],
+    ['10.123', '11.84'],
+    ['10.125', '11.85'],
+    ['0.001', '0'],
+    ['1234567.891', '1444444.43'],
+  ])('renvoie la réduction de %s km de haies en texte décimal arrondi à deux décimales : %s', (km, expected) => {
+    const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: km } })
+
+    expect(result._unsafeUnwrap().reduction).toBe(expected)
   })
 
   it('lit un jeu de données territorial livré avec le paquet', () => {

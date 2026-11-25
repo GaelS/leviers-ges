@@ -118,7 +118,8 @@ type RequestInput =
 
 type Lever = RequestInput['id']
 
-type StatusedEstimateResult = EstimateResult & {
+type StatusedEstimateResult = Omit<EstimateResult, 'reduction'> & {
+  readonly reduction: string
   readonly status: ComputedStatus
   readonly limits: readonly LeverLimit[]
   readonly datasets: readonly DatasetProvenance[]
@@ -157,6 +158,7 @@ function createEstimator(dataSource: DataSource): Estimator {
               .map((dataset) => dataSource.provenance(dataset)),
           ).map((datasets) => ({
             ...leverEstimate,
+            reduction: leverEstimate.reduction.toFixed(),
             status,
             limits: LEVER_LIMITS[request.id],
             datasets,

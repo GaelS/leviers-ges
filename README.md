@@ -39,7 +39,7 @@ const result = estimate({
 })
 ```
 
-`result.value.reduction.toFixed()` vaut `'117'` (tCO2e par an).
+`result.value.reduction` vaut `'117'` (tCO2e par an).
 
 ### Un levier par territoire
 
@@ -51,7 +51,7 @@ const result = estimate({
 })
 ```
 
-`result.value.reduction.toFixed()` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite. `result.value.status` vaut `no_open_question` (aucune question ouverte à ce niveau) ou `workaround` (niveau calculé par un contournement documenté dans `methodology.md`). `result.value.limits` liste les limites du levier (`limit`, `effect`), reprises du tableau « Limites » de son `methodology.md`. `result.value.datasets` liste les jeux de `data/` lus par le calcul, chacun avec sa source (périmètre compris), son millésime et sa date de récupération, tels que le manifeste les donne.
+`result.value.reduction` vaut `'248249.26'`. `result.value.appliedAssumptions` liste les hypothèses appliquées, chacune avec sa valeur, sa source et sa limite. `result.value.status` vaut `no_open_question` (aucune question ouverte à ce niveau) ou `workaround` (niveau calculé par un contournement documenté dans `methodology.md`). `result.value.limits` liste les limites du levier (`limit`, `effect`), reprises du tableau « Limites » de son `methodology.md`. `result.value.datasets` liste les jeux de `data/` lus par le calcul, chacun avec sa source (périmètre compris), son millésime et sa date de récupération, tels que le manifeste les donne.
 
 ### Un niveau non calculé
 
@@ -79,7 +79,7 @@ const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: 'abc
 - `territory.code` : texte (`'84'`, `'69'`, `'2A'`, SIREN de l'EPCI `'200046977'`).
 - Types et bornes des valeurs : voir « Types et bornes » plus bas.
 - Un schéma refuse toute clé inconnue : `wasteReductionFraction` n'existe pas, `dechets_sobriete` prend `storageReductionFraction` et `incinerationReductionFraction`.
-- `reduction` est un `BigNumber` arrondi à deux décimales.
+- `reduction` est un texte décimal en tCO2e par an, arrondi à deux décimales (demi supérieur), sans notation scientifique ni zéro final : `'11.7'`, `'0'`. Aucun type de `bignumber.js` n'est exposé.
 - `level_not_computed`, `missing_data` (territoire sans donnée, par exemple l'outre-mer) et `invalid_request` sont les erreurs de l'estimation. Les types sont exportés (`EstimationError`, `DataSourceError`).
 
 ## Les leviers
@@ -172,7 +172,7 @@ const result = estimate({
 })
 ```
 
-`result.value.reduction.toFixed()` vaut `'747377.9'`. Un lisier sur des caprins donne `{ kind: 'invalid_request', issues: [{ parameter: 'parameters.animals.goats.targetManureShares.liquid', message: 'liquid manure is not an available management mode for goats' }] }`.
+`result.value.reduction` vaut `'747377.9'`. Un lisier sur des caprins donne `{ kind: 'invalid_request', issues: [{ parameter: 'parameters.animals.goats.targetManureShares.liquid', message: 'liquid manure is not an available management mode for goats' }] }`.
 
 ### Résidentiel et réseaux de chaleur
 
