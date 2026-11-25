@@ -11,12 +11,13 @@ import type {
   KgCo2ePerGigajoule,
   KgCo2ePerKwh,
   MegawattHours,
+  ReductionFraction,
   TonnesCo2ePerYear,
 } from '../../domain/units.ts'
 import type { AgriculturalConsumption } from './data/agricultural-consumption.ts'
 
 type ReductionFractions = {
-  readonly electricity: Fraction
+  readonly electricity: ReductionFraction
   readonly naturalGas: Fraction
   readonly petroleumProducts: Fraction
   readonly heat: Fraction
@@ -33,7 +34,7 @@ function calculateAvoidedEmissions({
   emissionFactor,
 }: {
   consumption: MegawattHours
-  reductionFraction: Fraction
+  reductionFraction: Fraction | ReductionFraction
   emissionFactor: KgCo2ePerKwh
 }): BigNumber {
   const reducedConsumption = consumption.times(reductionFraction)

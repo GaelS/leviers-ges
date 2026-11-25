@@ -292,6 +292,29 @@ describe('estimate, batiments_machines_agricoles', () => {
     expect(estimate(request('departement', '2A'))._unsafeUnwrap().reduction.toFixed()).toBe('3.5')
   })
 
+  it('accepte une réduction d’électricité négative : un passage à l’électrique ajoute des émissions', () => {
+    const electrification = { ...NONE, electricityReductionFraction: '-0.5', petroleumProductsReductionFraction: '1' }
+    const withIncrease = estimate(request('region', '84', electrification))._unsafeUnwrap().reduction
+    const withoutIncrease = estimate(
+      request('region', '84', { ...electrification, electricityReductionFraction: '0' }),
+    )._unsafeUnwrap().reduction
+    expect(withIncrease.isLessThan(withoutIncrease)).toBe(true)
+  })
+
+  it.each([
+    ['electricityReductionFraction', '1.5'],
+    ['naturalGasReductionFraction', '-0.5'],
+    ['petroleumProductsReductionFraction', '-0.5'],
+    ['heatReductionFraction', '-0.5'],
+  ])('refuse %s à %s', (parameter, value) => {
+    const parsed = batimentsMachinesAgricolesRequestSchema.safeParse({
+      id: 'batiments_machines_agricoles',
+      territory: { level: 'region', code: '84' },
+      parameters: { ...NONE, [parameter]: value },
+    })
+    expect(parsed.success).toBe(false)
+  })
+
   it('refuse un territoire inconnu', () => {
     expect(estimate(request('region', '99'))._unsafeUnwrapErr()).toEqual({
       kind: 'unknown_territory',

@@ -1,11 +1,15 @@
 import { z } from 'zod'
-import { fractionSchema, territorySchema } from '../../application/estimate/shared-schemas.ts'
+import {
+  fractionSchema,
+  reductionFractionSchema,
+  territorySchema,
+} from '../../application/estimate/shared-schemas.ts'
 
 const batimentsMachinesAgricolesRequestSchema = z.strictObject({
   id: z.literal('batiments_machines_agricoles'),
   territory: territorySchema,
   parameters: z.strictObject({
-    electricityReductionFraction: fractionSchema,
+    electricityReductionFraction: reductionFractionSchema,
     naturalGasReductionFraction: fractionSchema,
     petroleumProductsReductionFraction: fractionSchema,
     heatReductionFraction: fractionSchema,

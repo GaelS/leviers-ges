@@ -19,7 +19,7 @@ const NO_CONSUMPTION: AgriculturalConsumption = {
 }
 
 const FULL_REDUCTION: ReductionFractions = {
-  electricity: quantity<'Fraction'>('1'),
+  electricity: quantity<'ReductionFraction'>('1'),
   naturalGas: quantity<'Fraction'>('1'),
   petroleumProducts: quantity<'Fraction'>('1'),
   heat: quantity<'Fraction'>('1'),
@@ -76,12 +76,23 @@ describe('calculateBatimentsMachinesAgricolesReduction', () => {
       heat: ONE_THOUSAND_MWH,
     }
     const reductionFractions: ReductionFractions = {
-      electricity: quantity<'Fraction'>('0'),
+      electricity: quantity<'ReductionFraction'>('0'),
       naturalGas: quantity<'Fraction'>('0'),
       petroleumProducts: quantity<'Fraction'>('0.5'),
       heat: quantity<'Fraction'>('0'),
     }
     expect(reduction({ consumption, reductionFractions })).toBe('134.136')
+  })
+
+  it('une réduction d’électricité négative ajoute des émissions : −50 % sur 1 000 MWh donnent −17,4903 tCO2e', () => {
+    const reductionFractions: ReductionFractions = {
+      ...FULL_REDUCTION,
+      electricity: quantity<'ReductionFraction'>('-0.5'),
+      naturalGas: quantity<'Fraction'>('0'),
+      petroleumProducts: quantity<'Fraction'>('0'),
+      heat: quantity<'Fraction'>('0'),
+    }
+    expect(reduction({ consumption: { electricity: ONE_THOUSAND_MWH }, reductionFractions })).toBe('-17.4903')
   })
 
   it('une chaleur à facteur nul n’évite rien', () => {
