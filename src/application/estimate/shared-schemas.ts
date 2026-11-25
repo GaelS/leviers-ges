@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { numberToDecimalText, parseBig } from '../../domain/big-number.ts'
 import { levels, territoryCodeSchema } from '../../domain/territory.ts'
-import { parseFraction, quantity } from '../../domain/units.ts'
+import { parseFraction, parseReductionFraction, quantity } from '../../domain/units.ts'
 
 const decimalInputSchema = z.union([
   z.string().refine((text) => parseBig(text).isOk(), 'must be a decimal number'),
@@ -17,6 +17,16 @@ const fractionSchema =decimalInputSchema.transform((text, context) =>
     (fraction) => fraction,
     () => {
       context.addIssue({ code: 'custom', message: 'must be between 0 and 1', input: text })
+      return z.NEVER
+    },
+  ),
+)
+
+const reductionFractionSchema = decimalInputSchema.transform((text, context) =>
+  parseReductionFraction(text).match(
+    (reduction) => reduction,
+    () => {
+      context.addIssue({ code: 'custom', message: 'must be at most 1', input: text })
       return z.NEVER
     },
   ),
@@ -62,6 +72,7 @@ export {
   nonNegativeHectaresSchema,
   nonNegativeTonneKilometresSchema,
   positiveYearsSchema,
+  reductionFractionSchema,
   relativeChangeSchema,
   territorySchema,
 }

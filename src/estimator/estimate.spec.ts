@@ -311,8 +311,25 @@ describe('estimate', () => {
       expect(withEnergy(request)._unsafeUnwrap().reduction.toFixed()).toBe('134.14')
     })
 
+    it('refuse une réduction d’électricité supérieure à 1', () => {
+      const request = batimentsMachinesAgricolesRequest({ electricityReductionFraction: '1.01' })
+      expect(estimate(request)._unsafeUnwrapErr()).toEqual({
+        kind: 'invalid_request',
+        issues: [{ parameter: 'parameters.electricityReductionFraction', message: 'must be at most 1' }],
+      })
+    })
+
+    it('accepte une réduction d’électricité négative', () => {
+      const request = batimentsMachinesAgricolesRequest({
+        electricityReductionFraction: '-0.5',
+        naturalGasReductionFraction: '0',
+        petroleumProductsReductionFraction: '0',
+        heatReductionFraction: '0',
+      })
+      expect(withEnergy(request).isOk()).toBe(true)
+    })
+
     it.each([
-      ['electricityReductionFraction'],
       ['naturalGasReductionFraction'],
       ['petroleumProductsReductionFraction'],
       ['heatReductionFraction'],

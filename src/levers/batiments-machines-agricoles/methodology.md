@@ -24,12 +24,12 @@ FE_produits pétroliers = FE du gazole non routier
 
 | Entrée | Unité | Bornes |
 |---|---|---|
-| `electricityReductionFraction` | fraction | 0 à 1 |
+| `electricityReductionFraction` | fraction | au plus 1, négative admise |
 | `naturalGasReductionFraction` | fraction | 0 à 1 |
 | `petroleumProductsReductionFraction` | fraction | 0 à 1 |
 | `heatReductionFraction` | fraction | 0 à 1 |
 
-Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à 0. Le tableur n'a ni valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H12:I15` vides).
+Les quatre sont obligatoires : un vecteur qu'on ne réduit pas se saisit à 0. La réduction d'électricité peut être négative : la documentation (7.1.3.2, p. 49) l'admet pour le remplacement d'équipements carbonés par des équipements électriques, une hausse de consommation qui ajoute des émissions. Elle n'a pas de borne basse (choix de conception, non validé). Le tableur n'a ni valeur par défaut ni valeur de la SNBC 3 (`ParametreDeterminants!H12:I15` vides).
 
 ## Constantes
 
@@ -67,6 +67,7 @@ Le facteur de la chaleur est la moyenne des facteurs des réseaux du territoire,
 | Entrée | Résultat |
 |---|---|
 | 1 000 MWh d'électricité, 100 % | 34,9806 tCO2e |
+| 1 000 MWh d'électricité, −50 % | −17,4903 tCO2e |
 | 1 000 MWh de gaz naturel, 100 % | 201,168 tCO2e |
 | 1 000 MWh de produits pétroliers, 100 % | 268,272 tCO2e |
 | 1 000 MWh de chaleur à 0,1 kgCO2e/kWh, 100 % | 100 tCO2e |
@@ -103,5 +104,5 @@ Le facteur de la chaleur est la moyenne des facteurs des réseaux du territoire,
 | Communes de la géographie sans ligne de SAU | 1 384 (dont 94 d'outre-mer) : lues comme une SAU nulle, cohérent avec les totaux régionaux (manifeste de `surface-agricole-utile`) |
 | Facteur du gazole pour tous les produits pétroliers | appliqué aussi à l'essence ; OMINEA donne 72,48 pour l'essence des engins agricoles, soit 2,7 % de moins, et pas de facteur 2024 pour le fioul domestique de ces engins |
 | Élevage | la fiche élevage (02) n'est pas vérifiée contre le dessin du classeur |
-| Réduction d'électricité négative | refusée (0 à 1), alors que la documentation (7.1.3.2, p. 49) l'admet pour un passage à l'électrique |
+| Réduction d'électricité sans borne basse | une réduction négative est admise sans plancher : −100 % double la consommation d'électricité, et −300 % la quadruple |
 | Corse | calculée avec les facteurs continentaux, alors que la documentation (3.4) ne la couvre pas en V1 ; électricité corse : 1,9 % du résultat |

@@ -129,8 +129,8 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
       "effect": "la fiche élevage (02) n'est pas vérifiée contre le dessin du classeur"
     },
     {
-      "limit": "Réduction d'électricité négative",
-      "effect": "refusée (0 à 1), alors que la documentation (7.1.3.2, p. 49) l'admet pour un passage à l'électrique"
+      "limit": "Réduction d'électricité sans borne basse",
+      "effect": "une réduction négative est admise sans plancher : −100 % double la consommation d'électricité, et −300 % la quadruple"
     },
     {
       "limit": "Corse",

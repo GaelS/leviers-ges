@@ -5,6 +5,7 @@ import { type InvalidParameter, invalidParameter } from './invalid-parameter.ts'
 
 type UnitName =
   | 'Fraction'
+  | 'ReductionFraction'
   | 'Kilometres'
   | 'Tonnes'
   | 'TonneKilometres'
@@ -37,6 +38,7 @@ type UnitName =
 type Quantity<U extends UnitName> = BigNumber & { readonly unit: U }
 
 type Fraction = Quantity<'Fraction'>
+type ReductionFraction = Quantity<'ReductionFraction'>
 type Kilometres = Quantity<'Kilometres'>
 type Tonnes = Quantity<'Tonnes'>
 type TonneKilometres = Quantity<'TonneKilometres'>
@@ -86,7 +88,14 @@ function parseFraction(value: string): Result<Fraction, InvalidParameter> {
   return ok(quantity<'Fraction'>(value))
 }
 
-export { gigawattHoursToMegawattHours, parseFraction, quantity }
+function parseReductionFraction(value: string): Result<ReductionFraction, InvalidParameter> {
+  const parsed = parseBig(value)
+  if (parsed.isErr()) return err(invalidParameter({ parameter: 'reductionFraction', value }))
+  if (parsed.value.isGreaterThan(1)) return err(invalidParameter({ parameter: 'reductionFraction', value }))
+  return ok(quantity<'ReductionFraction'>(value))
+}
+
+export { gigawattHoursToMegawattHours, parseFraction, parseReductionFraction, quantity }
 export type {
   BillionTonneKilometres,
   Fraction,
@@ -107,6 +116,7 @@ export type {
   MegawattHours,
   PassengerKilometresPerWeek,
   Quantity,
+  ReductionFraction,
   RelativeChange,
   TCo2ePerHectare,
   TCo2ePerHectarePerYear,

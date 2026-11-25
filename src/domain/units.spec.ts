@@ -2,6 +2,7 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 import {
   gigawattHoursToMegawattHours,
   parseFraction,
+  parseReductionFraction,
   quantity,
   type Fraction,
   type Kilometres,
@@ -32,6 +33,18 @@ describe('units', () => {
     expect(parseFraction(value)._unsafeUnwrapErr()).toEqual({
       kind: 'invalid_parameter',
       parameter: 'fraction',
+      value,
+    })
+  })
+
+  it.each(['-3', '-0.5', '0', '0.25', '1'])('accepte la réduction %s', (value) => {
+    expect(parseReductionFraction(value).isOk()).toBe(true)
+  })
+
+  it.each(['1.01', '25', 'abc'])('refuse la réduction %s', (value) => {
+    expect(parseReductionFraction(value)._unsafeUnwrapErr()).toEqual({
+      kind: 'invalid_parameter',
+      parameter: 'reductionFraction',
       value,
     })
   })
