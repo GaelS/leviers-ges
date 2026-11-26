@@ -44,4 +44,12 @@ function roundOutput(value: BigNumber): BigNumber {
   return value.decimalPlaces(OUTPUT_DECIMAL_PLACES)
 }
 
-export { numberToDecimalText, parseBig, parseBigWithExponent, roundOutput, sum, toBig }
+export {
+  decimalTextPattern,
+  numberToDecimalText,
+  parseBig,
+  parseBigWithExponent,
+  roundOutput,
+  sum,
+  toBig,
+}

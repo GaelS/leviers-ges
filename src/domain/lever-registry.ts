@@ -5,6 +5,9 @@ type Status = 'no_open_question' | 'workaround' | 'not_computed'
 
 type ComputedStatus = Exclude<Status, 'not_computed'>
 
+// Source : choix de conception, non validé : les deux statuts d'un niveau calculé, exposés pour que les consommateurs dérivent leurs énumérations ; un test vérifie que la liste couvre ComputedStatus
+const ESTIMATE_STATUSES = ['no_open_question', 'workaround'] as const satisfies readonly ComputedStatus[]
+
 type LevelStatuses = Readonly<Record<Level, Status>>
 
 // Source : compound-knowledge-db, docs/plans/2026-09-21-001-feat-leviers-ges/onglets/00-questions-implementation.md,
@@ -107,5 +110,5 @@ function isComputedLevel<L extends LeverId>(lever: L, level: Level): level is Co
   return isComputed(getStatus({ lever, level }))
 }
 
-export { getStatus, isComputed, isComputedLevel, LEVERS }
+export { ESTIMATE_STATUSES, getStatus, isComputed, isComputedLevel, LEVERS }
 export type { ComputedLevels, ComputedStatus, LeverId, Status }

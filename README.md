@@ -82,6 +82,11 @@ const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: 'abc
 - `reduction` est un texte décimal en tCO2e par an, arrondi à deux décimales (demi supérieur), sans notation scientifique ni zéro final : `'11.7'`, `'0'`. Aucun type de `bignumber.js` n'est exposé.
 - `level_not_computed`, `missing_data` (territoire sans donnée, par exemple l'outre-mer) et `invalid_request` sont les erreurs de l'estimation. Les types sont exportés (`EstimationError`, `DataSourceError`).
 
+## Catalogue, constantes et types
+
+- `LEVERS_CATALOG` : un élément par levier, `{ id, territoryRequired, levels, parametersJsonSchema }`. `levels` donne le statut de chaque niveau (`no_open_question`, `workaround` ou `not_computed`). `parametersJsonSchema` est le JSON Schema (brouillon 2020-12) des paramètres tel que l'accepte l'estimateur : un décimal est un texte au motif `^-?\d+(\.\d+)?$` ou un nombre, et la description du paramètre donne sa borne ; les bornes que le calcul contrôle ne sont pas dans le schéma.
+- `ESTIMATION_ERROR_KINDS` et `ESTIMATE_STATUSES` : les valeurs de `EstimationError['kind']` et de `Estimate['status']`, avec les types `EstimationErrorKind` et `EstimateStatus`.
+
 ## Les leviers
 
 Le détail d'un levier (formule, constantes sourcées, données, limites, cas de test) est dans son `src/levers/<dossier>/methodology.md`.
