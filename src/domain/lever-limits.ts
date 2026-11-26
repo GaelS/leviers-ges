@@ -244,7 +244,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
   "residentiel_renovation": [
     {
       "limit": "Consommation par m² moyenne nationale",
-      "effect": "un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité environ 56 kWh/m², gaz environ 95, fioul 130, bois 177, chaleur 132"
+      "effect": "un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité 74 kWh/m², gaz 104, fioul 122, GPL 92, chaleur 146, bois 181 (73 TWh du CEREN sur les m² « autre »), recalculées le 2026-11-26 : consommation régionale × part du chauffage et de l'ECS ÷ m² du parc INSEE chauffés à cette énergie"
     },
     {
       "limit": "Appartements d'après 1971",

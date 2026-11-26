@@ -47,7 +47,7 @@ Aucun jeu propre. La consommation vient de `src/application/residential-consumpt
 |---|---|---|
 | 1 | Consommation avant rénovation = consommation du territoire × part nationale du chauffage et de l'ECS, la même au m² pour tous les types, combustibles identiques et toutes les périodes | interprétation nouvelle, les parts viennent du CEREN national (`Residentiel_Rénovation!G24` désigne le CEREN départemental, non ouvert) ; suppose le même usage partout |
 | 2 | Maisons et appartements d'avant 1971 : « après » = 65 % de « avant » | documentation p. 54 ; `A34` |
-| 3 | Appartements d'après 1971 (privé et social, 1971-2005 et après 2005) : non calculés, ils comptent 0 | le tableur les aligne sur le BBC rénovation, 110 kWhEP/m²/an et 11 kgCO2e/m²/an (`B13`) ; comparé à des moyennes nationales en énergie finale (électricité environ 56 kWh/m², gaz environ 95, fioul 130), le niveau donnerait un gain négatif pour l'électricité et le gaz sans facteurs d'énergie primaire ; −35 % partout surestimerait ; choix de conception, non validé |
+| 3 | Appartements d'après 1971 (privé et social, 1971-2005 et après 2005) : non calculés, ils comptent 0 | le tableur les aligne sur le BBC rénovation, 110 kWhEP/m²/an et 11 kgCO2e/m²/an (`B13`) ; comparé à des moyennes nationales en énergie finale (électricité 74 kWh/m², gaz 104, fioul 122), le niveau donnerait un gain négatif pour l'électricité et le gaz sans facteurs d'énergie primaire ; −35 % partout surestimerait ; choix de conception, non validé |
 | 4 | La part éligible d'un vecteur sans logement chauffé à ce combustible vaut 0 | choix de conception, non validé |
 | 5 | Une seule part de parc rénové pour tous les types | documentation p. 54 : « par défaut de façon homogène » |
 | 6 | Climatisation non comptée | documentation p. 51 : chauffage et ECS ; le tableur ajoute la climatisation (`B13`), 2,6 TWh d'électricité en 2024 |
@@ -77,7 +77,7 @@ Les valeurs sur données réelles sont recalculées hors du dépôt (Python, `De
 
 | Limite | Effet |
 |---|---|
-| Consommation par m² moyenne nationale | un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité environ 56 kWh/m², gaz environ 95, fioul 130, bois 177, chaleur 132 |
+| Consommation par m² moyenne nationale | un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité 74 kWh/m², gaz 104, fioul 122, GPL 92, chaleur 146, bois 181 (73 TWh du CEREN sur les m² « autre »), recalculées le 2026-11-26 : consommation régionale × part du chauffage et de l'ECS ÷ m² du parc INSEE chauffés à cette énergie |
 | Appartements d'après 1971 | non comptés : le total est sous-estimé |
 | Régions, départements et EPCI | les totaux diffèrent d'environ 1 % (4,30, 4,34 et 4,35 MtCO2e à 50 % du parc) : les consommations viennent de trois jeux différents (bilan régional, IRIS départemental, SDES à l'EPCI), la part éligible du même parc INSEE ; comme `residentiel_sobriete` |
 | EPCI sans surface de logements | la consommation de l'EPCI, lue en amont, échoue déjà en `missing_data` ; le levier ne le vérifie pas une seconde fois |
