@@ -86,6 +86,7 @@ const result = estimate({ id: 'haies', parameters: { hedgeKmCreatedPerYear: 'abc
 
 - `LEVERS_CATALOG` : un élément par levier, `{ id, territoryRequired, levels, parametersJsonSchema }`. `levels` donne le statut de chaque niveau (`no_open_question`, `workaround` ou `not_computed`). `parametersJsonSchema` est le JSON Schema (brouillon 2020-12) des paramètres tel que l'accepte l'estimateur : un décimal est un texte au motif `^-?\d+(\.\d+)?$` ou un nombre, et la description du paramètre donne sa borne ; les bornes que le calcul contrôle ne sont pas dans le schéma.
 - Chaque issue d'un `invalid_request` est `{ parameter, code, message }`. `code` est stable (`ISSUE_CODES` : `not_an_object`, `unknown_lever`, `unknown_parameter`, `required`, `invalid_type`, `not_a_decimal`, `out_of_range`, `invalid_combination`, `invalid_value`) ; `message` est un texte anglais, mélange de messages du paquet et de zod, à ne pas comparer.
+- `describeEstimationError(error)` : une phrase française pour n'importe quelle `EstimationError`, construite sur le `kind` et les `code` (jamais sur les `message`). Une issue d'`invalid_request` y est décrite par son paramètre et le texte de son code.
 - `ESTIMATION_ERROR_KINDS` et `ESTIMATE_STATUSES` : les valeurs de `EstimationError['kind']` et de `Estimate['status']`, avec les types `EstimationErrorKind` et `EstimateStatus`.
 
 ## Les leviers

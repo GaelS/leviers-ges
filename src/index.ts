@@ -6,6 +6,7 @@ export { LEVERS_CATALOG } from './estimator/levers-catalog.ts'
 export type { JsonSchema, LeverCatalogEntry } from './estimator/levers-catalog.ts'
 export { ESTIMATE_STATUSES } from './domain/lever-registry.ts'
 export type { ComputedStatus as EstimateStatus, Status } from './domain/lever-registry.ts'
+export { describeEstimationError } from './application/estimate/describe-estimation-error.ts'
 export { ESTIMATION_ERROR_KINDS, ISSUE_CODES } from './application/estimate/estimation-error.ts'
 export type {
   EstimationError,
