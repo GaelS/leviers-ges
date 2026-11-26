@@ -8,7 +8,7 @@ import { getResidentialInputs } from '../../application/residential-consumption/
 import type { DataSourceError } from '../../domain/data-source.ts'
 import type { UnknownTerritory } from '../../domain/territory-index.ts'
 import { calculateResidentielRenovationReduction } from './calculate-residentiel-renovation-reduction.ts'
-import { readEligibleSurfaceShares } from './data/read-eligible-surface-shares.ts'
+import { readHousingSurfaces } from './data/read-housing-surfaces.ts'
 import type { ResidentielRenovationRequest } from './residentiel-renovation-request.ts'
 import { toAppliedAssumptions } from './to-applied-assumptions.ts'
 
@@ -19,13 +19,13 @@ function estimate(
   return getCommunesOf(territory).andThen((communes) =>
     getResidentialInputs({ dataSource, territory, communes }).andThen(
       ({ consumption, heatEmissionFactor }) =>
-        readEligibleSurfaceShares({ dataSource, territory, communes, getDepartementByCommune }).map(
-          (eligibleSurfaceShare) =>
+        readHousingSurfaces({ dataSource, territory, communes, getDepartementByCommune }).map(
+          (housingSurfaces) =>
             toEstimateResult(
               calculateResidentielRenovationReduction({
                 renovatedParcFraction: parameters.renovatedParcFraction,
                 consumption,
-                eligibleSurfaceShare,
+                housingSurfaces,
                 heatEmissionFactor,
               }),
               toAppliedAssumptions(),

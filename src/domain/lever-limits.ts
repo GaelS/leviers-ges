@@ -247,8 +247,8 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
       "effect": "un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité 84 kWh/m², gaz 109, fioul 122, GPL 98, chaleur 146, bois 164 (65,9 TWh du SDES sur les m² « autre »), recalculées le 2026-11-26 : consommation régionale × part du chauffage et de l'ECS ÷ m² du parc INSEE chauffés à cette énergie ; un gradient par période de construction (Phébus 2013, CGDD n° 645 : de 0,017 tep/m² avant 1970 à 0,012 après 2006) changerait la part éligible de moins de 4 % (électricité +2,1 %, gaz +3,7 %, fioul +0,5 %, GPL +1,0 %), de 13,8 % pour la chaleur"
     },
     {
-      "limit": "Appartements d'après 1971",
-      "effect": "non comptés : le total est sous-estimé"
+      "limit": "Collectifs d'après 1971",
+      "effect": "plafonds du BBC rénovation lus avec les coefficients d'énergie primaire du DPE et nos facteurs d'émission : gain par énergie après rénovation environ −43 % pour l'électricité, −50 % pour le gaz, −66 % pour le fioul, −51 % pour le GPL sur la consommation moyenne nationale ; la consommation par m² du territoire est supposée la même pour les logements récents et anciens"
     },
     {
       "limit": "Régions, départements et EPCI",
