@@ -105,6 +105,7 @@ describe('resolveTargetShares', () => {
       issues: [
         {
           parameter: 'parameters',
+          code: 'invalid_combination',
           message:
             'the unspecified target shares have no current use to share the remaining part of the energy: give all but one of them',
         },

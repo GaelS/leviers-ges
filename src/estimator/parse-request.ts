@@ -1,6 +1,11 @@
 import { err, ok, type Result } from 'neverthrow'
 import { z } from 'zod'
-import { invalidRequest, type InvalidRequest } from '../application/estimate/estimation-error.ts'
+import { match } from 'ts-pattern'
+import {
+  invalidRequest,
+  type InvalidRequest,
+  type InvalidRequestIssueCode,
+} from '../application/estimate/estimation-error.ts'
 import { batimentsMachinesAgricolesRequestSchema } from '../levers/batiments-machines-agricoles/index.ts'
 import { dechetsModeDeTraitementRequestSchema } from '../levers/dechets-mode-de-traitement/index.ts'
 import { dechetsSobrieteRequestSchema } from '../levers/dechets-sobriete/index.ts'
@@ -55,6 +60,26 @@ function parameterOf(issue: z.core.$ZodIssue): string {
   return parameter === '' ? 'request' : parameter
 }
 
+function valueAt(input: unknown, path: readonly PropertyKey[]): unknown {
+  return path.reduce<unknown>((current, key) => Reflect.get(Object(current), key), input)
+}
+
+function codeOf(issue: z.core.$ZodIssue, input: unknown): InvalidRequestIssueCode {
+  const isMissing = valueAt(input, issue.path) === undefined
+  return match(issue)
+    .with({ code: 'invalid_type', path: [] }, () => 'not_an_object' as const)
+    .with({ code: 'invalid_union', path: ['id'] }, () => 'unknown_lever' as const)
+    .with({ code: 'unrecognized_keys' }, () => 'unknown_parameter' as const)
+    .with({ code: 'invalid_format' }, () => 'not_a_decimal' as const)
+    .with({ code: 'custom', params: { code: 'out_of_range' } }, () => 'out_of_range' as const)
+    .with({ code: 'custom' }, () => 'invalid_combination' as const)
+    .with({ code: 'invalid_value' }, () => 'invalid_value' as const)
+    .with({ code: 'invalid_type' }, { code: 'invalid_union' }, () =>
+      isMissing ? ('required' as const) : ('invalid_type' as const),
+    )
+    .otherwise(() => 'invalid_value' as const)
+}
+
 function messageOf(issue: z.core.$ZodIssue): string {
   if (issue.code === 'invalid_type' && issue.path.length === 0) return 'expected an object'
   if (issue.code === 'invalid_union' && issue.path.join('.') === 'id') return 'unknown lever'
@@ -66,7 +91,11 @@ function parseRequest(input: unknown): Result<ParsedRequest, InvalidRequest> {
   if (parsed.success) return ok(parsed.data)
   return err(
     invalidRequest(
-      parsed.error.issues.map((issue) => ({ parameter: parameterOf(issue), message: messageOf(issue) })),
+      parsed.error.issues.map((issue) => ({
+        parameter: parameterOf(issue),
+        code: codeOf(issue, input),
+        message: messageOf(issue),
+      })),
     ),
   )
 }
