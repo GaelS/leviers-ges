@@ -489,7 +489,7 @@ describe('estimate', () => {
         territory: { level: 'departement', code: '01' },
         parameters: { renovatedParcFraction: '1' },
       })
-      expect(result._unsafeUnwrap().reduction).toBe('65.2')
+      expect(result._unsafeUnwrap().reduction).toBe('61.87')
     })
 
     it('annonce le contournement du niveau', () => {

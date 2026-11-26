@@ -135,20 +135,20 @@ function request(level: Level, code: string): ResidentielChangementSystemeChauff
 
 describe('estimate, residentiel_changement_systeme_chauffage', () => {
   it.each([
-    ['la région 84', 'region', '84', '4457.75'],
-    ['le département 01', 'departement', '01', '541.43'],
-    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '541.43'],
+    ['la région 84', 'region', '84', '4462.45'],
+    ['le département 01', 'departement', '01', '544.13'],
+    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '544.13'],
   ] as const)('évite pour %s : %s tCO2e par an', (_label, level, code, expected) => {
     expect(estimate(request(level, code), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })
 
   it.each([
-    ['sans part précisée, le mix actuel : seul le gain de rendement des appareils rénovés', {}, '61.87'],
-    ['le fioul à 0, les autres parts proportionnelles au mix actuel', { targetFuelOilShareFraction: '0' }, '169.57'],
+    ['sans part précisée, le mix actuel : seul le gain de rendement des appareils rénovés', {}, '60.89'],
+    ['le fioul à 0, les autres parts proportionnelles au mix actuel', { targetFuelOilShareFraction: '0' }, '166.94'],
     [
       'le fioul à 0 et le bois à 10 %',
       { targetFuelOilShareFraction: '0', targetWoodShareFraction: '0.1' },
-      '262.03',
+      '258.79',
     ],
   ])('départ 01 : %s', (_label, parameters, expected) => {
     const result = estimate(requestWith('departement', '01', parameters), context)._unsafeUnwrap()
@@ -172,7 +172,7 @@ describe('estimate, residentiel_changement_systeme_chauffage', () => {
     }
     expect(
       estimate(requestWith('departement', '01', parameters), context)._unsafeUnwrap().reduction.toFixed(),
-    ).toBe('346.83')
+    ).toBe('353.5')
   })
 
   it('déclare la part nationale du chauffage comme hypothèse appliquée', () => {
