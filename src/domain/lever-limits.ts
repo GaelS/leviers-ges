@@ -244,7 +244,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
   "residentiel_renovation": [
     {
       "limit": "Consommation par m² moyenne nationale",
-      "effect": "un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité 74 kWh/m², gaz 104, fioul 122, GPL 92, chaleur 146, bois 181 (73 TWh du CEREN sur les m² « autre »), recalculées le 2026-11-26 : consommation régionale × part du chauffage et de l'ECS ÷ m² du parc INSEE chauffés à cette énergie"
+      "effect": "un département plus ou moins chauffé que la France, ou des logements plus ou moins énergivores, sont mal estimés ; les moyennes nationales sont, en énergie finale pour le chauffage et l'ECS : électricité 84 kWh/m², gaz 109, fioul 122, GPL 98, chaleur 146, bois 164 (65,9 TWh du SDES sur les m² « autre »), recalculées le 2026-11-26 : consommation régionale × part du chauffage et de l'ECS ÷ m² du parc INSEE chauffés à cette énergie ; un gradient par période de construction (Phébus 2013, CGDD n° 645 : de 0,017 tep/m² avant 1970 à 0,012 après 2006) changerait la part éligible de moins de 4 % (électricité +2,1 %, gaz +3,7 %, fioul +0,5 %, GPL +1,0 %), de 13,8 % pour la chaleur"
     },
     {
       "limit": "Appartements d'après 1971",
@@ -252,7 +252,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     },
     {
       "limit": "Régions, départements et EPCI",
-      "effect": "les totaux diffèrent d'environ 1 % (4,30, 4,34 et 4,35 MtCO2e à 50 % du parc) : les consommations viennent de trois jeux différents (bilan régional, IRIS départemental, SDES à l'EPCI), la part éligible du même parc INSEE ; comme `residentiel_sobriete`"
+      "effect": "les totaux diffèrent d'environ 1 % (4,48, 4,52 et 4,53 MtCO2e à 50 % du parc) : les consommations viennent de trois jeux différents (bilan régional, IRIS départemental, SDES à l'EPCI), la part éligible du même parc INSEE ; comme `residentiel_sobriete`"
     },
     {
       "limit": "EPCI sans surface de logements",
@@ -282,7 +282,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
   "residentiel_changement_systeme_chauffage": [
     {
       "limit": "Part nationale du chauffage",
-      "effect": "un département qui chauffe moins ou plus que la moyenne nationale est mal estimé ; Ille-et-Vilaine : 4,41 TWh tous usages, dont une part chauffage et ECS qui baisse avec les parts CEREN (non rechiffrée) ; parts arrondies au TWh, climat normal et non réel"
+      "effect": "un département qui chauffe moins ou plus que la moyenne nationale est mal estimé ; Ille-et-Vilaine : 2,93 TWh de chauffage et d'ECS (électricité, gaz, fioul) sur 4,41 TWh tous usages"
     },
     {
       "limit": "Bois",
@@ -290,11 +290,11 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     },
     {
       "limit": "GPL",
-      "effect": "50 % de sa consommation sert au chauffage et à l'ECS ; il n'est pas modifiable"
+      "effect": "53,2 % de sa consommation sert au chauffage et à l'ECS ; il n'est pas modifiable"
     },
     {
       "limit": "Territoire sans réseau de chaleur",
-      "effect": "facteur nul : un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût ; la somme des EPCI dépasse de 6,5 % celle des départements"
+      "effect": "facteur nul : un EPCI sans réseau qui vise du réseau de chaleur évite des émissions sans coût ; la somme des EPCI dépasse de 6,8 % celle des départements"
     },
     {
       "limit": "Pompes à chaleur",
@@ -302,7 +302,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     },
     {
       "limit": "Résultat négatif",
-      "effect": "une cible plus émettrice que l'actuel donne une réduction négative, sans plancher (gaz vers fioul : −19,68 tCO2e pour 1 000 MWh)"
+      "effect": "une cible plus émettrice que l'actuel donne une réduction négative, sans plancher (gaz vers fioul : −20,73 tCO2e pour 1 000 MWh)"
     },
     {
       "limit": "Effets rebond",
