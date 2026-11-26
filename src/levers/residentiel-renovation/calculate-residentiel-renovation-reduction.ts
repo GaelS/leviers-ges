@@ -25,8 +25,8 @@ const BBC_PRIMARY_ENERGY_THRESHOLD: BigNumber = toBig('110')
 // Source : PlanET V1, Residentiel_Rénovation!B13 : moins de 11 kgCO2eq/m²/an pour le BBC rénovation
 const BBC_EMISSION_THRESHOLD: BigNumber = toBig('11')
 
-// Source : choix de conception, non validé : coefficient de conversion en énergie primaire de l'électricité du DPE (2,3), non donné par la documentation fonctionnelle
-const ELECTRICITY_PRIMARY_ENERGY_FACTOR: BigNumber = toBig('2.3')
+// Source : arrêté du 13 août 2025 modifiant l'annexe 3 de l'arrêté du 31 mars 2021 relatif au DPE : coefficient de conversion de l'électricité en énergie primaire de 1,9 à compter du 1er janvier 2026 (2,3 avant), non donné par la documentation fonctionnelle ; non relu sur Légifrance, choix de conception, non validé
+const ELECTRICITY_PRIMARY_ENERGY_FACTOR: BigNumber = toBig('1.9')
 
 // Source : choix de conception, non validé : coefficient de conversion en énergie primaire des énergies autres que l'électricité (1), non donné par la documentation fonctionnelle
 const OTHER_PRIMARY_ENERGY_FACTOR: BigNumber = toBig('1')

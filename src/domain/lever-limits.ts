@@ -248,7 +248,7 @@ const LEVER_LIMITS: Readonly<Record<LeverId, readonly LeverLimit[]>> = {
     },
     {
       "limit": "Collectifs d'après 1971",
-      "effect": "plafonds du BBC rénovation lus avec les coefficients d'énergie primaire du DPE et nos facteurs d'émission : gain par énergie après rénovation environ −43 % pour l'électricité, −50 % pour le gaz, −66 % pour le fioul, −51 % pour le GPL sur la consommation moyenne nationale ; la consommation par m² du territoire est supposée la même pour les logements récents et anciens"
+      "effect": "plafonds du BBC rénovation lus avec les coefficients d'énergie primaire du DPE et les facteurs d'émission de la documentation : gain par énergie après rénovation environ −31 % pour l'électricité, −50 % pour le gaz, −66 % pour le fioul, −51 % pour le GPL sur la consommation moyenne nationale ; la consommation par m² du territoire est supposée la même pour les logements récents et anciens"
     },
     {
       "limit": "Régions, départements et EPCI",

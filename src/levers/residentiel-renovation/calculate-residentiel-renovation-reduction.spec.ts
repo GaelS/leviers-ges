@@ -120,13 +120,23 @@ describe('calculateResidentielRenovationReduction', () => {
 describe('collectifs d’après 1971 : niveau BBC rénovation', () => {
   it.each([
     ['gaz : plafond d’émissions 11 ÷ 0,201168 = 54,68 kWh/m², 32,60 + 38,14 tCO2e', { naturalGas: '1000' }, 'naturalGas', '70.74'],
-    ['électricité : plafond d’énergie primaire 110 ÷ 2,3 = 47,83 kWh/m², 46,72 en dessous donc 2,86 tCO2e', { electricity: '1000' }, 'electricity', '2.86'],
+    ['électricité : plafond d’énergie primaire 110 ÷ 1,9 = 57,89 kWh/m², 46,72 en dessous donc 2,86 tCO2e', { electricity: '1000' }, 'electricity', '2.86'],
     ['fioul : plafond d’émissions 41,00 kWh/m², 46,95 + 79,14 tCO2e', { fuelOil: '1000' }, 'fuelOil', '126.08'],
     ['GPL : plafond d’émissions 48,42 kWh/m², 21,15 + 5,42 tCO2e', { liquefiedPetroleumGas: '1000' }, 'liquefiedPetroleumGas', '26.57'],
   ] as const)('10 000 m² dont la moitié d’après 1971, %s', (_label, vectors, vector, expected) => {
     expect(
       reduction({ vectors, eligible: { [vector]: '0.5' }, surface: { [vector]: '10000' } }),
     ).toBe(expected)
+  })
+
+  it('plafonne l’électricité par l’énergie primaire : 5 000 m², 93,44 kWh/m² pour un plafond de 57,89, soit 2,86 + 3,11 tCO2e', () => {
+    expect(
+      reduction({
+        vectors: { electricity: '1000' },
+        eligible: { electricity: '0.5' },
+        surface: { electricity: '5000' },
+      }),
+    ).toBe('5.97')
   })
 
   it('applique le parc rénové aux logements d’après 1971 comme aux autres : la moitié du parc donne 35,37 tCO2e pour le gaz', () => {
