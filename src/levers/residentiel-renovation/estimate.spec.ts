@@ -145,9 +145,9 @@ const context = createEstimationContext(createTemporaryCsvDataSource(fixtures({}
 
 describe('estimate, residentiel_renovation', () => {
   it.each([
-    ['le département 01', 'departement', '01', '59.39'],
-    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '59.39'],
-    ['la région 84, parc des départements 01 et 69 additionné', 'region', '84', '1018.45'],
+    ['le département 01', 'departement', '01', '58.47'],
+    ['l’EPCI 200000001, qui couvre tout le département 01', 'epci', '200000001', '58.47'],
+    ['la région 84, parc des départements 01 et 69 additionné', 'region', '84', '1013.44'],
   ] as const)('évite pour %s : %s tCO2e par an à 50 %% du parc rénové', (_label, level, code, expected) => {
     expect(estimate(request(level, code), context)._unsafeUnwrap().reduction.toFixed()).toBe(expected)
   })

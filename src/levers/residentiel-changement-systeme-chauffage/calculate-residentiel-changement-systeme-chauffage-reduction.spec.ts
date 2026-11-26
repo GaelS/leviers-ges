@@ -71,8 +71,8 @@ describe('calculateResidentielChangementSystemeChauffageReduction', () => {
   })
 
   it.each([
-    ['une cible mélangée', MIXED_TARGET, '293.17'],
-    ['une cible équilibrée', BALANCED_TARGET, '116.94'],
+    ['une cible mélangée', MIXED_TARGET, '290.19'],
+    ['une cible équilibrée', BALANCED_TARGET, '119.31'],
   ])('1 000 MWh de chaque vecteur, chaleur à 0,1 kgCO2e/kWh, %s', (_label, shares, expected) => {
     const vectors = { electricity: '1000', naturalGas: '1000', fuelOil: '1000', heat: '1000' }
     expect(reduction({ vectors, shares, heatEmissionFactor: '0.1' })).toBe(expected)
@@ -81,12 +81,12 @@ describe('calculateResidentielChangementSystemeChauffageReduction', () => {
   it('une cible égale au mix actuel évite le gain de rendement des appareils rénovés', () => {
     const vectors = { naturalGas: '1000' }
     const keepGas: SharesInput = { electricity: '0', naturalGas: '1', fuelOil: '0', wood: '0', heat: '0' }
-    expect(reduction({ vectors, shares: keepGas })).toBe('31.05')
+    expect(reduction({ vectors, shares: keepGas })).toBe('29.46')
   })
 
   it('une cible plus émettrice que l’actuel donne une réduction négative', () => {
     const allToFuelOil: SharesInput = { electricity: '0', naturalGas: '0', fuelOil: '1', wood: '0', heat: '0' }
-    expect(reduction({ vectors: { naturalGas: '1000' }, shares: allToFuelOil })).toBe('-20.73')
+    expect(reduction({ vectors: { naturalGas: '1000' }, shares: allToFuelOil })).toBe('-19.68')
   })
 
   it('un passage au réseau de chaleur sans réseau n’émet rien : facteur nul', () => {
@@ -122,7 +122,7 @@ describe('calculateCurrentUsefulShares', () => {
       fuelOil: shares.fuelOil.decimalPlaces(4).toFixed(),
       naturalGas: shares.naturalGas.decimalPlaces(4).toFixed(),
       wood: shares.wood.toFixed(),
-    }).toEqual({ useful: '1444.49', fuelOil: '0.5192', naturalGas: '0.4808', wood: '0' })
+    }).toEqual({ useful: '1409.09', fuelOil: '0.5323', naturalGas: '0.4677', wood: '0' })
   })
 
   it('sans énergie de chauffage, aucun vecteur n’a de part', () => {

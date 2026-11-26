@@ -1,5 +1,5 @@
 import type BigNumber from 'bignumber.js'
-import { sum, toBig } from './big-number.ts'
+import { toBig } from './big-number.ts'
 import { quantity, type Fraction } from './units.ts'
 
 type ResidentialEnergyVector = 'electricity' | 'naturalGas' | 'fuelOil' | 'liquefiedPetroleumGas' | 'heat'
@@ -13,43 +13,38 @@ function toShare({ heatingAndHotWater, allUses }: NationalUsage): Fraction {
   return quantity<'Fraction'>(heatingAndHotWater.dividedBy(allUses).toFixed())
 }
 
-// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 : les consommations impactées par les leviers Rénovation et Changement de système de chauffage sont celles du chauffage et de l'eau chaude sanitaire ; SDES, « Consommation énergétique du secteur résidentiel » (Conso_usage), 2024, à climat réel, TWh PCI :
-// électricité de chauffage (hors PAC 34,459046350223204 + PAC 10,5510417675111) et d'ECS (hors PAC 22,920677669989999 + PAC 1,4190073671907901) sur l'électricité tous usages (hors PAC 136,459186710296 + PAC 11,970049134701899). Choix de conception, non validé : la part nationale s'applique à chaque territoire
+// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 : les consommations impactées par les leviers Rénovation et Changement de système de chauffage sont celles du chauffage et de l'eau chaude sanitaire, données CEREN ; CEREN, « Données sur l'énergie dans le résidentiel » (mise à jour du 20 décembre 2024), tableau « Répartition en 2024 des consommations », France métropolitaine, à climat normal, TWh entiers :
+// électricité, chauffage 45 et ECS 16 sur un total de 148. Choix de conception, non validé : la part nationale s'applique à chaque territoire
 const ELECTRICITY_HEATING_AND_HOT_WATER_SHARE: Fraction = toShare({
-  heatingAndHotWater: sum([
-    toBig('34.459046350223204'),
-    toBig('10.5510417675111'),
-    toBig('22.920677669989999'),
-    toBig('1.4190073671907901'),
-  ]),
-  allUses: toBig('136.459186710296').plus(toBig('11.970049134701899')),
+  heatingAndHotWater: toBig('45').plus(toBig('16')),
+  allUses: toBig('148'),
 })
 
-// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; SDES, Conso_usage, 2024, TWh PCI : gaz naturel, chauffage 81,257758783685603 et ECS 12,973144221213401 sur tous usages 101,76291646815. Choix de conception, non validé
+// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; CEREN, tableau « Répartition en 2024 des consommations », climat normal, TWh : gaz de ville, chauffage 80 et ECS 7 sur un total de 99 (cuisson 12). Choix de conception, non validé
 const NATURAL_GAS_HEATING_AND_HOT_WATER_SHARE: Fraction = toShare({
-  heatingAndHotWater: toBig('81.257758783685603').plus(toBig('12.973144221213401')),
-  allUses: toBig('101.76291646815'),
+  heatingAndHotWater: toBig('80').plus(toBig('7')),
+  allUses: toBig('99'),
 })
 
-// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; SDES, Conso_usage, 2024, TWh PCI : fioul domestique, chauffage 25,893030524875698 et ECS 3,31670289970701 sur tous usages 29,209733424582701. Choix de conception, non validé
+// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; CEREN, tableau « Répartition en 2024 des consommations », climat normal, TWh : fioul, chauffage 29 et ECS 3 sur un total de 32. Choix de conception, non validé
 const FUEL_OIL_HEATING_AND_HOT_WATER_SHARE: Fraction = toShare({
-  heatingAndHotWater: toBig('25.893030524875698').plus(toBig('3.31670289970701')),
-  allUses: toBig('29.209733424582701'),
+  heatingAndHotWater: toBig('29').plus(toBig('3')),
+  allUses: toBig('32'),
 })
 
-// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; SDES, Conso_usage, 2024, TWh PCI : chaleur, chauffage 13,401216880281 et ECS 1,30819351940587 sur tous usages 14,709410399686901. Choix de conception, non validé
+// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; CEREN, tableau « Répartition en 2024 des consommations », climat normal, TWh : chaleur urbaine, chauffage 13 et ECS 1 sur un total de 14. Choix de conception, non validé
 const HEAT_HEATING_AND_HOT_WATER_SHARE: Fraction = toShare({
-  heatingAndHotWater: toBig('13.401216880281').plus(toBig('1.30819351940587')),
-  allUses: toBig('14.709410399686901'),
+  heatingAndHotWater: toBig('13').plus(toBig('1')),
+  allUses: toBig('14'),
 })
 
-// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; SDES, Conso_usage, 2024, TWh PCI : GPL, chauffage 3,4440826812716301 et ECS 0,477378867665957 sur tous usages 7,3712892696473302. Choix de conception, non validé
+// Source : documentation fonctionnelle PlanET (juin 2026), p. 51 ; CEREN, tableau « Répartition en 2024 des consommations », climat normal, TWh : GPL, chauffage 4 et ECS 0 (arrondi) sur un total de 8 (cuisson 3). Choix de conception, non validé
 const LIQUEFIED_PETROLEUM_GAS_HEATING_AND_HOT_WATER_SHARE: Fraction = toShare({
-  heatingAndHotWater: toBig('3.4440826812716301').plus(toBig('0.477378867665957')),
-  allUses: toBig('7.3712892696473302'),
+  heatingAndHotWater: toBig('4').plus(toBig('0')),
+  allUses: toBig('8'),
 })
 
-// Source : choix de conception de ce dépôt, sans source externe : les parts nationales du chauffage et de l'ECS par vecteur, aucune par territoire (le CEREN n'est pas ouvert)
+// Source : CEREN, parts nationales du chauffage et de l'ECS par vecteur, aucune par territoire (le CEREN départemental n'est pas ouvert) ; choix de conception, non validé : la part nationale s'applique à chaque territoire
 const HEATING_AND_HOT_WATER_SHARE: Readonly<Record<ResidentialEnergyVector, Fraction>> = {
   electricity: ELECTRICITY_HEATING_AND_HOT_WATER_SHARE,
   naturalGas: NATURAL_GAS_HEATING_AND_HOT_WATER_SHARE,
