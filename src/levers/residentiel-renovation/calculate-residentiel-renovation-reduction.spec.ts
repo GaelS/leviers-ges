@@ -3,6 +3,7 @@ import type { ResidentialConsumption } from '../../domain/residential-consumptio
 import type { ResidentialEnergyVector } from '../../domain/residential-heating-shares.ts'
 import { quantity } from '../../domain/units.ts'
 import { calculateResidentielRenovationReduction } from './calculate-residentiel-renovation-reduction.ts'
+import type { HousingSurface } from './data/housing-surface.ts'
 
 type VectorsInMwh = Partial<Record<keyof ResidentialConsumption, string>>
 
@@ -22,33 +23,45 @@ function consumptionOf({
   }
 }
 
-function sharesOf(
-  shares: Partial<Record<ResidentialEnergyVector, string>>,
-): Readonly<Record<ResidentialEnergyVector, ReturnType<typeof quantity<'Fraction'>>>> {
+const LARGE_SURFACE = '1000000000'
+
+function surfacesOf({
+  shares,
+  total,
+}: {
+  shares: Partial<Record<ResidentialEnergyVector, string>>
+  total: Partial<Record<ResidentialEnergyVector, string>>
+}): Readonly<Record<ResidentialEnergyVector, HousingSurface>> {
+  const surfaceOf = (vector: ResidentialEnergyVector): HousingSurface => ({
+    eligibleShare: quantity<'Fraction'>(shares[vector] ?? '1'),
+    total: quantity<'SquareMetres'>(total[vector] ?? LARGE_SURFACE),
+  })
   return {
-    electricity: quantity<'Fraction'>(shares.electricity ?? '1'),
-    naturalGas: quantity<'Fraction'>(shares.naturalGas ?? '1'),
-    fuelOil: quantity<'Fraction'>(shares.fuelOil ?? '1'),
-    liquefiedPetroleumGas: quantity<'Fraction'>(shares.liquefiedPetroleumGas ?? '1'),
-    heat: quantity<'Fraction'>(shares.heat ?? '1'),
+    electricity: surfaceOf('electricity'),
+    naturalGas: surfaceOf('naturalGas'),
+    fuelOil: surfaceOf('fuelOil'),
+    liquefiedPetroleumGas: surfaceOf('liquefiedPetroleumGas'),
+    heat: surfaceOf('heat'),
   }
 }
 
 function reduction({
   vectors,
   eligible = {},
+  surface = {},
   renovated = '1',
   heatEmissionFactor = '0',
 }: {
   vectors: VectorsInMwh
   eligible?: Partial<Record<ResidentialEnergyVector, string>>
+  surface?: Partial<Record<ResidentialEnergyVector, string>>
   renovated?: string
   heatEmissionFactor?: string
 }): string {
   return calculateResidentielRenovationReduction({
     renovatedParcFraction: quantity<'Fraction'>(renovated),
     consumption: consumptionOf(vectors),
-    eligibleSurfaceShare: sharesOf(eligible),
+    housingSurfaces: surfacesOf({ shares: eligible, total: surface }),
     heatEmissionFactor: quantity<'KgCo2ePerKwh'>(heatEmissionFactor),
   })
     .decimalPlaces(2)
@@ -101,5 +114,81 @@ describe('calculateResidentielRenovationReduction', () => {
         eligible: { naturalGas: '0', fuelOil: '0' },
       }),
     }).toEqual({ none: '0', noEligibleSurface: '0' })
+  })
+})
+
+describe('collectifs d’après 1971 : niveau BBC rénovation', () => {
+  it.each([
+    ['gaz : plafond d’émissions 11 ÷ 0,201168 = 54,68 kWh/m², 32,60 + 38,14 tCO2e', { naturalGas: '1000' }, 'naturalGas', '70.74'],
+    ['électricité : plafond d’énergie primaire 110 ÷ 2,3 = 47,83 kWh/m², 46,72 en dessous donc 2,86 tCO2e', { electricity: '1000' }, 'electricity', '2.86'],
+    ['fioul : plafond d’émissions 41,00 kWh/m², 46,95 + 79,14 tCO2e', { fuelOil: '1000' }, 'fuelOil', '126.08'],
+    ['GPL : plafond d’émissions 48,42 kWh/m², 21,15 + 5,42 tCO2e', { liquefiedPetroleumGas: '1000' }, 'liquefiedPetroleumGas', '26.57'],
+  ] as const)('10 000 m² dont la moitié d’après 1971, %s', (_label, vectors, vector, expected) => {
+    expect(
+      reduction({ vectors, eligible: { [vector]: '0.5' }, surface: { [vector]: '10000' } }),
+    ).toBe(expected)
+  })
+
+  it('applique le parc rénové aux logements d’après 1971 comme aux autres : la moitié du parc donne 35,37 tCO2e pour le gaz', () => {
+    expect(
+      reduction({
+        vectors: { naturalGas: '1000' },
+        eligible: { naturalGas: '0.5' },
+        surface: { naturalGas: '10000' },
+        renovated: '0.5',
+      }),
+    ).toBe('35.37')
+  })
+
+  it('ne compte aucun gain BBC quand la consommation par m² est déjà sous le plafond : 100 000 m², 32,60 tCO2e', () => {
+    expect(
+      reduction({
+        vectors: { naturalGas: '1000' },
+        eligible: { naturalGas: '0.5' },
+        surface: { naturalGas: '100000' },
+      }),
+    ).toBe('32.6')
+  })
+
+  it('ne compte aucun gain BBC sans logement d’après 1971 : tout éligible', () => {
+    expect(
+      reduction({
+        vectors: { naturalGas: '1000' },
+        eligible: { naturalGas: '1' },
+        surface: { naturalGas: '10000' },
+      }),
+    ).toBe('65.2')
+  })
+
+  it('ne compte aucun gain BBC sans surface', () => {
+    expect(
+      reduction({
+        vectors: { naturalGas: '1000' },
+        eligible: { naturalGas: '0.5' },
+        surface: { naturalGas: '0' },
+      }),
+    ).toBe('32.6')
+  })
+
+  it('plafonne la chaleur par ses émissions quand son facteur est non nul : facteur 0,2, plafond 55 kWh/m²', () => {
+    expect(
+      reduction({
+        vectors: { heat: '1000' },
+        eligible: { heat: '0.5' },
+        surface: { heat: '10000' },
+        heatEmissionFactor: '0.2',
+      }),
+    ).toBe('80')
+  })
+
+  it('plafonne la chaleur par l’énergie primaire quand son plafond d’émissions est plus haut : facteur 0,05, plafond 110 kWh/m², aucun gain BBC à 100 kWh/m²', () => {
+    expect(
+      reduction({
+        vectors: { heat: '1000' },
+        eligible: { heat: '0.5' },
+        surface: { heat: '10000' },
+        heatEmissionFactor: '0.05',
+      }),
+    ).toBe('8.75')
   })
 })

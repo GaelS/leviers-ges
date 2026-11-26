@@ -12,6 +12,7 @@ import {
 import type { ResidentialEnergyVector } from '../../../domain/residential-heating-shares.ts'
 import type { Level, Territory } from '../../../domain/territory.ts'
 import { quantity, type Fraction, type SquareMetres } from '../../../domain/units.ts'
+import type { HousingSurface } from './housing-surface.ts'
 
 type SurfaceCell = { readonly type: string; readonly period: string }
 
@@ -28,7 +29,7 @@ const SURFACE_FUEL: Readonly<Record<ResidentialEnergyVector, string>> = {
   heat: 'heat_network',
 }
 
-// Source : documentation fonctionnelle PlanET (juin 2026), pp. 53-54 : rénovation à −35 % pour les maisons individuelles et les appartements d'avant 1971 ; les appartements d'après 1971 (BBC rénovation, 110 kWhEP/m²/an) ne sont pas calculés, choix de conception, non validé
+// Source : documentation fonctionnelle PlanET (juin 2026), pp. 53-54 : rénovation à −35 % pour les maisons individuelles et les appartements d'avant 1971 ; les collectifs d'après 1971 rejoignent le niveau BBC rénovation (110 kWhEP/m²/an), calculé séparément
 const ELIGIBLE_CELLS: readonly SurfaceCell[] = [
   { type: 'house', period: 'before_1971' },
   { type: 'house', period: '1971_to_2005' },
@@ -72,7 +73,7 @@ function sumSurfaces({
   ).map((surfaces) => quantity<'SquareMetres'>(sum(surfaces).toFixed()))
 }
 
-function toEligibleShare({
+function toHousingSurface({
   dataset,
   rows,
   vector,
@@ -80,32 +81,33 @@ function toEligibleShare({
   dataset: string
   rows: readonly DataRow[]
   vector: ResidentialEnergyVector
-}): Result<Fraction, DataSourceError> {
+}): Result<HousingSurface, DataSourceError> {
   const fuel = SURFACE_FUEL[vector]
   return Result.combine([
     sumSurfaces({ dataset, rows, fuel, cells: ELIGIBLE_CELLS }),
     sumSurfaces({ dataset, rows, fuel, cells: NOT_ELIGIBLE_CELLS }),
   ]).map(([eligible, notEligible]) => {
-    const total = eligible.plus(notEligible)
-    return total.isZero()
+    const total = quantity<'SquareMetres'>(eligible.plus(notEligible).toFixed())
+    const eligibleShare = total.isZero()
       ? NO_ELIGIBLE_SURFACE
       : quantity<'Fraction'>(eligible.dividedBy(total).toFixed())
+    return { total, eligibleShare }
   })
 }
 
-function toEligibleShares({
+function toHousingSurfaces({
   dataset,
   rows,
 }: {
   dataset: string
   rows: readonly DataRow[]
-}): Result<Readonly<Record<ResidentialEnergyVector, Fraction>>, DataSourceError> {
+}): Result<Readonly<Record<ResidentialEnergyVector, HousingSurface>>, DataSourceError> {
   return Result.combine([
-    toEligibleShare({ dataset, rows, vector: 'electricity' }),
-    toEligibleShare({ dataset, rows, vector: 'naturalGas' }),
-    toEligibleShare({ dataset, rows, vector: 'fuelOil' }),
-    toEligibleShare({ dataset, rows, vector: 'liquefiedPetroleumGas' }),
-    toEligibleShare({ dataset, rows, vector: 'heat' }),
+    toHousingSurface({ dataset, rows, vector: 'electricity' }),
+    toHousingSurface({ dataset, rows, vector: 'naturalGas' }),
+    toHousingSurface({ dataset, rows, vector: 'fuelOil' }),
+    toHousingSurface({ dataset, rows, vector: 'liquefiedPetroleumGas' }),
+    toHousingSurface({ dataset, rows, vector: 'heat' }),
   ]).map(([electricity, naturalGas, fuelOil, liquefiedPetroleumGas, heat]) => ({
     electricity,
     naturalGas,
@@ -159,7 +161,7 @@ function readEpciRows({
     .map((rows) => rows.filter((row) => row['code_epci'] === territory.code))
 }
 
-function readEligibleSurfaceShares({
+function readHousingSurfaces({
   dataSource,
   territory,
   communes,
@@ -169,24 +171,24 @@ function readEligibleSurfaceShares({
   territory: Territory<Level>
   communes: readonly string[]
   getDepartementByCommune: DepartementLookup
-}): Result<Readonly<Record<ResidentialEnergyVector, Fraction>>, DataSourceError> {
+}): Result<Readonly<Record<ResidentialEnergyVector, HousingSurface>>, DataSourceError> {
   return match(territory)
     .with({ level: 'epci' }, (epci) =>
       readEpciRows({ dataSource, territory: epci }).andThen((rows) =>
-        toEligibleShares({ dataset: epcisDataset, rows }),
+        toHousingSurfaces({ dataset: epcisDataset, rows }),
       ),
     )
     .with({ level: 'departement' }, ({ code }) =>
       readDepartementRows({ dataSource, departements: new Set([code]) }).andThen((rows) =>
-        toEligibleShares({ dataset: departementsDataset, rows }),
+        toHousingSurfaces({ dataset: departementsDataset, rows }),
       ),
     )
     .with({ level: 'region' }, () =>
       readRegionDepartements({ communes, getDepartementByCommune })
         .andThen((departements) => readDepartementRows({ dataSource, departements }))
-        .andThen((rows) => toEligibleShares({ dataset: departementsDataset, rows })),
+        .andThen((rows) => toHousingSurfaces({ dataset: departementsDataset, rows })),
     )
     .exhaustive()
 }
 
-export { readEligibleSurfaceShares }
+export { readHousingSurfaces }
