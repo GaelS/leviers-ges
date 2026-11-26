@@ -16,7 +16,12 @@ const fractionSchema =decimalInputSchema.transform((text, context) =>
   parseFraction(text).match(
     (fraction) => fraction,
     () => {
-      context.addIssue({ code: 'custom', message: 'must be between 0 and 1', input: text })
+      context.addIssue({
+      code: 'custom',
+      message: 'must be between 0 and 1',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
       return z.NEVER
     },
   ),
@@ -26,7 +31,12 @@ const reductionFractionSchema = decimalInputSchema.transform((text, context) =>
   parseReductionFraction(text).match(
     (reduction) => reduction,
     () => {
-      context.addIssue({ code: 'custom', message: 'must be at most 1', input: text })
+      context.addIssue({
+      code: 'custom',
+      message: 'must be at most 1',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
       return z.NEVER
     },
   ),
@@ -35,28 +45,48 @@ const reductionFractionSchema = decimalInputSchema.transform((text, context) =>
 const nonNegativeHectaresSchema = decimalInputSchema.transform((text, context) => {
   const hectares = quantity<'Hectares'>(text)
   if (!hectares.isNegative()) return hectares
-  context.addIssue({ code: 'custom', message: 'must not be negative', input: text })
+  context.addIssue({
+      code: 'custom',
+      message: 'must not be negative',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
   return z.NEVER
 }).meta({ description: 'Surface en hectares, décimale positive ou nulle' })
 
 const nonNegativeHectaresPerYearSchema = decimalInputSchema.transform((text, context) => {
   const hectaresPerYear = quantity<'HectaresPerYear'>(text)
   if (!hectaresPerYear.isNegative()) return hectaresPerYear
-  context.addIssue({ code: 'custom', message: 'must not be negative', input: text })
+  context.addIssue({
+      code: 'custom',
+      message: 'must not be negative',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
   return z.NEVER
 }).meta({ description: 'Surface en hectares par an, décimale positive ou nulle' })
 
 const positiveYearsSchema = decimalInputSchema.transform((text, context) => {
   const years = quantity<'Years'>(text)
   if (years.isGreaterThan(0)) return years
-  context.addIssue({ code: 'custom', message: 'must be greater than 0', input: text })
+  context.addIssue({
+      code: 'custom',
+      message: 'must be greater than 0',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
   return z.NEVER
 }).meta({ description: 'Nombre d’années, décimal strictement positif' })
 
 const nonNegativeTonneKilometresSchema = decimalInputSchema.transform((text, context) => {
   const tonneKilometres = quantity<'TonneKilometres'>(text)
   if (!tonneKilometres.isNegative()) return tonneKilometres
-  context.addIssue({ code: 'custom', message: 'must not be negative', input: text })
+  context.addIssue({
+      code: 'custom',
+      message: 'must not be negative',
+      input: text,
+      params: { code: 'out_of_range' },
+    })
   return z.NEVER
 }).meta({ description: 'Tonnes.kilomètres, décimal positif ou nul' })
 

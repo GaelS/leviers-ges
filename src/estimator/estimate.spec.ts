@@ -64,7 +64,7 @@ describe('estimate', () => {
       const result = estimate(pratiquesStockantesRequest({ agroforestryHectares: '-1' }))
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'parameters.agroforestryHectares', message: 'must not be negative' }],
+        issues: [{ parameter: 'parameters.agroforestryHectares', code: 'out_of_range', message: 'must not be negative' }],
       })
     })
 
@@ -72,7 +72,7 @@ describe('estimate', () => {
       const result = estimate(pratiquesStockantesRequest({ intermediateCropsHectares: 'abc' }))
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'parameters.intermediateCropsHectares', message: 'must be a decimal number' }],
+        issues: [{ parameter: 'parameters.intermediateCropsHectares', code: 'not_a_decimal', message: 'must be a decimal number' }],
       })
     })
 
@@ -83,7 +83,7 @@ describe('estimate', () => {
       } as unknown as RequestInput)
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'territory', message: 'Unrecognized key: "territory"' }],
+        issues: [{ parameter: 'territory', code: 'unknown_parameter', message: 'Unrecognized key: "territory"' }],
       })
     })
   })
@@ -138,7 +138,7 @@ describe('estimate', () => {
       } as unknown as RequestInput)
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'territory', message: 'Unrecognized key: "territory"' }],
+        issues: [{ parameter: 'territory', code: 'unknown_parameter', message: 'Unrecognized key: "territory"' }],
       })
     })
   })
@@ -216,6 +216,7 @@ describe('estimate', () => {
         issues: [
           {
             parameter: 'parameters.emissionFactorReductionFraction',
+            code: 'out_of_range',
             message: 'must be between 0 and 1',
           },
         ],
@@ -238,8 +239,8 @@ describe('estimate', () => {
       expect(estimate(request)._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
         issues: [
-          { parameter: 'territory.level', message: expect.stringContaining('Invalid') as string },
-          { parameter: 'territory.code', message: 'must not be empty' },
+          { parameter: 'territory.level', code: 'invalid_value', message: expect.stringContaining('Invalid') as string },
+          { parameter: 'territory.code', code: 'invalid_value', message: 'must not be empty' },
         ],
       })
     })
@@ -247,7 +248,7 @@ describe('estimate', () => {
     it('refuse un code de territoire fait seulement d’espaces', () => {
       expect(estimate(reseauxChaleurRequest({ code: '  ' }))._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'territory.code', message: 'must not be empty' }],
+        issues: [{ parameter: 'territory.code', code: 'invalid_value', message: 'must not be empty' }],
       })
     })
   })
@@ -314,7 +315,7 @@ describe('estimate', () => {
       const request = batimentsMachinesAgricolesRequest({ electricityReductionFraction: '1.01' })
       expect(estimate(request)._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'parameters.electricityReductionFraction', message: 'must be at most 1' }],
+        issues: [{ parameter: 'parameters.electricityReductionFraction', code: 'out_of_range', message: 'must be at most 1' }],
       })
     })
 
@@ -336,7 +337,9 @@ describe('estimate', () => {
       const request = batimentsMachinesAgricolesRequest({ [parameter]: '1.01' })
       expect(estimate(request)._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: `parameters.${parameter}`, message: 'must be between 0 and 1' }],
+        issues: [
+          { parameter: `parameters.${parameter}`, code: 'out_of_range', message: 'must be between 0 and 1' },
+        ],
       })
     })
 
@@ -416,7 +419,7 @@ describe('estimate', () => {
     it('refuse une hausse qui n’est pas un nombre', () => {
       expect(withWood(produitsBoisRequest({ increase: 'beaucoup' }))._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'parameters.woodProductionIncrease', message: 'must be a decimal number' }],
+        issues: [{ parameter: 'parameters.woodProductionIncrease', code: 'not_a_decimal', message: 'must be a decimal number' }],
       })
     })
   })
@@ -624,7 +627,7 @@ describe('estimate', () => {
       ).toEqual({
         kind: 'invalid_request',
         issues: [
-          { parameter: 'parameters.consumptionReductionFraction', message: 'must be between 0 and 1' },
+          { parameter: 'parameters.consumptionReductionFraction', code: 'out_of_range', message: 'must be between 0 and 1' },
         ],
       })
     })
@@ -688,7 +691,7 @@ describe('estimate', () => {
         withTransport(transportPersonnesEfficaciteRequest({ passengerIncrease: '-0.1' }))._unsafeUnwrapErr(),
       ).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'parameters.carPassengerIncrease', message: 'must be 0 or more' }],
+        issues: [{ parameter: 'parameters.carPassengerIncrease', code: 'out_of_range', message: 'must be 0 or more' }],
       })
     })
   })
@@ -741,7 +744,7 @@ describe('estimate', () => {
       expect(withTransport(transportPersonnesElectrificationRequest('1.5'))._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
         issues: [
-          { parameter: 'parameters.carElectrificationFraction', message: 'must be between 0 and 1' },
+          { parameter: 'parameters.carElectrificationFraction', code: 'out_of_range', message: 'must be between 0 and 1' },
         ],
       })
     })
@@ -823,6 +826,7 @@ describe('estimate', () => {
         issues: [
           {
             parameter: 'parameters.carToActiveModesFraction',
+            code: 'invalid_combination',
             message: 'must be at most 100% together with carToPublicTransportFraction',
           },
         ],
@@ -1549,7 +1553,7 @@ describe('estimate', () => {
       const result = estimate(input as unknown as RequestInput)
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'id', message: 'unknown lever' }],
+        issues: [{ parameter: 'id', code: 'unknown_lever', message: 'unknown lever' }],
       })
     })
 
@@ -1562,9 +1566,9 @@ describe('estimate', () => {
       expect(estimate(request)._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
         issues: [
-          { parameter: 'territory.code', message: 'must not be empty' },
-          { parameter: 'parameters.emissionFactorReductionFraction', message: 'must be between 0 and 1' },
-          { parameter: 'parameters.wood', message: expect.stringContaining('Unrecognized') as string },
+          { parameter: 'territory.code', code: 'invalid_value', message: 'must not be empty' },
+          { parameter: 'parameters.emissionFactorReductionFraction', code: 'out_of_range', message: 'must be between 0 and 1' },
+          { parameter: 'parameters.wood', code: 'unknown_parameter', message: expect.stringContaining('Unrecognized') as string },
         ],
       })
     })
@@ -1575,7 +1579,7 @@ describe('estimate', () => {
         expect(estimate(haiesRequest(kilometres))._unsafeUnwrapErr()).toEqual({
           kind: 'invalid_request',
           issues: [
-            { parameter: 'parameters.hedgeKmCreatedPerYear', message: 'must be a decimal number' },
+            { parameter: 'parameters.hedgeKmCreatedPerYear', code: 'not_a_decimal', message: 'must be a decimal number' },
           ],
         })
       },
@@ -1606,7 +1610,7 @@ describe('estimate', () => {
       const result = estimate(input as unknown as RequestInput)
       expect(result._unsafeUnwrapErr()).toEqual({
         kind: 'invalid_request',
-        issues: [{ parameter: 'request', message: 'expected an object' }],
+        issues: [{ parameter: 'request', code: 'not_an_object', message: 'expected an object' }],
       })
     })
   })

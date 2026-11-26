@@ -3,9 +3,28 @@ import type { LeverId } from '../../domain/lever-registry.ts'
 import type { Level } from '../../domain/territory.ts'
 import type { UnknownTerritory } from '../../domain/territory-index.ts'
 
+// Source : choix de conception, non validé : codes stables des issues d'une requête invalide, exposés pour que les consommateurs n'aient pas à lire les messages ; un test vérifie que la liste couvre le type
+const ISSUE_CODES = [
+  'not_an_object',
+  'unknown_lever',
+  'unknown_parameter',
+  'required',
+  'invalid_type',
+  'not_a_decimal',
+  'out_of_range',
+  'invalid_combination',
+  'invalid_value',
+] as const
+
+type InvalidRequestIssueCode = (typeof ISSUE_CODES)[number]
+
 type InvalidRequest = {
   readonly kind: 'invalid_request'
-  readonly issues: ReadonlyArray<{ readonly parameter: string; readonly message: string }>
+  readonly issues: ReadonlyArray<{
+    readonly parameter: string
+    readonly code: InvalidRequestIssueCode
+    readonly message: string
+  }>
 }
 
 type LevelNotComputed = {
@@ -35,5 +54,11 @@ function levelNotComputed({ lever, level }: Pick<LevelNotComputed, 'lever' | 'le
   return { kind: 'level_not_computed', lever, level }
 }
 
-export { ESTIMATION_ERROR_KINDS, invalidRequest, levelNotComputed }
-export type { EstimationError, EstimationErrorKind, InvalidRequest, LevelNotComputed }
+export { ESTIMATION_ERROR_KINDS, invalidRequest, ISSUE_CODES, levelNotComputed }
+export type {
+  EstimationError,
+  EstimationErrorKind,
+  InvalidRequest,
+  InvalidRequestIssueCode,
+  LevelNotComputed,
+}

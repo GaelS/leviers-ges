@@ -8,7 +8,7 @@ import type { ComputedLevels } from '../../domain/lever-registry.ts'
 
 const loadFactorIncreaseSchema = relativeChangeSchema.refine(
   (increase) => !increase.isNegative(),
-  'must be 0 or more',
+  { message: 'must be 0 or more', params: { code: 'out_of_range' } },
 )
 
 const transportMarchandisesEfficaciteRequestSchema = z.strictObject({
