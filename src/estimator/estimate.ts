@@ -91,6 +91,7 @@ import {
   type TransportPersonnesSobrieteDeplacementsRequestInput,
 } from '../levers/transport-personnes-sobriete-deplacements/index.ts'
 import { estimateOnComputedLevel } from './estimate-on-computed-level.ts'
+import { freezeEstimate } from './freeze-estimate.ts'
 import { parseRequest, type ParsedRequest } from './parse-request.ts'
 
 type RequestInput =
@@ -156,13 +157,15 @@ function createEstimator(dataSource: DataSource): Estimator {
               .takeReadDatasets()
               .filter((dataset) => !dataset.startsWith(TERRITORY_DATASET_PREFIX))
               .map((dataset) => dataSource.provenance(dataset)),
-          ).map((datasets) => ({
-            ...leverEstimate,
-            reduction: leverEstimate.reduction.toFixed(),
-            status,
-            limits: LEVER_LIMITS[request.id],
-            datasets,
-          })),
+          ).map((datasets) =>
+            freezeEstimate({
+              ...leverEstimate,
+              reduction: leverEstimate.reduction.toFixed(),
+              status,
+              limits: LEVER_LIMITS[request.id],
+              datasets,
+            }),
+          ),
         ),
       )
     })
