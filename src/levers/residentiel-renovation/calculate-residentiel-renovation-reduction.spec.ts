@@ -57,10 +57,10 @@ function reduction({
 
 describe('calculateResidentielRenovationReduction', () => {
   it.each([
-    ['1 000 MWh d’électricité : 41,2 % de chauffage et d’ECS × 35 % × FE 0,0349806', { electricity: '1000' }, '5.05'],
-    ['1 000 MWh de gaz naturel : 87,9 %', { naturalGas: '1000' }, '61.87'],
+    ['1 000 MWh d’électricité : 46,7 % de chauffage et d’ECS × 35 % × FE 0,0349806', { electricity: '1000' }, '5.72'],
+    ['1 000 MWh de gaz naturel : 92,6 %', { naturalGas: '1000' }, '65.2'],
     ['1 000 MWh de fioul : 100 %', { fuelOil: '1000' }, '93.9'],
-    ['1 000 MWh de GPL : 50 %', { liquefiedPetroleumGas: '1000' }, '39.75'],
+    ['1 000 MWh de GPL : 53,2 %', { liquefiedPetroleumGas: '1000' }, '42.3'],
   ])('à 100 %% du parc rénové et tout éligible, %s', (_label, vectors, expected) => {
     expect(reduction({ vectors })).toBe(expected)
   })
@@ -89,7 +89,7 @@ describe('calculateResidentielRenovationReduction', () => {
         renovated: '0.5',
         heatEmissionFactor: '0.1',
       }),
-    ).toBe('59.52')
+    ).toBe('61.54')
   })
 
   it('ne rénove rien à 0 % du parc ni sans surface éligible', () => {

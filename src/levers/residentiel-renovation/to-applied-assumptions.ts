@@ -4,9 +4,9 @@ function toAppliedAssumptions(): AppliedAssumptions {
   return {
     nationalHeatingShares: {
       value:
-        'énergie du chauffage et de l’eau chaude = consommation du territoire × part nationale (électricité 41,2 %, gaz naturel 87,9 %, fioul 100 %, GPL 50 %, chaleur 100 %, 2024, à climat normal) ; la même consommation par mètre carré pour tous les logements utilisant une énergie donnée',
+        'énergie du chauffage et de l’eau chaude = consommation du territoire × part nationale (électricité 46,7 %, gaz naturel 92,6 %, fioul 100 %, GPL 53,2 %, chaleur 100 %, 2024) ; la même consommation par mètre carré pour tous les logements utilisant une énergie donnée',
       source:
-        'Documentation fonctionnelle (p. 51) : le chauffage et l’eau chaude sont les consommations du levier de rénovation ; CEREN, Données sur l’énergie dans le résidentiel (mise à jour du 20 décembre 2024), consommations 2024 à climat normal, TWh entiers',
+        'Documentation fonctionnelle (p. 51) : le chauffage et l’eau chaude sont les consommations du levier de rénovation ; SDES, Consommation énergétique du secteur résidentiel (Conso_usage), 2024',
       limit:
         'La consommation CEREN par mètre carré selon le type, l’énergie, la période et le département n’est pas ouverte : chaque territoire est supposé consommer comme la France, et les maisons comme les appartements, les logements anciens comme récents. Le bois est absent des données du territoire',
     },

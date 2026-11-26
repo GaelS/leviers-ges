@@ -40,18 +40,18 @@ function reduction(target: { level: Level; code: string }): string {
   return estimate(toRequest(target), context)._unsafeUnwrap().reduction.toFixed()
 }
 
-describe('estimate residentiel_changement_systeme_chauffage, parts nationales CEREN 2024 et rendements ADEME', () => {
+describe('estimate residentiel_changement_systeme_chauffage, parts nationales SDES 2024 et rendements ADEME', () => {
   it.each([
-    ['region', '84', '2476098.31'],
-    ['region', '53', '781188.31'],
-    ['region', '11', '3402993.09'],
-    ['departement', '01', '184440'],
-    ['departement', '35', '239822.28'],
-    ['departement', '75', '583539.2'],
-    ['departement', '69', '630154.98'],
-    ['departement', '2A', '-151.23'],
-    ['epci', '200000172', '11647.91'],
-    ['epci', '200000438', '8182.11'],
+    ['region', '84', '2534886.5'],
+    ['region', '53', '787896.15'],
+    ['region', '11', '3520993.89'],
+    ['departement', '01', '189176.33'],
+    ['departement', '35', '244191.78'],
+    ['departement', '75', '602377.64'],
+    ['departement', '69', '649587.99'],
+    ['departement', '2A', '-230.31'],
+    ['epci', '200000172', '11911.69'],
+    ['epci', '200000438', '8326.74'],
   ] as const)(
     'à une cible de 50 %% d’électricité, 10 %% de gaz, 10 %% de bois et 30 %% de réseau, le niveau %s %s évite %s tCO2e',
     (level, code, expected) => {
@@ -60,9 +60,9 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales CE
   )
 
   it.each([
-    ['sans part précisée, le mix actuel', {}, '64518.05'],
-    ['le fioul à 0', { targetFuelOilShareFraction: '0' }, '109013.74'],
-    ['le fioul à 0 et le bois à 10 %', { targetFuelOilShareFraction: '0', targetWoodShareFraction: '0.1' }, '143321.86'],
+    ['sans part précisée, le mix actuel', {}, '67236.55'],
+    ['le fioul à 0', { targetFuelOilShareFraction: '0' }, '112606.37'],
+    ['le fioul à 0 et le bois à 10 %', { targetFuelOilShareFraction: '0', targetWoodShareFraction: '0.1' }, '148503.72'],
   ])('Ille-et-Vilaine, %s : %s tCO2e', (_label, parameters, expected) => {
     const parsed = residentielChangementSystemeChauffageRequestSchema.parse({
       id: 'residentiel_changement_systeme_chauffage',
@@ -78,7 +78,7 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales CE
       reduction({ level: 'region', code: row['code_region'] ?? '' }),
     )
     expect(reductions).toHaveLength(13)
-    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('18676566.08')
+    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('19155808.29')
   })
 
   it('les 96 départements évitent 19 450 737,66 tCO2e', () => {
@@ -86,7 +86,7 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales CE
       reduction({ level: 'departement', code: row['code_departement'] ?? '' }),
     )
     expect(reductions).toHaveLength(96)
-    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('18952822.9')
+    expect(sum(reductions.map((value) => toBig(value))).toFixed()).toBe('19450737.66')
   })
 
   it('1 232 des 1 255 EPCI évitent 20 774 364,19 tCO2e, les 23 EPCI d’outre-mer sans parc de logements sont refusés', () => {
@@ -96,7 +96,7 @@ describe('estimate residentiel_changement_systeme_chauffage, parts nationales CE
     const computed = outcomes.flatMap((outcome) => (outcome.isOk() ? [outcome.value.reduction] : []))
     const refused = outcomes.flatMap((outcome) => (outcome.isErr() ? [outcome.error] : []))
     expect(computed).toHaveLength(1232)
-    expect(sum(computed).toFixed()).toBe('20179470.96')
+    expect(sum(computed).toFixed()).toBe('20774364.19')
     expect(refused).toHaveLength(23)
     expect(refused.every((error) => error.kind === 'missing_data')).toBe(true)
   })
